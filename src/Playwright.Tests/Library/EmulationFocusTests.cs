@@ -22,17 +22,19 @@ using static Microsoft.Playwright.Tests.Fixtures.Utils;
 namespace Microsoft.Playwright.Tests.Library;
 
 /// <summary>Port of tests/library/emulation-focus.spec.ts.</summary>
-public class EmulationFocusTests
+public class EmulationFocusTests : UpstreamBrowserTest
 {
     [UpstreamTest("EM-013 should think that it is focused by default")]
-    public async Task ShouldThinkThatItIsFocusedByDefault(IPage page)
+    public async Task ShouldThinkThatItIsFocusedByDefault()
     {
+        var page = await PageFixture();
         Assert.That(await page.EvaluateAsync<bool>("document.hasFocus()"), Is.EqualTo(true));
     }
 
     [UpstreamTest("EM-014 should think that all pages are focused @smoke")]
-    public async Task ShouldThinkThatAllPagesAreFocused(IPage page)
+    public async Task ShouldThinkThatAllPagesAreFocused()
     {
+        var page = await PageFixture();
         var page2 = await page.Context.NewPageAsync();
         Assert.That(await page.EvaluateAsync<bool>("document.hasFocus()"), Is.EqualTo(true));
         Assert.That(await page2.EvaluateAsync<bool>("document.hasFocus()"), Is.EqualTo(true));
@@ -40,23 +42,25 @@ public class EmulationFocusTests
     }
 
     [UpstreamTest("EM-015 should focus popups by default")]
-    public async Task ShouldFocusPopupsByDefault(IPage page, Server server)
+    public async Task ShouldFocusPopupsByDefault()
     {
-        await page.GotoAsync(server.EmptyPage);
+        var page = await PageFixture();
+        await page.GotoAsync(Server.EmptyPage);
         var (popup, _) = await PromiseAll(
             page.WaitForPopupAsync(),
-            page.EvaluateAsync("url => { window.open(url); }", server.EmptyPage));
+            page.EvaluateAsync("url => { window.open(url); }", Server.EmptyPage));
         Assert.That(await popup.EvaluateAsync<bool>("document.hasFocus()"), Is.EqualTo(true));
         Assert.That(await page.EvaluateAsync<bool>("document.hasFocus()"), Is.EqualTo(true));
     }
 
     [UpstreamTest("EM-016 should provide target for keyboard events")]
-    public async Task ShouldProvideTargetForKeyboardEvents(IPage page, Server server)
+    public async Task ShouldProvideTargetForKeyboardEvents()
     {
+        var page = await PageFixture();
         var page2 = await page.Context.NewPageAsync();
         await PromiseAll(
-            page.GotoAsync(server.Prefix + "/input/textarea.html"),
-            page2.GotoAsync(server.Prefix + "/input/textarea.html"));
+            page.GotoAsync(Server.Prefix + "/input/textarea.html"),
+            page2.GotoAsync(Server.Prefix + "/input/textarea.html"));
         await PromiseAll(
             page.FocusAsync("input"),
             page2.FocusAsync("input"));
@@ -74,8 +78,9 @@ public class EmulationFocusTests
     }
 
     [UpstreamTest("EM-017 should not affect mouse event target page")]
-    public async Task ShouldNotAffectMouseEventTargetPage(IPage page, Server server)
+    public async Task ShouldNotAffectMouseEventTargetPage()
     {
+        var page = await PageFixture();
         var page2 = await page.Context.NewPageAsync();
         const string clickCounter = @"function clickCounter() {
     document.onclick = () => window['clickCount']  = (window['clickCount'] || 0) + 1;
@@ -97,12 +102,13 @@ public class EmulationFocusTests
     }
 
     [UpstreamTest("EM-018 should change document.activeElement")]
-    public async Task ShouldChangeDocumentActiveElement(IPage page, Server server)
+    public async Task ShouldChangeDocumentActiveElement()
     {
+        var page = await PageFixture();
         var page2 = await page.Context.NewPageAsync();
         await PromiseAll(
-            page.GotoAsync(server.Prefix + "/input/textarea.html"),
-            page2.GotoAsync(server.Prefix + "/input/textarea.html"));
+            page.GotoAsync(Server.Prefix + "/input/textarea.html"),
+            page2.GotoAsync(Server.Prefix + "/input/textarea.html"));
         await PromiseAll(
             page.FocusAsync("input"),
             page2.FocusAsync("textarea"));
@@ -115,18 +121,19 @@ public class EmulationFocusTests
     }
 
     [UpstreamTest("EM-019 should not affect screenshots")]
-    public async Task ShouldNotAffectScreenshots(IPage page, Server server, string browserName, bool headless, bool isWindows, bool isLinux, bool isHeadlessShell, string channel)
+    public async Task ShouldNotAffectScreenshots()
     {
-        Info.Skip(browserName == "webkit" && isWindows && !headless, "WebKit/Windows/headed has a larger minimal viewport. See https://github.com/microsoft/playwright/issues/22616");
-        Info.Skip(browserName == "webkit" && isLinux && !headless, "WebKit headed has a larger minimal viewport on gtk4.");
-        Info.Skip(browserName == "firefox" && !headless, "Firefox headed produces a different image");
+        var page = await PageFixture();
+        Info.Skip(BrowserName == "webkit" && IsWindows && !Headless, "WebKit/Windows/headed has a larger minimal viewport. See https://github.com/microsoft/playwright/issues/22616");
+        Info.Skip(BrowserName == "webkit" && IsLinux && !Headless, "WebKit headed has a larger minimal viewport on gtk4.");
+        Info.Skip(BrowserName == "firefox" && !Headless, "Firefox headed produces a different image");
 
         var page2 = await page.Context.NewPageAsync();
         await PromiseAll(
             page.SetViewportSizeAsync(500, 500),
-            page.GotoAsync(server.Prefix + "/grid.html"),
+            page.GotoAsync(Server.Prefix + "/grid.html"),
             page2.SetViewportSizeAsync(50, 50),
-            page2.GotoAsync(server.Prefix + "/grid.html"));
+            page2.GotoAsync(Server.Prefix + "/grid.html"));
         await PromiseAll(
             page.FocusAsync("body"),
             page2.FocusAsync("body"));
@@ -140,13 +147,14 @@ public class EmulationFocusTests
     }
 
     [UpstreamTest("EM-020 should change focused iframe")]
-    public async Task ShouldChangeFocusedIframe(IPage page, Server server, string browserName, bool headless)
+    public async Task ShouldChangeFocusedIframe()
     {
-        Info.Skip(browserName == "firefox" && !headless, "Headed FF might lose focus");
-        await page.GotoAsync(server.EmptyPage);
+        var page = await PageFixture();
+        Info.Skip(BrowserName == "firefox" && !Headless, "Headed FF might lose focus");
+        await page.GotoAsync(Server.EmptyPage);
         var (frame1, frame2) = await PromiseAll(
-            AttachFrame(page, "frame1", server.Prefix + "/input/textarea.html"),
-            AttachFrame(page, "frame2", server.Prefix + "/input/textarea.html"));
+            AttachFrame(page, "frame1", Server.Prefix + "/input/textarea.html"),
+            AttachFrame(page, "frame2", Server.Prefix + "/input/textarea.html"));
         const string logger = @"function logger() {
     self['_events'] = [];
     const element = document.querySelector('input');
@@ -197,10 +205,10 @@ public class EmulationFocusTests
 
     // @see https://github.com/microsoft/playwright/issues/3476
     [UpstreamTest("EM-021 should focus with more than one page/context")]
-    public async Task ShouldFocusWithMoreThanOnePageContext(ContextFactory contextFactory)
+    public async Task ShouldFocusWithMoreThanOnePageContext()
     {
-        var page1 = await (await contextFactory()).NewPageAsync();
-        var page2 = await (await contextFactory()).NewPageAsync();
+        var page1 = await (await ContextFactory()).NewPageAsync();
+        var page2 = await (await ContextFactory()).NewPageAsync();
         await page1.SetContentAsync("<button id=\"foo\" onfocus=\"window.gotFocus=true\">foo</button>");
         await page2.SetContentAsync("<button id=\"foo\" onfocus=\"window.gotFocus=true\">foo</button>");
         await page1.FocusAsync("#foo");
@@ -210,10 +218,10 @@ public class EmulationFocusTests
     }
 
     [UpstreamTest("EM-022 should not fire blur events when interacting with more than one page/context")]
-    public async Task ShouldNotFireBlurEventsWhenInteractingWithMoreThanOnePageContext(ContextFactory contextFactory, string browserName)
+    public async Task ShouldNotFireBlurEventsWhenInteractingWithMoreThanOnePageContext()
     {
-        var page1 = await (await contextFactory()).NewPageAsync();
-        var page2 = await (await contextFactory()).NewPageAsync();
+        var page1 = await (await ContextFactory()).NewPageAsync();
+        var page2 = await (await ContextFactory()).NewPageAsync();
         await page1.SetContentAsync("<button id=\"foo\" onblur=\"window.gotBlur=true\">foo</button>");
         await page2.SetContentAsync("<button id=\"foo\" onblur=\"window.gotBlur=true\">foo</button>");
         await page1.ClickAsync("#foo");
@@ -223,12 +231,12 @@ public class EmulationFocusTests
     }
 
     [UpstreamTest("EM-023 should not blur iframe when interacting with another page/context")]
-    public async Task ShouldNotBlurIframeWhenInteractingWithAnotherPageContext(ContextFactory contextFactory, string browserName)
+    public async Task ShouldNotBlurIframeWhenInteractingWithAnotherPageContext()
     {
-        Info.Fixme(browserName == "firefox", "https://github.com/microsoft/playwright/issues/43280");
+        Info.Fixme(BrowserName == "firefox", "https://github.com/microsoft/playwright/issues/43280");
 
-        var page1 = await (await contextFactory()).NewPageAsync();
-        var page2 = await (await contextFactory()).NewPageAsync();
+        var page1 = await (await ContextFactory()).NewPageAsync();
+        var page2 = await (await ContextFactory()).NewPageAsync();
         var srcdoc = "<button id=foo>foo</button><script>window.addEventListener('blur', () => window.gotBlur = true)</script>";
         await page1.SetContentAsync($"<iframe srcdoc=\"{srcdoc}\"></iframe><iframe srcdoc=\"{srcdoc}\"></iframe>");
         var (frame1, frame2) = (page1.Frames[1], page1.Frames[2]);
@@ -241,16 +249,16 @@ public class EmulationFocusTests
     }
 
     [UpstreamTest("EM-024 should trigger hover state concurrently")]
-    public async Task ShouldTriggerHoverStateConcurrently(IBrowserType browserType, bool headless, BrowserTypeLaunchOptions launchOptions, BrowserNewContextOptions contextOptions, BrowserNewPageOptions newPageOptions)
+    public async Task ShouldTriggerHoverStateConcurrently()
     {
-        Info.Skip(!headless, "headed messes up with hover");
+        Info.Skip(!Headless, "headed messes up with hover");
 
-        var browser1 = await browserType.LaunchAsync(launchOptions);
-        var context1 = await browser1.NewContextAsync(contextOptions);
+        var browser1 = await BrowserType.LaunchAsync(LaunchOptions());
+        var context1 = await browser1.NewContextAsync(ContextOptions());
         var page1 = await context1.NewPageAsync();
         var page2 = await context1.NewPageAsync();
-        var browser2 = await browserType.LaunchAsync(launchOptions);
-        var page3 = await browser2.NewPageAsync(newPageOptions);
+        var browser2 = await BrowserType.LaunchAsync(LaunchOptions());
+        var page3 = await browser2.NewPageAsync(NewPageOptions());
 
         foreach (var page in new[] { page1, page2, page3 })
         {
@@ -286,10 +294,10 @@ public class EmulationFocusTests
     }
 
     [UpstreamTest("EM-028 should keep mouse drag when interacting with another page/context")]
-    public async Task ShouldKeepMouseDragWhenInteractingWithAnotherPageContext(ContextFactory contextFactory)
+    public async Task ShouldKeepMouseDragWhenInteractingWithAnotherPageContext()
     {
-        var page1 = await (await contextFactory()).NewPageAsync();
-        var page2 = await (await contextFactory()).NewPageAsync();
+        var page1 = await (await ContextFactory()).NewPageAsync();
+        var page2 = await (await ContextFactory()).NewPageAsync();
         foreach (var page in new[] { page1, page2 })
         {
             await page.SetContentAsync(@"

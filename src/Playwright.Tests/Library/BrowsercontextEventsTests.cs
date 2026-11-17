@@ -21,11 +21,12 @@ using static Microsoft.Playwright.Tests.Fixtures.Utils;
 namespace Microsoft.Playwright.Tests.Library;
 
 /// <summary>Port of tests/library/browsercontext-events.spec.ts.</summary>
-public class BrowsercontextEventsTests
+public class BrowsercontextEventsTests : UpstreamBrowserTest
 {
     [UpstreamTest("BC-033 console event should work with element handles")]
-    public async Task ConsoleEventShouldWorkWithElementHandles(IPage page)
+    public async Task ConsoleEventShouldWorkWithElementHandles()
     {
+        var page = await PageFixture();
         await page.SetContentAsync("<body>hello</body>");
         var (message, _) = await PromiseAll(
             page.Context.WaitForConsoleMessageAsync(),
@@ -36,8 +37,9 @@ public class BrowsercontextEventsTests
     }
 
     [UpstreamTest("BC-034 console event should work in popup")]
-    public async Task ConsoleEventShouldWorkInPopup(IPage page)
+    public async Task ConsoleEventShouldWorkInPopup()
     {
+        var page = await PageFixture();
         var (_, message, popup) = await PromiseAll(
             page.EvaluateAsync(@"() => {
       const win = window.open('');
@@ -51,9 +53,10 @@ public class BrowsercontextEventsTests
     }
 
     [UpstreamTest("BC-035 console event should work in popup 2")]
-    public async Task ConsoleEventShouldWorkInPopup2(IPage page, string browserName, bool isBidi)
+    public async Task ConsoleEventShouldWorkInPopup2()
     {
-        Info.Fixme(browserName == "firefox" && !isBidi, "console message from javascript: url is not reported at all");
+        var page = await PageFixture();
+        Info.Fixme(BrowserName == "firefox" && !IsBidi, "console message from javascript: url is not reported at all");
 
         var (_, message, popup) = await PromiseAll(
             page.EvaluateAsync(@"async () => {
@@ -69,9 +72,10 @@ public class BrowsercontextEventsTests
     }
 
     [UpstreamTest("BC-036 console event should work in immediately closed popup")]
-    public async Task ConsoleEventShouldWorkInImmediatelyClosedPopup(IPage page, string browserName, bool isBidi)
+    public async Task ConsoleEventShouldWorkInImmediatelyClosedPopup()
     {
-        Info.Fixme(browserName == "firefox" && !isBidi, "console message is not reported at all");
+        var page = await PageFixture();
+        Info.Fixme(BrowserName == "firefox" && !IsBidi, "console message is not reported at all");
 
         var (_, message, popup) = await PromiseAll(
             page.EvaluateAsync(@"async () => {
@@ -87,8 +91,9 @@ public class BrowsercontextEventsTests
     }
 
     [UpstreamTest("BC-037 dialog event should work @smoke")]
-    public async Task DialogEventShouldWork(IPage page)
+    public async Task DialogEventShouldWork()
     {
+        var page = await PageFixture();
         var promise = page.EvaluateAsync<string>("() => prompt('hey?')");
         var (dialog1, dialog2) = await PromiseAll(
             Once<IDialog>(h => page.Context.Dialog += h, h => page.Context.Dialog -= h),
@@ -102,8 +107,9 @@ public class BrowsercontextEventsTests
     }
 
     [UpstreamTest("BC-038 dialogclosed event should work")]
-    public async Task DialogclosedEventShouldWork(IPage page)
+    public async Task DialogclosedEventShouldWork()
     {
+        var page = await PageFixture();
         var promise = page.EvaluateAsync<string>("() => prompt('hey?')");
         var dialog = await Once<IDialog>(h => page.Context.Dialog += h, h => page.Context.Dialog -= h);
         var (closed1, closed2) = await PromiseAll(
@@ -116,8 +122,9 @@ public class BrowsercontextEventsTests
     }
 
     [UpstreamTest("BC-039 dialog event should work in popup")]
-    public async Task DialogEventShouldWorkInPopup(IPage page)
+    public async Task DialogEventShouldWorkInPopup()
     {
+        var page = await PageFixture();
         var promise = page.EvaluateAsync<string>(@"() => {
     const win = window.open('');
     return win.prompt('hey?');
@@ -134,9 +141,10 @@ public class BrowsercontextEventsTests
     }
 
     [UpstreamTest("BC-040 dialog event should work in popup 2")]
-    public async Task DialogEventShouldWorkInPopup2(IPage page, string browserName)
+    public async Task DialogEventShouldWorkInPopup2()
     {
-        Info.Fixme(browserName == "firefox", "dialog from javascript: url is not reported at all");
+        var page = await PageFixture();
+        Info.Fixme(BrowserName == "firefox", "dialog from javascript: url is not reported at all");
 
         var promise = page.EvaluateAsync(@"async () => {
     window.open('javascript:prompt(""hey?"")');
@@ -151,8 +159,9 @@ public class BrowsercontextEventsTests
     }
 
     [UpstreamTest("BC-041 dialog event should work in immediately closed popup")]
-    public async Task DialogEventShouldWorkInImmediatelyClosedPopup(IPage page)
+    public async Task DialogEventShouldWorkInImmediatelyClosedPopup()
     {
+        var page = await PageFixture();
         var promise = page.EvaluateAsync<string>(@"async () => {
     const win = window.open();
     const result = win.prompt('hey?');
@@ -171,15 +180,16 @@ public class BrowsercontextEventsTests
     }
 
     [UpstreamTest("BC-042 dialog event should work with inline script tag")]
-    public async Task DialogEventShouldWorkWithInlineScriptTag(IPage page, Server server)
+    public async Task DialogEventShouldWorkWithInlineScriptTag()
     {
-        server.SetRoute("/popup.html", (req, res) =>
+        var page = await PageFixture();
+        Server.SetRoute("/popup.html", (req, res) =>
         {
             res.SetHeader("content-type", "text/html");
             res.End("<script>window.result = prompt('hey?')</script>");
         });
 
-        await page.GotoAsync(server.EmptyPage);
+        await page.GotoAsync(Server.EmptyPage);
         await page.SetContentAsync("<a href='popup.html' target=_blank>Click me</a>");
 
         var promise = page.ClickAsync("a");
@@ -195,8 +205,9 @@ public class BrowsercontextEventsTests
     }
 
     [UpstreamTest("BC-043 weberror event should work")]
-    public async Task WeberrorEventShouldWork(IPage page)
+    public async Task WeberrorEventShouldWork()
     {
+        var page = await PageFixture();
         var webError = await PromiseAll(
             Once<IWebError>(h => page.Context.WebError += h, h => page.Context.WebError -= h),
             page.SetContentAsync("<script>throw new Error(\"boom\")</script>"));
@@ -206,9 +217,10 @@ public class BrowsercontextEventsTests
     }
 
     [UpstreamTest("BC-044 weberror event should include location")]
-    public async Task WeberrorEventShouldIncludeLocation(IPage page, Server server)
+    public async Task WeberrorEventShouldIncludeLocation()
     {
-        server.SetRoute("/error.js", (req, res) =>
+        var page = await PageFixture();
+        Server.SetRoute("/error.js", (req, res) =>
         {
             res.SetHeader("content-type", "application/javascript");
             res.End(@"
@@ -219,7 +231,7 @@ public class BrowsercontextEventsTests
     ");
         });
 
-        server.SetRoute("/error.html", (req, res) =>
+        Server.SetRoute("/error.html", (req, res) =>
         {
             res.SetHeader("content-type", "text/html");
             res.End("<script src=\"/error.js\"></script>");
@@ -227,36 +239,39 @@ public class BrowsercontextEventsTests
 
         var (webError, _) = await PromiseAll(
             Once<IWebError>(h => page.Context.WebError += h, h => page.Context.WebError -= h),
-            page.GotoAsync(server.Prefix + "/error.html"));
+            page.GotoAsync(Server.Prefix + "/error.html"));
 
         var location = webError.Location;
-        Assert.That(location.Url, Is.EqualTo($"{server.Prefix}/error.js"));
+        Assert.That(location.Url, Is.EqualTo($"{Server.Prefix}/error.js"));
         Assert.That(location.Line, Is.EqualTo(2));
         Assert.That(location.Column, Is.GreaterThan(0)); // column is not consistent across browsers
     }
 
     [UpstreamTest("BC-045 pageload event should work @smoke")]
-    public async Task PageloadEventShouldWork(IPage page, Server server)
+    public async Task PageloadEventShouldWork()
     {
+        var page = await PageFixture();
         var (eventPage, _) = await PromiseAll(
             Once<IPage>(h => page.Context.PageLoad += h, h => page.Context.PageLoad -= h),
-            page.GotoAsync(server.EmptyPage));
+            page.GotoAsync(Server.EmptyPage));
         Assert.That(eventPage, Is.SameAs(page));
     }
 
     [UpstreamTest("BC-046 framenavigated event should work @smoke")]
-    public async Task FramenavigatedEventShouldWork(IPage page, Server server)
+    public async Task FramenavigatedEventShouldWork()
     {
+        var page = await PageFixture();
         var (frame, _) = await PromiseAll(
             Once<IFrame>(h => page.Context.FrameNavigated += h, h => page.Context.FrameNavigated -= h),
-            page.GotoAsync(server.EmptyPage));
+            page.GotoAsync(Server.EmptyPage));
         Assert.That(frame, Is.SameAs(page.MainFrame));
-        Assert.That(frame.Url, Is.EqualTo(server.EmptyPage));
+        Assert.That(frame.Url, Is.EqualTo(Server.EmptyPage));
     }
 
     [UpstreamTest("BC-047 pageclose event should work @smoke")]
-    public async Task PagecloseEventShouldWork(IBrowserContext context)
+    public async Task PagecloseEventShouldWork()
     {
+        var context = await ContextFixture();
         var page = await context.NewPageAsync();
         var closed = await PromiseAll(
             Once<IPage>(h => context.PageClose += h, h => context.PageClose -= h),
@@ -265,9 +280,10 @@ public class BrowsercontextEventsTests
     }
 
     [UpstreamTest("BC-048 frameattached event should work @smoke")]
-    public async Task FrameattachedEventShouldWork(IPage page, Server server)
+    public async Task FrameattachedEventShouldWork()
     {
-        await page.GotoAsync(server.EmptyPage);
+        var page = await PageFixture();
+        await page.GotoAsync(Server.EmptyPage);
         var (frame, _) = await PromiseAll(
             Once<IFrame>(h => page.Context.FrameAttached += h, h => page.Context.FrameAttached -= h),
             page.EvaluateAsync(@"() => {
@@ -279,9 +295,10 @@ public class BrowsercontextEventsTests
     }
 
     [UpstreamTest("BC-049 framedetached event should work @smoke")]
-    public async Task FramedetachedEventShouldWork(IPage page, Server server)
+    public async Task FramedetachedEventShouldWork()
     {
-        await page.GotoAsync(server.EmptyPage);
+        var page = await PageFixture();
+        await page.GotoAsync(Server.EmptyPage);
         await page.EvaluateAsync(@"() => {
     const iframe = document.createElement('iframe');
     iframe.id = 'x';
@@ -296,15 +313,16 @@ public class BrowsercontextEventsTests
     }
 
     [UpstreamTest("BC-050 download event should work @smoke")]
-    public async Task DownloadEventShouldWork(IPage page, Server server)
+    public async Task DownloadEventShouldWork()
     {
-        server.SetRoute("/download", (req, res) =>
+        var page = await PageFixture();
+        Server.SetRoute("/download", (req, res) =>
         {
             res.SetHeader("Content-Type", "application/octet-stream");
             res.SetHeader("Content-Disposition", "attachment; filename=file.txt");
             res.End("Hello world");
         });
-        await page.SetContentAsync($"<a href=\"{server.Prefix}/download\">download</a>");
+        await page.SetContentAsync($"<a href=\"{Server.Prefix}/download\">download</a>");
         var download = await PromiseAll(
             Once<IDownload>(h => page.Context.Download += h, h => page.Context.Download -= h),
             page.ClickAsync("a"));

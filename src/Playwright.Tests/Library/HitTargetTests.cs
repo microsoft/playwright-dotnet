@@ -21,14 +21,14 @@ using static Microsoft.Playwright.Tests.Fixtures.Utils;
 namespace Microsoft.Playwright.Tests.Library;
 
 /// <summary>Port of tests/library/hit-target.spec.ts.</summary>
-public class HitTargetTests
+public class HitTargetTests : UpstreamPageTest
 {
     [UpstreamTest("HT-001 should block all events when hit target is wrong")]
     [LocalFixme("dotnet: the message is 'Timeout 3000ms exceeded.', without the 'page.click: ' prefix of the call")]
-    public async Task ShouldBlockAllEventsWhenHitTargetIsWrong(IPage page, Server server)
+    public async Task ShouldBlockAllEventsWhenHitTargetIsWrong()
     {
-        await page.GotoAsync(server.Prefix + "/input/button.html");
-        await page.EvaluateAsync(@"() => {
+        await Page.GotoAsync(Server.Prefix + "/input/button.html");
+        await Page.EvaluateAsync(@"() => {
     const blocker = document.createElement('div');
     blocker.style.position = 'absolute';
     blocker.style.width = '400px';
@@ -45,20 +45,20 @@ public class HitTargetTests
     }
   }");
 
-        var error = await Catch(() => page.ClickAsync("button", new() { Timeout = 3000 }));
+        var error = await Catch(() => Page.ClickAsync("button", new() { Timeout = 3000 }));
         Assert.That(error.Message, Does.Contain("page.click: Timeout 3000ms exceeded."));
 
         // Give it some time, just in case.
-        await page.WaitForTimeoutAsync(1000);
-        var allEvents = await page.EvaluateAsync<string[]>("() => window.allEvents");
+        await Page.WaitForTimeoutAsync(1000);
+        var allEvents = await Page.EvaluateAsync<string[]>("() => window.allEvents");
         Assert.That(allEvents, Is.EqualTo(Array.Empty<string>()));
     }
 
     [UpstreamTest("HT-002 should block click when mousedown fails")]
-    public async Task ShouldBlockClickWhenMousedownFails(IPage page, Server server)
+    public async Task ShouldBlockClickWhenMousedownFails()
     {
-        await page.GotoAsync(server.Prefix + "/input/button.html");
-        await page.EvalOnSelectorAsync("button", @"button => {
+        await Page.GotoAsync(Server.Prefix + "/input/button.html");
+        await Page.EvalOnSelectorAsync("button", @"button => {
     button.addEventListener('mousemove', () => {
       button.style.marginLeft = '100px';
     });
@@ -69,9 +69,9 @@ public class HitTargetTests
       button.addEventListener(name, e => allEvents.push(e.type));
   }");
 
-        await page.ClickAsync("button");
-        Assert.That(await page.EvaluateAsync<string>("result"), Is.EqualTo("Clicked"));
-        var allEvents = await page.EvaluateAsync<string[]>("() => window.allEvents");
+        await Page.ClickAsync("button");
+        Assert.That(await Page.EvaluateAsync<string>("result"), Is.EqualTo("Clicked"));
+        var allEvents = await Page.EvaluateAsync<string[]>("() => window.allEvents");
         Assert.That(allEvents, Is.EqualTo(new[]
         {
             // First attempt failed.
@@ -82,26 +82,26 @@ public class HitTargetTests
     }
 
     [UpstreamTest("HT-003 should click when element detaches in mousedown")]
-    public async Task ShouldClickWhenElementDetachesInMousedown(IPage page, Server server)
+    public async Task ShouldClickWhenElementDetachesInMousedown()
     {
-        await page.GotoAsync(server.Prefix + "/input/button.html");
-        await page.EvalOnSelectorAsync("button", @"button => {
+        await Page.GotoAsync(Server.Prefix + "/input/button.html");
+        await Page.EvalOnSelectorAsync("button", @"button => {
     button.addEventListener('mousedown', () => {
       window.result = 'Mousedown';
       button.remove();
     });
   }");
 
-        await page.ClickAsync("button", new() { Timeout = 15000 });
-        Assert.That(await page.EvaluateAsync<string>("result"), Is.EqualTo("Mousedown"));
+        await Page.ClickAsync("button", new() { Timeout = 15000 });
+        Assert.That(await Page.EvaluateAsync<string>("result"), Is.EqualTo("Mousedown"));
     }
 
     [UpstreamTest("HT-004 should block all events when hit target is wrong and element detaches")]
     [LocalFixme("dotnet: the message is 'Timeout 3000ms exceeded.', without the 'page.click: ' prefix of the call")]
-    public async Task ShouldBlockAllEventsWhenHitTargetIsWrongAndElementDetaches(IPage page, Server server)
+    public async Task ShouldBlockAllEventsWhenHitTargetIsWrongAndElementDetaches()
     {
-        await page.GotoAsync(server.Prefix + "/input/button.html");
-        await page.EvalOnSelectorAsync("button", @"button => {
+        await Page.GotoAsync(Server.Prefix + "/input/button.html");
+        await Page.EvalOnSelectorAsync("button", @"button => {
     const blocker = document.createElement('div');
     blocker.style.position = 'absolute';
     blocker.style.width = '400px';
@@ -120,20 +120,20 @@ public class HitTargetTests
     }
   }");
 
-        var error = await Catch(() => page.ClickAsync("button", new() { Timeout = 3000 }));
+        var error = await Catch(() => Page.ClickAsync("button", new() { Timeout = 3000 }));
         Assert.That(error.Message, Does.Contain("page.click: Timeout 3000ms exceeded."));
 
         // Give it some time, just in case.
-        await page.WaitForTimeoutAsync(1000);
-        var allEvents = await page.EvaluateAsync<string[]>("() => window.allEvents");
+        await Page.WaitForTimeoutAsync(1000);
+        var allEvents = await Page.EvaluateAsync<string[]>("() => window.allEvents");
         Assert.That(allEvents, Is.EqualTo(Array.Empty<string>()));
     }
 
     [UpstreamTest("HT-005 should not block programmatic events")]
-    public async Task ShouldNotBlockProgrammaticEvents(IPage page, Server server)
+    public async Task ShouldNotBlockProgrammaticEvents()
     {
-        await page.GotoAsync(server.Prefix + "/input/button.html");
-        await page.EvalOnSelectorAsync("button", @"button => {
+        await Page.GotoAsync(Server.Prefix + "/input/button.html");
+        await Page.EvalOnSelectorAsync("button", @"button => {
     button.addEventListener('mousemove', () => {
       button.style.marginLeft = '100px';
       button.dispatchEvent(new MouseEvent('click'));
@@ -147,9 +147,9 @@ public class HitTargetTests
     });
   }");
 
-        await page.ClickAsync("button");
-        Assert.That(await page.EvaluateAsync<string>("result"), Is.EqualTo("Clicked"));
-        var allEvents = await page.EvaluateAsync<string[]>("() => window.allEvents");
+        await Page.ClickAsync("button");
+        Assert.That(await Page.EvaluateAsync<string>("result"), Is.EqualTo("Clicked"));
+        var allEvents = await Page.EvaluateAsync<string[]>("() => window.allEvents");
         // We should get one programmatic click on each attempt.
         Assert.That(allEvents, Is.EqualTo(new[]
         {
@@ -158,26 +158,26 @@ public class HitTargetTests
     }
 
     [UpstreamTest("HT-006 should click the button again after document.write")]
-    public async Task ShouldClickTheButtonAgainAfterDocumentWrite(IPage page, Server server)
+    public async Task ShouldClickTheButtonAgainAfterDocumentWrite()
     {
-        await page.GotoAsync(server.Prefix + "/input/button.html");
-        await page.ClickAsync("button");
-        Assert.That(await page.EvaluateAsync<string>("result"), Is.EqualTo("Clicked"));
+        await Page.GotoAsync(Server.Prefix + "/input/button.html");
+        await Page.ClickAsync("button");
+        Assert.That(await Page.EvaluateAsync<string>("result"), Is.EqualTo("Clicked"));
 
-        await page.EvaluateAsync(@"() => {
+        await Page.EvaluateAsync(@"() => {
     document.open();
     document.write('<button onclick=""window.result2 = true""></button>');
     document.close();
   }");
-        await page.ClickAsync("button");
-        Assert.That(await page.EvaluateAsync<bool>("result2"), Is.EqualTo(true));
+        await Page.ClickAsync("button");
+        Assert.That(await Page.EvaluateAsync<bool>("result2"), Is.EqualTo(true));
     }
 
     [UpstreamTest("HT-007 should work with mui select")]
-    public async Task ShouldWorkWithMuiSelect(IPage page, Server server)
+    public async Task ShouldWorkWithMuiSelect()
     {
-        await page.GotoAsync(server.Prefix + "/mui.html");
-        await page.EvaluateAsync(@"() => {
+        await Page.GotoAsync(Server.Prefix + "/mui.html");
+        await Page.EvaluateAsync(@"() => {
     renderComponent(e(MaterialUI.FormControl, { fullWidth: true }, [
       e(MaterialUI.InputLabel, { id: 'demo-simple-select-label' }, ['Age']),
       e(MaterialUI.Select, {
@@ -192,23 +192,23 @@ public class HitTargetTests
       ]),
     ]));
   }");
-        await page.ClickAsync("div.MuiFormControl-root:has-text(\"Age\")");
-        await Expect(page.Locator("text=Thirty")).ToBeVisibleAsync();
+        await Page.ClickAsync("div.MuiFormControl-root:has-text(\"Age\")");
+        await Expect(Page.Locator("text=Thirty")).ToBeVisibleAsync();
     }
 
     [UpstreamTest("HT-008 should work with drag and drop that moves the element under cursor")]
-    public async Task ShouldWorkWithDragAndDropThatMovesTheElementUnderCursor(IPage page, Server server)
+    public async Task ShouldWorkWithDragAndDropThatMovesTheElementUnderCursor()
     {
-        await page.GotoAsync(server.Prefix + "/input/drag-n-drop-manual.html");
-        await page.DragAndDropAsync("#from", "#to");
-        await Expect(page.Locator("#to")).ToHaveTextAsync("Dropped");
+        await Page.GotoAsync(Server.Prefix + "/input/drag-n-drop-manual.html");
+        await Page.DragAndDropAsync("#from", "#to");
+        await Expect(Page.Locator("#to")).ToHaveTextAsync("Dropped");
     }
 
     [UpstreamTest("HT-009 should work with block inside inline")]
-    public async Task ShouldWorkWithBlockInsideInline(IPage page, Server server)
+    public async Task ShouldWorkWithBlockInsideInline()
     {
-        await page.GotoAsync(server.EmptyPage);
-        await page.SetContentAsync(@"
+        await Page.GotoAsync(Server.EmptyPage);
+        await Page.SetContentAsync(@"
     <div>
       <span>
         <div id=""target"" onclick=""window._clicked=true"">
@@ -217,15 +217,15 @@ public class HitTargetTests
       </span>
     </div>
   ");
-        await page.Locator("#target").ClickAsync();
-        Assert.That(await page.EvaluateAsync<bool>("window._clicked"), Is.EqualTo(true));
+        await Page.Locator("#target").ClickAsync();
+        Assert.That(await Page.EvaluateAsync<bool>("window._clicked"), Is.EqualTo(true));
     }
 
     [UpstreamTest("HT-010 should work with block-block-block inside inline-inline")]
-    public async Task ShouldWorkWithBlockBlockBlockInsideInlineInline(IPage page, Server server)
+    public async Task ShouldWorkWithBlockBlockBlockInsideInlineInline()
     {
-        await page.GotoAsync(server.EmptyPage);
-        await page.SetContentAsync(@"
+        await Page.GotoAsync(Server.EmptyPage);
+        await Page.SetContentAsync(@"
     <div>
       <a href=""#ney"">
         <div>
@@ -242,15 +242,15 @@ public class HitTargetTests
       </a>
     </div>
   ");
-        await page.Locator("#target").ClickAsync();
-        await Expect(page).ToHaveURLAsync(server.EmptyPage + "#yay");
+        await Page.Locator("#target").ClickAsync();
+        await Expect(Page).ToHaveURLAsync(Server.EmptyPage + "#yay");
     }
 
     [UpstreamTest("HT-011 should work with block inside inline in shadow dom")]
-    public async Task ShouldWorkWithBlockInsideInlineInShadowDom(IPage page, Server server)
+    public async Task ShouldWorkWithBlockInsideInlineInShadowDom()
     {
-        await page.GotoAsync(server.EmptyPage);
-        await page.SetContentAsync(@"
+        await Page.GotoAsync(Server.EmptyPage);
+        await Page.SetContentAsync(@"
     <div>
     </div>
     <script>
@@ -265,15 +265,15 @@ public class HitTargetTests
       div.textContent = 'Hello';
     </script>
   ");
-        await page.Locator("#target").ClickAsync();
-        Assert.That(await page.EvaluateAsync<bool>("window._clicked"), Is.EqualTo(true));
+        await Page.Locator("#target").ClickAsync();
+        Assert.That(await Page.EvaluateAsync<bool>("window._clicked"), Is.EqualTo(true));
     }
 
     [UpstreamTest("HT-012 should not click iframe overlaying the target")]
-    public async Task ShouldNotClickIframeOverlayingTheTarget(IPage page, Server server)
+    public async Task ShouldNotClickIframeOverlayingTheTarget()
     {
-        await page.GotoAsync(server.EmptyPage);
-        await page.SetContentAsync(@"
+        await Page.GotoAsync(Server.EmptyPage);
+        await Page.SetContentAsync(@"
     <button style=""position: absolute; left: 250px;bottom: 0;height: 40px;width: 200px;"" onclick=""window._clicked=1"">
       click-me
     </button>
@@ -281,37 +281,37 @@ public class HitTargetTests
       <iframe srcdoc=""<body onclick='window.top._clicked=2' style='background-color:red;height:40px;'></body>"" style=""display: block; border: 0px; width: 100vw; height: 48px;""></iframe>
     </div>
   ");
-        var error = await Catch(() => page.ClickAsync("text=click-me", new() { Timeout = 3000 }));
-        Assert.That(await page.EvaluateAsync<object>("window._clicked"), Is.Null);
+        var error = await Catch(() => Page.ClickAsync("text=click-me", new() { Timeout = 3000 }));
+        Assert.That(await Page.EvaluateAsync<object>("window._clicked"), Is.Null);
         Assert.That(error.Message, Does.Contain("<iframe srcdoc=\"<body onclick='window.top._clicked=2' style='background-color:red;height:40px;'></body>\"></iframe> from <div>…</div> subtree intercepts pointer events"));
     }
 
     [UpstreamTest("HT-013 should not click an element overlaying iframe with the target")]
-    public async Task ShouldNotClickAnElementOverlayingIframeWithTheTarget(IPage page, Server server)
+    public async Task ShouldNotClickAnElementOverlayingIframeWithTheTarget()
     {
-        await page.GotoAsync(server.EmptyPage);
-        await page.SetContentAsync(@"
+        await Page.GotoAsync(Server.EmptyPage);
+        await Page.SetContentAsync(@"
     <div onclick='window.top._clicked=1'>padding</div>
     <iframe width=600 height=600 srcdoc=""<iframe srcdoc='<div onclick=&quot;window.top._clicked=2&quot;>padding</div><div onclick=&quot;window.top._clicked=3&quot;>inner</div>'></iframe><div onclick='window.top._clicked=4'>outer</div>""></iframe>
     <div onclick='window.top._clicked=5' style=""position: absolute; left: 0; right: 0; top: 0; bottom: 0; background: rgba(255, 0, 0, 0.1); padding: 200px;"">PINK OVERLAY</div>
   ");
 
-        var target = page.FrameLocator("iframe").FrameLocator("iframe").Locator("text=inner");
+        var target = Page.FrameLocator("iframe").FrameLocator("iframe").Locator("text=inner");
         var error = await Catch(() => target.ClickAsync(new() { Timeout = 3000 }));
-        Assert.That(await page.EvaluateAsync<object>("window._clicked"), Is.Null);
+        Assert.That(await Page.EvaluateAsync<object>("window._clicked"), Is.Null);
         Assert.That(error.Message, Does.Contain("<div onclick=\"window.top._clicked=5\">PINK OVERLAY</div> intercepts pointer events"));
 
-        await page.Locator("text=overlay").EvaluateAsync("e => e.style.display = 'none'");
+        await Page.Locator("text=overlay").EvaluateAsync("e => e.style.display = 'none'");
 
         await target.ClickAsync();
-        Assert.That(await page.EvaluateAsync<int>("window._clicked"), Is.EqualTo(3));
+        Assert.That(await Page.EvaluateAsync<int>("window._clicked"), Is.EqualTo(3));
     }
 
     [UpstreamTest("HT-014 should click into frame inside closed shadow root")]
-    public async Task ShouldClickIntoFrameInsideClosedShadowRoot(IPage page, Server server)
+    public async Task ShouldClickIntoFrameInsideClosedShadowRoot()
     {
-        await page.GotoAsync(server.EmptyPage);
-        await page.SetContentAsync(@"
+        await Page.GotoAsync(Server.EmptyPage);
+        await Page.SetContentAsync(@"
     <div id=framecontainer>
     </div>
     <script>
@@ -324,16 +324,16 @@ public class HitTargetTests
     </script>
   ");
 
-        var frame = page.Frames[1];
+        var frame = Page.Frames[1];
         await frame.Locator("text=click me").ClickAsync();
-        Assert.That(await page.EvaluateAsync<bool>("window.__clicked"), Is.EqualTo(true));
+        Assert.That(await Page.EvaluateAsync<bool>("window.__clicked"), Is.EqualTo(true));
     }
 
     [UpstreamTest("HT-015 should click an element inside closed shadow root")]
-    public async Task ShouldClickAnElementInsideClosedShadowRoot(IPage page, Server server)
+    public async Task ShouldClickAnElementInsideClosedShadowRoot()
     {
-        await page.GotoAsync(server.EmptyPage);
-        await page.SetContentAsync(@"
+        await Page.GotoAsync(Server.EmptyPage);
+        await Page.SetContentAsync(@"
     <div id=container>
     </div>
     <script>
@@ -347,16 +347,16 @@ public class HitTargetTests
     </script>
   ");
 
-        var handle = await page.EvaluateHandleAsync("window.__target");
+        var handle = await Page.EvaluateHandleAsync("window.__target");
         await ((IElementHandle)handle).ClickAsync();
-        Assert.That(await page.EvaluateAsync<bool>("window.__clicked"), Is.EqualTo(true));
+        Assert.That(await Page.EvaluateAsync<bool>("window.__clicked"), Is.EqualTo(true));
     }
 
     [UpstreamTest("HT-016 should detect overlay from another shadow root")]
-    public async Task ShouldDetectOverlayFromAnotherShadowRoot(IPage page, Server server)
+    public async Task ShouldDetectOverlayFromAnotherShadowRoot()
     {
-        await page.GotoAsync(server.EmptyPage);
-        await page.SetContentAsync(@"
+        await Page.GotoAsync(Server.EmptyPage);
+        await Page.SetContentAsync(@"
     <style>
       div > div {
         position: absolute;
@@ -397,14 +397,14 @@ public class HitTargetTests
     </script>
   ");
 
-        var error = await Catch(() => page.Locator("#container1 >> text=click me").ClickAsync(new() { Timeout = 3000 }));
+        var error = await Catch(() => Page.Locator("#container1 >> text=click me").ClickAsync(new() { Timeout = 3000 }));
         Assert.That(error.Message, Does.Contain("<div id=\"container2\"></div> intercepts pointer events"));
     }
 
     [UpstreamTest("HT-017 should detect overlaid element in a transformed iframe")]
-    public async Task ShouldDetectOverlaidElementInATransformedIframe(IPage page)
+    public async Task ShouldDetectOverlaidElementInATransformedIframe()
     {
-        await page.SetContentAsync(@"
+        await Page.SetContentAsync(@"
     <style>
       body, html, iframe { margin: 0; padding: 0; border: none; }
       iframe {
@@ -430,15 +430,15 @@ public class HitTargetTests
       </script>
     ""></iframe>
   ");
-        var locator = page.FrameLocator("iframe").Locator("div");
+        var locator = Page.FrameLocator("iframe").Locator("div");
         var error = await Catch(() => locator.ClickAsync(new() { Timeout = 5000 }));
         Assert.That(error.Message, Does.Contain("<section>Overlay</section> intercepts pointer events"));
     }
 
     [UpstreamTest("HT-018 should click in iframe with padding")]
-    public async Task ShouldClickInIframeWithPadding(IPage page)
+    public async Task ShouldClickInIframeWithPadding()
     {
-        await page.SetContentAsync(@"
+        await Page.SetContentAsync(@"
     <style>
       body, html, iframe { margin: 0; padding: 0; border: none; box-sizing: border-box; }
       iframe { background: gray; width: 200px; height: 200px; padding-top: 100px; }
@@ -456,15 +456,15 @@ public class HitTargetTests
       </script>
     ""></iframe>
   ");
-        var locator = page.FrameLocator("iframe").Locator("#target");
+        var locator = Page.FrameLocator("iframe").Locator("#target");
         await locator.ClickAsync();
-        Assert.That(await page.EvaluateAsync<bool>("window._clicked"), Is.EqualTo(true));
+        Assert.That(await Page.EvaluateAsync<bool>("window._clicked"), Is.EqualTo(true));
     }
 
     [UpstreamTest("HT-019 should click in iframe with padding 2")]
-    public async Task ShouldClickInIframeWithPadding2(IPage page)
+    public async Task ShouldClickInIframeWithPadding2()
     {
-        await page.SetContentAsync(@"
+        await Page.SetContentAsync(@"
     <style>
       body, html, iframe { margin: 0; padding: 0; border: none; box-sizing: content-box; }
       iframe { background: gray; width: 200px; height: 200px; padding-top: 100px; }
@@ -482,15 +482,15 @@ public class HitTargetTests
       </script>
     ""></iframe>
   ");
-        var locator = page.FrameLocator("iframe").Locator("#target");
+        var locator = Page.FrameLocator("iframe").Locator("#target");
         await locator.ClickAsync();
-        Assert.That(await page.EvaluateAsync<bool>("window._clicked"), Is.EqualTo(true));
+        Assert.That(await Page.EvaluateAsync<bool>("window._clicked"), Is.EqualTo(true));
     }
 
     [UpstreamTest("HT-020 should click in custom element")]
-    public async Task ShouldClickInCustomElement(IPage page)
+    public async Task ShouldClickInCustomElement()
     {
-        await page.SetContentAsync(@"
+        await Page.SetContentAsync(@"
     <html>
       <body>
         <my-input></my-input>
@@ -507,14 +507,14 @@ public class HitTargetTests
       </body>
     </html>
   ");
-        await page.Locator("input").ClickAsync();
-        Assert.That(await page.EvaluateAsync<bool>("window.__clicked"), Is.EqualTo(true));
+        await Page.Locator("input").ClickAsync();
+        Assert.That(await Page.EvaluateAsync<bool>("window.__clicked"), Is.EqualTo(true));
     }
 
     [UpstreamTest("HT-021 should click in nested custom elements")]
-    public async Task ShouldClickInNestedCustomElements(IPage page)
+    public async Task ShouldClickInNestedCustomElements()
     {
-        await page.SetContentAsync(@"
+        await Page.SetContentAsync(@"
     <outer-host></outer-host>
     <script>
       customElements.define('inner-host', class extends HTMLElement {
@@ -535,14 +535,14 @@ public class HitTargetTests
       });
     </script>
   ");
-        await page.Locator("input").ClickAsync();
-        Assert.That(await page.EvaluateAsync<bool>("window.__clicked"), Is.EqualTo(true));
+        await Page.Locator("input").ClickAsync();
+        Assert.That(await Page.EvaluateAsync<bool>("window.__clicked"), Is.EqualTo(true));
     }
 
     [UpstreamTest("HT-022 should click an element inside nested closed shadow roots")]
-    public async Task ShouldClickAnElementInsideNestedClosedShadowRoots(IPage page)
+    public async Task ShouldClickAnElementInsideNestedClosedShadowRoots()
     {
-        await page.SetContentAsync(@"
+        await Page.SetContentAsync(@"
     <div id=container></div>
     <script>
       const input = document.createElement('input');
@@ -554,8 +554,8 @@ public class HitTargetTests
       window.__target = input;
     </script>
   ");
-        var handle = await page.EvaluateHandleAsync("window.__target");
+        var handle = await Page.EvaluateHandleAsync("window.__target");
         await ((IElementHandle)handle).ClickAsync();
-        Assert.That(await page.EvaluateAsync<bool>("window.__clicked"), Is.EqualTo(true));
+        Assert.That(await Page.EvaluateAsync<bool>("window.__clicked"), Is.EqualTo(true));
     }
 }

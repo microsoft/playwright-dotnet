@@ -22,24 +22,24 @@ using static Microsoft.Playwright.Tests.Fixtures.Utils;
 namespace Microsoft.Playwright.Tests.Library;
 
 /// <summary>Port of tests/library/screencast.spec.ts.</summary>
-public class ScreencastTests
+public class ScreencastTests : UpstreamBrowserTest
 {
     [SetUp]
     public void Slow() => Info.Slow();
 
-    [BeforeEach]
-    public static void Skip(string mode) => Info.Skip(mode != "default", "screencast is not available in remote mode");
+    [SetUp]
+    public void Skip() => Info.Skip(Mode != "default", "screencast is not available in remote mode");
 
-    [BeforeEach]
-    public static void Skip2(string video) => Info.Skip(video == "on", "conflicts with built-in video recording");
+    [SetUp]
+    public void Skip2() => Info.Skip(Video == "on", "conflicts with built-in video recording");
 
     [UpstreamTest("SC-001 screencast.start delivers frames via onFrame callback")]
-    public async Task ScreencastStartDeliversFramesViaOnFrameCallback(IBrowser browser, Server server, string trace, string browserName, bool isMac, bool headless, BrowserNewContextOptions contextOptions)
+    public async Task ScreencastStartDeliversFramesViaOnFrameCallback()
     {
-        Info.Skip(trace == "on", "trace=on has different screencast image configuration");
-        Info.Fixme(browserName == "firefox" && isMac && !headless, "wrong frame size in headed Firefox on Mac");
+        Info.Skip(Trace == "on", "trace=on has different screencast image configuration");
+        Info.Fixme(BrowserName == "firefox" && IsMac && !Headless, "wrong frame size in headed Firefox on Mac");
 
-        var context = await browser.NewContextAsync(new(contextOptions) { ViewportSize = new() { Width = 1000, Height = 400 } });
+        var context = await Browser.NewContextAsync(new(ContextOptions()) { ViewportSize = new() { Width = 1000, Height = 400 } });
         var page = await context.NewPageAsync();
 
         var frames = new List<byte[]>();
@@ -53,7 +53,7 @@ public class ScreencastTests
             },
             Size = size,
         });
-        await page.GotoAsync(server.EmptyPage);
+        await page.GotoAsync(Server.EmptyPage);
         await page.EvaluateAsync("() => document.body.style.backgroundColor = 'red'");
         await EnsureSomeFrames(page);
         await page.Screencast.StopAsync();
@@ -76,11 +76,11 @@ public class ScreencastTests
 
     [UpstreamTest("SC-002 applies backpressure while async onFrame callback is pending")]
     [LocalFixme("dotnet: the client never sends screencastFrameAck after the OnFrame callback (Screencast.OnScreencastFrame), so the driver stops sending frames: no frame comes after the test releases the callback")]
-    public async Task AppliesBackpressureWhileAsyncOnFrameCallbackIsPending(IBrowser browser, Server server, string trace, BrowserNewContextOptions contextOptions)
+    public async Task AppliesBackpressureWhileAsyncOnFrameCallbackIsPending()
     {
-        Info.Skip(trace == "on", "trace recording acknowledges screencast frames independently");
+        Info.Skip(Trace == "on", "trace recording acknowledges screencast frames independently");
 
-        var context = await browser.NewContextAsync(new(contextOptions) { ViewportSize = new() { Width = 500, Height = 400 } });
+        var context = await Browser.NewContextAsync(new(ContextOptions()) { ViewportSize = new() { Width = 500, Height = 400 } });
         var page = await context.NewPageAsync();
 
         var callbackDone = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
@@ -97,7 +97,7 @@ public class ScreencastTests
                 await callbackDone.Task;
             },
         });
-        await page.GotoAsync(server.EmptyPage);
+        await page.GotoAsync(Server.EmptyPage);
         await page.EvaluateAsync(@"() => {
     const animate = () => {
       document.body.style.backgroundColor = document.body.style.backgroundColor === 'red' ? 'blue' : 'red';
@@ -127,12 +127,12 @@ public class ScreencastTests
     }
 
     [UpstreamTest("SC-003 onFrame receives viewport size")]
-    public async Task OnFrameReceivesViewportSize(IBrowser browser, Server server, string trace, string browserName, bool isMac, bool headless, BrowserNewContextOptions contextOptions)
+    public async Task OnFrameReceivesViewportSize()
     {
-        Info.Skip(trace == "on", "trace=on has different screencast image configuration");
-        Info.Fixme(browserName == "firefox" && isMac && !headless, "wrong frame size in headed Firefox on Mac");
+        Info.Skip(Trace == "on", "trace=on has different screencast image configuration");
+        Info.Fixme(BrowserName == "firefox" && IsMac && !Headless, "wrong frame size in headed Firefox on Mac");
 
-        var context = await browser.NewContextAsync(new(contextOptions) { ViewportSize = new() { Width = 1000, Height = 400 } });
+        var context = await Browser.NewContextAsync(new(ContextOptions()) { ViewportSize = new() { Width = 1000, Height = 400 } });
         var page = await context.NewPageAsync();
 
         var frames = new List<(float timestamp, int viewportWidth, int viewportHeight)>();
@@ -145,7 +145,7 @@ public class ScreencastTests
             },
             Size = new() { Width = 500, Height = 400 },
         });
-        await page.GotoAsync(server.EmptyPage);
+        await page.GotoAsync(Server.EmptyPage);
         await EnsureSomeFrames(page);
         await page.Screencast.StopAsync();
 
@@ -161,9 +161,9 @@ public class ScreencastTests
     }
 
     [UpstreamTest("SC-004 start throws if screencast is already started")]
-    public async Task StartThrowsIfScreencastIsAlreadyStarted(IBrowser browser, BrowserNewContextOptions contextOptions)
+    public async Task StartThrowsIfScreencastIsAlreadyStarted()
     {
-        var context = await browser.NewContextAsync(new(contextOptions) { ViewportSize = new() { Width = 500, Height = 400 } });
+        var context = await Browser.NewContextAsync(new(ContextOptions()) { ViewportSize = new() { Width = 500, Height = 400 } });
         var page = await context.NewPageAsync();
 
         await page.Screencast.StartAsync(new() { OnFrame = _ => Task.CompletedTask });
@@ -175,11 +175,11 @@ public class ScreencastTests
     }
 
     [UpstreamTest("SC-005 start allows restart with different options after stop")]
-    public async Task StartAllowsRestartWithDifferentOptionsAfterStop(IBrowser browser, string trace, BrowserNewContextOptions contextOptions)
+    public async Task StartAllowsRestartWithDifferentOptionsAfterStop()
     {
-        Info.Skip(trace == "on", "trace=on enables screencast with different options");
+        Info.Skip(Trace == "on", "trace=on enables screencast with different options");
 
-        var context = await browser.NewContextAsync(new(contextOptions) { ViewportSize = new() { Width = 500, Height = 400 } });
+        var context = await Browser.NewContextAsync(new(ContextOptions()) { ViewportSize = new() { Width = 500, Height = 400 } });
         var page = await context.NewPageAsync();
 
         await page.Screencast.StartAsync(new() { OnFrame = _ => Task.CompletedTask, Size = new() { Width = 500, Height = 400 } });
@@ -191,10 +191,10 @@ public class ScreencastTests
     }
 
     [UpstreamTest("SC-006 start returns a disposable that stops screencast")]
-    public async Task StartReturnsADisposableThatStopsScreencast(IBrowser browser, Server server, string trace, BrowserNewContextOptions contextOptions)
+    public async Task StartReturnsADisposableThatStopsScreencast()
     {
-        Info.Skip(trace == "on", "trace=on has different screencast image configuration");
-        var context = await browser.NewContextAsync(new(contextOptions) { ViewportSize = new() { Width = 500, Height = 400 } });
+        Info.Skip(Trace == "on", "trace=on has different screencast image configuration");
+        var context = await Browser.NewContextAsync(new(ContextOptions()) { ViewportSize = new() { Width = 500, Height = 400 } });
         var page = await context.NewPageAsync();
 
         var frames = new List<byte[]>();
@@ -207,7 +207,7 @@ public class ScreencastTests
             },
             Size = new() { Width = 500, Height = 400 },
         });
-        await page.GotoAsync(server.EmptyPage);
+        await page.GotoAsync(Server.EmptyPage);
         await page.EvaluateAsync("() => document.body.style.backgroundColor = 'red'");
         await EnsureSomeFrames(page);
         await page.Screencast.StopAsync();
@@ -224,21 +224,21 @@ public class ScreencastTests
     }
 
     [UpstreamTest("SC-007 start/stop twice without path creates two files in artifactsDir")]
-    public async Task StartStopTwiceWithoutPathCreatesTwoFilesInArtifactsDir(IBrowserType browserType, TestInfo testInfo, BrowserTypeLaunchOptions launchOptions, BrowserNewContextOptions contextOptions)
+    public async Task StartStopTwiceWithoutPathCreatesTwoFilesInArtifactsDir()
     {
         Info.Slow();
-        var artifactsDir = testInfo.OutputPath("artifacts");
-        var browser = await browserType.LaunchAsync(new(launchOptions) { ArtifactsDir = artifactsDir });
+        var artifactsDir = Info.OutputPath("artifacts");
+        var browser = await BrowserType.LaunchAsync(new(LaunchOptions()) { ArtifactsDir = artifactsDir });
         var size = new ScreencastSize { Width = 800, Height = 800 };
-        var context = await browser.NewContextAsync(new(contextOptions) { ViewportSize = new() { Width = size.Width, Height = size.Height } });
+        var context = await browser.NewContextAsync(new(ContextOptions()) { ViewportSize = new() { Width = size.Width, Height = size.Height } });
         var page = await context.NewPageAsync();
 
-        await page.Screencast.StartAsync(new() { Path = testInfo.OutputPath("video1.webm"), Size = size });
+        await page.Screencast.StartAsync(new() { Path = Info.OutputPath("video1.webm"), Size = size });
         await page.EvaluateAsync("() => document.body.style.backgroundColor = 'red'");
         await EnsureSomeFrames(page);
         await page.Screencast.StopAsync();
 
-        await page.Screencast.StartAsync(new() { Path = testInfo.OutputPath("video2.webm"), Size = size });
+        await page.Screencast.StartAsync(new() { Path = Info.OutputPath("video2.webm"), Size = size });
         await page.EvaluateAsync("() => document.body.style.backgroundColor = 'blue'");
         await EnsureSomeFrames(page);
         await page.Screencast.StopAsync();
@@ -251,13 +251,13 @@ public class ScreencastTests
     }
 
     [UpstreamTest("SC-008 start should work when recordVideo is set")]
-    public async Task StartShouldWorkWhenRecordVideoIsSet(IBrowser browser, TestInfo testInfo, BrowserNewContextOptions contextOptions)
+    public async Task StartShouldWorkWhenRecordVideoIsSet()
     {
         Info.Slow();
 
-        var autoDir = testInfo.OutputPath("auto");
-        var manualDir = testInfo.OutputPath("manual");
-        var context = await browser.NewContextAsync(new(contextOptions)
+        var autoDir = Info.OutputPath("auto");
+        var manualDir = Info.OutputPath("manual");
+        var context = await Browser.NewContextAsync(new(ContextOptions())
         {
             RecordVideoDir = autoDir,
         });
@@ -276,11 +276,11 @@ public class ScreencastTests
     }
 
     [UpstreamTest("SC-009 start should record video with the requested fps")]
-    public async Task StartShouldRecordVideoWithTheRequestedFps(IBrowser browser, TestInfo testInfo, BrowserNewContextOptions contextOptions)
+    public async Task StartShouldRecordVideoWithTheRequestedFps()
     {
-        var context = await browser.NewContextAsync(contextOptions);
+        var context = await Browser.NewContextAsync(ContextOptions());
         var page = await context.NewPageAsync();
-        var videoPath = testInfo.OutputPath("video.webm");
+        var videoPath = Info.OutputPath("video.webm");
         await page.Screencast.StartAsync(new() { Path = videoPath, Fps = 60 });
         await EnsureSomeFrames(page);
         await page.Screencast.StopAsync();
@@ -289,25 +289,27 @@ public class ScreencastTests
     }
 
     [UpstreamTest("SC-010 start should throw on invalid fps")]
-    public async Task StartShouldThrowOnInvalidFps(IPage page, TestInfo testInfo)
+    public async Task StartShouldThrowOnInvalidFps()
     {
-        var error = await Catch(() => page.Screencast.StartAsync(new() { Path = testInfo.OutputPath("video.webm"), Fps = -1 }));
+        var page = await PageFixture();
+        var error = await Catch(() => page.Screencast.StartAsync(new() { Path = Info.OutputPath("video.webm"), Fps = -1 }));
         Assert.That(error.Message, Does.Contain("\"fps\" must be a positive number, got -1"));
     }
 
     [UpstreamTest("SC-011 start should fail when another recording is in progress")]
-    public async Task StartShouldFailWhenAnotherRecordingIsInProgress(IPage page, string trace, TestInfo testInfo)
+    public async Task StartShouldFailWhenAnotherRecordingIsInProgress()
     {
-        Info.Skip(trace == "on", "trace=on has different screencast image configuration");
-        await page.Screencast.StartAsync(new() { Path = testInfo.OutputPath("video.webm") });
-        var error = await Catch(() => page.Screencast.StartAsync(new() { Path = testInfo.OutputPath("video2.webm") }));
+        var page = await PageFixture();
+        Info.Skip(Trace == "on", "trace=on has different screencast image configuration");
+        await page.Screencast.StartAsync(new() { Path = Info.OutputPath("video.webm") });
+        var error = await Catch(() => page.Screencast.StartAsync(new() { Path = Info.OutputPath("video2.webm") }));
         Assert.That(error.Message, Does.Contain("Screencast is already started"));
     }
 
     [UpstreamTest("SC-012 stop should not fail when no recording is in progress")]
-    public async Task StopShouldNotFailWhenNoRecordingIsInProgress(IBrowser browser, BrowserNewContextOptions contextOptions)
+    public async Task StopShouldNotFailWhenNoRecordingIsInProgress()
     {
-        var context = await browser.NewContextAsync(contextOptions);
+        var context = await Browser.NewContextAsync(ContextOptions());
         var page = await context.NewPageAsync();
         // stop() is a no-op when screencast is not started.
         await page.Screencast.StopAsync();
@@ -315,11 +317,11 @@ public class ScreencastTests
     }
 
     [UpstreamTest("SC-013 start should finish when page is closed")]
-    public async Task StartShouldFinishWhenPageIsClosed(IBrowser browser, TestInfo testInfo, BrowserNewContextOptions contextOptions)
+    public async Task StartShouldFinishWhenPageIsClosed()
     {
-        var context = await browser.NewContextAsync(contextOptions);
+        var context = await Browser.NewContextAsync(ContextOptions());
         var page = await context.NewPageAsync();
-        var videoPath = testInfo.OutputPath("video.webm");
+        var videoPath = Info.OutputPath("video.webm");
         await page.Screencast.StartAsync(new() { Path = videoPath, Size = new() { Width = 800, Height = 800 } });
         await page.EvaluateAsync("() => document.body.style.backgroundColor = 'red'");
         await EnsureSomeFrames(page);
@@ -330,12 +332,12 @@ public class ScreencastTests
     }
 
     [UpstreamTest("SC-014 empty video")]
-    public async Task EmptyVideo(IBrowser browser, TestInfo testInfo, BrowserNewContextOptions contextOptions)
+    public async Task EmptyVideo()
     {
         var size = (width: 800, height: 800);
-        var context = await browser.NewContextAsync(new(contextOptions) { ViewportSize = new() { Width = size.width, Height = size.height } });
+        var context = await Browser.NewContextAsync(new(ContextOptions()) { ViewportSize = new() { Width = size.width, Height = size.height } });
         var page = await context.NewPageAsync();
-        var videoPath = testInfo.OutputPath("empty-video.webm");
+        var videoPath = Info.OutputPath("empty-video.webm");
         await page.Screencast.StartAsync(new() { Path = videoPath, Size = new() { Width = size.width, Height = size.height } });
         await page.Screencast.StopAsync();
         await context.CloseAsync();
@@ -343,13 +345,13 @@ public class ScreencastTests
     }
 
     [UpstreamTest("SC-015 start dispose stops recording")]
-    public async Task StartDisposeStopsRecording(IBrowser browser, TestInfo testInfo, BrowserNewContextOptions contextOptions)
+    public async Task StartDisposeStopsRecording()
     {
         Info.Slow();
         var size = (width: 800, height: 800);
-        var context = await browser.NewContextAsync(new(contextOptions) { ViewportSize = new() { Width = size.width, Height = size.height } });
+        var context = await Browser.NewContextAsync(new(ContextOptions()) { ViewportSize = new() { Width = size.width, Height = size.height } });
         var page = await context.NewPageAsync();
-        var videoPath = testInfo.OutputPath("dispose-video.webm");
+        var videoPath = Info.OutputPath("dispose-video.webm");
         var disposable = await page.Screencast.StartAsync(new() { Path = videoPath, Size = new() { Width = size.width, Height = size.height } });
         await page.EvaluateAsync("() => document.body.style.backgroundColor = 'red'");
         await EnsureSomeFrames(page);

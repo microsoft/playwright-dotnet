@@ -23,7 +23,7 @@ using static Microsoft.Playwright.Tests.Fixtures.Utils;
 namespace Microsoft.Playwright.Tests.Library;
 
 /// <summary>Port of tests/library/modernizr.spec.ts.</summary>
-public class ModernizrTests
+public class ModernizrTests : UpstreamBrowserTest
 {
     private static async Task<(Dictionary<string, object> actual, JsonObject expected)> CheckFeatures(string name, IBrowserContext context, Server server)
     {
@@ -43,17 +43,17 @@ public class ModernizrTests
     }
 
     [UpstreamTest("CA-030 Safari Desktop")]
-    public async Task SafariDesktop(IBrowser browser, string browserName, string platform, Server httpsServer, string channel, bool isFrozenWebkit, BrowserNewContextOptions contextOptions)
+    public async Task SafariDesktop()
     {
-        Info.Skip(browserName != "webkit");
-        Info.Skip(browserName == "webkit" && platform == "darwin" && RuntimeInformation.ProcessArchitecture == Architecture.X64, "Modernizr uses WebGL which is not available on Intel macOS - https://bugs.webkit.org/show_bug.cgi?id=278277");
-        Info.Skip(isFrozenWebkit);
-        var context = await browser.NewContextAsync(new(contextOptions)
+        Info.Skip(BrowserName != "webkit");
+        Info.Skip(BrowserName == "webkit" && Platform == "darwin" && RuntimeInformation.ProcessArchitecture == Architecture.X64, "Modernizr uses WebGL which is not available on Intel macOS - https://bugs.webkit.org/show_bug.cgi?id=278277");
+        Info.Skip(IsFrozenWebkit);
+        var context = await Browser.NewContextAsync(new(ContextOptions())
         {
             DeviceScaleFactor = 2,
             IgnoreHTTPSErrors = true,
         });
-        var (actual, expected) = await CheckFeatures("safari-26", context, httpsServer);
+        var (actual, expected) = await CheckFeatures("safari-26", context, HttpsServer);
 
         // Shipping Safari exposes `font-display` as a settable CSS property (element.style.fontDisplay === ''),
         // but open-source WebKit keeps it a @font-face descriptor only, so it is undefined here. No runtime
@@ -68,7 +68,7 @@ public class ModernizrTests
         expected["video"] = expected["video"]?.GetValueKind() is not (null or JsonValueKind.False);
         actual["video"] = actual["video"] is not (null or false);
 
-        if (platform == "linux" || channel == "webkit-wsl")
+        if (Platform == "linux" || Channel == "webkit-wsl")
         {
             expected["speechrecognition"] = false;
             expected["mediastream"] = false;
@@ -79,7 +79,7 @@ public class ModernizrTests
             expected.Remove("variablefonts");
         }
 
-        if (platform == "win32" && channel != "webkit-wsl")
+        if (Platform == "win32" && Channel != "webkit-wsl")
         {
             expected["getusermedia"] = false;
             expected["peerconnection"] = false;
@@ -106,19 +106,19 @@ public class ModernizrTests
     }
 
     [UpstreamTest("CA-031 Mobile Safari")]
-    public async Task MobileSafari(IPlaywright playwright, IBrowser browser, string browserName, string platform, Server httpsServer, string channel, bool isFrozenWebkit, BrowserNewContextOptions contextOptions)
+    public async Task MobileSafari()
     {
-        Info.Skip(browserName != "webkit");
-        Info.Skip(browserName == "webkit" && platform == "darwin" && RuntimeInformation.ProcessArchitecture == Architecture.X64, "Modernizr uses WebGL which is not available on Intel macOS - https://bugs.webkit.org/show_bug.cgi?id=278277");
-        Info.Skip(isFrozenWebkit);
-        var iPhone = playwright.Devices["iPhone 12"];
-        var context = await browser.NewContextAsync(MergeOptions(
+        Info.Skip(BrowserName != "webkit");
+        Info.Skip(BrowserName == "webkit" && Platform == "darwin" && RuntimeInformation.ProcessArchitecture == Architecture.X64, "Modernizr uses WebGL which is not available on Intel macOS - https://bugs.webkit.org/show_bug.cgi?id=278277");
+        Info.Skip(IsFrozenWebkit);
+        var iPhone = Playwright.Devices["iPhone 12"];
+        var context = await Browser.NewContextAsync(MergeOptions(
             new BrowserNewContextOptions(iPhone)
             {
                 IgnoreHTTPSErrors = true,
             },
-            contextOptions));
-        var (actual, expected) = await CheckFeatures("mobile-safari-26", context, httpsServer);
+            ContextOptions()));
+        var (actual, expected) = await CheckFeatures("mobile-safari-26", context, HttpsServer);
 
         {
             // All platforms.
@@ -144,7 +144,7 @@ public class ModernizrTests
             actual["video"] = actual["video"] is not (null or false);
         }
 
-        if (platform == "linux" || channel == "webkit-wsl")
+        if (Platform == "linux" || Channel == "webkit-wsl")
         {
             expected["speechrecognition"] = false;
             expected["mediastream"] = false;
@@ -155,7 +155,7 @@ public class ModernizrTests
             expected.Remove("variablefonts");
         }
 
-        if (platform == "win32" && channel != "webkit-wsl")
+        if (Platform == "win32" && Channel != "webkit-wsl")
         {
             expected["getusermedia"] = false;
             expected["peerconnection"] = false;

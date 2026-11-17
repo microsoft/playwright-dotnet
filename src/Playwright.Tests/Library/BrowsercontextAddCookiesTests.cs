@@ -21,17 +21,19 @@ using static Microsoft.Playwright.Tests.Fixtures.Utils;
 namespace Microsoft.Playwright.Tests.Library;
 
 /// <summary>Port of tests/library/browsercontext-add-cookies.spec.ts.</summary>
-public class BrowsercontextAddCookiesTests
+public class BrowsercontextAddCookiesTests : UpstreamBrowserTest
 {
     [UpstreamTest("CO-019 should work @smoke")]
-    public async Task ShouldWork(IBrowserContext context, IPage page, Server server)
+    public async Task ShouldWork()
     {
-        await page.GotoAsync(server.EmptyPage);
+        var context = await ContextFixture();
+        var page = await PageFixture();
+        await page.GotoAsync(Server.EmptyPage);
         await context.AddCookiesAsync(new[]
         {
             new Cookie
             {
-                Url = server.EmptyPage,
+                Url = Server.EmptyPage,
                 Name = "password",
                 Value = "123456",
             },
@@ -40,8 +42,10 @@ public class BrowsercontextAddCookiesTests
     }
 
     [UpstreamTest("CO-020 should work with expires=-1")]
-    public async Task ShouldWorkWithExpires1(IBrowserContext context, IPage page)
+    public async Task ShouldWorkWithExpires1()
     {
+        var context = await ContextFixture();
+        var page = await PageFixture();
         await context.AddCookiesAsync(new[]
         {
             new Cookie
@@ -65,8 +69,10 @@ public class BrowsercontextAddCookiesTests
     }
 
     [UpstreamTest("CO-021 should add cookies with empty value")]
-    public async Task ShouldAddCookiesWithEmptyValue(IBrowserContext context, IPage page, Server server)
+    public async Task ShouldAddCookiesWithEmptyValue()
     {
+        var context = await ContextFixture();
+        var page = await PageFixture();
         await context.AddCookiesAsync(new[]
         {
             new Cookie
@@ -90,8 +96,9 @@ public class BrowsercontextAddCookiesTests
     }
 
     [UpstreamTest("CO-022 should set cookies with SameSite attribute and no secure attribute")]
-    public async Task ShouldSetCookiesWithSameSiteAttributeAndNoSecureAttribute(IBrowserContext context, string browserName, bool isWindows, bool isLinux, string defaultSameSiteCookieValue, string channel, bool isBidi)
+    public async Task ShouldSetCookiesWithSameSiteAttributeAndNoSecureAttribute()
     {
+        var context = await ContextFixture();
         // Use domain instead of URL to ensure that the `secure` attribute is not set.
         await context.AddCookiesAsync(new[]
         {
@@ -137,8 +144,8 @@ public class BrowsercontextAddCookiesTests
             expires = -1,
             httpOnly = false,
             secure = false,
-            sameSite = defaultSameSiteCookieValue,
-        }, .. (browserName == "chromium" || (browserName == "webkit" && (isLinux || channel == "webkit-wsl")) || isBidi ? Array.Empty<object>() : [new
+            sameSite = DefaultSameSiteCookieValue,
+        }, .. (BrowserName == "chromium" || (BrowserName == "webkit" && (IsLinux || Channel == "webkit-wsl")) || IsBidi ? Array.Empty<object>() : [new
         {
             name = "same-site-none",
             value = "1",
@@ -157,7 +164,7 @@ public class BrowsercontextAddCookiesTests
             expires = -1,
             httpOnly = false,
             secure = false,
-            sameSite = (browserName == "webkit" && isWindows && channel != "webkit-wsl") ? "None" : "Lax",
+            sameSite = (BrowserName == "webkit" && IsWindows && Channel != "webkit-wsl") ? "None" : "Lax",
         }, new
         {
             name = "same-site-strict",
@@ -167,14 +174,16 @@ public class BrowsercontextAddCookiesTests
             expires = -1,
             httpOnly = false,
             secure = false,
-            sameSite = (browserName == "webkit" && isWindows && channel != "webkit-wsl") ? "None" : "Strict",
+            sameSite = (BrowserName == "webkit" && IsWindows && Channel != "webkit-wsl") ? "None" : "Strict",
         }]));
     }
 
     [UpstreamTest("CO-023 should roundtrip cookie")]
-    public async Task ShouldRoundtripCookie(IBrowserContext context, IPage page, Server server)
+    public async Task ShouldRoundtripCookie()
     {
-        await page.GotoAsync(server.EmptyPage);
+        var context = await ContextFixture();
+        var page = await PageFixture();
+        await page.GotoAsync(Server.EmptyPage);
         // @see https://en.wikipedia.org/wiki/Year_2038_problem
         var date = new DateTimeOffset(new DateTime(2038, 1, 1)).ToUnixTimeMilliseconds();
         var documentCookie = await page.EvaluateAsync<string>(@"timestamp => {
@@ -194,26 +203,28 @@ public class BrowsercontextAddCookiesTests
     }
 
     [UpstreamTest("CO-024 should send cookie header")]
-    public async Task ShouldSendCookieHeader(Server server, IBrowserContext context)
+    public async Task ShouldSendCookieHeader()
     {
+        var context = await ContextFixture();
         var cookie = "";
-        server.SetRoute("/empty.html", (req, res) =>
+        Server.SetRoute("/empty.html", (req, res) =>
         {
             cookie = req.Headers["cookie"];
             res.End();
         });
-        await context.AddCookiesAsync(new[] { new Cookie { Url = server.EmptyPage, Name = "cookie", Value = "value" } });
+        await context.AddCookiesAsync(new[] { new Cookie { Url = Server.EmptyPage, Name = "cookie", Value = "value" } });
         var page = await context.NewPageAsync();
-        await page.GotoAsync(server.EmptyPage);
+        await page.GotoAsync(Server.EmptyPage);
         Assert.That(cookie, Is.EqualTo("cookie=value"));
     }
 
     [UpstreamTest("CO-025 should isolate cookies in browser contexts")]
-    public async Task ShouldIsolateCookiesInBrowserContexts(IBrowserContext context, Server server, IBrowser browser, BrowserNewContextOptions contextOptions)
+    public async Task ShouldIsolateCookiesInBrowserContexts()
     {
-        var anotherContext = await browser.NewContextAsync(contextOptions);
-        await context.AddCookiesAsync(new[] { new Cookie { Url = server.EmptyPage, Name = "isolatecookie", Value = "page1value" } });
-        await anotherContext.AddCookiesAsync(new[] { new Cookie { Url = server.EmptyPage, Name = "isolatecookie", Value = "page2value" } });
+        var context = await ContextFixture();
+        var anotherContext = await Browser.NewContextAsync(ContextOptions());
+        await context.AddCookiesAsync(new[] { new Cookie { Url = Server.EmptyPage, Name = "isolatecookie", Value = "page1value" } });
+        await anotherContext.AddCookiesAsync(new[] { new Cookie { Url = Server.EmptyPage, Name = "isolatecookie", Value = "page2value" } });
 
         var cookies1 = await context.CookiesAsync();
         var cookies2 = await anotherContext.CookiesAsync();
@@ -227,28 +238,29 @@ public class BrowsercontextAddCookiesTests
     }
 
     [UpstreamTest("CO-026 should isolate session cookies")]
-    public async Task ShouldIsolateSessionCookies(IBrowserContext context, Server server, IBrowser browser, BrowserNewContextOptions contextOptions)
+    public async Task ShouldIsolateSessionCookies()
     {
-        server.SetRoute("/setcookie.html", (req, res) =>
+        var context = await ContextFixture();
+        Server.SetRoute("/setcookie.html", (req, res) =>
         {
             res.SetHeader("Set-Cookie", "session=value");
             res.End();
         });
         {
             var page = await context.NewPageAsync();
-            await page.GotoAsync(server.Prefix + "/setcookie.html");
+            await page.GotoAsync(Server.Prefix + "/setcookie.html");
         }
         {
             var page = await context.NewPageAsync();
-            await page.GotoAsync(server.EmptyPage);
+            await page.GotoAsync(Server.EmptyPage);
             var cookies = await context.CookiesAsync();
             Assert.That(cookies.Count, Is.EqualTo(1));
             Assert.That(string.Join(",", cookies.Select(c => c.Value)), Is.EqualTo("value"));
         }
         {
-            var context2 = await browser.NewContextAsync(contextOptions);
+            var context2 = await Browser.NewContextAsync(ContextOptions());
             var page = await context2.NewPageAsync();
-            await page.GotoAsync(server.EmptyPage);
+            await page.GotoAsync(Server.EmptyPage);
             var cookies = await context2.CookiesAsync();
             // .NET: cookies[0] of an empty list throws, in JavaScript it is undefined.
             Assert.That(cookies.ElementAtOrDefault(0)?.Name, Is.Null);
@@ -257,20 +269,21 @@ public class BrowsercontextAddCookiesTests
     }
 
     [UpstreamTest("CO-027 should isolate persistent cookies")]
-    public async Task ShouldIsolatePersistentCookies(IBrowserContext context, Server server, IBrowser browser, BrowserNewContextOptions contextOptions)
+    public async Task ShouldIsolatePersistentCookies()
     {
-        server.SetRoute("/setcookie.html", (req, res) =>
+        var context = await ContextFixture();
+        Server.SetRoute("/setcookie.html", (req, res) =>
         {
             res.SetHeader("Set-Cookie", "persistent=persistent-value; max-age=3600");
             res.End();
         });
         var page = await context.NewPageAsync();
-        await page.GotoAsync(server.Prefix + "/setcookie.html");
+        await page.GotoAsync(Server.Prefix + "/setcookie.html");
 
         var context1 = context;
-        var context2 = await browser.NewContextAsync(contextOptions);
+        var context2 = await Browser.NewContextAsync(ContextOptions());
         var (page1, page2) = await PromiseAll(context1.NewPageAsync(), context2.NewPageAsync());
-        await PromiseAll(page1.GotoAsync(server.EmptyPage), page2.GotoAsync(server.EmptyPage));
+        await PromiseAll(page1.GotoAsync(Server.EmptyPage), page2.GotoAsync(Server.EmptyPage));
         var (cookies1, cookies2) = await PromiseAll(context1.CookiesAsync(), context2.CookiesAsync());
         Assert.That(cookies1.Count, Is.EqualTo(1));
         Assert.That(cookies1[0].Name, Is.EqualTo("persistent"));
@@ -280,62 +293,65 @@ public class BrowsercontextAddCookiesTests
     }
 
     [UpstreamTest("CO-028 should isolate send cookie header")]
-    public async Task ShouldIsolateSendCookieHeader(Server server, IBrowserContext context, IBrowser browser, BrowserNewContextOptions contextOptions)
+    public async Task ShouldIsolateSendCookieHeader()
     {
+        var context = await ContextFixture();
         var cookie = "";
-        server.SetRoute("/empty.html", (req, res) =>
+        Server.SetRoute("/empty.html", (req, res) =>
         {
             cookie = req.Headers["cookie"] ?? "";
             res.End();
         });
-        await context.AddCookiesAsync(new[] { new Cookie { Url = server.EmptyPage, Name = "sendcookie", Value = "value" } });
+        await context.AddCookiesAsync(new[] { new Cookie { Url = Server.EmptyPage, Name = "sendcookie", Value = "value" } });
         {
             var page = await context.NewPageAsync();
-            await page.GotoAsync(server.EmptyPage);
+            await page.GotoAsync(Server.EmptyPage);
             Assert.That(cookie, Is.EqualTo("sendcookie=value"));
         }
         {
             // .NET: a block can not declare a variable with the name of a parameter: context2 is the context of upstream.
-            var context2 = await browser.NewContextAsync(contextOptions);
+            var context2 = await Browser.NewContextAsync(ContextOptions());
             var page = await context2.NewPageAsync();
-            await page.GotoAsync(server.EmptyPage);
+            await page.GotoAsync(Server.EmptyPage);
             Assert.That(cookie, Is.EqualTo(""));
             await context2.CloseAsync();
         }
     }
 
     [UpstreamTest("CO-029 should isolate cookies between launches")]
-    public async Task ShouldIsolateCookiesBetweenLaunches(IBrowserType browserType, Server server, BrowserTypeLaunchOptions launchOptions, BrowserNewContextOptions contextOptions)
+    public async Task ShouldIsolateCookiesBetweenLaunches()
     {
         Info.Slow();
 
-        var browser1 = await browserType.LaunchAsync(launchOptions);
-        var context1 = await browser1.NewContextAsync(contextOptions);
-        await context1.AddCookiesAsync(new[] { new Cookie { Url = server.EmptyPage, Name = "cookie-in-context-1", Value = "value", Expires = (float)((DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() / 1000d) + 10000) } });
+        var browser1 = await BrowserType.LaunchAsync(LaunchOptions());
+        var context1 = await browser1.NewContextAsync(ContextOptions());
+        await context1.AddCookiesAsync(new[] { new Cookie { Url = Server.EmptyPage, Name = "cookie-in-context-1", Value = "value", Expires = (float)((DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() / 1000d) + 10000) } });
         await browser1.CloseAsync();
 
-        var browser2 = await browserType.LaunchAsync(launchOptions);
-        var context2 = await browser2.NewContextAsync(contextOptions);
+        var browser2 = await BrowserType.LaunchAsync(LaunchOptions());
+        var context2 = await browser2.NewContextAsync(ContextOptions());
         var cookies = await context2.CookiesAsync();
         Assert.That(cookies.Count, Is.EqualTo(0));
         await browser2.CloseAsync();
     }
 
     [UpstreamTest("CO-030 should set multiple cookies")]
-    public async Task ShouldSetMultipleCookies(IBrowserContext context, IPage page, Server server)
+    public async Task ShouldSetMultipleCookies()
     {
-        await page.GotoAsync(server.EmptyPage);
+        var context = await ContextFixture();
+        var page = await PageFixture();
+        await page.GotoAsync(Server.EmptyPage);
         await context.AddCookiesAsync(new[]
         {
             new Cookie
             {
-                Url = server.EmptyPage,
+                Url = Server.EmptyPage,
                 Name = "multiple-1",
                 Value = "123456",
             },
             new Cookie
             {
-                Url = server.EmptyPage,
+                Url = Server.EmptyPage,
                 Name = "multiple-2",
                 Value = "bar",
             },
@@ -351,13 +367,14 @@ public class BrowsercontextAddCookiesTests
     }
 
     [UpstreamTest("CO-031 should have |expires| set to |-1| for session cookies")]
-    public async Task ShouldHaveExpiresSetTo1ForSessionCookies(IBrowserContext context, Server server)
+    public async Task ShouldHaveExpiresSetTo1ForSessionCookies()
     {
+        var context = await ContextFixture();
         await context.AddCookiesAsync(new[]
         {
             new Cookie
             {
-                Url = server.EmptyPage,
+                Url = Server.EmptyPage,
                 Name = "expires",
                 Value = "123456",
             },
@@ -367,13 +384,14 @@ public class BrowsercontextAddCookiesTests
     }
 
     [UpstreamTest("CO-032 should set cookie with reasonable defaults")]
-    public async Task ShouldSetCookieWithReasonableDefaults(IBrowserContext context, Server server, string defaultSameSiteCookieValue)
+    public async Task ShouldSetCookieWithReasonableDefaults()
     {
+        var context = await ContextFixture();
         await context.AddCookiesAsync(new[]
         {
             new Cookie
             {
-                Url = server.EmptyPage,
+                Url = Server.EmptyPage,
                 Name = "defaults",
                 Value = "123456",
             },
@@ -385,25 +403,27 @@ public class BrowsercontextAddCookiesTests
             {
                 name = "defaults",
                 value = "123456",
-                domain = server.Hostname,
+                domain = Server.Hostname,
                 path = "/",
                 expires = -1,
                 httpOnly = false,
                 secure = false,
-                sameSite = defaultSameSiteCookieValue,
+                sameSite = DefaultSameSiteCookieValue,
             },
         });
     }
 
     [UpstreamTest("CO-033 should set a cookie with a path")]
-    public async Task ShouldSetACookieWithAPath(IBrowserContext context, IPage page, Server server, string browserName, bool isWindows, string channel)
+    public async Task ShouldSetACookieWithAPath()
     {
-        await page.GotoAsync(server.Prefix + "/grid.html");
+        var context = await ContextFixture();
+        var page = await PageFixture();
+        await page.GotoAsync(Server.Prefix + "/grid.html");
         await context.AddCookiesAsync(new[]
         {
             new Cookie
             {
-                Domain = server.Hostname,
+                Domain = Server.Hostname,
                 Path = "/grid.html",
                 Name = "gridcookie",
                 Value = "GRID",
@@ -416,30 +436,31 @@ public class BrowsercontextAddCookiesTests
             {
                 name = "gridcookie",
                 value = "GRID",
-                domain = server.Hostname,
+                domain = Server.Hostname,
                 path = "/grid.html",
                 expires = -1,
                 httpOnly = false,
                 secure = false,
-                sameSite = (browserName == "webkit" && isWindows && channel != "webkit-wsl") ? "None" : "Lax",
+                sameSite = (BrowserName == "webkit" && IsWindows && Channel != "webkit-wsl") ? "None" : "Lax",
             },
         });
         Assert.That(await page.EvaluateAsync<string>("document.cookie"), Is.EqualTo("gridcookie=GRID"));
-        await page.GotoAsync(server.EmptyPage);
+        await page.GotoAsync(Server.EmptyPage);
         Assert.That(await page.EvaluateAsync<string>("document.cookie"), Is.EqualTo(""));
-        await page.GotoAsync(server.Prefix + "/grid.html");
+        await page.GotoAsync(Server.Prefix + "/grid.html");
         Assert.That(await page.EvaluateAsync<string>("document.cookie"), Is.EqualTo("gridcookie=GRID"));
     }
 
     [UpstreamTest("CO-034 should not set a cookie with blank page URL")]
-    public async Task ShouldNotSetACookieWithBlankPageURL(IBrowserContext context, Server server)
+    public async Task ShouldNotSetACookieWithBlankPageURL()
     {
+        var context = await ContextFixture();
         Exception error = null;
         try
         {
             await context.AddCookiesAsync(new[]
             {
-                new Cookie { Url = server.EmptyPage, Name = "example-cookie", Value = "best" },
+                new Cookie { Url = Server.EmptyPage, Name = "example-cookie", Value = "best" },
                 new Cookie { Url = "about:blank", Name = "example-cookie-blank", Value = "best" },
             });
         }
@@ -452,8 +473,9 @@ public class BrowsercontextAddCookiesTests
     }
 
     [UpstreamTest("CO-035 should not set a cookie on a data URL page")]
-    public async Task ShouldNotSetACookieOnADataURLPage(IBrowserContext context)
+    public async Task ShouldNotSetACookieOnADataURLPage()
     {
+        var context = await ContextFixture();
         Exception error = null;
         try
         {
@@ -467,9 +489,11 @@ public class BrowsercontextAddCookiesTests
     }
 
     [UpstreamTest("CO-036 should default to setting secure cookie for HTTPS websites")]
-    public async Task ShouldDefaultToSettingSecureCookieForHTTPSWebsites(IBrowserContext context, IPage page, Server server)
+    public async Task ShouldDefaultToSettingSecureCookieForHTTPSWebsites()
     {
-        await page.GotoAsync(server.EmptyPage);
+        var context = await ContextFixture();
+        var page = await PageFixture();
+        await page.GotoAsync(Server.EmptyPage);
         const string SECURE_URL = "https://example.com";
         await context.AddCookiesAsync(new[]
         {
@@ -485,9 +509,11 @@ public class BrowsercontextAddCookiesTests
     }
 
     [UpstreamTest("CO-037 should be able to set unsecure cookie for HTTP website")]
-    public async Task ShouldBeAbleToSetUnsecureCookieForHTTPWebsite(IBrowserContext context, IPage page, Server server)
+    public async Task ShouldBeAbleToSetUnsecureCookieForHTTPWebsite()
     {
-        await page.GotoAsync(server.EmptyPage);
+        var context = await ContextFixture();
+        var page = await PageFixture();
+        await page.GotoAsync(Server.EmptyPage);
         const string HTTP_URL = "http://example.com";
         await context.AddCookiesAsync(new[]
         {
@@ -503,9 +529,11 @@ public class BrowsercontextAddCookiesTests
     }
 
     [UpstreamTest("CO-038 should set a cookie on a different domain")]
-    public async Task ShouldSetACookieOnADifferentDomain(IBrowserContext context, IPage page, Server server, string browserName, bool isWindows, string channel)
+    public async Task ShouldSetACookieOnADifferentDomain()
     {
-        await page.GotoAsync(server.EmptyPage);
+        var context = await ContextFixture();
+        var page = await PageFixture();
+        await page.GotoAsync(Server.EmptyPage);
         await context.AddCookiesAsync(new[]
         {
             new Cookie
@@ -528,18 +556,20 @@ public class BrowsercontextAddCookiesTests
                 expires = -1,
                 httpOnly = false,
                 secure = true,
-                sameSite = (browserName == "webkit" && isWindows && channel != "webkit-wsl") ? "None" : "Lax",
+                sameSite = (BrowserName == "webkit" && IsWindows && Channel != "webkit-wsl") ? "None" : "Lax",
             },
         });
     }
 
     [UpstreamTest("CO-039 should set cookies for a frame")]
-    public async Task ShouldSetCookiesForAFrame(IBrowserContext context, IPage page, Server server)
+    public async Task ShouldSetCookiesForAFrame()
     {
-        await page.GotoAsync(server.EmptyPage);
+        var context = await ContextFixture();
+        var page = await PageFixture();
+        await page.GotoAsync(Server.EmptyPage);
         await context.AddCookiesAsync(new[]
         {
-            new Cookie { Url = server.Prefix, Name = "frame-cookie", Value = "value" },
+            new Cookie { Url = Server.Prefix, Name = "frame-cookie", Value = "value" },
         });
         await page.EvaluateAsync(@"src => {
     let fulfill;
@@ -549,15 +579,17 @@ public class BrowsercontextAddCookiesTests
     iframe.onload = fulfill;
     iframe.src = src;
     return promise;
-  }", server.Prefix + "/grid.html");
+  }", Server.Prefix + "/grid.html");
 
         Assert.That(await page.Frames[1].EvaluateAsync<string>("document.cookie"), Is.EqualTo("frame-cookie=value"));
     }
 
     [UpstreamTest("CO-040 should allow unnamed cookies")]
-    public async Task ShouldAllowUnnamedCookies(IPage page, IBrowserContext context, Server server, string browserName, string platform, bool isBidi)
+    public async Task ShouldAllowUnnamedCookies()
     {
-        server.SetRoute("/cookies", (req, res) =>
+        var page = await PageFixture();
+        var context = await ContextFixture();
+        Server.SetRoute("/cookies", (req, res) =>
         {
             res.Write(req.Headers["cookie"] ?? "undefined-on-server");
             res.End();
@@ -566,14 +598,14 @@ public class BrowsercontextAddCookiesTests
         {
             new Cookie
             {
-                Url = server.EmptyPage,
+                Url = Server.EmptyPage,
                 Name = "",
                 Value = "unnamed-via-add-cookies",
             },
         });
         // Round-trip behavior
-        var resp = await page.GotoAsync(server.Prefix + "/cookies");
-        if ((browserName == "webkit" && platform == "darwin") || (browserName == "firefox" && isBidi))
+        var resp = await page.GotoAsync(Server.Prefix + "/cookies");
+        if ((BrowserName == "webkit" && Platform == "darwin") || (BrowserName == "firefox" && IsBidi))
         {
             Assert.That(await resp.TextAsync(), Is.EqualTo("undefined-on-server"));
             Assert.That(await page.EvaluateAsync<string>("document.cookie"), Is.EqualTo(""));
@@ -584,11 +616,11 @@ public class BrowsercontextAddCookiesTests
             Assert.That(await page.EvaluateAsync<string>("document.cookie"), Is.EqualTo("unnamed-via-add-cookies"));
         }
         // Within PW behavior
-        await page.GotoAsync(server.EmptyPage);
+        await page.GotoAsync(Server.EmptyPage);
         await page.EvaluateAsync("() => document.cookie = '=unnamed-via-js;'");
         // .NET: CookiesAsync gives BrowserContextCookiesResult objects, and AddCookiesAsync takes Cookie objects.
         await context.AddCookiesAsync((await context.CookiesAsync()).Select(c => new Cookie { Name = c.Name, Value = c.Value, Domain = c.Domain, Path = c.Path, Expires = c.Expires, HttpOnly = c.HttpOnly, Secure = c.Secure, SameSite = c.SameSite, PartitionKey = c.PartitionKey }));
-        if ((browserName == "webkit" && platform == "darwin") || (browserName == "firefox" && isBidi))
+        if ((BrowserName == "webkit" && Platform == "darwin") || (BrowserName == "firefox" && IsBidi))
         {
             Assert.That(await page.EvaluateAsync<string>("document.cookie"), Is.EqualTo(""));
         }
@@ -599,15 +631,15 @@ public class BrowsercontextAddCookiesTests
     }
 
     [UpstreamTest("CO-041 should set secure cookies on secure WebSocket")]
-    public async Task ShouldSetSecureCookiesOnSecureWebSocket(ContextFactory contextFactory, Server httpsServer)
+    public async Task ShouldSetSecureCookiesOnSecureWebSocket()
     {
         var receivedWebSocketHeaders = new TaskCompletionSource<ServerHeaders>(TaskCreationOptions.RunContinuationsAsynchronously);
-        httpsServer.OnceWebSocketConnection((ws, req) => receivedWebSocketHeaders.TrySetResult(req.Headers));
-        var context = await contextFactory(new() { IgnoreHTTPSErrors = true });
+        HttpsServer.OnceWebSocketConnection((ws, req) => receivedWebSocketHeaders.TrySetResult(req.Headers));
+        var context = await ContextFactory(new() { IgnoreHTTPSErrors = true });
         var page = await context.NewPageAsync();
-        await page.GotoAsync(httpsServer.EmptyPage);
-        await context.AddCookiesAsync(new[] { new Cookie { Domain = new Uri(httpsServer.Prefix).Host, Path = "/", Name = "foo", Value = "bar", Secure = true } });
-        await page.EvaluateAsync("hostname => new WebSocket(`wss://${hostname}/ws`)", httpsServer.Host);
+        await page.GotoAsync(HttpsServer.EmptyPage);
+        await context.AddCookiesAsync(new[] { new Cookie { Domain = new Uri(HttpsServer.Prefix).Host, Path = "/", Name = "foo", Value = "bar", Secure = true } });
+        await page.EvaluateAsync("hostname => new WebSocket(`wss://${hostname}/ws`)", HttpsServer.Host);
         var headers = await receivedWebSocketHeaders.Task;
         Assert.That(headers["cookie"], Is.EqualTo("foo=bar"));
     }

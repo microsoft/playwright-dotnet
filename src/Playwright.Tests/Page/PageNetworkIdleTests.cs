@@ -22,12 +22,12 @@ using static Microsoft.Playwright.Tests.Fixtures.Utils;
 namespace Microsoft.Playwright.Tests.Page;
 
 /// <summary>Port of tests/page/page-network-idle.spec.ts.</summary>
-public class PageNetworkIdleTests
+public class PageNetworkIdleTests : UpstreamPageTest
 {
     [UpstreamTest("NE-070 should navigate to empty page with networkidle")]
-    public async Task ShouldNavigateToEmptyPageWithNetworkidle(IPage page, Server server)
+    public async Task ShouldNavigateToEmptyPageWithNetworkidle()
     {
-        var response = await page.GotoAsync(server.EmptyPage, new() { WaitUntil = WaitUntilState.NetworkIdle });
+        var response = await Page.GotoAsync(Server.EmptyPage, new() { WaitUntil = WaitUntilState.NetworkIdle });
         Assert.That(response.Status, Is.EqualTo(200));
     }
 
@@ -100,91 +100,91 @@ public class PageNetworkIdleTests
     }
 
     [UpstreamTest("NE-071 should wait for networkidle to succeed navigation")]
-    public async Task ShouldWaitForNetworkidleToSucceedNavigation(IPage page, Server server)
+    public async Task ShouldWaitForNetworkidleToSucceedNavigation()
     {
-        await NetworkIdleTest(page.MainFrame, server, () =>
+        await NetworkIdleTest(Page.MainFrame, Server, () =>
         {
-            return page.GotoAsync(server.Prefix + "/networkidle.html", new() { WaitUntil = WaitUntilState.NetworkIdle });
+            return Page.GotoAsync(Server.Prefix + "/networkidle.html", new() { WaitUntil = WaitUntilState.NetworkIdle });
         });
     }
 
     [UpstreamTest("NE-072 should wait for networkidle to succeed navigation with request from previous navigation")]
-    public async Task ShouldWaitForNetworkidleToSucceedNavigationWithRequestFromPreviousNavigation(IPage page, Server server)
+    public async Task ShouldWaitForNetworkidleToSucceedNavigationWithRequestFromPreviousNavigation()
     {
-        await page.GotoAsync(server.EmptyPage);
-        server.SetRoute("/foo.js", (req, res) => { });
-        await page.SetContentAsync("<script>fetch('foo.js');</script>");
-        await NetworkIdleTest(page.MainFrame, server, () =>
+        await Page.GotoAsync(Server.EmptyPage);
+        Server.SetRoute("/foo.js", (req, res) => { });
+        await Page.SetContentAsync("<script>fetch('foo.js');</script>");
+        await NetworkIdleTest(Page.MainFrame, Server, () =>
         {
-            return page.GotoAsync(server.Prefix + "/networkidle.html", new() { WaitUntil = WaitUntilState.NetworkIdle });
+            return Page.GotoAsync(Server.Prefix + "/networkidle.html", new() { WaitUntil = WaitUntilState.NetworkIdle });
         });
     }
 
     [UpstreamTest("NE-073 should wait for networkidle in waitForNavigation")]
-    public async Task ShouldWaitForNetworkidleInWaitForNavigation(IPage page, Server server)
+    public async Task ShouldWaitForNetworkidleInWaitForNavigation()
     {
-        await NetworkIdleTest(page.MainFrame, server, () =>
+        await NetworkIdleTest(Page.MainFrame, Server, () =>
         {
-            var promise = page.WaitForNavigationAsync(new() { WaitUntil = WaitUntilState.NetworkIdle });
-            IgnoreErrors(page.GotoAsync(server.Prefix + "/networkidle.html"));
+            var promise = Page.WaitForNavigationAsync(new() { WaitUntil = WaitUntilState.NetworkIdle });
+            IgnoreErrors(Page.GotoAsync(Server.Prefix + "/networkidle.html"));
             return promise;
         });
     }
 
     [UpstreamTest("NE-074 should wait for networkidle in setContent")]
-    public async Task ShouldWaitForNetworkidleInSetContent(IPage page, Server server)
+    public async Task ShouldWaitForNetworkidleInSetContent()
     {
-        await page.GotoAsync(server.EmptyPage);
-        await NetworkIdleTest(page.MainFrame, server, () =>
+        await Page.GotoAsync(Server.EmptyPage);
+        await NetworkIdleTest(Page.MainFrame, Server, () =>
         {
-            return page.SetContentAsync("<script src='networkidle.js'></script>", new() { WaitUntil = WaitUntilState.NetworkIdle });
+            return Page.SetContentAsync("<script src='networkidle.js'></script>", new() { WaitUntil = WaitUntilState.NetworkIdle });
         }, true);
     }
 
     [UpstreamTest("NE-075 should wait for networkidle in setContent with request from previous navigation")]
-    public async Task ShouldWaitForNetworkidleInSetContentWithRequestFromPreviousNavigation(IPage page, Server server)
+    public async Task ShouldWaitForNetworkidleInSetContentWithRequestFromPreviousNavigation()
     {
-        await page.GotoAsync(server.EmptyPage);
-        server.SetRoute("/foo.js", (req, res) => { });
-        await page.SetContentAsync("<script>fetch('foo.js');</script>");
-        await NetworkIdleTest(page.MainFrame, server, () =>
+        await Page.GotoAsync(Server.EmptyPage);
+        Server.SetRoute("/foo.js", (req, res) => { });
+        await Page.SetContentAsync("<script>fetch('foo.js');</script>");
+        await NetworkIdleTest(Page.MainFrame, Server, () =>
         {
-            return page.SetContentAsync("<script src='networkidle.js'></script>", new() { WaitUntil = WaitUntilState.NetworkIdle });
+            return Page.SetContentAsync("<script src='networkidle.js'></script>", new() { WaitUntil = WaitUntilState.NetworkIdle });
         }, true);
     }
 
     [UpstreamTest("NE-076 should wait for networkidle when navigating iframe")]
-    public async Task ShouldWaitForNetworkidleWhenNavigatingIframe(IPage page, Server server)
+    public async Task ShouldWaitForNetworkidleWhenNavigatingIframe()
     {
-        await page.GotoAsync(server.Prefix + "/frames/one-frame.html");
-        var frame = page.MainFrame.ChildFrames[0];
-        await NetworkIdleTest(frame, server, () => frame.GotoAsync(server.Prefix + "/networkidle.html", new() { WaitUntil = WaitUntilState.NetworkIdle }));
+        await Page.GotoAsync(Server.Prefix + "/frames/one-frame.html");
+        var frame = Page.MainFrame.ChildFrames[0];
+        await NetworkIdleTest(frame, Server, () => frame.GotoAsync(Server.Prefix + "/networkidle.html", new() { WaitUntil = WaitUntilState.NetworkIdle }));
     }
 
     [UpstreamTest("NE-077 should wait for networkidle in setContent from the child frame")]
-    public async Task ShouldWaitForNetworkidleInSetContentFromTheChildFrame(IPage page, Server server)
+    public async Task ShouldWaitForNetworkidleInSetContentFromTheChildFrame()
     {
-        await page.GotoAsync(server.EmptyPage);
-        await NetworkIdleTest(page.MainFrame, server, () =>
+        await Page.GotoAsync(Server.EmptyPage);
+        await NetworkIdleTest(Page.MainFrame, Server, () =>
         {
-            return page.SetContentAsync("<iframe src='networkidle.html'></iframe>", new() { WaitUntil = WaitUntilState.NetworkIdle });
+            return Page.SetContentAsync("<iframe src='networkidle.html'></iframe>", new() { WaitUntil = WaitUntilState.NetworkIdle });
         }, true);
     }
 
     [UpstreamTest("NE-078 should wait for networkidle from the child frame")]
-    public async Task ShouldWaitForNetworkidleFromTheChildFrame(IPage page, Server server)
+    public async Task ShouldWaitForNetworkidleFromTheChildFrame()
     {
-        await NetworkIdleTest(page.MainFrame, server, () =>
+        await NetworkIdleTest(Page.MainFrame, Server, () =>
         {
-            return page.GotoAsync(server.Prefix + "/networkidle-frame.html", new() { WaitUntil = WaitUntilState.NetworkIdle });
+            return Page.GotoAsync(Server.Prefix + "/networkidle-frame.html", new() { WaitUntil = WaitUntilState.NetworkIdle });
         });
     }
 
     [UpstreamTest("NE-079 should wait for networkidle from the popup")]
-    public async Task ShouldWaitForNetworkidleFromThePopup(IPage page, Server server)
+    public async Task ShouldWaitForNetworkidleFromThePopup()
     {
-        await page.GotoAsync(server.EmptyPage);
-        await page.SetContentAsync(@"
+        await Page.GotoAsync(Server.EmptyPage);
+        await Page.SetContentAsync(@"
     <button id=box1 onclick=""window.open('./popup/popup.html')"">Button1</button>
     <button id=box2 onclick=""window.open('./popup/popup.html')"">Button2</button>
     <button id=box3 onclick=""window.open('./popup/popup.html')"">Button3</button>
@@ -194,25 +194,25 @@ public class PageNetworkIdleTests
         for (var i = 1; i < 6; ++i)
         {
             var popup = await PromiseAll(
-                page.WaitForPopupAsync(),
-                page.ClickAsync("#box" + i));
+                Page.WaitForPopupAsync(),
+                Page.ClickAsync("#box" + i));
             await popup.WaitForLoadStateAsync(LoadState.NetworkIdle);
         }
     }
 
     [UpstreamTest("NE-080 should wait for networkidle when iframe attaches and detaches")]
-    public async Task ShouldWaitForNetworkidleWhenIframeAttachesAndDetaches(IPage page, Server server)
+    public async Task ShouldWaitForNetworkidleWhenIframeAttachesAndDetaches()
     {
-        server.SetRoute("/empty.html", (req, res) => { });
+        Server.SetRoute("/empty.html", (req, res) => { });
         var done = false;
         // .NET: page.setContent(...).then(() => done = true) is a local function that is called in its place.
         async Task SetContent()
         {
-            await page.SetContentAsync($@"
+            await Page.SetContentAsync($@"
     <body>
       <script>
         const iframe = document.createElement('iframe');
-        iframe.src = {JsonSerializer.Serialize(server.EmptyPage)};
+        iframe.src = {JsonSerializer.Serialize(Server.EmptyPage)};
         document.body.appendChild(iframe);
       </script>
     </body>
@@ -220,9 +220,9 @@ public class PageNetworkIdleTests
             done = true;
         }
         var promise = SetContent();
-        await page.WaitForTimeoutAsync(600);
+        await Page.WaitForTimeoutAsync(600);
         Assert.That(done, Is.EqualTo(false));
-        await page.EvaluateAsync(@"() => {
+        await Page.EvaluateAsync(@"() => {
     document.querySelector('iframe').remove();
   }");
         await promise;
@@ -230,10 +230,10 @@ public class PageNetworkIdleTests
     }
 
     [UpstreamTest("NE-081 should work after repeated navigations in the same page")]
-    public async Task ShouldWorkAfterRepeatedNavigationsInTheSamePage(IPage page, Server server)
+    public async Task ShouldWorkAfterRepeatedNavigationsInTheSamePage()
     {
         var requestCount = 0;
-        await page.RouteAsync("**/empty.html", route =>
+        await Page.RouteAsync("**/empty.html", route =>
         {
             IgnoreErrors(route.FulfillAsync(new()
             {
@@ -245,7 +245,7 @@ public class PageNetworkIdleTests
             }));
         });
 
-        await page.RouteAsync("**/sample", route =>
+        await Page.RouteAsync("**/sample", route =>
         {
             requestCount++;
             IgnoreErrors(route.FulfillAsync(new()
@@ -258,16 +258,16 @@ public class PageNetworkIdleTests
             }));
         });
 
-        await page.GotoAsync(server.EmptyPage, new() { WaitUntil = WaitUntilState.NetworkIdle });
+        await Page.GotoAsync(Server.EmptyPage, new() { WaitUntil = WaitUntilState.NetworkIdle });
         Assert.That(requestCount, Is.EqualTo(1));
-        await page.GotoAsync(server.EmptyPage, new() { WaitUntil = WaitUntilState.NetworkIdle });
+        await Page.GotoAsync(Server.EmptyPage, new() { WaitUntil = WaitUntilState.NetworkIdle });
         Assert.That(requestCount, Is.EqualTo(2));
     }
 
     [UpstreamTest("NE-082 should not wait for an open EventSource connection")]
-    public async Task ShouldNotWaitForAnOpenEventSourceConnection(IPage page, Server server)
+    public async Task ShouldNotWaitForAnOpenEventSourceConnection()
     {
-        server.SetRoute("/sse", (req, res) =>
+        Server.SetRoute("/sse", (req, res) =>
         {
             res.WriteHead(200, new()
             {
@@ -277,20 +277,20 @@ public class PageNetworkIdleTests
             });
             res.Write("data: hello\n\n");
         });
-        server.SetRoute("/sse-page.html", (req, res) =>
+        Server.SetRoute("/sse-page.html", (req, res) =>
         {
             res.WriteHead(200, new() { ["Content-Type"] = "text/html" });
             res.End("<script>new EventSource('/sse');</script>");
         });
 
-        var response = await page.GotoAsync(server.Prefix + "/sse-page.html", new() { WaitUntil = WaitUntilState.NetworkIdle });
+        var response = await Page.GotoAsync(Server.Prefix + "/sse-page.html", new() { WaitUntil = WaitUntilState.NetworkIdle });
         Assert.That(response.Status, Is.EqualTo(200));
     }
 
     [UpstreamTest("NE-083 should not wait for an open EventSource connection in setContent")]
-    public async Task ShouldNotWaitForAnOpenEventSourceConnectionInSetContent(IPage page, Server server)
+    public async Task ShouldNotWaitForAnOpenEventSourceConnectionInSetContent()
     {
-        server.SetRoute("/sse", (req, res) =>
+        Server.SetRoute("/sse", (req, res) =>
         {
             res.WriteHead(200, new()
             {
@@ -301,13 +301,13 @@ public class PageNetworkIdleTests
             res.Write("data: hello\n\n");
         });
 
-        await page.GotoAsync(server.EmptyPage);
-        await page.SetContentAsync(@"<script>
+        await Page.GotoAsync(Server.EmptyPage);
+        await Page.SetContentAsync(@"<script>
     window.__sseOpened = new Promise(resolve => {
       const es = new EventSource('/sse');
       es.onmessage = () => resolve();
     });
   </script>", new() { WaitUntil = WaitUntilState.NetworkIdle });
-        await page.EvaluateAsync("() => window['__sseOpened']");
+        await Page.EvaluateAsync("() => window['__sseOpened']");
     }
 }

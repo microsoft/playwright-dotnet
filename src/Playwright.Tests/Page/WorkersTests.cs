@@ -22,35 +22,35 @@ using static Microsoft.Playwright.Tests.Fixtures.Utils;
 namespace Microsoft.Playwright.Tests.Page;
 
 /// <summary>Port of tests/page/workers.spec.ts.</summary>
-public class WorkersTests
+public class WorkersTests : UpstreamPageTest
 {
     [UpstreamTest("WO-001 Page.workers @smoke")]
-    public async Task PageWorkers(IPage page, Server server, string browserName, int browserMajorVersion)
+    public async Task PageWorkers()
     {
-        Info.Skip(browserName == "chromium" && browserMajorVersion < 143, "needs workerScriptLoaded event");
+        Info.Skip(BrowserName == "chromium" && BrowserMajorVersion < 143, "needs workerScriptLoaded event");
 
         await PromiseAll(
-            page.WaitForWorkerAsync(),
-            page.GotoAsync(server.Prefix + "/worker/worker.html"));
-        var worker = page.Workers[0];
+            Page.WaitForWorkerAsync(),
+            Page.GotoAsync(Server.Prefix + "/worker/worker.html"));
+        var worker = Page.Workers[0];
         Assert.That(worker.Url, Does.Contain("worker.js"));
 
         Assert.That(await worker.EvaluateAsync<string>("() => self['workerFunction']()"), Is.EqualTo("worker function result"));
 
-        await page.GotoAsync(server.EmptyPage);
-        Assert.That(page.Workers.Count, Is.EqualTo(0));
+        await Page.GotoAsync(Server.EmptyPage);
+        Assert.That(Page.Workers.Count, Is.EqualTo(0));
     }
 
     [UpstreamTest("WO-002 should emit created and destroyed events")]
     [LocalFixme("dotnet: the message is \"Target page, context or browser has been closed\", upstream expects the name of the call before it, \"jsHandle.getProperty: \"")]
-    public async Task ShouldEmitCreatedAndDestroyedEvents(IPage page)
+    public async Task ShouldEmitCreatedAndDestroyedEvents()
     {
-        var workerCreatedPromise = page.WaitForWorkerAsync();
-        var workerObj = await page.EvaluateHandleAsync("() => new Worker(URL.createObjectURL(new Blob(['1'], { type: 'application/javascript' })))");
+        var workerCreatedPromise = Page.WaitForWorkerAsync();
+        var workerObj = await Page.EvaluateHandleAsync("() => new Worker(URL.createObjectURL(new Blob(['1'], { type: 'application/javascript' })))");
         var worker = await workerCreatedPromise;
         var workerThisObj = await worker.EvaluateHandleAsync("this");
         var workerDestroyedPromise = Once<IWorker>(h => worker.Close += h, h => worker.Close -= h);
-        await page.EvaluateAsync("workerObj => workerObj.terminate()", workerObj);
+        await Page.EvaluateAsync("workerObj => workerObj.terminate()", workerObj);
         Assert.That(await workerDestroyedPromise, Is.SameAs(worker));
         var error = await Catch(() => workerThisObj.GetPropertyAsync("self"));
         Assert.That(error.Message, Does.Contain("jsHandle.getProperty"));
@@ -59,43 +59,43 @@ public class WorkersTests
 
     [UpstreamTest("WO-003 should reject in-flight evaluate and emit close when page closes")]
     [LocalFixme("dotnet: the message is \"Target page, context or browser has been closed\", upstream expects the name of the call before it, \"worker.evaluate: \" (only in chromium and firefox); dotnet: the message is \"Target page, context or browser has been closed\" or \"Execution context was destroyed, most likely because of a navigation.\", upstream expects the name of the call before it, \"worker.evaluate: \" (only in webkit)")]
-    public async Task ShouldRejectInFlightEvaluateAndEmitCloseWhenPageCloses(IPage page, Server server)
+    public async Task ShouldRejectInFlightEvaluateAndEmitCloseWhenPageCloses()
     {
-        await page.GotoAsync(server.EmptyPage);
+        await Page.GotoAsync(Server.EmptyPage);
         var (worker, _) = await PromiseAll(
-            page.WaitForWorkerAsync(),
-            page.EvaluateAsync("() => new Worker(URL.createObjectURL(new Blob(['1'], { type: 'application/javascript' })))"));
+            Page.WaitForWorkerAsync(),
+            Page.EvaluateAsync("() => new Worker(URL.createObjectURL(new Blob(['1'], { type: 'application/javascript' })))"));
         var closePromise = Once<IWorker>(h => worker.Close += h, h => worker.Close -= h);
         var evalPromise = Catch(() => worker.EvaluateAsync<object>("() => new Promise(() => {})"));
-        await page.CloseAsync();
+        await Page.CloseAsync();
         var error = await evalPromise;
         Assert.That(error.Message, Does.Contain("worker.evaluate"));
         Assert.That(await closePromise, Is.SameAs(worker));
     }
 
     [UpstreamTest("WO-004 should report console logs")]
-    public async Task ShouldReportConsoleLogs(IPage page)
+    public async Task ShouldReportConsoleLogs()
     {
         var (message, _) = await PromiseAll(
-            page.WaitForConsoleMessageAsync(),
-            page.EvaluateAsync("() => new Worker(URL.createObjectURL(new Blob(['console.log(1)'], { type: 'application/javascript' })))"));
+            Page.WaitForConsoleMessageAsync(),
+            Page.EvaluateAsync("() => new Worker(URL.createObjectURL(new Blob(['console.log(1)'], { type: 'application/javascript' })))"));
         Assert.That(message.Text, Is.EqualTo("1"));
         // Firefox's juggler had an issue that reported worker blob urls as frame urls.
-        Assert.That(page.Url, Does.Not.Contain("blob"));
+        Assert.That(Page.Url, Does.Not.Contain("blob"));
     }
 
     [UpstreamTest("WO-005 should have timestamp on worker console messages")]
     [LocalFixme("dotnet: ConsoleMessage.Timestamp is a float, which holds the milliseconds since the epoch in steps of 131072 only: the value is up to 65 seconds away from the time of the message, and the test passes only when the rounded value falls in its window by chance")]
-    public async Task ShouldHaveTimestampOnWorkerConsoleMessages(IPage page, bool isAndroid, string channel)
+    public async Task ShouldHaveTimestampOnWorkerConsoleMessages()
     {
-        Info.Skip(isAndroid, "there is a time difference between android emulator and host machine");
-        Info.Skip(channel == "webkit-wsl", "there is a time difference between WSL VM and host machine");
+        Info.Skip(IsAndroid, "there is a time difference between android emulator and host machine");
+        Info.Skip(Channel == "webkit-wsl", "there is a time difference between WSL VM and host machine");
 
         // .NET: a number of JavaScript is a double. NUnit compares a float with a long as two floats.
         double before = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() - 1;  // Account for the rounding of fractional timestamps.
         var (message, _) = await PromiseAll(
-            page.WaitForConsoleMessageAsync(),
-            page.EvaluateAsync("() => new Worker(URL.createObjectURL(new Blob(['console.log(\"ts\")'], { type: 'application/javascript' })))"));
+            Page.WaitForConsoleMessageAsync(),
+            Page.EvaluateAsync("() => new Worker(URL.createObjectURL(new Blob(['console.log(\"ts\")'], { type: 'application/javascript' })))"));
         double after = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() + 1;  // Account for the rounding of fractional timestamps.
         Assert.That(message.Text, Is.EqualTo("ts"));
         Assert.That(message.Timestamp, Is.GreaterThanOrEqualTo(before));
@@ -103,27 +103,27 @@ public class WorkersTests
     }
 
     [UpstreamTest("WO-006 should not report console logs from workers twice")]
-    public async Task ShouldNotReportConsoleLogsFromWorkersTwice(IPage page)
+    public async Task ShouldNotReportConsoleLogsFromWorkersTwice()
     {
         var messages = new List<string>();
-        page.Console += (_, msg) => messages.Add(msg.Text);
+        Page.Console += (_, msg) => messages.Add(msg.Text);
         await PromiseAll(
-            page.EvaluateAsync("() => new Worker(URL.createObjectURL(new Blob(['console.log(1); console.log(2);'], { type: 'application/javascript' })))"),
-            page.WaitForConsoleMessageAsync(new() { Predicate = msg => msg.Text == "1" }),
-            page.WaitForConsoleMessageAsync(new() { Predicate = msg => msg.Text == "2" }));
+            Page.EvaluateAsync("() => new Worker(URL.createObjectURL(new Blob(['console.log(1); console.log(2);'], { type: 'application/javascript' })))"),
+            Page.WaitForConsoleMessageAsync(new() { Predicate = msg => msg.Text == "1" }),
+            Page.WaitForConsoleMessageAsync(new() { Predicate = msg => msg.Text == "2" }));
         Assert.That(messages, Is.EqualTo(new[] { "1", "2" }));
         // Firefox's juggler had an issue that reported worker blob urls as frame urls.
-        Assert.That(page.Url, Does.Not.Contain("blob"));
+        Assert.That(Page.Url, Does.Not.Contain("blob"));
     }
 
     [UpstreamTest("WO-007 should have JSHandles for console logs")]
-    public async Task ShouldHaveJSHandlesForConsoleLogs(IPage page, string browserName)
+    public async Task ShouldHaveJSHandlesForConsoleLogs()
     {
         var logPromise = new TaskCompletionSource<IConsoleMessage>(TaskCreationOptions.RunContinuationsAsynchronously);
-        page.Console += (_, x) => logPromise.TrySetResult(x);
-        await page.EvaluateAsync("() => new Worker(URL.createObjectURL(new Blob(['console.log(1,2,3,this)'], { type: 'application/javascript' })))");
+        Page.Console += (_, x) => logPromise.TrySetResult(x);
+        await Page.EvaluateAsync("() => new Worker(URL.createObjectURL(new Blob(['console.log(1,2,3,this)'], { type: 'application/javascript' })))");
         var log = await logPromise.Task;
-        if (browserName != "firefox")
+        if (BrowserName != "firefox")
         {
             Assert.That(log.Text, Is.EqualTo("1 2 3 DedicatedWorkerGlobalScope"));
         }
@@ -136,30 +136,30 @@ public class WorkersTests
     }
 
     [UpstreamTest("WO-008 should evaluate")]
-    public async Task ShouldEvaluate(IPage page, string browserName, int browserMajorVersion)
+    public async Task ShouldEvaluate()
     {
-        Info.Skip(browserName == "chromium" && browserMajorVersion < 143, "needs workerScriptLoaded event");
+        Info.Skip(BrowserName == "chromium" && BrowserMajorVersion < 143, "needs workerScriptLoaded event");
 
-        var workerCreatedPromise = page.WaitForWorkerAsync();
-        await page.EvaluateAsync("() => new Worker(URL.createObjectURL(new Blob(['console.log(1)'], { type: 'application/javascript' })))");
+        var workerCreatedPromise = Page.WaitForWorkerAsync();
+        await Page.EvaluateAsync("() => new Worker(URL.createObjectURL(new Blob(['console.log(1)'], { type: 'application/javascript' })))");
         var worker = await workerCreatedPromise;
         Assert.That(await worker.EvaluateAsync<int>("1+1"), Is.EqualTo(2));
     }
 
     [UpstreamTest("WO-009 should report console event on the worker")]
-    public async Task ShouldReportConsoleEventOnTheWorker(IPage page, string browserName, int browserMajorVersion)
+    public async Task ShouldReportConsoleEventOnTheWorker()
     {
-        Info.Skip(browserName == "chromium" && browserMajorVersion < 143, "needs workerScriptLoaded event");
+        Info.Skip(BrowserName == "chromium" && BrowserMajorVersion < 143, "needs workerScriptLoaded event");
 
         var (worker, _) = await PromiseAll(
-            page.WaitForWorkerAsync(),
-            page.EvaluateAsync(@"() => {
+            Page.WaitForWorkerAsync(),
+            Page.EvaluateAsync(@"() => {
       window.worker = new Worker(URL.createObjectURL(new Blob(['42'], { type: 'application/javascript' })));
     }"));
         var (message1, message2, message3, _) = await PromiseAll(
             Once<IConsoleMessage>(h => worker.Console += h, h => worker.Console -= h),
-            page.WaitForConsoleMessageAsync(),
-            page.Context.WaitForConsoleMessageAsync(),
+            Page.WaitForConsoleMessageAsync(),
+            Page.Context.WaitForConsoleMessageAsync(),
             worker.EvaluateAsync<object>(@"() => {
       console.log('hello from worker');
     }"));
@@ -169,13 +169,13 @@ public class WorkersTests
     }
 
     [UpstreamTest("WO-010 should report console event on the worker when not listening on page or context")]
-    public async Task ShouldReportConsoleEventOnTheWorkerWhenNotListeningOnPageOrContext(IPage page, string browserName, int browserMajorVersion)
+    public async Task ShouldReportConsoleEventOnTheWorkerWhenNotListeningOnPageOrContext()
     {
-        Info.Skip(browserName == "chromium" && browserMajorVersion < 143, "needs workerScriptLoaded event");
+        Info.Skip(BrowserName == "chromium" && BrowserMajorVersion < 143, "needs workerScriptLoaded event");
 
         var (worker, _) = await PromiseAll(
-            page.WaitForWorkerAsync(),
-            page.EvaluateAsync(@"() => {
+            Page.WaitForWorkerAsync(),
+            Page.EvaluateAsync(@"() => {
       window.worker = new Worker(URL.createObjectURL(new Blob(['42'], { type: 'application/javascript' })));
     }"));
         var (message, _) = await PromiseAll(
@@ -187,11 +187,11 @@ public class WorkersTests
     }
 
     [UpstreamTest("WO-011 should report errors")]
-    public async Task ShouldReportErrors(IPage page)
+    public async Task ShouldReportErrors()
     {
         var errorPromise = new TaskCompletionSource<string>(TaskCreationOptions.RunContinuationsAsynchronously);
-        page.PageError += (_, x) => errorPromise.TrySetResult(x);
-        await page.EvaluateAsync(@"() => new Worker(URL.createObjectURL(new Blob([`
+        Page.PageError += (_, x) => errorPromise.TrySetResult(x);
+        await Page.EvaluateAsync(@"() => new Worker(URL.createObjectURL(new Blob([`
     setTimeout(() => {
       // Do a console.log just to check that we do not confuse it with an error.
       console.log('hey');
@@ -203,13 +203,13 @@ public class WorkersTests
     }
 
     [UpstreamTest("WO-012 should clear upon navigation")]
-    public async Task ShouldClearUponNavigation(Server server, IPage page)
+    public async Task ShouldClearUponNavigation()
     {
-        await page.GotoAsync(server.EmptyPage);
-        var workerCreatedPromise = page.WaitForWorkerAsync();
-        await page.EvaluateAsync("() => new Worker(URL.createObjectURL(new Blob(['console.log(1)'], { type: 'application/javascript' })))");
+        await Page.GotoAsync(Server.EmptyPage);
+        var workerCreatedPromise = Page.WaitForWorkerAsync();
+        await Page.EvaluateAsync("() => new Worker(URL.createObjectURL(new Blob(['console.log(1)'], { type: 'application/javascript' })))");
         var worker = await workerCreatedPromise;
-        Assert.That(page.Workers.Count, Is.EqualTo(1));
+        Assert.That(Page.Workers.Count, Is.EqualTo(1));
         var destroyed = false;
         EventHandler<IWorker> once = null;
         once = (_, _) =>
@@ -218,19 +218,19 @@ public class WorkersTests
             destroyed = true;
         };
         worker.Close += once;
-        await page.GotoAsync(server.Prefix + "/one-style.html");
+        await Page.GotoAsync(Server.Prefix + "/one-style.html");
         Assert.That(destroyed, Is.EqualTo(true));
-        Assert.That(page.Workers.Count, Is.EqualTo(0));
+        Assert.That(Page.Workers.Count, Is.EqualTo(0));
     }
 
     [UpstreamTest("WO-013 should clear upon cross-process navigation")]
-    public async Task ShouldClearUponCrossProcessNavigation(Server server, IPage page)
+    public async Task ShouldClearUponCrossProcessNavigation()
     {
-        await page.GotoAsync(server.EmptyPage);
-        var workerCreatedPromise = page.WaitForWorkerAsync();
-        await page.EvaluateAsync("() => new Worker(URL.createObjectURL(new Blob(['console.log(1)'], { type: 'application/javascript' })))");
+        await Page.GotoAsync(Server.EmptyPage);
+        var workerCreatedPromise = Page.WaitForWorkerAsync();
+        await Page.EvaluateAsync("() => new Worker(URL.createObjectURL(new Blob(['console.log(1)'], { type: 'application/javascript' })))");
         var worker = await workerCreatedPromise;
-        Assert.That(page.Workers.Count, Is.EqualTo(1));
+        Assert.That(Page.Workers.Count, Is.EqualTo(1));
         var destroyed = false;
         EventHandler<IWorker> once = null;
         once = (_, _) =>
@@ -239,59 +239,59 @@ public class WorkersTests
             destroyed = true;
         };
         worker.Close += once;
-        await page.GotoAsync(server.CrossProcessPrefix + "/empty.html");
+        await Page.GotoAsync(Server.CrossProcessPrefix + "/empty.html");
         Assert.That(destroyed, Is.EqualTo(true));
-        Assert.That(page.Workers.Count, Is.EqualTo(0));
+        Assert.That(Page.Workers.Count, Is.EqualTo(0));
     }
 
     [UpstreamTest("WO-014 should attribute network activity for worker inside iframe to the iframe")]
-    public async Task ShouldAttributeNetworkActivityForWorkerInsideIframeToTheIframe(IPage page, Server server, string browserName, int browserMajorVersion)
+    public async Task ShouldAttributeNetworkActivityForWorkerInsideIframeToTheIframe()
     {
-        Info.Skip(browserName == "firefox" && browserMajorVersion < 114, "https://github.com/microsoft/playwright/issues/21760");
-        Info.Skip(browserName == "chromium" && browserMajorVersion < 149, "needs TargetInfo.parentFrameId for workers");
+        Info.Skip(BrowserName == "firefox" && BrowserMajorVersion < 114, "https://github.com/microsoft/playwright/issues/21760");
+        Info.Skip(BrowserName == "chromium" && BrowserMajorVersion < 149, "needs TargetInfo.parentFrameId for workers");
 
-        await page.GotoAsync(server.Prefix + "/empty.html");
+        await Page.GotoAsync(Server.Prefix + "/empty.html");
         var (worker, frame) = await PromiseAll(
-            page.WaitForWorkerAsync(),
-            AttachFrame(page, "frame1", server.Prefix + "/worker/worker.html"));
-        var url = server.Prefix + "/one-style.css";
+            Page.WaitForWorkerAsync(),
+            AttachFrame(Page, "frame1", Server.Prefix + "/worker/worker.html"));
+        var url = Server.Prefix + "/one-style.css";
         var (request, _) = await PromiseAll(
-            page.WaitForRequestAsync(url),
+            Page.WaitForRequestAsync(url),
             worker.EvaluateAsync<object>("url => fetch(url).then(response => response.text()).then(console.log)", url));
         Assert.That(request.Url, Is.EqualTo(url));
         Assert.That(request.Frame, Is.SameAs(frame));
     }
 
     [UpstreamTest("WO-015 should report network activity")]
-    public async Task ShouldReportNetworkActivity(IPage page, Server server, string browserName, int browserMajorVersion, Func<string, string> asset)
+    public async Task ShouldReportNetworkActivity()
     {
-        Info.Skip(browserName == "firefox" && browserMajorVersion < 114, "https://github.com/microsoft/playwright/issues/21760");
-        Info.Skip(browserName == "chromium" && browserMajorVersion < 143, "needs workerScriptLoaded event");
+        Info.Skip(BrowserName == "firefox" && BrowserMajorVersion < 114, "https://github.com/microsoft/playwright/issues/21760");
+        Info.Skip(BrowserName == "chromium" && BrowserMajorVersion < 143, "needs workerScriptLoaded event");
 
         var (worker, _) = await PromiseAll(
-            page.WaitForWorkerAsync(),
-            page.GotoAsync(server.Prefix + "/worker/worker.html"));
-        var url = server.Prefix + "/one-style.css";
-        var requestPromise = page.WaitForRequestAsync(url);
-        var responsePromise = page.WaitForResponseAsync(url);
+            Page.WaitForWorkerAsync(),
+            Page.GotoAsync(Server.Prefix + "/worker/worker.html"));
+        var url = Server.Prefix + "/one-style.css";
+        var requestPromise = Page.WaitForRequestAsync(url);
+        var responsePromise = Page.WaitForResponseAsync(url);
         await worker.EvaluateAsync<object>("url => fetch(url).then(response => response.text()).then(console.log)", url);
         var request = await requestPromise;
         var response = await responsePromise;
         Assert.That(request.Url, Is.EqualTo(url));
         Assert.That(response.Request, Is.SameAs(request));
         Assert.That(response.Ok, Is.EqualTo(true));
-        Assert.That(await response.TextAsync(), Is.EqualTo(File.ReadAllText(asset("one-style.css"))));
+        Assert.That(await response.TextAsync(), Is.EqualTo(File.ReadAllText(Asset("one-style.css"))));
     }
 
     [UpstreamTest("WO-016 should report network activity on worker creation")]
-    public async Task ShouldReportNetworkActivityOnWorkerCreation(IPage page, Server server, string browserName, int browserMajorVersion)
+    public async Task ShouldReportNetworkActivityOnWorkerCreation()
     {
-        Info.Skip(browserName == "firefox" && browserMajorVersion < 114, "https://github.com/microsoft/playwright/issues/21760");
-        await page.GotoAsync(server.EmptyPage);
-        var url = server.Prefix + "/one-style.css";
-        var requestPromise = page.WaitForRequestAsync(url);
-        var responsePromise = page.WaitForResponseAsync(url);
-        await page.EvaluateAsync(@"url => new Worker(URL.createObjectURL(new Blob([`
+        Info.Skip(BrowserName == "firefox" && BrowserMajorVersion < 114, "https://github.com/microsoft/playwright/issues/21760");
+        await Page.GotoAsync(Server.EmptyPage);
+        var url = Server.Prefix + "/one-style.css";
+        var requestPromise = Page.WaitForRequestAsync(url);
+        var responsePromise = Page.WaitForResponseAsync(url);
+        await Page.EvaluateAsync(@"url => new Worker(URL.createObjectURL(new Blob([`
     fetch(""${url}"").then(response => response.text()).then(console.log);
   `], { type: 'application/javascript' })))", url);
         var request = await requestPromise;
@@ -302,14 +302,14 @@ public class WorkersTests
     }
 
     [UpstreamTest("WO-017 should report worker script as network request")]
-    public async Task ShouldReportWorkerScriptAsNetworkRequest(IPage page, Server server)
+    public async Task ShouldReportWorkerScriptAsNetworkRequest()
     {
-        await page.GotoAsync(server.EmptyPage);
+        await Page.GotoAsync(Server.EmptyPage);
         var (request1, request2, _) = await PromiseAll(
-            page.WaitForRequestAsync(r => r.Url.Contains("worker.js")),
-            page.WaitForRequestFinishedAsync(new() { Predicate = r => r.Url.Contains("worker.js") }),
-            page.EvaluateAsync("() => window.w = new Worker('/worker/worker.js')"));
-        Assert.That(request1.Url, Is.EqualTo(server.Prefix + "/worker/worker.js"));
+            Page.WaitForRequestAsync(r => r.Url.Contains("worker.js")),
+            Page.WaitForRequestFinishedAsync(new() { Predicate = r => r.Url.Contains("worker.js") }),
+            Page.EvaluateAsync("() => window.w = new Worker('/worker/worker.js')"));
+        Assert.That(request1.Url, Is.EqualTo(Server.Prefix + "/worker/worker.js"));
         Assert.That(request1, Is.SameAs(request2));
         var response = await request1.ResponseAsync();
         var text = await response.TextAsync();
@@ -317,64 +317,64 @@ public class WorkersTests
     }
 
     [UpstreamTest("WO-018 should report worker script as network request after redirect")]
-    public async Task ShouldReportWorkerScriptAsNetworkRequestAfterRedirect(IPage page, Server server, string browserName)
+    public async Task ShouldReportWorkerScriptAsNetworkRequestAfterRedirect()
     {
-        Info.Fixme(browserName == "chromium", "Chromium does not report the redirect because it is not plumbed to the worker target");
+        Info.Fixme(BrowserName == "chromium", "Chromium does not report the redirect because it is not plumbed to the worker target");
 
-        await page.GotoAsync(server.EmptyPage);
-        server.SetRedirect("/worker.js", "/worker2.js");
-        server.SetRoute("/worker2.js", (req, res) =>
+        await Page.GotoAsync(Server.EmptyPage);
+        Server.SetRedirect("/worker.js", "/worker2.js");
+        Server.SetRoute("/worker2.js", (req, res) =>
         {
             res.SetHeader("Content-Type", "text/javascript");
             res.End("console.log('hello from the worker');");
         });
         var (request, _, _) = await PromiseAll(
-            page.WaitForRequestAsync(r => r.Url.Contains("worker.js")),
-            page.WaitForConsoleMessageAsync(new() { Predicate = msg => msg.Text.Contains("hello from the worker") }),
-            page.EvaluateAsync("() => window.w = new Worker('/worker.js')"));
-        Assert.That(request.Url, Is.EqualTo(server.Prefix + "/worker.js"));
+            Page.WaitForRequestAsync(r => r.Url.Contains("worker.js")),
+            Page.WaitForConsoleMessageAsync(new() { Predicate = msg => msg.Text.Contains("hello from the worker") }),
+            Page.EvaluateAsync("() => window.w = new Worker('/worker.js')"));
+        Assert.That(request.Url, Is.EqualTo(Server.Prefix + "/worker.js"));
         var redirect = request.RedirectedTo;
         Assert.That(redirect, Is.Not.Null);
-        Assert.That(redirect.Url, Is.EqualTo(server.Prefix + "/worker2.js"));
+        Assert.That(redirect.Url, Is.EqualTo(Server.Prefix + "/worker2.js"));
         var response = await redirect.ResponseAsync();
         var text = await response.TextAsync();
         Assert.That(text, Does.Contain("console.log('hello from the worker');"));
     }
 
     [UpstreamTest("WO-019 should dispatch console messages when page has workers")]
-    public async Task ShouldDispatchConsoleMessagesWhenPageHasWorkers(IPage page, Server server)
+    public async Task ShouldDispatchConsoleMessagesWhenPageHasWorkers()
     {
-        await page.GotoAsync(server.EmptyPage);
+        await Page.GotoAsync(Server.EmptyPage);
         await PromiseAll(
-            page.WaitForWorkerAsync(),
-            page.EvaluateAsync("() => new Worker(URL.createObjectURL(new Blob(['const x = 1;'], { type: 'application/javascript' })))"));
+            Page.WaitForWorkerAsync(),
+            Page.EvaluateAsync("() => new Worker(URL.createObjectURL(new Blob(['const x = 1;'], { type: 'application/javascript' })))"));
         var (message, _) = await PromiseAll(
-            page.WaitForConsoleMessageAsync(),
-            page.EvaluateAsync("() => console.log('foo')"));
+            Page.WaitForConsoleMessageAsync(),
+            Page.EvaluateAsync("() => console.log('foo')"));
         Assert.That(message.Text, Is.EqualTo("foo"));
     }
 
     [UpstreamTest("WO-020 should report and intercept network from nested worker")]
-    public async Task ShouldReportAndInterceptNetworkFromNestedWorker(IPage page, Server server, string browserName, int browserMajorVersion)
+    public async Task ShouldReportAndInterceptNetworkFromNestedWorker()
     {
-        Info.Fixme(browserName == "webkit", "https://github.com/microsoft/playwright/issues/27376");
-        Info.Skip(browserName == "chromium" && browserMajorVersion < 143, "needs workerScriptLoaded event");
+        Info.Fixme(BrowserName == "webkit", "https://github.com/microsoft/playwright/issues/27376");
+        Info.Skip(BrowserName == "chromium" && BrowserMajorVersion < 143, "needs workerScriptLoaded event");
 
-        await page.RouteAsync("**/simple.json", async route =>
+        await Page.RouteAsync("**/simple.json", async route =>
         {
             var json = new { foo = "not bar" };
             await route.FulfillAsync(new() { Json = json });
         });
 
-        await page.GotoAsync(server.EmptyPage);
-        var url = server.Prefix + "/simple.json";
+        await Page.GotoAsync(Server.EmptyPage);
+        var url = Server.Prefix + "/simple.json";
         var workers = new List<IWorker>();
         var messages = new List<string>();
 
-        page.Worker += (_, worker) => workers.Add(worker);
-        page.Console += (_, msg) => messages.Add(msg.Text);
+        Page.Worker += (_, worker) => workers.Add(worker);
+        Page.Console += (_, msg) => messages.Add(msg.Text);
 
-        await page.EvaluateAsync(@"url => new Worker(URL.createObjectURL(new Blob([`
+        await Page.EvaluateAsync(@"url => new Worker(URL.createObjectURL(new Blob([`
     fetch(""${url}"").then(response => response.text()).then(t => console.log(t.trim()));
   `], { type: 'application/javascript' })))", url);
         await Expect(async () => Assert.That(workers.Count, Is.EqualTo(1))).ToPassAsync();
@@ -389,45 +389,45 @@ public class WorkersTests
     }
 
     [UpstreamTest("WO-021 should support extra http headers")]
-    public async Task ShouldSupportExtraHttpHeaders(IPage page, Server server, string browserName, int browserMajorVersion)
+    public async Task ShouldSupportExtraHttpHeaders()
     {
-        Info.Skip(browserName == "chromium" && browserMajorVersion < 143, "needs workerScriptLoaded event");
+        Info.Skip(BrowserName == "chromium" && BrowserMajorVersion < 143, "needs workerScriptLoaded event");
 
-        await page.SetExtraHTTPHeadersAsync(new Dictionary<string, string> { ["foo"] = "bar" });
+        await Page.SetExtraHTTPHeadersAsync(new Dictionary<string, string> { ["foo"] = "bar" });
         var (worker, request1, _) = await PromiseAll(
-            page.WaitForWorkerAsync(),
-            server.WaitForRequest("/worker/worker.js"),
-            page.GotoAsync(server.Prefix + "/worker/worker.html"));
+            Page.WaitForWorkerAsync(),
+            Server.WaitForRequest("/worker/worker.js"),
+            Page.GotoAsync(Server.Prefix + "/worker/worker.html"));
         var (request2, _) = await PromiseAll(
-            server.WaitForRequest("/one-style.css"),
-            worker.EvaluateAsync<object>("url => fetch(url)", server.Prefix + "/one-style.css"));
+            Server.WaitForRequest("/one-style.css"),
+            worker.EvaluateAsync<object>("url => fetch(url)", Server.Prefix + "/one-style.css"));
         Assert.That(request1.Headers["foo"], Is.EqualTo("bar"));
         Assert.That(request2.Headers["foo"], Is.EqualTo("bar"));
     }
 
     [UpstreamTest("WO-022 should support offline")]
-    public async Task ShouldSupportOffline(IPage page, Server server, string browserName)
+    public async Task ShouldSupportOffline()
     {
-        Info.Fixme(browserName == "webkit", "flaky on all platforms");
-        Info.Fixme(browserName == "firefox", "does not plumb setOffline into WorkerNavigator::OnLine");
+        Info.Fixme(BrowserName == "webkit", "flaky on all platforms");
+        Info.Fixme(BrowserName == "firefox", "does not plumb setOffline into WorkerNavigator::OnLine");
 
         var (worker, _, _) = await PromiseAll(
-            page.WaitForWorkerAsync(),
-            page.WaitForConsoleMessageAsync(new() { Predicate = msg => msg.Text.Contains("hello from the worker") }),
-            page.GotoAsync(server.Prefix + "/worker/worker.html"));
-        await page.Context.SetOfflineAsync(true);
+            Page.WaitForWorkerAsync(),
+            Page.WaitForConsoleMessageAsync(new() { Predicate = msg => msg.Text.Contains("hello from the worker") }),
+            Page.GotoAsync(Server.Prefix + "/worker/worker.html"));
+        await Page.Context.SetOfflineAsync(true);
         await Expect(async () => Assert.That(await worker.EvaluateAsync<bool>("() => navigator.onLine"), Is.EqualTo(false))).ToPassAsync();
         Assert.That(await worker.EvaluateAsync<string>("() => fetch('/one-style.css').catch(e => 'error')"), Is.EqualTo("error"));
-        await page.Context.SetOfflineAsync(false);
+        await Page.Context.SetOfflineAsync(false);
         await Expect(async () => Assert.That(await worker.EvaluateAsync<bool>("() => navigator.onLine"), Is.EqualTo(true))).ToPassAsync();
     }
 
     [UpstreamTest("WO-023 should resolve worker script allHeaders in main frame")]
-    public async Task ShouldResolveWorkerScriptAllHeadersInMainFrame(IPage page, Server server, string browserName)
+    public async Task ShouldResolveWorkerScriptAllHeadersInMainFrame()
     {
         var (request, _) = await PromiseAll(
-            page.WaitForRequestFinishedAsync(new() { Predicate = r => r.Url == server.Prefix + "/worker/worker.js" }),
-            page.GotoAsync(server.Prefix + "/worker/worker.html"));
+            Page.WaitForRequestFinishedAsync(new() { Predicate = r => r.Url == Server.Prefix + "/worker/worker.js" }),
+            Page.GotoAsync(Server.Prefix + "/worker/worker.html"));
         var response = await request.ResponseAsync();
         var requestHeaders = await request.AllHeadersAsync();
         Assert.That(requestHeaders["host"], Is.Not.Empty);
@@ -436,13 +436,13 @@ public class WorkersTests
     }
 
     [UpstreamTest("WO-024 should resolve worker script allHeaders in iframe")]
-    public async Task ShouldResolveWorkerScriptAllHeadersInIframe(IPage page, Server server, string browserName, int browserMajorVersion)
+    public async Task ShouldResolveWorkerScriptAllHeadersInIframe()
     {
-        Info.Skip(browserName == "chromium" && browserMajorVersion < 151, "needs proper Network.requestWillBeSentExtraInfo");
+        Info.Skip(BrowserName == "chromium" && BrowserMajorVersion < 151, "needs proper Network.requestWillBeSentExtraInfo");
 
         var (request, _) = await PromiseAll(
-            page.WaitForRequestFinishedAsync(new() { Predicate = r => r.Url == server.Prefix + "/worker/worker.js" }),
-            AttachFrame(page, "frame1", server.Prefix + "/worker/worker.html"));
+            Page.WaitForRequestFinishedAsync(new() { Predicate = r => r.Url == Server.Prefix + "/worker/worker.js" }),
+            AttachFrame(Page, "frame1", Server.Prefix + "/worker/worker.html"));
         var response = await request.ResponseAsync();
         var requestHeaders = await request.AllHeadersAsync();
         Assert.That(requestHeaders["host"], Is.Not.Empty);
@@ -451,19 +451,19 @@ public class WorkersTests
     }
 
     [UpstreamTest("WO-025 should resolve worker script allHeaders in nested worker inside iframe")]
-    public async Task ShouldResolveWorkerScriptAllHeadersInNestedWorkerInsideIframe(IPage page, Server server, string browserName)
+    public async Task ShouldResolveWorkerScriptAllHeadersInNestedWorkerInsideIframe()
     {
-        Info.Fixme(browserName == "webkit", "cannot evaluate in nested worker");
-        Info.Fixme(browserName == "firefox", "nested worker script request is not reported at all");
+        Info.Fixme(BrowserName == "webkit", "cannot evaluate in nested worker");
+        Info.Fixme(BrowserName == "firefox", "nested worker script request is not reported at all");
 
-        var url = server.Prefix + "/worker/worker.js";
+        var url = Server.Prefix + "/worker/worker.js";
         var (worker, _, _) = await PromiseAll(
-            page.WaitForWorkerAsync(),
-            page.WaitForRequestFinishedAsync(new() { Predicate = r => r.Url == url }),
-            AttachFrame(page, "frame1", server.Prefix + "/worker/worker.html"));
+            Page.WaitForWorkerAsync(),
+            Page.WaitForRequestFinishedAsync(new() { Predicate = r => r.Url == url }),
+            AttachFrame(Page, "frame1", Server.Prefix + "/worker/worker.html"));
 
         var (request, _) = await PromiseAll(
-            page.WaitForRequestFinishedAsync(new() { Predicate = r => r.Url == url }),
+            Page.WaitForRequestFinishedAsync(new() { Predicate = r => r.Url == url }),
             worker.EvaluateAsync<object>(@"url => {
       self.w = new Worker(url);
     }", url));

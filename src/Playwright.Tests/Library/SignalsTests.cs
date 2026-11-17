@@ -22,19 +22,22 @@ using Microsoft.Playwright.Tests.Fixtures;
 
 namespace Microsoft.Playwright.Tests.Library;
 
-/// <summary>Port of tests/library/signals.spec.ts.</summary>
-public class SignalsTests
+public abstract class SignalsTestsBase : UpstreamBrowserTest
 {
     [SetUp]
     public void Slow() => Info.Slow();
+}
 
+/// <summary>Port of tests/library/signals.spec.ts.</summary>
+public class SignalsTests : SignalsTestsBase
+{
     [UpstreamTest("SI-001 should close the browser when the node process closes")]
-    public async Task ShouldCloseTheBrowserWhenTheNodeProcessCloses(StartRemoteServer startRemoteServer, bool isWindows, Server server, string mode)
+    public async Task ShouldCloseTheBrowserWhenTheNodeProcessCloses()
     {
-        var remoteServer = await startRemoteServer("launchServer", new() { Url = server.EmptyPage });
+        var remoteServer = await StartRemoteServer("launchServer", new() { Url = Server.EmptyPage });
         try
         {
-            if (isWindows)
+            if (IsWindows)
             {
                 // .NET: execSync(`taskkill /pid ${remoteServer.child().pid} /T /F`, { stdio: 'ignore' })
                 using var taskkill = Process.Start(new ProcessStartInfo("taskkill", $"/pid {remoteServer.Child().Id} /T /F") { UseShellExecute = false, CreateNoWindow = true });
@@ -60,16 +63,16 @@ public class SignalsTests
         }
         // We might not get browser exitCode in time when killing the parent node process,
         // so we don't check it here.
-        Assert.That(await remoteServer.ChildExitCode(), Is.EqualTo(isWindows ? 1 : 0));
+        Assert.That(await remoteServer.ChildExitCode(), Is.EqualTo(IsWindows ? 1 : 0));
     }
 
     [UpstreamTest("SI-002 should remove temp dir on process.exit")]
-    public async Task ShouldRemoveTempDirOnProcessExit(StartRemoteServer startRemoteServer, Server server, string platform, TestInfo testInfo)
+    public async Task ShouldRemoveTempDirOnProcessExit()
     {
-        Info.Skip(platform == "win32", "Removing user data dir synchronously is blocked on Windows");
+        Info.Skip(Platform == "win32", "Removing user data dir synchronously is blocked on Windows");
 
-        var file = testInfo.OutputPath("exit.file");
-        var remoteServer = await startRemoteServer("launchServer", new() { Url = server.EmptyPage, ExitOnFile = file });
+        var file = Info.OutputPath("exit.file");
+        var remoteServer = await StartRemoteServer("launchServer", new() { Url = Server.EmptyPage, ExitOnFile = file });
         var tempDir = await remoteServer.Out("tempDir");
         var before = Directory.Exists(tempDir);
         File.WriteAllText(file, "data");
@@ -79,18 +82,18 @@ public class SignalsTests
         Assert.That(after, Is.EqualTo(false));
     }
 
-    public class Signals
+    public class Signals : SignalsTestsBase
     {
-        [BeforeEach]
-        public static void Skip(string platform) => Info.Skip(platform == "win32");
+        [SetUp]
+        public void Skip() => Info.Skip(Platform == "win32");
 
         [UpstreamTest("SI-003 should report browser close signal 2")]
-        public async Task ShouldReportBrowserCloseSignal2(StartRemoteServer startRemoteServer, Server server, bool isMac, int macVersion, string browserName)
+        public async Task ShouldReportBrowserCloseSignal2()
         {
-            var remoteServer = await startRemoteServer("launchServer", new() { Url = server.EmptyPage });
+            var remoteServer = await StartRemoteServer("launchServer", new() { Url = Server.EmptyPage });
             var pid = await remoteServer.Out("pid");
             NodeProcess.Kill(-int.Parse(pid, CultureInfo.InvariantCulture), "SIGKILL");
-            if (isMac && browserName == "webkit" && macVersion > 13 && RuntimeInformation.ProcessArchitecture == Architecture.Arm64)
+            if (IsMac && BrowserName == "webkit" && MacVersion > 13 && RuntimeInformation.ProcessArchitecture == Architecture.Arm64)
             {
                 // WebKit on newer macOS exits sometimes with exit code, sometimes with signal.
                 Assert.That(
@@ -107,9 +110,9 @@ public class SignalsTests
         }
 
         [UpstreamTest("SI-004 should close the browser on SIGINT")]
-        public async Task ShouldCloseTheBrowserOnSIGINT(StartRemoteServer startRemoteServer, Server server)
+        public async Task ShouldCloseTheBrowserOnSIGINT()
         {
-            var remoteServer = await startRemoteServer("launchServer", new() { Url = server.EmptyPage });
+            var remoteServer = await StartRemoteServer("launchServer", new() { Url = Server.EmptyPage });
             NodeProcess.Kill(remoteServer.Child().Id, "SIGINT");
             Assert.That(await remoteServer.Out("exitCode"), Is.EqualTo("0"));
             Assert.That(await remoteServer.Out("signal"), Is.EqualTo("null"));
@@ -117,9 +120,9 @@ public class SignalsTests
         }
 
         [UpstreamTest("SI-005 should close the browser on SIGTERM")]
-        public async Task ShouldCloseTheBrowserOnSIGTERM(StartRemoteServer startRemoteServer, Server server)
+        public async Task ShouldCloseTheBrowserOnSIGTERM()
         {
-            var remoteServer = await startRemoteServer("launchServer", new() { Url = server.EmptyPage });
+            var remoteServer = await StartRemoteServer("launchServer", new() { Url = Server.EmptyPage });
             NodeProcess.Kill(remoteServer.Child().Id, "SIGTERM");
             Assert.That(await remoteServer.Out("exitCode"), Is.EqualTo("0"));
             Assert.That(await remoteServer.Out("signal"), Is.EqualTo("null"));
@@ -127,9 +130,9 @@ public class SignalsTests
         }
 
         [UpstreamTest("SI-006 should close the browser on SIGHUP")]
-        public async Task ShouldCloseTheBrowserOnSIGHUP(StartRemoteServer startRemoteServer, Server server)
+        public async Task ShouldCloseTheBrowserOnSIGHUP()
         {
-            var remoteServer = await startRemoteServer("launchServer", new() { Url = server.EmptyPage });
+            var remoteServer = await StartRemoteServer("launchServer", new() { Url = Server.EmptyPage });
             NodeProcess.Kill(remoteServer.Child().Id, "SIGHUP");
             Assert.That(await remoteServer.Out("exitCode"), Is.EqualTo("0"));
             Assert.That(await remoteServer.Out("signal"), Is.EqualTo("null"));
@@ -137,9 +140,9 @@ public class SignalsTests
         }
 
         [UpstreamTest("SI-007 should kill the browser on double SIGINT and remove temp dir")]
-        public async Task ShouldKillTheBrowserOnDoubleSIGINTAndRemoveTempDir(StartRemoteServer startRemoteServer, Server server)
+        public async Task ShouldKillTheBrowserOnDoubleSIGINTAndRemoveTempDir()
         {
-            var remoteServer = await startRemoteServer("launchServer", new() { StallOnClose = true, Url = server.EmptyPage });
+            var remoteServer = await StartRemoteServer("launchServer", new() { StallOnClose = true, Url = Server.EmptyPage });
             var tempDir = await remoteServer.Out("tempDir");
             var before = Directory.Exists(tempDir);
             NodeProcess.Kill(remoteServer.Child().Id, "SIGINT");
@@ -154,9 +157,9 @@ public class SignalsTests
         }
 
         [UpstreamTest("SI-008 should kill the browser on SIGINT + SIGTERM")]
-        public async Task ShouldKillTheBrowserOnSIGINTSIGTERM(StartRemoteServer startRemoteServer, Server server)
+        public async Task ShouldKillTheBrowserOnSIGINTSIGTERM()
         {
-            var remoteServer = await startRemoteServer("launchServer", new() { StallOnClose = true, Url = server.EmptyPage });
+            var remoteServer = await StartRemoteServer("launchServer", new() { StallOnClose = true, Url = Server.EmptyPage });
             NodeProcess.Kill(remoteServer.Child().Id, "SIGINT");
             await remoteServer.Out("stalled");
             NodeProcess.Kill(remoteServer.Child().Id, "SIGTERM");
@@ -166,9 +169,9 @@ public class SignalsTests
         }
 
         [UpstreamTest("SI-009 should kill the browser on SIGTERM + SIGINT")]
-        public async Task ShouldKillTheBrowserOnSIGTERMSIGINT(StartRemoteServer startRemoteServer, Server server)
+        public async Task ShouldKillTheBrowserOnSIGTERMSIGINT()
         {
-            var remoteServer = await startRemoteServer("launchServer", new() { StallOnClose = true, Url = server.EmptyPage });
+            var remoteServer = await StartRemoteServer("launchServer", new() { StallOnClose = true, Url = Server.EmptyPage });
             NodeProcess.Kill(remoteServer.Child().Id, "SIGTERM");
             await remoteServer.Out("stalled");
             NodeProcess.Kill(remoteServer.Child().Id, "SIGINT");
@@ -178,9 +181,9 @@ public class SignalsTests
         }
 
         [UpstreamTest("SI-010 should not prevent default SIGTERM handling after browser close")]
-        public async Task ShouldNotPreventDefaultSIGTERMHandlingAfterBrowserClose(StartRemoteServer startRemoteServer, Server server, string platform, TestInfo testInfo)
+        public async Task ShouldNotPreventDefaultSIGTERMHandlingAfterBrowserClose()
         {
-            var remoteServer = await startRemoteServer("launchServer", new() { StartStopAndRunHttp = true });
+            var remoteServer = await StartRemoteServer("launchServer", new() { StartStopAndRunHttp = true });
             Assert.That(await remoteServer.Out("closed"), Is.EqualTo("success"));
             NodeProcess.Kill(remoteServer.Child().Id, "SIGTERM");
             Assert.That(await remoteServer.ChildExitCode(), Is.Null);

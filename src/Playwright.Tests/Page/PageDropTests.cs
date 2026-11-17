@@ -22,10 +22,10 @@ using static Microsoft.Playwright.Tests.Fixtures.Utils;
 namespace Microsoft.Playwright.Tests.Page;
 
 /// <summary>Port of tests/page/page-drop.spec.ts.</summary>
-public class PageDropTests
+public class PageDropTests : UpstreamPageTest
 {
-    [BeforeEach]
-    public static void Skip(bool isAndroid) => Info.Skip(isAndroid, "No drag&drop on Android.");
+    [SetUp]
+    public void Skip() => Info.Skip(IsAndroid, "No drag&drop on Android.");
 
     private static async Task SetupDropzone(IPage page)
     {
@@ -59,14 +59,14 @@ public class PageDropTests
     }
 
     [UpstreamTest("DD-021 should drop a file payload")]
-    public async Task ShouldDropAFilePayload(IPage page)
+    public async Task ShouldDropAFilePayload()
     {
-        await SetupDropzone(page);
-        await page.Locator("#dropzone").DropAsync(new()
+        await SetupDropzone(Page);
+        await Page.Locator("#dropzone").DropAsync(new()
         {
             Files = new[] { new FilePayload { Name = "note.txt", MimeType = "text/plain", Buffer = Encoding.UTF8.GetBytes("hello") } },
         });
-        ExpectToEqual(await GetDropInfo(page), new
+        ExpectToEqual(await GetDropInfo(Page), new
         {
             files = new[] { new { name = "note.txt", type = "text/plain", size = 5, text = "hello" } },
             data = new { },
@@ -74,10 +74,10 @@ public class PageDropTests
     }
 
     [UpstreamTest("DD-022 should drop multiple file payloads")]
-    public async Task ShouldDropMultipleFilePayloads(IPage page)
+    public async Task ShouldDropMultipleFilePayloads()
     {
-        await SetupDropzone(page);
-        await page.Locator("#dropzone").DropAsync(new()
+        await SetupDropzone(Page);
+        await Page.Locator("#dropzone").DropAsync(new()
         {
             Files = new[]
             {
@@ -85,28 +85,28 @@ public class PageDropTests
                 new FilePayload { Name = "b.txt", MimeType = "text/plain", Buffer = Encoding.UTF8.GetBytes("BB") },
             },
         });
-        var info = await GetDropInfo(page);
+        var info = await GetDropInfo(Page);
         ExpectToEqual(info.GetProperty("files").EnumerateArray().Select(f => new[] { f.GetProperty("name").GetString(), f.GetProperty("text").GetString() }), new[] { new[] { "a.txt", "AAA" }, new[] { "b.txt", "BB" } });
     }
 
     [UpstreamTest("DD-023 should drop a file by local path")]
-    public async Task ShouldDropAFileByLocalPath(IPage page, TestInfo testInfo)
+    public async Task ShouldDropAFileByLocalPath()
     {
-        await SetupDropzone(page);
-        var filePath = testInfo.OutputPath("hello.txt");
+        await SetupDropzone(Page);
+        var filePath = Info.OutputPath("hello.txt");
         await File.WriteAllTextAsync(filePath, "path-content");
-        await page.Locator("#dropzone").DropAsync(new() { FilePaths = new[] { filePath } });
-        var info = await GetDropInfo(page);
+        await Page.Locator("#dropzone").DropAsync(new() { FilePaths = new[] { filePath } });
+        var info = await GetDropInfo(Page);
         Assert.That(info.GetProperty("files").GetArrayLength(), Is.EqualTo(1));
         Assert.That(info.GetProperty("files")[0].GetProperty("name").GetString(), Is.EqualTo("hello.txt"));
         Assert.That(info.GetProperty("files")[0].GetProperty("text").GetString(), Is.EqualTo("path-content"));
     }
 
     [UpstreamTest("DD-024 should drop clipboard-like data")]
-    public async Task ShouldDropClipboardLikeData(IPage page)
+    public async Task ShouldDropClipboardLikeData()
     {
-        await SetupDropzone(page);
-        await page.Locator("#dropzone").DropAsync(new()
+        await SetupDropzone(Page);
+        await Page.Locator("#dropzone").DropAsync(new()
         {
             Data = new Dictionary<string, string>
             {
@@ -114,34 +114,34 @@ public class PageDropTests
                 ["text/uri-list"] = "https://example.com",
             },
         });
-        var info = await GetDropInfo(page);
+        var info = await GetDropInfo(Page);
         ExpectToEqual(info.GetProperty("files"), Array.Empty<object>());
         Assert.That(info.GetProperty("data").GetProperty("text/plain").GetString(), Is.EqualTo("hello world"));
         Assert.That(info.GetProperty("data").GetProperty("text/uri-list").GetString(), Is.EqualTo("https://example.com"));
     }
 
     [UpstreamTest("DD-025 should drop files and data together")]
-    public async Task ShouldDropFilesAndDataTogether(IPage page)
+    public async Task ShouldDropFilesAndDataTogether()
     {
-        await SetupDropzone(page);
-        await page.Locator("#dropzone").DropAsync(new()
+        await SetupDropzone(Page);
+        await Page.Locator("#dropzone").DropAsync(new()
         {
             Files = new[] { new FilePayload { Name = "mix.txt", MimeType = "text/plain", Buffer = Encoding.UTF8.GetBytes("mix") } },
             Data = new Dictionary<string, string> { ["text/plain"] = "label" },
         });
-        var info = await GetDropInfo(page);
+        var info = await GetDropInfo(Page);
         Assert.That(info.GetProperty("files")[0].GetProperty("text").GetString(), Is.EqualTo("mix"));
         Assert.That(info.GetProperty("data").GetProperty("text/plain").GetString(), Is.EqualTo("label"));
     }
 
     [UpstreamTest("DD-026 should throw when target does not accept drop")]
-    public async Task ShouldThrowWhenTargetDoesNotAcceptDrop(IPage page)
+    public async Task ShouldThrowWhenTargetDoesNotAcceptDrop()
     {
         // Dropzone without preventDefault on dragover.
-        await page.SetContentAsync(@"
+        await Page.SetContentAsync(@"
     <div id=""dropzone"" style=""width: 200px; height: 100px;""></div>
   ");
-        var error = await ThrowsAsync<PlaywrightException>(() => page.Locator("#dropzone").DropAsync(new()
+        var error = await ThrowsAsync<PlaywrightException>(() => Page.Locator("#dropzone").DropAsync(new()
         {
             Data = new Dictionary<string, string> { ["text/plain"] = "nope" },
         }));
@@ -149,10 +149,10 @@ public class PageDropTests
     }
 
     [UpstreamTest("DD-027 should throw when neither files nor data provided")]
-    public async Task ShouldThrowWhenNeitherFilesNorDataProvided(IPage page)
+    public async Task ShouldThrowWhenNeitherFilesNorDataProvided()
     {
-        await SetupDropzone(page);
-        var error = await ThrowsAsync<PlaywrightException>(() => page.Locator("#dropzone").DropAsync(new()));
+        await SetupDropzone(Page);
+        var error = await ThrowsAsync<PlaywrightException>(() => Page.Locator("#dropzone").DropAsync(new()));
         Assert.That(error.Message, Does.Match("At least one of \"files\" or \"data\""));
     }
 }

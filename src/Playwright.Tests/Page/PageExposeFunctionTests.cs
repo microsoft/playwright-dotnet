@@ -23,70 +23,70 @@ using static Microsoft.Playwright.Tests.Fixtures.Utils;
 namespace Microsoft.Playwright.Tests.Page;
 
 /// <summary>Port of tests/page/page-expose-function.spec.ts.</summary>
-public class PageExposeFunctionTests
+public class PageExposeFunctionTests : UpstreamPageTest
 {
     [UpstreamTest("EF-001 exposeBinding should work @smoke")]
-    public async Task ExposeBindingShouldWork(IPage page)
+    public async Task ExposeBindingShouldWork()
     {
         BindingSource bindingSource = null;
-        await page.ExposeBindingAsync("add", (BindingSource source, int a, int b) =>
+        await Page.ExposeBindingAsync("add", (BindingSource source, int a, int b) =>
         {
             bindingSource = source;
             return a + b;
         });
-        var result = await page.EvaluateAsync<int>(@"async function() {
+        var result = await Page.EvaluateAsync<int>(@"async function() {
     return window['add'](5, 6);
   }");
-        Assert.That(bindingSource.Context, Is.SameAs(page.Context));
-        Assert.That(bindingSource.Page, Is.SameAs(page));
-        Assert.That(bindingSource.Frame, Is.SameAs(page.MainFrame));
+        Assert.That(bindingSource.Context, Is.SameAs(Page.Context));
+        Assert.That(bindingSource.Page, Is.SameAs(Page));
+        Assert.That(bindingSource.Frame, Is.SameAs(Page.MainFrame));
         Assert.That(result, Is.EqualTo(11));
     }
 
     [UpstreamTest("EF-002 should work")]
-    public async Task ShouldWork(IPage page, Server server)
+    public async Task ShouldWork()
     {
-        await page.ExposeFunctionAsync("compute", (int a, int b) =>
+        await Page.ExposeFunctionAsync("compute", (int a, int b) =>
         {
             return a * b;
         });
-        var result = await page.EvaluateAsync<int>(@"async function() {
+        var result = await Page.EvaluateAsync<int>(@"async function() {
     return await window['compute'](9, 4);
   }");
         Assert.That(result, Is.EqualTo(36));
     }
 
     [UpstreamTest("EF-003 should dispose")]
-    public async Task ShouldDispose(IPage page, Server server)
+    public async Task ShouldDispose()
     {
-        var binding = await page.ExposeFunctionAsync("compute", (int a, int b) =>
+        var binding = await Page.ExposeFunctionAsync("compute", (int a, int b) =>
         {
             return a * b;
         });
-        var result = await page.EvaluateAsync<int>(@"async function() {
+        var result = await Page.EvaluateAsync<int>(@"async function() {
     return await window['compute'](9, 4);
   }");
         Assert.That(result, Is.EqualTo(36));
         await binding.DisposeAsync();
 
-        var e = await Catch(() => page.EvaluateAsync(@"async function() {
+        var e = await Catch(() => Page.EvaluateAsync(@"async function() {
     return await window['compute'](9, 4);
   }"));
         Assert.That(e.Message, Does.Contain("is not a function"));
     }
 
     [UpstreamTest("EF-004 should work with handles and complex objects")]
-    public async Task ShouldWorkWithHandlesAndComplexObjects(IPage page, Server server)
+    public async Task ShouldWorkWithHandlesAndComplexObjects()
     {
-        var fooHandle = await page.EvaluateHandleAsync(@"() => {
+        var fooHandle = await Page.EvaluateHandleAsync(@"() => {
     window['fooValue'] = { bar: 2 };
     return window['fooValue'];
   }");
-        await page.ExposeFunctionAsync("handle", () =>
+        await Page.ExposeFunctionAsync("handle", () =>
         {
             return new[] { new { foo = fooHandle } };
         });
-        var equals = await page.EvaluateAsync<bool>(@"async function() {
+        var equals = await Page.EvaluateAsync<bool>(@"async function() {
     const value = await window['handle']();
     const [{ foo }] = value;
     return foo === window['fooValue'];
@@ -95,14 +95,14 @@ public class PageExposeFunctionTests
     }
 
     [UpstreamTest("EF-005 should throw exception in page context")]
-    public async Task ShouldThrowExceptionInPageContext(IPage page, Server server)
+    public async Task ShouldThrowExceptionInPageContext()
     {
-        await page.ExposeFunctionAsync("woof", () =>
+        await Page.ExposeFunctionAsync("woof", () =>
         {
             throw new Exception("WOOF WOOF");
         });
         // .NET: const { message, stack } = await page.evaluate(...)
-        var result = await page.EvaluateAsync<JsonElement>(@"async () => {
+        var result = await Page.EvaluateAsync<JsonElement>(@"async () => {
     try {
       await window['woof']();
     } catch (e) {
@@ -116,16 +116,16 @@ public class PageExposeFunctionTests
     }
 
     [UpstreamTest("EF-007 should be callable from-inside addInitScript")]
-    public async Task ShouldBeCallableFromInsideAddInitScript(IPage page, Server server)
+    public async Task ShouldBeCallableFromInsideAddInitScript()
     {
         var called = false;
-        await page.ExposeFunctionAsync("woof", () =>
+        await Page.ExposeFunctionAsync("woof", () =>
         {
             called = true;
         });
         // .NET: an init script is a script, not a function: the call that upstream adds to a function is written out.
-        await page.AddInitScriptAsync("(() => window['woof']())()");
-        await page.ReloadAsync();
+        await Page.AddInitScriptAsync("(() => window['woof']())()");
+        await Page.ReloadAsync();
         await Expect(() =>
         {
             Assert.That(called, Is.EqualTo(true));
@@ -134,44 +134,44 @@ public class PageExposeFunctionTests
     }
 
     [UpstreamTest("EF-008 should survive navigation")]
-    public async Task ShouldSurviveNavigation(IPage page, Server server)
+    public async Task ShouldSurviveNavigation()
     {
-        await page.ExposeFunctionAsync("compute", (int a, int b) =>
+        await Page.ExposeFunctionAsync("compute", (int a, int b) =>
         {
             return a * b;
         });
 
-        await page.GotoAsync(server.EmptyPage);
-        var result = await page.EvaluateAsync<int>(@"async function() {
+        await Page.GotoAsync(Server.EmptyPage);
+        var result = await Page.EvaluateAsync<int>(@"async function() {
     return await window['compute'](9, 4);
   }");
         Assert.That(result, Is.EqualTo(36));
     }
 
     [UpstreamTest("EF-009 should await returned promise")]
-    public async Task ShouldAwaitReturnedPromise(IPage page, Server server)
+    public async Task ShouldAwaitReturnedPromise()
     {
-        await page.ExposeFunctionAsync("compute", (int a, int b) =>
+        await Page.ExposeFunctionAsync("compute", (int a, int b) =>
         {
             return Task.FromResult(a * b);
         });
 
-        var result = await page.EvaluateAsync<int>(@"async function() {
+        var result = await Page.EvaluateAsync<int>(@"async function() {
     return await window['compute'](3, 5);
   }");
         Assert.That(result, Is.EqualTo(15));
     }
 
     [UpstreamTest("EF-010 should work on frames")]
-    public async Task ShouldWorkOnFrames(IPage page, Server server)
+    public async Task ShouldWorkOnFrames()
     {
-        await page.ExposeFunctionAsync("compute", (int a, int b) =>
+        await Page.ExposeFunctionAsync("compute", (int a, int b) =>
         {
             return Task.FromResult(a * b);
         });
 
-        await page.GotoAsync(server.Prefix + "/frames/nested-frames.html");
-        var frame = page.Frames[1];
+        await Page.GotoAsync(Server.Prefix + "/frames/nested-frames.html");
+        var frame = Page.Frames[1];
         var result = await frame.EvaluateAsync<int>(@"async function() {
     return await window['compute'](3, 5);
   }");
@@ -179,15 +179,15 @@ public class PageExposeFunctionTests
     }
 
     [UpstreamTest("EF-011 should work on frames before navigation")]
-    public async Task ShouldWorkOnFramesBeforeNavigation(IPage page, Server server)
+    public async Task ShouldWorkOnFramesBeforeNavigation()
     {
-        await page.GotoAsync(server.Prefix + "/frames/nested-frames.html");
-        await page.ExposeFunctionAsync("compute", (int a, int b) =>
+        await Page.GotoAsync(Server.Prefix + "/frames/nested-frames.html");
+        await Page.ExposeFunctionAsync("compute", (int a, int b) =>
         {
             return Task.FromResult(a * b);
         });
 
-        var frame = page.Frames[1];
+        var frame = Page.Frames[1];
         var result = await frame.EvaluateAsync<int>(@"async function() {
     return await window['compute'](3, 5);
   }");
@@ -195,85 +195,85 @@ public class PageExposeFunctionTests
     }
 
     [UpstreamTest("EF-012 should work after cross origin navigation")]
-    public async Task ShouldWorkAfterCrossOriginNavigation(IPage page, Server server)
+    public async Task ShouldWorkAfterCrossOriginNavigation()
     {
-        await page.GotoAsync(server.EmptyPage);
-        await page.ExposeFunctionAsync("compute", (int a, int b) =>
+        await Page.GotoAsync(Server.EmptyPage);
+        await Page.ExposeFunctionAsync("compute", (int a, int b) =>
         {
             return a * b;
         });
 
-        await page.GotoAsync(server.CrossProcessPrefix + "/empty.html");
-        var result = await page.EvaluateAsync<int>(@"async function() {
+        await Page.GotoAsync(Server.CrossProcessPrefix + "/empty.html");
+        var result = await Page.EvaluateAsync<int>(@"async function() {
     return await window['compute'](9, 4);
   }");
         Assert.That(result, Is.EqualTo(36));
     }
 
     [UpstreamTest("EF-013 should work with complex objects")]
-    public async Task ShouldWorkWithComplexObjects(IPage page, Server server)
+    public async Task ShouldWorkWithComplexObjects()
     {
-        await page.ExposeFunctionAsync("complexObject", (JsonElement a, JsonElement b) =>
+        await Page.ExposeFunctionAsync("complexObject", (JsonElement a, JsonElement b) =>
         {
             return new { x = a.GetProperty("x").GetInt32() + b.GetProperty("x").GetInt32() };
         });
-        var result = await page.EvaluateAsync<JsonElement>("async () => window['complexObject']({ x: 5 }, { x: 2 })");
+        var result = await Page.EvaluateAsync<JsonElement>("async () => window['complexObject']({ x: 5 }, { x: 2 })");
         Assert.That(result.GetProperty("x").GetInt32(), Is.EqualTo(7));
     }
 
     [UpstreamTest("EF-014 should throw for duplicate registrations")]
     [LocalFixme("dotnet: the message is 'Function \"foo\" has been already registered', without the 'page.exposeFunction: ' prefix of the call")]
-    public async Task ShouldThrowForDuplicateRegistrations(IPage page)
+    public async Task ShouldThrowForDuplicateRegistrations()
     {
-        await page.ExposeFunctionAsync("foo", () => { });
-        var error = await Catch(() => page.ExposeFunctionAsync("foo", () => { }));
+        await Page.ExposeFunctionAsync("foo", () => { });
+        var error = await Catch(() => Page.ExposeFunctionAsync("foo", () => { }));
         Assert.That(error.Message, Does.Contain("page.exposeFunction: Function \"foo\" has been already registered"));
     }
 
     [UpstreamTest("EF-015 should work with setContent")]
-    public async Task ShouldWorkWithSetContent(IPage page, Server server)
+    public async Task ShouldWorkWithSetContent()
     {
-        await page.ExposeFunctionAsync("compute", (int a, int b) =>
+        await Page.ExposeFunctionAsync("compute", (int a, int b) =>
         {
             return Task.FromResult(a * b);
         });
-        await page.SetContentAsync("<script>window.result = compute(3, 2)</script>");
-        Assert.That(await page.EvaluateAsync<int>("window.result"), Is.EqualTo(6));
+        await Page.SetContentAsync("<script>window.result = compute(3, 2)</script>");
+        Assert.That(await Page.EvaluateAsync<int>("window.result"), Is.EqualTo(6));
     }
 
     [UpstreamTest("EF-016 should alias Window, Document and Node")]
-    public async Task ShouldAliasWindowDocumentAndNode(IPage page)
+    public async Task ShouldAliasWindowDocumentAndNode()
     {
         string[] @object = null;
-        await page.ExposeBindingAsync("log", (BindingSource source, string[] obj) => @object = obj);
-        await page.EvaluateAsync("window.log([window, document, document.body])");
+        await Page.ExposeBindingAsync("log", (BindingSource source, string[] obj) => @object = obj);
+        await Page.EvaluateAsync("window.log([window, document, document.body])");
         Assert.That(@object, Is.EqualTo(new[] { "ref: <Window>", "ref: <Document>", "ref: <Node>" }));
     }
 
     [UpstreamTest("EF-017 should serialize cycles")]
-    public async Task ShouldSerializeCycles(IPage page)
+    public async Task ShouldSerializeCycles()
     {
         object @object = null;
-        await page.ExposeBindingAsync("log", (BindingSource source, object obj) => @object = obj);
-        await page.EvaluateAsync("const a = {}; a.b = a; window.log(a)");
+        await Page.ExposeBindingAsync("log", (BindingSource source, object obj) => @object = obj);
+        await Page.EvaluateAsync("const a = {}; a.b = a; window.log(a)");
         var a = new Dictionary<string, object>();
         a["b"] = a;
         ExpectToEqual(@object, a);
     }
 
     [UpstreamTest("EF-018 should work with overridden console object")]
-    public async Task ShouldWorkWithOverriddenConsoleObject(IPage page)
+    public async Task ShouldWorkWithOverriddenConsoleObject()
     {
-        await page.EvaluateAsync("() => window.console = null");
-        Assert.That(page.EvaluateAsync<bool>("() => window.console === null"), Is.Not.Null);
-        await page.ExposeFunctionAsync("add", (int a, int b) => a + b);
-        Assert.That(await page.EvaluateAsync<int>("add(5, 6)"), Is.EqualTo(11));
+        await Page.EvaluateAsync("() => window.console = null");
+        Assert.That(Page.EvaluateAsync<bool>("() => window.console === null"), Is.Not.Null);
+        await Page.ExposeFunctionAsync("add", (int a, int b) => a + b);
+        Assert.That(await Page.EvaluateAsync<int>("add(5, 6)"), Is.EqualTo(11));
     }
 
     [UpstreamTest("EF-019 should work with busted Array.prototype.map/push")]
-    public async Task ShouldWorkWithBustedArrayPrototypeMapPush(IPage page, Server server)
+    public async Task ShouldWorkWithBustedArrayPrototypeMapPush()
     {
-        server.SetRoute("/test", (req, res) =>
+        Server.SetRoute("/test", (req, res) =>
         {
             res.WriteHead(200, new()
             {
@@ -284,30 +284,30 @@ public class PageExposeFunctionTests
       Array.prototype.push = null;
     </script>");
         });
-        await page.GotoAsync(server.Prefix + "/test");
-        await page.ExposeFunctionAsync("add", (int a, int b) => a + b);
-        Assert.That(await page.EvaluateAsync<int>("add(5, 6)"), Is.EqualTo(11));
+        await Page.GotoAsync(Server.Prefix + "/test");
+        await Page.ExposeFunctionAsync("add", (int a, int b) => a + b);
+        Assert.That(await Page.EvaluateAsync<int>("add(5, 6)"), Is.EqualTo(11));
     }
 
     [UpstreamTest("EF-020 should fail with busted Array.prototype.toJSON")]
-    public async Task ShouldFailWithBustedArrayPrototypeToJSON(IPage page)
+    public async Task ShouldFailWithBustedArrayPrototypeToJSON()
     {
-        await page.EvaluateHandleAsync("() => Array.prototype.toJSON = () => '\"[]\"'");
+        await Page.EvaluateHandleAsync("() => Array.prototype.toJSON = () => '\"[]\"'");
 
-        await page.ExposeFunctionAsync("add", (int a, int b) => a + b);
-        var error = await ThrowsAsync<PlaywrightException>(() => page.EvaluateAsync("add(5, 6)"));
+        await Page.ExposeFunctionAsync("add", (int a, int b) => a + b);
+        var error = await ThrowsAsync<PlaywrightException>(() => Page.EvaluateAsync("add(5, 6)"));
         Assert.That(error.Message, Does.Contain("serializedArgs is not an array. This can happen when Array.prototype.toJSON is defined incorrectly"));
 
-        Assert.That(await page.EvaluateAsync<string>("() => [].toJSON()"), Is.EqualTo("\"[]\""));
+        Assert.That(await Page.EvaluateAsync<string>("() => [].toJSON()"), Is.EqualTo("\"[]\""));
     }
 
     [UpstreamTest("EF-021 exposeBinding should work in parallel")]
-    public async Task ExposeBindingShouldWorkInParallel(IPage page)
+    public async Task ExposeBindingShouldWorkInParallel()
     {
         await PromiseAll(
-            page.ExposeBindingAsync("foo", _ => 42),
-            page.ExposeBindingAsync("bar", _ => 42));
-        await page.EvaluateAsync(@"() => {
+            Page.ExposeBindingAsync("foo", _ => 42),
+            Page.ExposeBindingAsync("bar", _ => 42));
+        await Page.EvaluateAsync(@"() => {
     window.foo();
     window.bar();
   }");

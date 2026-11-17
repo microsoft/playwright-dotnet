@@ -21,19 +21,19 @@ using static Microsoft.Playwright.Assertions;
 namespace Microsoft.Playwright.Tests.Library;
 
 /// <summary>Port of tests/library/locator-highlight.spec.ts.</summary>
-public class LocatorHighlightTests
+public class LocatorHighlightTests : UpstreamBrowserTest
 {
-    [BeforeEach]
-    public static void Skip(string mode) => Info.Skip(mode != "default", "Highlight overlay uses an open shadow root only in default mode");
+    [SetUp]
+    public void Skip() => Info.Skip(Mode != "default", "Highlight overlay uses an open shadow root only in default mode");
 
     [UpstreamTest("LO-193 highlight should accept a CSS string style")]
-    public async Task HighlightShouldAcceptACSSStringStyle(IBrowser browser, Server server, bool isFrozenWebkit, BrowserNewContextOptions contextOptions)
+    public async Task HighlightShouldAcceptACSSStringStyle()
     {
-        Info.Skip(isFrozenWebkit);
+        Info.Skip(IsFrozenWebkit);
 
-        var context = await browser.NewContextAsync(contextOptions);
+        var context = await Browser.NewContextAsync(ContextOptions());
         var page = await context.NewPageAsync();
-        await page.GotoAsync(server.Prefix + "/input/button.html");
+        await page.GotoAsync(Server.Prefix + "/input/button.html");
 
         await page.GetByRole(AriaRole.Button).HighlightAsync(new() { Style = "outline: 3px solid rgb(255, 0, 0); background-color: rgba(0, 255, 0, 0.25)" });
 
@@ -55,11 +55,11 @@ public class LocatorHighlightTests
     }
 
     [UpstreamTest("LO-195 hideHighlight removes a styled highlight")]
-    public async Task HideHighlightRemovesAStyledHighlight(IBrowser browser, Server server, BrowserNewContextOptions contextOptions)
+    public async Task HideHighlightRemovesAStyledHighlight()
     {
-        var context = await browser.NewContextAsync(contextOptions);
+        var context = await Browser.NewContextAsync(ContextOptions());
         var page = await context.NewPageAsync();
-        await page.GotoAsync(server.Prefix + "/input/button.html");
+        await page.GotoAsync(Server.Prefix + "/input/button.html");
 
         var button = page.GetByRole(AriaRole.Button);
         await button.HighlightAsync(new() { Style = "outline: 2px solid red" });
@@ -72,9 +72,9 @@ public class LocatorHighlightTests
     }
 
     [UpstreamTest("LO-196 highlight should survive navigation")]
-    public async Task HighlightShouldSurviveNavigation(IBrowser browser, Server server, BrowserNewContextOptions contextOptions)
+    public async Task HighlightShouldSurviveNavigation()
     {
-        var context = await browser.NewContextAsync(contextOptions);
+        var context = await Browser.NewContextAsync(ContextOptions());
         var page = await context.NewPageAsync();
         await page.SetContentAsync("<button onclick=\"console.log(1)\">Clicker</button>");
 
@@ -82,7 +82,7 @@ public class LocatorHighlightTests
         await Expect(page.Locator("x-pw-highlight")).ToHaveCountAsync(1);
 
         // Highlights are resolved again after the navigation.
-        await page.GotoAsync(server.Prefix + "/input/button.html");
+        await page.GotoAsync(Server.Prefix + "/input/button.html");
         await Expect(page.Locator("x-pw-highlight")).ToHaveCountAsync(1);
 
         await page.HideHighlightAsync();
@@ -92,9 +92,9 @@ public class LocatorHighlightTests
     }
 
     [UpstreamTest("LO-197 Page.hideHighlight clears all locator highlights")]
-    public async Task PageHideHighlightClearsAllLocatorHighlights(IBrowser browser, Server server, BrowserNewContextOptions contextOptions)
+    public async Task PageHideHighlightClearsAllLocatorHighlights()
     {
-        var context = await browser.NewContextAsync(contextOptions);
+        var context = await Browser.NewContextAsync(ContextOptions());
         var page = await context.NewPageAsync();
         await page.SetContentAsync("<button>One</button><button>Two</button>");
 
@@ -109,7 +109,7 @@ public class LocatorHighlightTests
     }
 
     [UpstreamTest("LO-198 highlight should work with a custom selector engine that runs in the main world")]
-    public async Task HighlightShouldWorkWithACustomSelectorEngineThatRunsInTheMainWorld(IPlaywright playwright, IBrowser browser, BrowserNewContextOptions contextOptions)
+    public async Task HighlightShouldWorkWithACustomSelectorEngineThatRunsInTheMainWorld()
     {
         // Engines registered without "contentScript" run in the main world and can see page globals.
         const string createEngine = @"() => ({
@@ -120,9 +120,9 @@ public class LocatorHighlightTests
       return window['__engineEnabled'] ? Array.from(root.querySelectorAll(selector)) : [];
     },
   })";
-        await playwright.Selectors.RegisterAsync("highlight-tag", new() { Script = "(" + createEngine + ")()" });
+        await Playwright.Selectors.RegisterAsync("highlight-tag", new() { Script = "(" + createEngine + ")()" });
 
-        var context = await browser.NewContextAsync(contextOptions);
+        var context = await Browser.NewContextAsync(ContextOptions());
         var page = await context.NewPageAsync();
         await page.SetContentAsync("<button>Button</button>");
         await page.EvaluateAsync("() => window['__engineEnabled'] = true");
@@ -144,9 +144,9 @@ public class LocatorHighlightTests
     }
 
     [UpstreamTest("LO-199 highlight should resolve relative to the frame of the locator")]
-    public async Task HighlightShouldResolveRelativeToTheFrameOfTheLocator(IBrowser browser, BrowserNewContextOptions contextOptions)
+    public async Task HighlightShouldResolveRelativeToTheFrameOfTheLocator()
     {
-        var context = await browser.NewContextAsync(contextOptions);
+        var context = await Browser.NewContextAsync(ContextOptions());
         var page = await context.NewPageAsync();
         await page.SetContentAsync("<iframe name=\"frame\" srcdoc=\"<button>foo</button>\"></iframe><button>bar</button>");
         var frame = page.Frame("frame");

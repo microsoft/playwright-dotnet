@@ -23,10 +23,10 @@ using static Microsoft.Playwright.Tests.Fixtures.Utils;
 namespace Microsoft.Playwright.Tests.Library;
 
 /// <summary>Port of tests/library/screencast-actions.spec.ts.</summary>
-public class ScreencastActionsTests
+public class ScreencastActionsTests : UpstreamBrowserTest
 {
-    [BeforeEach]
-    public static void Skip(string mode) => Info.Skip(mode != "default", "Annotations use an open shadow root only in default mode");
+    [SetUp]
+    public void Skip() => Info.Skip(Mode != "default", "Annotations use an open shadow root only in default mode");
 
     private static readonly ScreencastActionStyle style = new()
     {
@@ -36,11 +36,11 @@ public class ScreencastActionsTests
 
     [UpstreamTest("SC-016 should show annotation on click")]
     [LocalFixme("dotnet: ToHaveTextAsync(Regex) sends ignoreCase: false when the IgnoreCase option is not set, upstream sends no ignoreCase, so the driver removes the 'i' flag of the regex and the title 'Click Locator(\"button\")' does not match")]
-    public async Task ShouldShowAnnotationOnClick(IBrowser browser, Server server, BrowserNewContextOptions contextOptions)
+    public async Task ShouldShowAnnotationOnClick()
     {
-        var context = await browser.NewContextAsync(contextOptions);
+        var context = await Browser.NewContextAsync(ContextOptions());
         var page = await context.NewPageAsync();
-        await page.GotoAsync(server.Prefix + "/input/button.html");
+        await page.GotoAsync(Server.Prefix + "/input/button.html");
 
         await page.Screencast.ShowActionsAsync(new() { Duration = 5000 });
         IgnoreErrors(page.ClickAsync("button"));
@@ -55,11 +55,11 @@ public class ScreencastActionsTests
     }
 
     [UpstreamTest("SC-017 should render annotation styles")]
-    public async Task ShouldRenderAnnotationStyles(IBrowser browser, Server server, BrowserNewContextOptions contextOptions)
+    public async Task ShouldRenderAnnotationStyles()
     {
-        var context = await browser.NewContextAsync(contextOptions);
+        var context = await Browser.NewContextAsync(ContextOptions());
         var page = await context.NewPageAsync();
-        await page.GotoAsync(server.Prefix + "/input/button.html");
+        await page.GotoAsync(Server.Prefix + "/input/button.html");
 
 #pragma warning disable CS0612
         await page.Screencast.ShowActionsAsync(new() { Duration = 5000, FontSize = 32, Style = MergeOptions(new ScreencastActionStyle { Title = "top: 100px; background-color: rgb(1, 2, 3)" }, style) });
@@ -114,12 +114,12 @@ public class ScreencastActionsTests
     ];
 
     [UpstreamTest("SC-018 should position title at ${position}")]
-    [CaseSource(nameof(Positions))]
-    public async Task ShouldPositionTitleAt(AnnotatePosition position, Dictionary<string, string> expected, IBrowser browser, Server server, BrowserNewContextOptions contextOptions)
+    [TestCaseSource(nameof(Positions))]
+    public async Task ShouldPositionTitleAt(AnnotatePosition position, Dictionary<string, string> expected)
     {
-        var context = await browser.NewContextAsync(contextOptions);
+        var context = await Browser.NewContextAsync(ContextOptions());
         var page = await context.NewPageAsync();
-        await page.GotoAsync(server.Prefix + "/input/button.html");
+        await page.GotoAsync(Server.Prefix + "/input/button.html");
 
         await page.Screencast.ShowActionsAsync(new() { Duration = 5000, Position = position });
         IgnoreErrors(page.ClickAsync("button"));
@@ -143,11 +143,11 @@ public class ScreencastActionsTests
     }
 
     [UpstreamTest("SC-019 should clear annotation after duration")]
-    public async Task ShouldClearAnnotationAfterDuration(IBrowser browser, Server server, BrowserNewContextOptions contextOptions)
+    public async Task ShouldClearAnnotationAfterDuration()
     {
-        var context = await browser.NewContextAsync(contextOptions);
+        var context = await Browser.NewContextAsync(ContextOptions());
         var page = await context.NewPageAsync();
-        await page.GotoAsync(server.Prefix + "/input/button.html");
+        await page.GotoAsync(Server.Prefix + "/input/button.html");
 
         await page.Screencast.ShowActionsAsync(new() { Duration = 1000, Style = style });
         await page.ClickAsync("button");
@@ -161,11 +161,11 @@ public class ScreencastActionsTests
 
     [UpstreamTest("SC-020 should annotate fill action")]
     [LocalFixme("dotnet: ToHaveTextAsync(Regex) sends ignoreCase: false when the IgnoreCase option is not set, upstream sends no ignoreCase, so the driver removes the 'i' flag of the regex and the title 'Fill \"hello\" Locator(\"textarea\")' does not match")]
-    public async Task ShouldAnnotateFillAction(IBrowser browser, Server server, BrowserNewContextOptions contextOptions)
+    public async Task ShouldAnnotateFillAction()
     {
-        var context = await browser.NewContextAsync(contextOptions);
+        var context = await Browser.NewContextAsync(ContextOptions());
         var page = await context.NewPageAsync();
-        await page.GotoAsync(server.Prefix + "/input/textarea.html");
+        await page.GotoAsync(Server.Prefix + "/input/textarea.html");
 
         await page.Screencast.ShowActionsAsync(new() { Duration = 5000 });
         IgnoreErrors(page.FillAsync("textarea", "hello"));
@@ -178,17 +178,17 @@ public class ScreencastActionsTests
     }
 
     [UpstreamTest("SC-021 should stop showing actions after dispose")]
-    public async Task ShouldStopShowingActionsAfterDispose(IBrowser browser, Server server, BrowserNewContextOptions contextOptions)
+    public async Task ShouldStopShowingActionsAfterDispose()
     {
-        var context = await browser.NewContextAsync(contextOptions);
+        var context = await Browser.NewContextAsync(ContextOptions());
         var page = await context.NewPageAsync();
-        await page.GotoAsync(server.Prefix + "/input/button.html");
+        await page.GotoAsync(Server.Prefix + "/input/button.html");
 
         var actions = await page.Screencast.ShowActionsAsync(new() { Duration = 1000 });
         await page.ClickAsync("button");
         await actions.DisposeAsync();
 
-        await page.GotoAsync(server.Prefix + "/input/button.html");
+        await page.GotoAsync(Server.Prefix + "/input/button.html");
         await page.ClickAsync("button");
 
         await Expect(page.Locator("x-pw-title")).ToBeHiddenAsync();
@@ -197,17 +197,17 @@ public class ScreencastActionsTests
     }
 
     [UpstreamTest("SC-022 should stop showing actions after hideActions")]
-    public async Task ShouldStopShowingActionsAfterHideActions(IBrowser browser, Server server, BrowserNewContextOptions contextOptions)
+    public async Task ShouldStopShowingActionsAfterHideActions()
     {
-        var context = await browser.NewContextAsync(contextOptions);
+        var context = await Browser.NewContextAsync(ContextOptions());
         var page = await context.NewPageAsync();
-        await page.GotoAsync(server.Prefix + "/input/button.html");
+        await page.GotoAsync(Server.Prefix + "/input/button.html");
 
         await page.Screencast.ShowActionsAsync(new() { Duration = 1000 });
         await page.ClickAsync("button");
         await page.Screencast.HideActionsAsync();
 
-        await page.GotoAsync(server.Prefix + "/input/button.html");
+        await page.GotoAsync(Server.Prefix + "/input/button.html");
         await page.ClickAsync("button");
 
         await Expect(page.Locator("x-pw-title")).ToBeHiddenAsync();
@@ -216,11 +216,11 @@ public class ScreencastActionsTests
     }
 
     [UpstreamTest("SC-023 should render an action cursor that animates to the click point")]
-    public async Task ShouldRenderAnActionCursorThatAnimatesToTheClickPoint(IBrowser browser, Server server, BrowserNewContextOptions contextOptions)
+    public async Task ShouldRenderAnActionCursorThatAnimatesToTheClickPoint()
     {
-        var context = await browser.NewContextAsync(contextOptions);
+        var context = await Browser.NewContextAsync(ContextOptions());
         var page = await context.NewPageAsync();
-        await page.GotoAsync(server.Prefix + "/input/button.html");
+        await page.GotoAsync(Server.Prefix + "/input/button.html");
 
         await page.Screencast.ShowActionsAsync(new() { Duration = 5000 });
         IgnoreErrors(page.ClickAsync("button"));
@@ -239,9 +239,9 @@ public class ScreencastActionsTests
     }
 
     [UpstreamTest("SC-024 cursor moves between two pointer actions")]
-    public async Task CursorMovesBetweenTwoPointerActions(IBrowser browser, Server server, BrowserNewContextOptions contextOptions)
+    public async Task CursorMovesBetweenTwoPointerActions()
     {
-        var context = await browser.NewContextAsync(contextOptions);
+        var context = await Browser.NewContextAsync(ContextOptions());
         var page = await context.NewPageAsync();
         await page.SetContentAsync(@"
     <div style=""position: fixed; top: 20px; left: 20px; width: 60px; height: 60px;"" id=""a"">A</div>
@@ -265,11 +265,11 @@ public class ScreencastActionsTests
     }
 
     [UpstreamTest("SC-025 cursor: \"none\" suppresses the action cursor decoration")]
-    public async Task CursorNoneSuppressesTheActionCursorDecoration(IBrowser browser, Server server, BrowserNewContextOptions contextOptions)
+    public async Task CursorNoneSuppressesTheActionCursorDecoration()
     {
-        var context = await browser.NewContextAsync(contextOptions);
+        var context = await Browser.NewContextAsync(ContextOptions());
         var page = await context.NewPageAsync();
-        await page.GotoAsync(server.Prefix + "/input/button.html");
+        await page.GotoAsync(Server.Prefix + "/input/button.html");
 
         await page.Screencast.ShowActionsAsync(new() { Duration = 5000, Cursor = ScreencastCursor.None });
         IgnoreErrors(page.ClickAsync("button"));
@@ -282,11 +282,11 @@ public class ScreencastActionsTests
     }
 
     [UpstreamTest("SC-026 cursor stays at the last action point until hideActions")]
-    public async Task CursorStaysAtTheLastActionPointUntilHideActions(IBrowser browser, Server server, BrowserNewContextOptions contextOptions)
+    public async Task CursorStaysAtTheLastActionPointUntilHideActions()
     {
-        var context = await browser.NewContextAsync(contextOptions);
+        var context = await Browser.NewContextAsync(ContextOptions());
         var page = await context.NewPageAsync();
-        await page.GotoAsync(server.Prefix + "/input/button.html");
+        await page.GotoAsync(Server.Prefix + "/input/button.html");
 
         await page.Screencast.ShowActionsAsync(new() { Duration = 100 });
         await page.ClickAsync("button");
@@ -295,7 +295,7 @@ public class ScreencastActionsTests
         await Expect(cursor).ToBeVisibleAsync();
         var position = await cursor.EvaluateAsync<object>("el => ({ top: el.style.top, left: el.style.left })");
 
-        await page.GotoAsync(server.EmptyPage);
+        await page.GotoAsync(Server.EmptyPage);
         await Expect(cursor).ToBeVisibleAsync();
         ExpectToEqual(await cursor.EvaluateAsync<object>("el => ({ top: el.style.top, left: el.style.left })"), position);
 
@@ -306,18 +306,18 @@ public class ScreencastActionsTests
     }
 
     [UpstreamTest("SC-027 should survive navigation")]
-    public async Task ShouldSurviveNavigation(IBrowser browser, Server server, BrowserNewContextOptions contextOptions)
+    public async Task ShouldSurviveNavigation()
     {
-        var context = await browser.NewContextAsync(contextOptions);
+        var context = await Browser.NewContextAsync(ContextOptions());
         var page = await context.NewPageAsync();
-        await page.GotoAsync(server.Prefix + "/input/button.html");
+        await page.GotoAsync(Server.Prefix + "/input/button.html");
 
         await page.Screencast.ShowActionsAsync(new() { Duration = 5000 });
         IgnoreErrors(page.ClickAsync("button"));
 
         await Expect(page.Locator("x-pw-title")).ToBeVisibleAsync();
 
-        await page.GotoAsync(server.Prefix + "/input/button.html");
+        await page.GotoAsync(Server.Prefix + "/input/button.html");
         IgnoreErrors(page.ClickAsync("button"));
 
         await Expect(page.Locator("x-pw-title")).ToBeVisibleAsync();

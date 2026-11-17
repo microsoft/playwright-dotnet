@@ -23,7 +23,7 @@ using static Microsoft.Playwright.Tests.Fixtures.Utils;
 namespace Microsoft.Playwright.Tests.Page;
 
 /// <summary>Port of tests/page/page-mouse.spec.ts.</summary>
-public class PageMouseTests
+public class PageMouseTests : UpstreamPageTest
 {
     private const string dimensions = @"function dimensions() {
   const rect = document.querySelector('textarea').getBoundingClientRect();
@@ -36,9 +36,9 @@ public class PageMouseTests
 }";
 
     [UpstreamTest("MO-001 should click the document @smoke")]
-    public async Task ShouldClickTheDocument(IPage page, Server server)
+    public async Task ShouldClickTheDocument()
     {
-        await page.EvaluateAsync(@"() => {
+        await Page.EvaluateAsync(@"() => {
     window['clickPromise'] = new Promise(resolve => {
       document.addEventListener('click', event => {
         resolve({
@@ -52,8 +52,8 @@ public class PageMouseTests
       });
     });
   }");
-        await page.Mouse.ClickAsync(50, 60);
-        var @event = await page.EvaluateAsync<JsonElement>("() => window['clickPromise']");
+        await Page.Mouse.ClickAsync(50, 60);
+        var @event = await Page.EvaluateAsync<JsonElement>("() => window['clickPromise']");
         Assert.That(@event.GetProperty("type").GetString(), Is.EqualTo("click"));
         Assert.That(@event.GetProperty("detail").GetInt32(), Is.EqualTo(1));
         Assert.That(@event.GetProperty("clientX").GetInt32(), Is.EqualTo(50));
@@ -63,10 +63,10 @@ public class PageMouseTests
     }
 
     [UpstreamTest("MO-002 should dblclick the div")]
-    public async Task ShouldDblclickTheDiv(IPage page, Server server)
+    public async Task ShouldDblclickTheDiv()
     {
-        await page.SetContentAsync("<div style='width: 100px; height: 100px;'>Click me</div>");
-        await page.EvaluateAsync(@"() => {
+        await Page.SetContentAsync("<div style='width: 100px; height: 100px;'>Click me</div>");
+        await Page.EvaluateAsync(@"() => {
     window['dblclickPromise'] = new Promise(resolve => {
       document.querySelector('div').addEventListener('dblclick', event => {
         resolve({
@@ -80,8 +80,8 @@ public class PageMouseTests
       });
     });
   }");
-        await page.Mouse.DblClickAsync(50, 60);
-        var @event = await page.EvaluateAsync<JsonElement>("() => window['dblclickPromise']");
+        await Page.Mouse.DblClickAsync(50, 60);
+        var @event = await Page.EvaluateAsync<JsonElement>("() => window['dblclickPromise']");
         Assert.That(@event.GetProperty("type").GetString(), Is.EqualTo("dblclick"));
         Assert.That(@event.GetProperty("detail").GetInt32(), Is.EqualTo(2));
         Assert.That(@event.GetProperty("clientX").GetInt32(), Is.EqualTo(50));
@@ -91,9 +91,9 @@ public class PageMouseTests
     }
 
     [UpstreamTest("MO-003 down and up should generate click")]
-    public async Task DownAndUpShouldGenerateClick(IPage page, Server server)
+    public async Task DownAndUpShouldGenerateClick()
     {
-        await page.EvaluateAsync(@"() => {
+        await Page.EvaluateAsync(@"() => {
     window['clickPromise'] = new Promise(resolve => {
       document.addEventListener('click', event => {
         resolve({
@@ -107,10 +107,10 @@ public class PageMouseTests
       });
     });
   }");
-        await page.Mouse.MoveAsync(50, 60);
-        await page.Mouse.DownAsync();
-        await page.Mouse.UpAsync();
-        var @event = await page.EvaluateAsync<JsonElement>("() => window['clickPromise']");
+        await Page.Mouse.MoveAsync(50, 60);
+        await Page.Mouse.DownAsync();
+        await Page.Mouse.UpAsync();
+        var @event = await Page.EvaluateAsync<JsonElement>("() => window['clickPromise']");
         Assert.That(@event.GetProperty("type").GetString(), Is.EqualTo("click"));
         Assert.That(@event.GetProperty("detail").GetInt32(), Is.EqualTo(1));
         Assert.That(@event.GetProperty("clientX").GetInt32(), Is.EqualTo(50));
@@ -120,10 +120,10 @@ public class PageMouseTests
     }
 
     [UpstreamTest("MO-004 should pointerdown the div with a custom button")]
-    public async Task ShouldPointerdownTheDivWithACustomButton(IPage page, Server server, string browserName)
+    public async Task ShouldPointerdownTheDivWithACustomButton()
     {
-        await page.SetContentAsync("<div style='width: 100px; height: 100px;'>Click me</div>");
-        await page.EvaluateAsync(@"() => {
+        await Page.SetContentAsync("<div style='width: 100px; height: 100px;'>Click me</div>");
+        await Page.EvaluateAsync(@"() => {
     window['pointerdownPromise'] = new Promise(resolve => {
       document.querySelector('div').addEventListener('pointerdown', event => {
         resolve({
@@ -139,13 +139,13 @@ public class PageMouseTests
       });
     });
   }");
-        await page.Mouse.ClickAsync(50, 60, new()
+        await Page.Mouse.ClickAsync(50, 60, new()
         {
             Button = MouseButton.Middle,
         });
-        var @event = await page.EvaluateAsync<JsonElement>("() => window['pointerdownPromise']");
+        var @event = await Page.EvaluateAsync<JsonElement>("() => window['pointerdownPromise']");
         Assert.That(@event.GetProperty("type").GetString(), Is.EqualTo("pointerdown"));
-        Assert.That(@event.GetProperty("detail").GetInt32(), Is.EqualTo(browserName == "webkit" ? 1 : 0));
+        Assert.That(@event.GetProperty("detail").GetInt32(), Is.EqualTo(BrowserName == "webkit" ? 1 : 0));
         Assert.That(@event.GetProperty("clientX").GetInt32(), Is.EqualTo(50));
         Assert.That(@event.GetProperty("clientY").GetInt32(), Is.EqualTo(60));
         Assert.That(@event.GetProperty("isTrusted").GetBoolean(), Is.EqualTo(true));
@@ -155,9 +155,9 @@ public class PageMouseTests
     }
 
     [UpstreamTest("MO-005 should report correct buttons property")]
-    public async Task ShouldReportCorrectButtonsProperty(IPage page)
+    public async Task ShouldReportCorrectButtonsProperty()
     {
-        await page.EvaluateAsync(@"() => {
+        await Page.EvaluateAsync(@"() => {
     window.__EVENTS = [];
     const handler = event => {
       window.__EVENTS.push({
@@ -169,24 +169,24 @@ public class PageMouseTests
     window.addEventListener('mousedown', handler, false);
     window.addEventListener('mouseup', handler, false);
   }");
-        await page.Mouse.MoveAsync(50, 60);
-        await page.Mouse.DownAsync(new()
+        await Page.Mouse.MoveAsync(50, 60);
+        await Page.Mouse.DownAsync(new()
         {
             Button = MouseButton.Middle,
         });
-        await page.Mouse.DownAsync(new()
+        await Page.Mouse.DownAsync(new()
         {
             Button = MouseButton.Left,
         });
-        await page.Mouse.UpAsync(new()
+        await Page.Mouse.UpAsync(new()
         {
             Button = MouseButton.Middle,
         });
-        await page.Mouse.UpAsync(new()
+        await Page.Mouse.UpAsync(new()
         {
             Button = MouseButton.Left,
         });
-        ExpectToEqual(await page.EvaluateAsync<object>("() => window.__EVENTS"), new[]
+        ExpectToEqual(await Page.EvaluateAsync<object>("() => window.__EVENTS"), new[]
         {
             new { type = "mousedown", button = 1, buttons = 4 },
             new { type = "mousedown", button = 0, buttons = 5 },
@@ -196,10 +196,10 @@ public class PageMouseTests
     }
 
     [UpstreamTest("MO-006 should report correct pointerType property")]
-    public async Task ShouldReportCorrectPointerTypeProperty(IPage page)
+    public async Task ShouldReportCorrectPointerTypeProperty()
     {
-        await page.Mouse.MoveAsync(50, 60);
-        await page.EvaluateAsync(@"() => {
+        await Page.Mouse.MoveAsync(50, 60);
+        await Page.EvaluateAsync(@"() => {
     window.__EVENTS = [];
     const handler = event => {
       window.__EVENTS.push({
@@ -211,10 +211,10 @@ public class PageMouseTests
     window.addEventListener('pointermove', handler, false);
     window.addEventListener('pointerup', handler, false);
   }");
-        await page.Mouse.MoveAsync(60, 50);
-        await page.Mouse.DownAsync();
-        await page.Mouse.UpAsync();
-        ExpectToEqual(await page.EvaluateAsync<object>("() => window.__EVENTS"), new[]
+        await Page.Mouse.MoveAsync(60, 50);
+        await Page.Mouse.DownAsync();
+        await Page.Mouse.UpAsync();
+        ExpectToEqual(await Page.EvaluateAsync<object>("() => window.__EVENTS"), new[]
         {
             new { type = "pointermove", pointerType = "mouse" },
             new { type = "pointerdown", pointerType = "mouse" },
@@ -223,89 +223,89 @@ public class PageMouseTests
     }
 
     [UpstreamTest("MO-007 should select the text with mouse")]
-    public async Task ShouldSelectTheTextWithMouse(IPage page, Server server)
+    public async Task ShouldSelectTheTextWithMouse()
     {
-        await page.GotoAsync(server.Prefix + "/input/textarea.html");
-        await page.FocusAsync("textarea");
+        await Page.GotoAsync(Server.Prefix + "/input/textarea.html");
+        await Page.FocusAsync("textarea");
         var text = "This is the text that we are going to try to select. Let's see how it goes.";
-        await page.Keyboard.TypeAsync(text);
+        await Page.Keyboard.TypeAsync(text);
         // Firefox needs an extra frame here after typing or it will fail to set the scrollTop
-        await Rafraf(page);
-        await page.EvaluateAsync("() => document.querySelector('textarea').scrollTop = 0");
+        await Rafraf(Page);
+        await Page.EvaluateAsync("() => document.querySelector('textarea').scrollTop = 0");
         // .NET: const { x, y } = await page.evaluate(dimensions);
-        var rect = await page.EvaluateAsync<JsonElement>(dimensions);
+        var rect = await Page.EvaluateAsync<JsonElement>(dimensions);
         var (x, y) = (rect.GetProperty("x").GetSingle(), rect.GetProperty("y").GetSingle());
-        await page.Mouse.MoveAsync(x + 2, y + 2);
-        await page.Mouse.DownAsync();
-        await page.Mouse.MoveAsync(200, 200);
-        await page.Mouse.UpAsync();
-        Assert.That(await page.EvaluateAsync<string>(@"() => {
+        await Page.Mouse.MoveAsync(x + 2, y + 2);
+        await Page.Mouse.DownAsync();
+        await Page.Mouse.MoveAsync(200, 200);
+        await Page.Mouse.UpAsync();
+        Assert.That(await Page.EvaluateAsync<string>(@"() => {
     const textarea = document.querySelector('textarea');
     return textarea.value.substring(textarea.selectionStart, textarea.selectionEnd);
   }"), Is.EqualTo(text));
     }
 
     [UpstreamTest("MO-008 should trigger hover state")]
-    public async Task ShouldTriggerHoverState(IPage page, Server server, bool headless)
+    public async Task ShouldTriggerHoverState()
     {
-        Info.Skip(!headless, "headed messes up with hover");
+        Info.Skip(!Headless, "headed messes up with hover");
 
-        await page.GotoAsync(server.Prefix + "/input/scrollable.html");
-        await page.HoverAsync("#button-6");
-        Assert.That(await page.EvaluateAsync<string>("() => document.querySelector('button:hover').id"), Is.EqualTo("button-6"));
-        await page.HoverAsync("#button-2");
-        Assert.That(await page.EvaluateAsync<string>("() => document.querySelector('button:hover').id"), Is.EqualTo("button-2"));
-        await page.HoverAsync("#button-91");
-        Assert.That(await page.EvaluateAsync<string>("() => document.querySelector('button:hover').id"), Is.EqualTo("button-91"));
+        await Page.GotoAsync(Server.Prefix + "/input/scrollable.html");
+        await Page.HoverAsync("#button-6");
+        Assert.That(await Page.EvaluateAsync<string>("() => document.querySelector('button:hover').id"), Is.EqualTo("button-6"));
+        await Page.HoverAsync("#button-2");
+        Assert.That(await Page.EvaluateAsync<string>("() => document.querySelector('button:hover').id"), Is.EqualTo("button-2"));
+        await Page.HoverAsync("#button-91");
+        Assert.That(await Page.EvaluateAsync<string>("() => document.querySelector('button:hover').id"), Is.EqualTo("button-91"));
     }
 
     [UpstreamTest("MO-009 should trigger hover state on disabled button")]
-    public async Task ShouldTriggerHoverStateOnDisabledButton(IPage page, Server server, bool headless)
+    public async Task ShouldTriggerHoverStateOnDisabledButton()
     {
-        Info.Skip(!headless, "headed messes up with hover");
+        Info.Skip(!Headless, "headed messes up with hover");
 
-        await page.GotoAsync(server.Prefix + "/input/scrollable.html");
-        await page.EvalOnSelectorAsync("#button-6", "button => button.disabled = true");
-        await page.HoverAsync("#button-6", new() { Timeout = 5000 });
-        Assert.That(await page.EvaluateAsync<string>("() => document.querySelector('button:hover').id"), Is.EqualTo("button-6"));
+        await Page.GotoAsync(Server.Prefix + "/input/scrollable.html");
+        await Page.EvalOnSelectorAsync("#button-6", "button => button.disabled = true");
+        await Page.HoverAsync("#button-6", new() { Timeout = 5000 });
+        Assert.That(await Page.EvaluateAsync<string>("() => document.querySelector('button:hover').id"), Is.EqualTo("button-6"));
     }
 
     [UpstreamTest("MO-010 should trigger hover state with removed window.Node")]
-    public async Task ShouldTriggerHoverStateWithRemovedWindowNode(IPage page, Server server, bool headless)
+    public async Task ShouldTriggerHoverStateWithRemovedWindowNode()
     {
-        Info.Skip(!headless, "headed messes up with hover");
+        Info.Skip(!Headless, "headed messes up with hover");
 
-        await page.GotoAsync(server.Prefix + "/input/scrollable.html");
-        await page.EvaluateAsync("() => delete window.Node");
-        await page.HoverAsync("#button-6");
-        Assert.That(await page.EvaluateAsync<string>("() => document.querySelector('button:hover').id"), Is.EqualTo("button-6"));
+        await Page.GotoAsync(Server.Prefix + "/input/scrollable.html");
+        await Page.EvaluateAsync("() => delete window.Node");
+        await Page.HoverAsync("#button-6");
+        Assert.That(await Page.EvaluateAsync<string>("() => document.querySelector('button:hover').id"), Is.EqualTo("button-6"));
     }
 
     [UpstreamTest("MO-011 should set modifier keys on click")]
-    public async Task ShouldSetModifierKeysOnClick(IPage page, Server server, string browserName, bool isMac)
+    public async Task ShouldSetModifierKeysOnClick()
     {
-        await page.GotoAsync(server.Prefix + "/input/scrollable.html");
-        await page.EvaluateAsync("() => document.querySelector('#button-3').addEventListener('mousedown', e => window['lastEvent'] = e, true)");
+        await Page.GotoAsync(Server.Prefix + "/input/scrollable.html");
+        await Page.EvaluateAsync("() => document.querySelector('#button-3').addEventListener('mousedown', e => window['lastEvent'] = e, true)");
         var modifiers = new Dictionary<string, string> { ["Shift"] = "shiftKey", ["Control"] = "ctrlKey", ["Alt"] = "altKey", ["Meta"] = "metaKey" };
         // In Firefox, the Meta modifier only exists on Mac
-        if (browserName == "firefox" && !isMac)
+        if (BrowserName == "firefox" && !IsMac)
         {
             modifiers.Remove("Meta");
         }
         foreach (var modifier in modifiers.Keys)
         {
-            await page.Keyboard.DownAsync(modifier);
-            await page.ClickAsync("#button-3");
-            if (!(await page.EvaluateAsync<bool>("mod => window['lastEvent'][mod]", modifiers[modifier])))
+            await Page.Keyboard.DownAsync(modifier);
+            await Page.ClickAsync("#button-3");
+            if (!(await Page.EvaluateAsync<bool>("mod => window['lastEvent'][mod]", modifiers[modifier])))
             {
                 throw new Exception(modifiers[modifier] + " should be true");
             }
-            await page.Keyboard.UpAsync(modifier);
+            await Page.Keyboard.UpAsync(modifier);
         }
-        await page.ClickAsync("#button-3");
+        await Page.ClickAsync("#button-3");
         foreach (var modifier in modifiers.Keys)
         {
-            if (await page.EvaluateAsync<bool>("mod => window['lastEvent'][mod]", modifiers[modifier]))
+            if (await Page.EvaluateAsync<bool>("mod => window['lastEvent'][mod]", modifiers[modifier]))
             {
                 throw new Exception(modifiers[modifier] + " should be false");
             }
@@ -313,25 +313,25 @@ public class PageMouseTests
     }
 
     [UpstreamTest("MO-012 should tween mouse movement")]
-    public async Task ShouldTweenMouseMovement(IPage page, string browserName, bool isAndroid, bool headless)
+    public async Task ShouldTweenMouseMovement()
     {
-        Info.Skip(isAndroid, "Bad rounding");
-        Info.Skip(!headless, "actual mouse interferes with the exact mousemove events");
+        Info.Skip(IsAndroid, "Bad rounding");
+        Info.Skip(!Headless, "actual mouse interferes with the exact mousemove events");
 
         // The test becomes flaky on WebKit without next line.
-        if (browserName == "webkit")
+        if (BrowserName == "webkit")
         {
-            await page.EvaluateAsync("() => new Promise(requestAnimationFrame)");
+            await Page.EvaluateAsync("() => new Promise(requestAnimationFrame)");
         }
-        await page.Mouse.MoveAsync(100, 100);
-        await page.EvaluateAsync(@"() => {
+        await Page.Mouse.MoveAsync(100, 100);
+        await Page.EvaluateAsync(@"() => {
     window['result'] = [];
     document.addEventListener('mousemove', event => {
       window['result'].push([event.clientX, event.clientY, event.movementX, event.movementY]);
     });
   }");
-        await page.Mouse.MoveAsync(200, 300, new() { Steps = 5 });
-        ExpectToEqual(await page.EvaluateAsync<object>("result"), new[]
+        await Page.Mouse.MoveAsync(200, 300, new() { Steps = 5 });
+        ExpectToEqual(await Page.EvaluateAsync<object>("result"), new[]
         {
             new[] { 120, 140, 20, 40 },
             new[] { 140, 180, 20, 40 },
@@ -342,46 +342,46 @@ public class PageMouseTests
     }
 
     [UpstreamTest("MO-013 should always round down")]
-    public async Task ShouldAlwaysRoundDown(IPage page)
+    public async Task ShouldAlwaysRoundDown()
     {
-        await page.EvaluateAsync(@"() => {
+        await Page.EvaluateAsync(@"() => {
     document.addEventListener('mousedown', event => {
       window['result'] = [event.clientX, event.clientY];
     });
   }");
-        await page.Mouse.ClickAsync(50.1f, 50.9f);
-        ExpectToEqual(await page.EvaluateAsync<object>("result"), new[] { 50, 50 });
+        await Page.Mouse.ClickAsync(50.1f, 50.9f);
+        ExpectToEqual(await Page.EvaluateAsync<object>("result"), new[] { 50, 50 });
     }
 
     [UpstreamTest("MO-014 should not crash on mouse drag with any button")]
-    public async Task ShouldNotCrashOnMouseDragWithAnyButton(IPage page)
+    public async Task ShouldNotCrashOnMouseDragWithAnyButton()
     {
-        await page.EvaluateAsync(@"() => {
+        await Page.EvaluateAsync(@"() => {
     // Do not show contextmenu on right click since it is poorly supported.
     window.addEventListener('contextmenu', e => e.preventDefault(), false);
   }");
         foreach (var button in new[] { MouseButton.Left, MouseButton.Middle, MouseButton.Right })
         {
-            await page.Mouse.MoveAsync(50, 50);
-            await page.Mouse.DownAsync(new() { Button = button });
-            await page.Mouse.MoveAsync(100, 100);
+            await Page.Mouse.MoveAsync(50, 50);
+            await Page.Mouse.DownAsync(new() { Button = button });
+            await Page.Mouse.MoveAsync(100, 100);
         }
     }
 
     [UpstreamTest("MO-015 should dispatch mouse move after context menu was opened")]
-    public async Task ShouldDispatchMouseMoveAfterContextMenuWasOpened(IPage page, string browserName, bool isWindows)
+    public async Task ShouldDispatchMouseMoveAfterContextMenuWasOpened()
     {
-        Info.Fixme(browserName == "chromium" && isWindows, "context menu support is best-effort for Linux and MacOS");
-        await page.EvaluateAsync(@"() => {
+        Info.Fixme(BrowserName == "chromium" && IsWindows, "context menu support is best-effort for Linux and MacOS");
+        await Page.EvaluateAsync(@"() => {
     window['contextMenuPromise'] = new Promise(x => {
       window.addEventListener('contextmenu', x, false);
     });
   }");
         const int CX = 100;
         const int CY = 100;
-        await page.Mouse.MoveAsync(CX, CY);
-        await page.Mouse.DownAsync(new() { Button = MouseButton.Right });
-        await page.EvaluateAsync("() => window['contextMenuPromise']");
+        await Page.Mouse.MoveAsync(CX, CY);
+        await Page.Mouse.DownAsync(new() { Button = MouseButton.Right });
+        await Page.EvaluateAsync("() => window['contextMenuPromise']");
         const int N = 20;
         foreach (var radius in new[] { 10, 30, 60, 90 })
         {
@@ -390,17 +390,17 @@ public class PageMouseTests
                 var angle = 2 * Math.PI * i / N;
                 var x = CX + (int)Math.Round(radius * Math.Cos(angle), MidpointRounding.AwayFromZero);
                 var y = CY + (int)Math.Round(radius * Math.Sin(angle), MidpointRounding.AwayFromZero);
-                await page.Mouse.MoveAsync(x, y);
+                await Page.Mouse.MoveAsync(x, y);
             }
         }
     }
 
     [UpstreamTest("MO-016 should track hover across iframe boundaries")]
-    public async Task ShouldTrackHoverAcrossIframeBoundaries(IPage page, bool headless)
+    public async Task ShouldTrackHoverAcrossIframeBoundaries()
     {
-        Info.Skip(!headless, "headed messes up with hover");
+        Info.Skip(!Headless, "headed messes up with hover");
 
-        await page.SetContentAsync(@"
+        await Page.SetContentAsync(@"
     <style>
       body, html { margin: 0; padding: 0; }
       #parentBox { position: absolute; left: 10px; top: 10px; width: 100px; height: 100px; }
@@ -423,23 +423,23 @@ public class PageMouseTests
       box.addEventListener('mouseleave', () => window.__log.push('parent:leave'));
     </script>
   ");
-        await page.WaitForSelectorAsync("iframe");
-        await page.Frames[1].WaitForSelectorAsync("#childBox");
-        var log = () => page.EvaluateAsync<string[]>("() => window['__log']");
-        var parentBox = await page.Locator("#parentBox").BoundingBoxAsync();
-        var iframeBox = await page.Locator("iframe").BoundingBoxAsync();
+        await Page.WaitForSelectorAsync("iframe");
+        await Page.Frames[1].WaitForSelectorAsync("#childBox");
+        var log = () => Page.EvaluateAsync<string[]>("() => window['__log']");
+        var parentBox = await Page.Locator("#parentBox").BoundingBoxAsync();
+        var iframeBox = await Page.Locator("iframe").BoundingBoxAsync();
         var parentCenter = new { x = parentBox.X + (parentBox.Width / 2), y = parentBox.Y + (parentBox.Height / 2) };
         var childCenter = new { x = iframeBox.X + 90, y = iframeBox.Y + 90 };
 
-        await page.Mouse.MoveAsync(parentCenter.x, parentCenter.y);
+        await Page.Mouse.MoveAsync(parentCenter.x, parentCenter.y);
         await Expect(async () => Assert.That(await log(), Is.EqualTo(new[] { "parent:enter" }))).ToPassAsync();
 
         // Crossing into the iframe leaves the parent element and enters the child.
-        await page.Mouse.MoveAsync(childCenter.x, childCenter.y);
+        await Page.Mouse.MoveAsync(childCenter.x, childCenter.y);
         await Expect(async () => Assert.That(await log(), Is.EqualTo(new[] { "parent:enter", "parent:leave", "child:enter" }))).ToPassAsync();
 
         // Crossing back out leaves the child element and re-enters the parent.
-        await page.Mouse.MoveAsync(parentCenter.x, parentCenter.y);
+        await Page.Mouse.MoveAsync(parentCenter.x, parentCenter.y);
         await Expect(async () => Assert.That(await log(), Is.EqualTo(new[] { "parent:enter", "parent:leave", "child:enter", "child:leave", "parent:enter" }))).ToPassAsync();
     }
 }

@@ -21,17 +21,17 @@ using static Microsoft.Playwright.Tests.Fixtures.Utils;
 namespace Microsoft.Playwright.Tests.Page;
 
 /// <summary>Port of tests/page/elementhandle-scroll-into-view.spec.ts.</summary>
-public class ElementhandleScrollIntoViewTests
+public class ElementhandleScrollIntoViewTests : UpstreamPageTest
 {
     [UpstreamTest("EH-093 should work @smoke")]
-    public async Task ShouldWork(IPage page, Server server, bool isAndroid)
+    public async Task ShouldWork()
     {
-        Info.Fixme(isAndroid);
+        Info.Fixme(IsAndroid);
 
-        await page.GotoAsync(server.Prefix + "/offscreenbuttons.html");
+        await Page.GotoAsync(Server.Prefix + "/offscreenbuttons.html");
         for (var i = 0; i < 11; ++i)
         {
-            var button = await page.QuerySelectorAsync("#btn" + i);
+            var button = await Page.QuerySelectorAsync("#btn" + i);
             var before = await button.EvaluateAsync<double>(@"button => {
       return button.getBoundingClientRect().right - window.innerWidth;
     }");
@@ -41,15 +41,15 @@ public class ElementhandleScrollIntoViewTests
       return button.getBoundingClientRect().right - window.innerWidth;
     }");
             Assert.That(after <= 0, Is.EqualTo(true));
-            await page.EvaluateAsync("() => window.scrollTo(0, 0)");
+            await Page.EvaluateAsync("() => window.scrollTo(0, 0)");
         }
     }
 
     [UpstreamTest("EH-094 should throw for detached element")]
-    public async Task ShouldThrowForDetachedElement(IPage page, Server server)
+    public async Task ShouldThrowForDetachedElement()
     {
-        await page.SetContentAsync("<div>Hello</div>");
-        var div = await page.QuerySelectorAsync("div");
+        await Page.SetContentAsync("<div>Hello</div>");
+        var div = await Page.QuerySelectorAsync("div");
         await div.EvaluateAsync("div => div.remove()");
         var error = await Catch(() => div.ScrollIntoViewIfNeededAsync());
         Assert.That(error.Message, Does.Contain("Element is not attached to the DOM"));
@@ -74,18 +74,18 @@ public class ElementhandleScrollIntoViewTests
     }
 
     [UpstreamTest("EH-095 should wait for display:none to become visible")]
-    public async Task ShouldWaitForDisplayNoneToBecomeVisible(IPage page, Server server)
+    public async Task ShouldWaitForDisplayNoneToBecomeVisible()
     {
-        await page.SetContentAsync("<div style=\"display:none\">Hello</div>");
-        await TestWaiting(page, "div => div.style.display = 'block'");
+        await Page.SetContentAsync("<div style=\"display:none\">Hello</div>");
+        await TestWaiting(Page, "div => div.style.display = 'block'");
     }
 
     [UpstreamTest("EH-096 should scroll display:contents into view")]
-    public async Task ShouldScrollDisplayContentsIntoView(IPage page, string browserName, int browserMajorVersion)
+    public async Task ShouldScrollDisplayContentsIntoView()
     {
-        Info.Skip(browserName == "chromium" && browserMajorVersion < 105, "Needs https://chromium-review.googlesource.com/c/chromium/src/+/3758670");
+        Info.Skip(BrowserName == "chromium" && BrowserMajorVersion < 105, "Needs https://chromium-review.googlesource.com/c/chromium/src/+/3758670");
 
-        await page.SetContentAsync(@"
+        await Page.SetContentAsync(@"
     <style>
       html, body { margin: 0; padding: 0; width: 100%; height: 100%; }
       ::-webkit-scrollbar { display: none; }
@@ -99,17 +99,17 @@ public class ElementhandleScrollIntoViewTests
       <div>
     </div>
   ");
-        var div = await page.QuerySelectorAsync("#target");
+        var div = await Page.QuerySelectorAsync("#target");
         await div.ScrollIntoViewIfNeededAsync();
-        var scrollTop = await page.EvalOnSelectorAsync<double>("#container", "e => e.scrollTop");
+        var scrollTop = await Page.EvalOnSelectorAsync<double>("#container", "e => e.scrollTop");
         // On Android the value is not exact due to various scale conversions.
         Assert.That(Math.Abs(scrollTop - 350), Is.LessThan(1));
     }
 
     [UpstreamTest("EH-124 should scroll nested display:contents into view")]
-    public async Task ShouldScrollNestedDisplayContentsIntoView(IPage page, string browserName, int browserMajorVersion)
+    public async Task ShouldScrollNestedDisplayContentsIntoView()
     {
-        await page.SetContentAsync(@"
+        await Page.SetContentAsync(@"
     <style>
       html, body { margin: 0; padding: 0; width: 100%; height: 100%; }
       ::-webkit-scrollbar { display: none; }
@@ -121,12 +121,12 @@ public class ElementhandleScrollIntoViewTests
       </div>
     </div>
   ");
-        var div = await page.QuerySelectorAsync("#outer");
+        var div = await Page.QuerySelectorAsync("#outer");
         await div.ScrollIntoViewIfNeededAsync();
         // The first box in the flattened subtree of #outer is #target, two levels down,
         // not the tall sibling. No whitespace text nodes inside #outer: in Firefox they
         // get boxes of their own, which would hide a fallback that only looks one level down.
-        var targetIsVisible = await page.EvalOnSelectorAsync<bool>("#target", @"target => {
+        var targetIsVisible = await Page.EvalOnSelectorAsync<bool>("#target", @"target => {
     const container = document.getElementById('container').getBoundingClientRect();
     const rect = target.getBoundingClientRect();
     return rect.top >= container.top && rect.bottom <= container.bottom;
@@ -135,32 +135,32 @@ public class ElementhandleScrollIntoViewTests
     }
 
     [UpstreamTest("EH-097 should work for visibility:hidden element")]
-    public async Task ShouldWorkForVisibilityHiddenElement(IPage page)
+    public async Task ShouldWorkForVisibilityHiddenElement()
     {
-        await page.SetContentAsync("<div style=\"visibility:hidden\">Hello</div>");
-        var div = await page.QuerySelectorAsync("div");
+        await Page.SetContentAsync("<div style=\"visibility:hidden\">Hello</div>");
+        var div = await Page.QuerySelectorAsync("div");
         await div.ScrollIntoViewIfNeededAsync();
     }
 
     [UpstreamTest("EH-098 should work for zero-sized element")]
-    public async Task ShouldWorkForZeroSizedElement(IPage page)
+    public async Task ShouldWorkForZeroSizedElement()
     {
-        await page.SetContentAsync("<div style=\"height:0\">Hello</div>");
-        var div = await page.QuerySelectorAsync("div");
+        await Page.SetContentAsync("<div style=\"height:0\">Hello</div>");
+        var div = await Page.QuerySelectorAsync("div");
         await div.ScrollIntoViewIfNeededAsync();
     }
 
     [UpstreamTest("EH-099 should wait for nested display:none to become visible")]
-    public async Task ShouldWaitForNestedDisplayNoneToBecomeVisible(IPage page, Server server)
+    public async Task ShouldWaitForNestedDisplayNoneToBecomeVisible()
     {
-        await page.SetContentAsync("<span style=\"display:none\"><div>Hello</div></span>");
-        await TestWaiting(page, "div => div.parentElement.style.display = 'block'");
+        await Page.SetContentAsync("<span style=\"display:none\"><div>Hello</div></span>");
+        await TestWaiting(Page, "div => div.parentElement.style.display = 'block'");
     }
 
     [UpstreamTest("EH-100 should wait for element to stop moving")]
-    public async Task ShouldWaitForElementToStopMoving(IPage page, Server server)
+    public async Task ShouldWaitForElementToStopMoving()
     {
-        await page.SetContentAsync(@"
+        await Page.SetContentAsync(@"
     <style>
       @keyframes move {
         from { margin-left: 0; }
@@ -172,14 +172,14 @@ public class ElementhandleScrollIntoViewTests
     </style>
     <div class=animated>moving</div>
     ");
-        await TestWaiting(page, "div => div.classList.remove('animated')");
+        await TestWaiting(Page, "div => div.classList.remove('animated')");
     }
 
     [UpstreamTest("EH-101 should timeout waiting for visible")]
-    public async Task ShouldTimeoutWaitingForVisible(IPage page, Server server)
+    public async Task ShouldTimeoutWaitingForVisible()
     {
-        await page.SetContentAsync("<div style=\"display:none\">Hello</div>");
-        var div = await page.QuerySelectorAsync("div");
+        await Page.SetContentAsync("<div style=\"display:none\">Hello</div>");
+        var div = await Page.QuerySelectorAsync("div");
         var error = await Catch(() => div.ScrollIntoViewIfNeededAsync(new() { Timeout = 3000 }));
         Assert.That(error.Message, Does.Contain("element is not visible"));
         Assert.That(error.Message, Does.Contain("retrying scroll into view action"));

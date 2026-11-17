@@ -47,12 +47,6 @@ The harness (base classes, test server, helpers) is `src/Playwright.Tests/Fixtur
 of `tests/config/`. A port of a test file does not change it. Section 7 says what to do when a
 test needs something that the harness does not have.
 
-Most files of `Page/` and `Library/` are not converted to these rules yet. They are in an older
-form, with the fixtures as parameters of the test, static `[BeforeEach]` hooks, `[Case]` and
-`[Fixture]`, and `Playwright.Tests.csproj` leaves them out of the build: `Compile Remove` takes
-all of them out, and `Compile Include` lists the converted ones. To convert a file, rewrite it
-by these rules, add it to `Compile Include`, and run it in the three browsers.
-
 ## 1. Files and names
 
 - The upstream file decides the C# file. `tests/page/page-check.spec.ts` is
@@ -77,8 +71,10 @@ by these rules, add it to `Compile Include`, and run it in the three browsers.
   ```
 
   The tests keep the upstream order, and they run in that order. `PageCheckTests.cs` is the
-  model; `PageBasicTests.cs` has skips, and `ElementhandleScreenshotTests.cs` has a describe,
-  modifiers and screenshots. A file without a test that can be ported has no C# file.
+  model; `PageBasicTests.cs` has skips, `ElementhandleScreenshotTests.cs` has a describe,
+  modifiers and screenshots, `Library/TapTests.cs` has a `test.use()` that its describes share,
+  and `Library/MulticlientTests.cs` has fixtures of its own. A file without a test that can be
+  ported has no C# file.
 - The class derives from a base class of the harness, which has the fixtures as properties
   (section 2). A file of `tests/page`, and a file of `tests/library` whose tests all take
   `page`, derives from `UpstreamPageTest`: every test has `Page` and `Context`. Another file
@@ -113,7 +109,14 @@ by these rules, add it to `Compile Include`, and run it in the three browsers.
     or a variable of the file, these go to an abstract class without tests,
     `PageClockTestsBase : UpstreamPageTest`, in the same file before the file class, and the
     file class and its nested classes derive from it. The hooks of the file run before the
-    hooks of the describe, as upstream. A field that a nested class uses is `protected`.
+    hooks of the describe, as upstream. A member that a nested class uses is `protected`. A
+    describe that has describes of its own and shares a hook with them gets such a class too,
+    `PageScreenshotBase`, right before it.
+  - A hook of a describe does not take the name of a hook of that base class: after `Skip` and
+    `Skip2` of the file, the first `skip` of the describe is `Skip3`.
+  - When the file class has no test of its own, only describes, and its fixtures need the
+    private helpers of the file, the nested classes derive from the file class itself, with a
+    `// .NET:` mark, as in `Library/ClientCertificatesTests.cs`.
   - When that name is the name of a test in it, the name of an earlier describe, or does not
     compile, it is `ToHaveCountDescribe`.
   - A describe whose whole title is a loop variable is `Describe`.
@@ -140,7 +143,9 @@ by these rules, add it to `Compile Include`, and run it in the three browsers.
 - `beforeEach`/`afterEach` are public `[SetUp]`/`[TearDown]` methods, named `BeforeEach` and
   `AfterEach` (`BeforeEach2` for a second one). They use the fixtures like a test.
   `beforeAll`/`afterAll` are static `[OneTimeSetUp]`/`[OneTimeTearDown]` methods, named
-  `BeforeAll` and `AfterAll`. They run outside of a test: the fixtures of a test are not there.
+  `BeforeAll` and `AfterAll`. They run outside of a test: only the fixtures that are the same
+  for the whole run are there (`BrowserName`, `Platform`, `Channel`, `Headless`, ...), which
+  are static.
   A variable of the file or of a describe (`let page; beforeEach(...)`) is a private field of
   the class with the upstream name, at the upstream place. Every test runs in an instance of
   the class of its own, so a field keeps nothing from one test to the next: a variable that a
@@ -151,10 +156,14 @@ by these rules, add it to `Compile Include`, and run it in the three browsers.
     `public bool FailsOn401 => BrowserName == "chromium" && !IsHeadlessShell;`.
   - A fixture with a setup is a method that makes the value once per test, as `PageFixture()`
     of the harness does, and a test that takes the fixture calls it at its start:
-    `var calls = await Calls();`. What follows `use(value)` upstream is a `[TearDown]` method,
-    named after the fixture with `TearDown` at the end, which also forgets the value.
+    `var calls = await Calls();`. The value is kept in a private field, `_calls ??= ...`. What
+    follows `use(value)` upstream is a `[TearDown]` method, named after the fixture with
+    `TearDown` at the end, which also forgets the value.
   - `{ auto: true }` is a `[SetUp]` method.
-  - A fixture whose value is a function is a method with the parameters of that function.
+  - A fixture whose value is a function is a method with the parameters of that function, and
+    a test calls it where upstream calls the function: `await Connect(wsEndpoint)`.
+  - A helper of the file that takes `contextFactory` as an argument takes a
+    `Func<BrowserNewContextOptions, Task<IBrowserContext>>`, and a test passes `ContextFactory`.
 - Helper functions of the file are private static methods of the class, at the upstream
   place; a helper that takes a page or a frame has two overloads. A helper that uses a fixture
   (`Server`, `Info`) is not static. A function or a constant
@@ -664,9 +673,7 @@ BROWSER=chromium dotnet test ./src/Playwright.Tests/Playwright.Tests.csproj -c D
   that. Add `-- NUnit.AssemblySelectLimit=10000` at the end of the command for such a filter.
 - `FullyQualifiedName~UpstreamRegistryTests` runs the registry check.
   `PWTEST_REGISTRY_REPORT=1` prints the coverage per subsystem, and
-  `PWTEST_REGISTRY_FILES=page/page-check,page/page-basic` limits the check for missing tests to
-  some files. While some files are not converted, the check passes only with the converted
-  files in this variable.
+  `PWTEST_REGISTRY_FILES=page/page-check` limits the check for missing tests to some files.
 - `BROWSER` is `chromium`, `firefox` or `webkit`; `HEADED=1` runs headed (the tests of
   `library/headful` run only so); `PWTEST_CHANNEL` sets the channel; `PWTEST_TIMEOUT=0` turns
   the test timeout off.

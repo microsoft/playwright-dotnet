@@ -22,58 +22,58 @@ using static Microsoft.Playwright.Tests.Fixtures.Utils;
 namespace Microsoft.Playwright.Tests.Page;
 
 /// <summary>Port of tests/page/page-evaluate-handle.spec.ts.</summary>
-public class PageEvaluateHandleTests
+public class PageEvaluateHandleTests : UpstreamPageTest
 {
     [UpstreamTest("EV-101 should work")]
-    public async Task ShouldWork(IPage page)
+    public async Task ShouldWork()
     {
-        var windowHandle = await page.EvaluateHandleAsync("() => window");
+        var windowHandle = await Page.EvaluateHandleAsync("() => window");
         Assert.That(windowHandle, Is.Not.Null);
     }
 
     [UpstreamTest("EV-102 should accept object handle as an argument")]
-    public async Task ShouldAcceptObjectHandleAsAnArgument(IPage page)
+    public async Task ShouldAcceptObjectHandleAsAnArgument()
     {
-        var navigatorHandle = await page.EvaluateHandleAsync("() => navigator");
-        var text = await page.EvaluateAsync<string>("e => e.userAgent", navigatorHandle);
+        var navigatorHandle = await Page.EvaluateHandleAsync("() => navigator");
+        var text = await Page.EvaluateAsync<string>("e => e.userAgent", navigatorHandle);
         Assert.That(text, Does.Contain("Mozilla"));
     }
 
     [UpstreamTest("EV-103 should accept object handle to primitive types")]
-    public async Task ShouldAcceptObjectHandleToPrimitiveTypes(IPage page)
+    public async Task ShouldAcceptObjectHandleToPrimitiveTypes()
     {
-        var aHandle = await page.EvaluateHandleAsync("() => 5");
-        var isFive = await page.EvaluateAsync<bool>("e => Object.is(e, 5)", aHandle);
+        var aHandle = await Page.EvaluateHandleAsync("() => 5");
+        var isFive = await Page.EvaluateAsync<bool>("e => Object.is(e, 5)", aHandle);
         Assert.That(isFive, Is.True);
     }
 
     [UpstreamTest("EV-104 should accept nested handle")]
-    public async Task ShouldAcceptNestedHandle(IPage page)
+    public async Task ShouldAcceptNestedHandle()
     {
-        var foo = await page.EvaluateHandleAsync("() => ({ x: 1, y: 'foo' })");
-        var result = await page.EvaluateAsync<object>(@"({ foo }) => {
+        var foo = await Page.EvaluateHandleAsync("() => ({ x: 1, y: 'foo' })");
+        var result = await Page.EvaluateAsync<object>(@"({ foo }) => {
     return foo;
   }", new { foo });
         ExpectToEqual(result, new { x = 1, y = "foo" });
     }
 
     [UpstreamTest("EV-105 should accept nested window handle")]
-    public async Task ShouldAcceptNestedWindowHandle(IPage page)
+    public async Task ShouldAcceptNestedWindowHandle()
     {
-        var foo = await page.EvaluateHandleAsync("() => window");
-        var result = await page.EvaluateAsync<bool>(@"({ foo }) => {
+        var foo = await Page.EvaluateHandleAsync("() => window");
+        var result = await Page.EvaluateAsync<bool>(@"({ foo }) => {
     return foo === window;
   }", new { foo });
         Assert.That(result, Is.EqualTo(true));
     }
 
     [UpstreamTest("EV-106 should accept multiple nested handles")]
-    public async Task ShouldAcceptMultipleNestedHandles(IPage page)
+    public async Task ShouldAcceptMultipleNestedHandles()
     {
-        var foo = await page.EvaluateHandleAsync("() => ({ x: 1, y: 'foo' })");
-        var bar = await page.EvaluateHandleAsync("() => 5");
-        var baz = await page.EvaluateHandleAsync("() => (['baz'])");
-        var result = await page.EvaluateAsync<string>(@"x => {
+        var foo = await Page.EvaluateHandleAsync("() => ({ x: 1, y: 'foo' })");
+        var bar = await Page.EvaluateHandleAsync("() => 5");
+        var baz = await Page.EvaluateHandleAsync("() => (['baz'])");
+        var result = await Page.EvaluateAsync<string>(@"x => {
     return JSON.stringify(x);
   }", new { a1 = new { foo }, a2 = new { bar, arr = new[] { new { baz } } } });
         ExpectToEqual(JsonSerializer.Deserialize<JsonElement>(result), new
@@ -84,30 +84,30 @@ public class PageEvaluateHandleTests
     }
 
     [UpstreamTest("EV-107 should accept same handle multiple times")]
-    public async Task ShouldAcceptSameHandleMultipleTimes(IPage page)
+    public async Task ShouldAcceptSameHandleMultipleTimes()
     {
-        var foo = await page.EvaluateHandleAsync("() => 1");
-        ExpectToEqual(await page.EvaluateAsync<object>("x => x", new { foo, bar = new[] { foo }, baz = new { foo } }), new { foo = 1, bar = new[] { 1 }, baz = new { foo = 1 } });
+        var foo = await Page.EvaluateHandleAsync("() => 1");
+        ExpectToEqual(await Page.EvaluateAsync<object>("x => x", new { foo, bar = new[] { foo }, baz = new { foo } }), new { foo = 1, bar = new[] { 1 }, baz = new { foo = 1 } });
     }
 
     [UpstreamTest("EV-108 should accept same nested object multiple times")]
-    public async Task ShouldAcceptSameNestedObjectMultipleTimes(IPage page)
+    public async Task ShouldAcceptSameNestedObjectMultipleTimes()
     {
         var foo = new { x = 1 };
-        ExpectToEqual(await page.EvaluateAsync<object>("x => x", new { foo, bar = new[] { foo }, baz = new { foo } }), new { foo = new { x = 1 }, bar = new[] { new { x = 1 } }, baz = new { foo = new { x = 1 } } });
+        ExpectToEqual(await Page.EvaluateAsync<object>("x => x", new { foo, bar = new[] { foo }, baz = new { foo } }), new { foo = new { x = 1 }, bar = new[] { new { x = 1 } }, baz = new { foo = new { x = 1 } } });
     }
 
     [UpstreamTest("EV-109 should accept object handle to unserializable value")]
-    public async Task ShouldAcceptObjectHandleToUnserializableValue(IPage page)
+    public async Task ShouldAcceptObjectHandleToUnserializableValue()
     {
-        var aHandle = await page.EvaluateHandleAsync("() => Infinity");
-        Assert.That(await page.EvaluateAsync<bool>("e => Object.is(e, Infinity)", aHandle), Is.EqualTo(true));
+        var aHandle = await Page.EvaluateHandleAsync("() => Infinity");
+        Assert.That(await Page.EvaluateAsync<bool>("e => Object.is(e, Infinity)", aHandle), Is.EqualTo(true));
     }
 
     [UpstreamTest("EV-110 should pass configurable args")]
-    public async Task ShouldPassConfigurableArgs(IPage page)
+    public async Task ShouldPassConfigurableArgs()
     {
-        var result = await page.EvaluateAsync<object>(@"arg => {
+        var result = await Page.EvaluateAsync<object>(@"arg => {
     if (arg.foo !== 42)
       throw new Error('Not a 42');
     arg.foo = 17;
@@ -122,12 +122,12 @@ public class PageEvaluateHandleTests
     }
 
     [UpstreamTest("EV-111 should work with primitives")]
-    public async Task ShouldWorkWithPrimitives(IPage page)
+    public async Task ShouldWorkWithPrimitives()
     {
-        var aHandle = await page.EvaluateHandleAsync(@"() => {
+        var aHandle = await Page.EvaluateHandleAsync(@"() => {
     window['FOO'] = 123;
     return window;
   }");
-        Assert.That(await page.EvaluateAsync<int>("e => e['FOO']", aHandle), Is.EqualTo(123));
+        Assert.That(await Page.EvaluateAsync<int>("e => e['FOO']", aHandle), Is.EqualTo(123));
     }
 }

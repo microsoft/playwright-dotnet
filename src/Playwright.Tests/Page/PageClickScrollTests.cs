@@ -20,12 +20,12 @@ using static Microsoft.Playwright.Tests.Fixtures.Utils;
 namespace Microsoft.Playwright.Tests.Page;
 
 /// <summary>Port of tests/page/page-click-scroll.spec.ts.</summary>
-public class PageClickScrollTests
+public class PageClickScrollTests : UpstreamPageTest
 {
     [UpstreamTest("CL-094 should not hit scroll bar")]
-    public async Task ShouldNotHitScrollBar(IPage page, string browserName, string platform)
+    public async Task ShouldNotHitScrollBar()
     {
-        await page.SetContentAsync(@"
+        await Page.SetContentAsync(@"
     <style>
       .categories { width: 180px; display: flex; overflow-x: scroll; }
       button { flex: none; height: 28px; }
@@ -40,153 +40,153 @@ public class PageClickScrollTests
       <button>Here</button>
     </div>
     ");
-        await page.ClickAsync("text=Story", new() { Timeout = 2000 });
+        await Page.ClickAsync("text=Story", new() { Timeout = 2000 });
     }
 
     [UpstreamTest("CL-095 should scroll into view display:contents")]
-    public async Task ShouldScrollIntoViewDisplayContents(IPage page, string browserName, int browserMajorVersion)
+    public async Task ShouldScrollIntoViewDisplayContents()
     {
-        Info.Skip(browserName == "chromium" && browserMajorVersion < 105, "Needs https://chromium-review.googlesource.com/c/chromium/src/+/3758670");
+        Info.Skip(BrowserName == "chromium" && BrowserMajorVersion < 105, "Needs https://chromium-review.googlesource.com/c/chromium/src/+/3758670");
 
-        await page.SetContentAsync(@"
+        await Page.SetContentAsync(@"
     <div style=""background:red;height:2000px"">filler</div>
     <div>
       Example text, and button here:
       <button style=""display: contents"" onclick=""window._clicked=true;"">click me</button>
     </div>
   ");
-        await page.ClickAsync("text=click me", new() { Timeout = 5000 });
-        Assert.That(await page.EvaluateAsync<bool>("window._clicked"), Is.EqualTo(true));
+        await Page.ClickAsync("text=click me", new() { Timeout = 5000 });
+        Assert.That(await Page.EvaluateAsync<bool>("window._clicked"), Is.EqualTo(true));
     }
 
     [UpstreamTest("CL-096 should scroll into view display:contents with a child")]
-    public async Task ShouldScrollIntoViewDisplayContentsWithAChild(IPage page, string browserName, int browserMajorVersion)
+    public async Task ShouldScrollIntoViewDisplayContentsWithAChild()
     {
-        Info.Skip(browserName == "chromium" && browserMajorVersion < 105, "Needs https://chromium-review.googlesource.com/c/chromium/src/+/3758670");
+        Info.Skip(BrowserName == "chromium" && BrowserMajorVersion < 105, "Needs https://chromium-review.googlesource.com/c/chromium/src/+/3758670");
 
-        await page.SetContentAsync(@"
+        await Page.SetContentAsync(@"
     <div style=""background:red;height:2000px"">filler</div>
     Example text, and button here:
     <button style=""display: contents"" onclick=""window._clicked=true;""><div>click me</div></button>
   ");
-        await page.ClickAsync("text=click me", new() { Timeout = 5000 });
-        Assert.That(await page.EvaluateAsync<bool>("window._clicked"), Is.EqualTo(true));
+        await Page.ClickAsync("text=click me", new() { Timeout = 5000 });
+        Assert.That(await Page.EvaluateAsync<bool>("window._clicked"), Is.EqualTo(true));
     }
 
     [UpstreamTest("CL-097 should scroll into view display:contents with position")]
-    public async Task ShouldScrollIntoViewDisplayContentsWithPosition(IPage page, string browserName)
+    public async Task ShouldScrollIntoViewDisplayContentsWithPosition()
     {
-        Info.Fixme(browserName == "chromium", "DOM.getBoxModel does not work for display:contents");
+        Info.Fixme(BrowserName == "chromium", "DOM.getBoxModel does not work for display:contents");
 
-        await page.SetContentAsync(@"
+        await Page.SetContentAsync(@"
     <div style=""background:red;height:2000px"">filler</div>
     <div>
       Example text, and button here:
       <button style=""display: contents"" onclick=""window._clicked=true;"">click me</button>
     </div>
   ");
-        await page.ClickAsync("text=click me", new() { Position = new() { X = 5, Y = 5 }, Timeout = 5000 });
-        Assert.That(await page.EvaluateAsync<bool>("window._clicked"), Is.EqualTo(true));
+        await Page.ClickAsync("text=click me", new() { Position = new() { X = 5, Y = 5 }, Timeout = 5000 });
+        Assert.That(await Page.EvaluateAsync<bool>("window._clicked"), Is.EqualTo(true));
     }
 
     [UpstreamTest("CL-098 should not crash when force-clicking hidden input")]
-    public async Task ShouldNotCrashWhenForceClickingHiddenInput(IPage page)
+    public async Task ShouldNotCrashWhenForceClickingHiddenInput()
     {
-        await page.SetContentAsync("<input type=hidden>");
-        var error = await Catch(() => page.Locator("input").ClickAsync(new() { Force = true, Timeout = 2000 }));
+        await Page.SetContentAsync("<input type=hidden>");
+        var error = await Catch(() => Page.Locator("input").ClickAsync(new() { Force = true, Timeout = 2000 }));
         Assert.That(error.Message, Does.Contain("Element is not visible"));
     }
 
     [UpstreamTest("CL-099 should scroll into view span element")]
     [LocalFixme("dotnet: Locator.WithElementAsync makes a negative timeout from the default timeout 0, and the call passes only when it ends before the timer of the driver")]
-    public async Task ShouldScrollIntoViewSpanElement(IPage page, bool isAndroid)
+    public async Task ShouldScrollIntoViewSpanElement()
     {
-        Info.Fixme(isAndroid);
-        await page.SetContentAsync(@"
+        Info.Fixme(IsAndroid);
+        await Page.SetContentAsync(@"
     <div id=big style=""height: 10000px;""></div>
     <span id=small>foo</span>
   ");
-        await page.Locator("#small").ScrollIntoViewIfNeededAsync();
-        Assert.That(await page.EvaluateAsync<int>("() => window.scrollY"), Is.GreaterThan(9000));
+        await Page.Locator("#small").ScrollIntoViewIfNeededAsync();
+        Assert.That(await Page.EvaluateAsync<int>("() => window.scrollY"), Is.GreaterThan(9000));
     }
 
     [UpstreamTest("CL-100 should scroll into view element in iframe")]
-    public async Task ShouldScrollIntoViewElementInIframe(IPage page, bool isAndroid, Server server, string browserName)
+    public async Task ShouldScrollIntoViewElementInIframe()
     {
-        Info.Fixme(isAndroid);
-        await page.GotoAsync(server.EmptyPage);
-        await page.SetContentAsync($@"
+        Info.Fixme(IsAndroid);
+        await Page.GotoAsync(Server.EmptyPage);
+        await Page.SetContentAsync($@"
     <div id=big style=""height: 10000px;""></div>
-    <iframe src='{server.CrossProcessPrefix}/input/button.html'></iframe>
+    <iframe src='{Server.CrossProcessPrefix}/input/button.html'></iframe>
   ");
-        await page.FrameLocator("iframe").GetByRole(AriaRole.Button).ClickAsync(new() { Timeout = 5000 });
+        await Page.FrameLocator("iframe").GetByRole(AriaRole.Button).ClickAsync(new() { Timeout = 5000 });
     }
 
     [UpstreamTest("CL-101 should not scroll the page when scroll is \"none\"")]
-    public async Task ShouldNotScrollThePageWhenScrollIsNone(IPage page)
+    public async Task ShouldNotScrollThePageWhenScrollIsNone()
     {
-        await page.SetContentAsync(@"
+        await Page.SetContentAsync(@"
     <div style=""height: 2000px;""></div>
     <button onclick=""window._clicked=true"">click me</button>
   ");
-        var error = await Catch(() => page.Locator("button").ClickAsync(new() { Scroll = ScrollMode.None, Timeout = 2000 }));
+        var error = await Catch(() => Page.Locator("button").ClickAsync(new() { Scroll = ScrollMode.None, Timeout = 2000 }));
         Assert.That(error.Message, Does.Contain("element is outside of the viewport"));
-        Assert.That(await page.EvaluateAsync<object>("window._clicked"), Is.Null);
-        Assert.That(await page.EvaluateAsync<int>("() => window.scrollY"), Is.EqualTo(0));
+        Assert.That(await Page.EvaluateAsync<object>("window._clicked"), Is.Null);
+        Assert.That(await Page.EvaluateAsync<int>("() => window.scrollY"), Is.EqualTo(0));
     }
 
     [UpstreamTest("CL-102 should click in-viewport element when scroll is \"none\"")]
-    public async Task ShouldClickInViewportElementWhenScrollIsNone(IPage page)
+    public async Task ShouldClickInViewportElementWhenScrollIsNone()
     {
-        await page.SetContentAsync(@"
+        await Page.SetContentAsync(@"
     <button onclick=""window._clicked=true"">click me</button>
     <div style=""height: 2000px;""></div>
   ");
-        await page.Locator("button").ClickAsync(new() { Scroll = ScrollMode.None, Timeout = 2000 });
-        Assert.That(await page.EvaluateAsync<bool>("window._clicked"), Is.EqualTo(true));
-        Assert.That(await page.EvaluateAsync<int>("() => window.scrollY"), Is.EqualTo(0));
+        await Page.Locator("button").ClickAsync(new() { Scroll = ScrollMode.None, Timeout = 2000 });
+        Assert.That(await Page.EvaluateAsync<bool>("window._clicked"), Is.EqualTo(true));
+        Assert.That(await Page.EvaluateAsync<int>("() => window.scrollY"), Is.EqualTo(0));
     }
 
     [UpstreamTest("CL-103 should not scroll nested container when scroll is \"none\"")]
-    public async Task ShouldNotScrollNestedContainerWhenScrollIsNone(IPage page)
+    public async Task ShouldNotScrollNestedContainerWhenScrollIsNone()
     {
-        await page.SetContentAsync(@"
+        await Page.SetContentAsync(@"
     <div style=""height: 100px; width: 100px; overflow-y: scroll;"">
       <div style=""height: 50px;"">A</div>
       <div style=""height: 50px;"">B</div>
       <button style=""height: 50px; width: 100px;"" onclick=""window._clicked=true"">C</button>
     </div>
   ");
-        var button = page.Locator("button");
+        var button = Page.Locator("button");
         // The button is scrolled out of the nested overflow container.
         var error = await Catch(() => button.ClickAsync(new() { Scroll = ScrollMode.None, Timeout = 2000 }));
         Assert.That(error, Is.Not.Null);
-        Assert.That(await page.EvaluateAsync<object>("window._clicked"), Is.Null);
+        Assert.That(await Page.EvaluateAsync<object>("window._clicked"), Is.Null);
         // Default behavior scrolls the nested container into view and succeeds.
         await button.ClickAsync(new() { Timeout = 2000 });
-        Assert.That(await page.EvaluateAsync<bool>("window._clicked"), Is.EqualTo(true));
+        Assert.That(await Page.EvaluateAsync<bool>("window._clicked"), Is.EqualTo(true));
     }
 
     [UpstreamTest("CL-104 should not scroll on hover when scroll is \"none\"")]
-    public async Task ShouldNotScrollOnHoverWhenScrollIsNone(IPage page)
+    public async Task ShouldNotScrollOnHoverWhenScrollIsNone()
     {
-        await page.SetContentAsync(@"
+        await Page.SetContentAsync(@"
     <div style=""height: 2000px;""></div>
     <div onmouseover=""window._hovered=true"" style=""width: 50px; height: 50px;"">hover me</div>
   ");
-        var error = await Catch(() => page.Locator("div >> text=hover me").HoverAsync(new() { Scroll = ScrollMode.None, Timeout = 2000 }));
+        var error = await Catch(() => Page.Locator("div >> text=hover me").HoverAsync(new() { Scroll = ScrollMode.None, Timeout = 2000 }));
         Assert.That(error.Message, Does.Contain("element is outside of the viewport"));
-        Assert.That(await page.EvaluateAsync<object>("window._hovered"), Is.Null);
-        Assert.That(await page.EvaluateAsync<int>("() => window.scrollY"), Is.EqualTo(0));
+        Assert.That(await Page.EvaluateAsync<object>("window._hovered"), Is.Null);
+        Assert.That(await Page.EvaluateAsync<int>("() => window.scrollY"), Is.EqualTo(0));
     }
 
     [UpstreamTest("CL-105 should scroll instantly on retry when scroll-behavior is smooth")]
-    public async Task ShouldScrollInstantlyOnRetryWhenScrollBehaviorIsSmooth(IPage page)
+    public async Task ShouldScrollInstantlyOnRetryWhenScrollBehaviorIsSmooth()
     {
         // The fixed header covers everything but the bottom strip of the viewport.
         // The first attempt centers the button under the header, so the click is
         // retried with a different scroll alignment using the native scrollIntoView().
-        await page.SetContentAsync(@"
+        await Page.SetContentAsync(@"
     <style>
       html { scroll-behavior: smooth; }
       body { margin: 0; }
@@ -203,11 +203,11 @@ public class PageClickScrollTests
       addEventListener('scroll', () => window.scrolls.push(window.scrollY));
     </script>
   ");
-        await page.ClickAsync("button");
-        Assert.That(await page.EvaluateAsync<bool>("window.clicked"), Is.EqualTo(true));
+        await Page.ClickAsync("button");
+        Assert.That(await Page.EvaluateAsync<bool>("window.clicked"), Is.EqualTo(true));
         // Every scroll performed by Playwright should be a single instant jump,
         // and never a smooth animation that fires a scroll event per frame.
-        var scrolls = await page.EvaluateAsync<object[]>("() => window['scrolls']");
+        var scrolls = await Page.EvaluateAsync<object[]>("() => window['scrolls']");
         Assert.That(scrolls.Length, Is.LessThanOrEqualTo(2));
     }
 }

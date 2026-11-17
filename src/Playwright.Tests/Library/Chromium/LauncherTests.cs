@@ -20,16 +20,16 @@ using Microsoft.Playwright.Tests.Fixtures;
 namespace Microsoft.Playwright.Tests.Library.Chromium;
 
 /// <summary>Port of tests/library/chromium/launcher.spec.ts.</summary>
-public class LauncherTests
+public class LauncherTests : UpstreamBrowserTest
 {
     // .NET: upstream runs the files of tests/library/chromium only in the Chromium project.
-    [BeforeEach]
-    public static void Skip(string browserName) => Info.Skip(browserName != "chromium", "chromium only");
+    [SetUp]
+    public void Skip() => Info.Skip(BrowserName != "chromium", "chromium only");
 
     [UpstreamTest("CR-035 should not create pages automatically")]
-    public async Task ShouldNotCreatePagesAutomatically(IBrowserType browserType, BrowserTypeLaunchOptions launchOptions, BrowserNewContextOptions contextOptions)
+    public async Task ShouldNotCreatePagesAutomatically()
     {
-        var browser = await browserType.LaunchAsync(launchOptions);
+        var browser = await BrowserType.LaunchAsync(LaunchOptions());
         var browserSession = await browser.NewBrowserCDPSessionAsync();
         var targets = new List<JsonElement>();
         browserSession.Event("Target.targetCreated").OnEvent += (_, @event) =>
@@ -41,7 +41,7 @@ public class LauncherTests
             }
         };
         await browserSession.SendAsync("Target.setDiscoverTargets", new() { ["discover"] = true });
-        await browser.NewContextAsync(contextOptions);
+        await browser.NewContextAsync(ContextOptions());
         await browser.CloseAsync();
         Assert.That(targets.Count, Is.EqualTo(0));
     }

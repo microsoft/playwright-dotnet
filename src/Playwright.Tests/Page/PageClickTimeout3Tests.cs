@@ -21,15 +21,15 @@ using static Microsoft.Playwright.Tests.Fixtures.Utils;
 namespace Microsoft.Playwright.Tests.Page;
 
 /// <summary>Port of tests/page/page-click-timeout-3.spec.ts.</summary>
-public class PageClickTimeout3Tests
+public class PageClickTimeout3Tests : UpstreamPageTest
 {
     [UpstreamTest("CL-117 should timeout waiting for hit target")]
     [LocalFixme("dotnet: the message is 'Timeout 5000ms exceeded.', without the 'elementHandle.click: ' prefix of the call")]
-    public async Task ShouldTimeoutWaitingForHitTarget(IPage page, Server server)
+    public async Task ShouldTimeoutWaitingForHitTarget()
     {
-        await page.GotoAsync(server.Prefix + "/input/button.html");
-        var button = await page.QuerySelectorAsync("button");
-        await page.EvaluateAsync(@"() => {
+        await Page.GotoAsync(Server.Prefix + "/input/button.html");
+        var button = await Page.QuerySelectorAsync("button");
+        await Page.EvaluateAsync(@"() => {
     document.body.style.position = 'relative';
     const blocker = document.createElement('div');
     blocker.id = 'blocker';
@@ -48,11 +48,11 @@ public class PageClickTimeout3Tests
     }
 
     [UpstreamTest("CL-118 should still click when force but hit target is obscured")]
-    public async Task ShouldStillClickWhenForceButHitTargetIsObscured(IPage page, Server server)
+    public async Task ShouldStillClickWhenForceButHitTargetIsObscured()
     {
-        await page.GotoAsync(server.Prefix + "/input/button.html");
-        var button = await page.QuerySelectorAsync("button");
-        await page.EvaluateAsync(@"() => {
+        await Page.GotoAsync(Server.Prefix + "/input/button.html");
+        var button = await Page.QuerySelectorAsync("button");
+        await Page.EvaluateAsync(@"() => {
     document.body.style.position = 'relative';
     const blocker = document.createElement('div');
     blocker.id = 'blocker';
@@ -68,11 +68,11 @@ public class PageClickTimeout3Tests
 
     [UpstreamTest("CL-119 should report wrong hit target subtree")]
     [LocalFixme("dotnet: the message is 'Timeout 5000ms exceeded.', without the 'elementHandle.click: ' prefix of the call")]
-    public async Task ShouldReportWrongHitTargetSubtree(IPage page, Server server)
+    public async Task ShouldReportWrongHitTargetSubtree()
     {
-        await page.GotoAsync(server.Prefix + "/input/button.html");
-        var button = await page.QuerySelectorAsync("button");
-        await page.EvaluateAsync(@"() => {
+        await Page.GotoAsync(Server.Prefix + "/input/button.html");
+        var button = await Page.QuerySelectorAsync("button");
+        await Page.EvaluateAsync(@"() => {
     document.body.style.position = 'relative';
 
     const blocker = document.createElement('div');

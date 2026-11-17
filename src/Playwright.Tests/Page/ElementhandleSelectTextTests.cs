@@ -21,52 +21,52 @@ using static Microsoft.Playwright.Tests.Fixtures.Utils;
 namespace Microsoft.Playwright.Tests.Page;
 
 /// <summary>Port of tests/page/elementhandle-select-text.spec.ts.</summary>
-public class ElementhandleSelectTextTests
+public class ElementhandleSelectTextTests : UpstreamPageTest
 {
     [UpstreamTest("EH-102 should select textarea")]
-    public async Task ShouldSelectTextarea(IPage page, Server server, string browserName)
+    public async Task ShouldSelectTextarea()
     {
-        await page.GotoAsync(server.Prefix + "/input/textarea.html");
-        var textarea = await page.QuerySelectorAsync("textarea");
+        await Page.GotoAsync(Server.Prefix + "/input/textarea.html");
+        var textarea = await Page.QuerySelectorAsync("textarea");
         await textarea.EvaluateAsync("textarea => textarea.value = 'some value'");
         await textarea.SelectTextAsync();
-        Assert.That(await page.EvaluateAsync<string>("() => window.getSelection().toString()"), Is.EqualTo("some value"));
+        Assert.That(await Page.EvaluateAsync<string>("() => window.getSelection().toString()"), Is.EqualTo("some value"));
     }
 
     [UpstreamTest("EH-103 should select input")]
-    public async Task ShouldSelectInput(IPage page, Server server, string browserName)
+    public async Task ShouldSelectInput()
     {
-        await page.GotoAsync(server.Prefix + "/input/textarea.html");
-        var input = await page.QuerySelectorAsync("input");
+        await Page.GotoAsync(Server.Prefix + "/input/textarea.html");
+        var input = await Page.QuerySelectorAsync("input");
         await input.EvaluateAsync("input => input.value = 'some value'");
         await input.SelectTextAsync();
-        Assert.That(await page.EvaluateAsync<string>("() => window.getSelection().toString()"), Is.EqualTo("some value"));
+        Assert.That(await Page.EvaluateAsync<string>("() => window.getSelection().toString()"), Is.EqualTo("some value"));
     }
 
     [UpstreamTest("EH-104 should select plain div")]
-    public async Task ShouldSelectPlainDiv(IPage page, Server server)
+    public async Task ShouldSelectPlainDiv()
     {
-        await page.GotoAsync(server.Prefix + "/input/textarea.html");
-        var div = await page.QuerySelectorAsync("div.plain");
+        await Page.GotoAsync(Server.Prefix + "/input/textarea.html");
+        var div = await Page.QuerySelectorAsync("div.plain");
         await div.SelectTextAsync();
-        Assert.That(await page.EvaluateAsync<string>("() => window.getSelection().toString()"), Is.EqualTo("Plain div"));
+        Assert.That(await Page.EvaluateAsync<string>("() => window.getSelection().toString()"), Is.EqualTo("Plain div"));
     }
 
     [UpstreamTest("EH-105 should timeout waiting for invisible element")]
-    public async Task ShouldTimeoutWaitingForInvisibleElement(IPage page, Server server)
+    public async Task ShouldTimeoutWaitingForInvisibleElement()
     {
-        await page.GotoAsync(server.Prefix + "/input/textarea.html");
-        var textarea = await page.QuerySelectorAsync("textarea");
+        await Page.GotoAsync(Server.Prefix + "/input/textarea.html");
+        var textarea = await Page.QuerySelectorAsync("textarea");
         await textarea.EvaluateAsync("e => e.style.display = 'none'");
         var error = await Catch(() => textarea.SelectTextAsync(new() { Timeout = 3000 }));
         Assert.That(error.Message, Does.Contain("element is not visible"));
     }
 
     [UpstreamTest("EH-106 should wait for visible")]
-    public async Task ShouldWaitForVisible(IPage page, Server server)
+    public async Task ShouldWaitForVisible()
     {
-        await page.GotoAsync(server.Prefix + "/input/textarea.html");
-        var textarea = await page.QuerySelectorAsync("textarea");
+        await Page.GotoAsync(Server.Prefix + "/input/textarea.html");
+        var textarea = await Page.QuerySelectorAsync("textarea");
         await textarea.EvaluateAsync("textarea => textarea.value = 'some value'");
         await textarea.EvaluateAsync("e => e.style.display = 'none'");
         var done = false;
@@ -77,7 +77,7 @@ public class ElementhandleSelectTextTests
             done = true;
         }
         var promise = Promise();
-        await page.WaitForTimeoutAsync(1000);
+        await Page.WaitForTimeoutAsync(1000);
         Assert.That(done, Is.EqualTo(false));
         await textarea.EvaluateAsync("e => e.style.display = 'block'");
         await promise;

@@ -24,34 +24,34 @@ using static Microsoft.Playwright.Tests.Fixtures.Utils;
 namespace Microsoft.Playwright.Tests.Library;
 
 /// <summary>Port of tests/library/fetch-proxy.spec.ts.</summary>
-public class FetchProxyTests
+public class FetchProxyTests : UpstreamBrowserTest
 {
-    [BeforeEach]
-    public static void Skip(string mode) => Info.Skip(mode != "default");
+    [SetUp]
+    public void Skip() => Info.Skip(Mode != "default");
 
     [UpstreamTest("PR-041 context request should pick up proxy credentials")]
-    public async Task ContextRequestShouldPickUpProxyCredentials(IBrowserType browserType, Server server, TestProxy proxyServer, BrowserTypeLaunchOptions launchOptions, BrowserNewContextOptions contextOptions)
+    public async Task ContextRequestShouldPickUpProxyCredentials()
     {
-        proxyServer.ForwardTo(server.Port, new() { AllowConnectRequests = true });
+        ProxyServer.ForwardTo(Server.Port, new() { AllowConnectRequests = true });
         var authPromise = new TaskCompletionSource<string>(TaskCreationOptions.RunContinuationsAsynchronously);
-        proxyServer.SetAuthHandler(req =>
+        ProxyServer.SetAuthHandler(req =>
         {
             var header = req.Headers["proxy-authorization"];
             // Browser can issue various unrelated requests over the proxy,
             // but we are only interested in our own request.
-            if (proxyServer.ConnectHosts.Contains("non-existent.com:80"))
+            if (ProxyServer.ConnectHosts.Contains("non-existent.com:80"))
             {
                 authPromise.TrySetResult(header);
             }
             return !string.IsNullOrEmpty(header);
         });
-        var browser = await browserType.LaunchAsync(new(launchOptions)
+        var browser = await BrowserType.LaunchAsync(new(LaunchOptions())
         {
-            Proxy = new() { Server = $"localhost:{proxyServer.Port}", Username = "user", Password = "secret" },
+            Proxy = new() { Server = $"localhost:{ProxyServer.Port}", Username = "user", Password = "secret" },
         });
-        var context = await browser.NewContextAsync(contextOptions);
+        var context = await browser.NewContextAsync(ContextOptions());
         var response = await context.APIRequest.GetAsync("http://non-existent.com/simple.json");
-        Assert.That(proxyServer.ConnectHosts, Does.Contain("non-existent.com:80"));
+        Assert.That(ProxyServer.ConnectHosts, Does.Contain("non-existent.com:80"));
         var auth = await authPromise.Task;
         Assert.That(auth, Is.EqualTo("Basic " + Convert.ToBase64String(Encoding.UTF8.GetBytes("user:secret"))));
         ExpectToEqual(await response.JsonAsync(), new { foo = "bar" });
@@ -59,51 +59,51 @@ public class FetchProxyTests
     }
 
     [UpstreamTest("PR-042 global request should pick up proxy credentials")]
-    public async Task GlobalRequestShouldPickUpProxyCredentials(IPlaywright playwright, Server server, TestProxy proxyServer)
+    public async Task GlobalRequestShouldPickUpProxyCredentials()
     {
-        proxyServer.ForwardTo(server.Port, new() { AllowConnectRequests = true });
+        ProxyServer.ForwardTo(Server.Port, new() { AllowConnectRequests = true });
         string auth = null;
-        proxyServer.SetAuthHandler(req =>
+        ProxyServer.SetAuthHandler(req =>
         {
             auth = req.Headers["proxy-authorization"];
             return !string.IsNullOrEmpty(auth);
         });
-        var request = await playwright.APIRequest.NewContextAsync(new()
+        var request = await Playwright.APIRequest.NewContextAsync(new()
         {
-            Proxy = new() { Server = $"localhost:{proxyServer.Port}", Username = "user", Password = "secret" },
+            Proxy = new() { Server = $"localhost:{ProxyServer.Port}", Username = "user", Password = "secret" },
         });
         var response = await request.GetAsync("http://non-existent.com/simple.json");
-        Assert.That(proxyServer.ConnectHosts, Does.Contain("non-existent.com:80"));
+        Assert.That(ProxyServer.ConnectHosts, Does.Contain("non-existent.com:80"));
         Assert.That(auth, Is.EqualTo("Basic " + Convert.ToBase64String(Encoding.UTF8.GetBytes("user:secret"))));
         ExpectToEqual(await response.JsonAsync(), new { foo = "bar" });
         await request.DisposeAsync();
     }
 
     [UpstreamTest("PR-043 should work with context level proxy")]
-    public async Task ShouldWorkWithContextLevelProxy(ContextFactory contextFactory, BrowserNewContextOptions contextOptions, Server server, TestProxy proxyServer)
+    public async Task ShouldWorkWithContextLevelProxy()
     {
-        server.SetRoute("/target.html", (req, res) =>
+        Server.SetRoute("/target.html", (req, res) =>
         {
             res.End("<title>Served by the proxy</title>");
         });
 
-        proxyServer.ForwardTo(server.Port, new() { AllowConnectRequests = true });
-        var context = await contextFactory(new()
+        ProxyServer.ForwardTo(Server.Port, new() { AllowConnectRequests = true });
+        var context = await ContextFactory(new()
         {
-            Proxy = new() { Server = $"localhost:{proxyServer.Port}" },
+            Proxy = new() { Server = $"localhost:{ProxyServer.Port}" },
         });
 
         var (request, response) = await PromiseAll(
-            server.WaitForRequest("/target.html"),
+            Server.WaitForRequest("/target.html"),
             context.APIRequest.GetAsync("http://non-existent.com/target.html"));
         Assert.That(response.Status, Is.EqualTo(200));
         Assert.That(request.Url, Is.EqualTo("/target.html"));
     }
 
     [UpstreamTest("PR-044 should support proxy.bypass")]
-    public async Task ShouldSupportProxyBypass(ContextFactory contextFactory, BrowserNewContextOptions contextOptions, Server server, TestProxy proxyServer)
+    public async Task ShouldSupportProxyBypass()
     {
-        server.SetRoute("/target.html", (req, res) =>
+        Server.SetRoute("/target.html", (req, res) =>
         {
             res.End("Served by the proxy");
         });
@@ -111,41 +111,41 @@ public class FetchProxyTests
         // that resolves everything to some weird search results page.
         //
         // @see https://gist.github.com/CollinChaffin/24f6c9652efb3d6d5ef2f5502720ef00
-        proxyServer.ForwardTo(server.Port, new() { AllowConnectRequests = true });
-        var context = await contextFactory(new(contextOptions)
+        ProxyServer.ForwardTo(Server.Port, new() { AllowConnectRequests = true });
+        var context = await ContextFactory(new(ContextOptions())
         {
-            Proxy = new() { Server = $"localhost:{proxyServer.Port}", Bypass = "1.non.existent.domain.for.the.test, 2.non.existent.domain.for.the.test, .another.test" },
+            Proxy = new() { Server = $"localhost:{ProxyServer.Port}", Bypass = "1.non.existent.domain.for.the.test, 2.non.existent.domain.for.the.test, .another.test" },
         });
 
         {
-            var res = await context.APIRequest.GetAsync(server.CrossProcessPrefix + "/target.html");
+            var res = await context.APIRequest.GetAsync(Server.CrossProcessPrefix + "/target.html");
             Assert.That(await res.TextAsync(), Does.Contain("Served by the proxy"));
-            Assert.That(proxyServer.ConnectHosts, Does.Contain(new Uri(server.CrossProcessPrefix).Authority));
-            proxyServer.ConnectHosts = [];
+            Assert.That(ProxyServer.ConnectHosts, Does.Contain(new Uri(Server.CrossProcessPrefix).Authority));
+            ProxyServer.ConnectHosts = [];
         }
 
         {
             var res = await context.APIRequest.GetAsync("http://0.non.existent.domain.for.the.test/target.html");
             Assert.That(await res.TextAsync(), Does.Contain("Served by the proxy"));
-            proxyServer.ConnectHosts = [];
+            ProxyServer.ConnectHosts = [];
         }
 
         {
             var error = await Catch(() => context.APIRequest.GetAsync("http://1.non.existent.domain.for.the.test/target.html"));
             Assert.That(error.Message, Is.Not.Empty);
-            Assert.That(proxyServer.ConnectHosts, Is.EqualTo(Array.Empty<string>()));
+            Assert.That(ProxyServer.ConnectHosts, Is.EqualTo(Array.Empty<string>()));
         }
 
         {
             var error = await Catch(() => context.APIRequest.GetAsync("http://2.non.existent.domain.for.the.test/target.html"));
             Assert.That(error.Message, Is.Not.Empty);
-            Assert.That(proxyServer.ConnectHosts, Is.EqualTo(Array.Empty<string>()));
+            Assert.That(ProxyServer.ConnectHosts, Is.EqualTo(Array.Empty<string>()));
         }
 
         {
             var error = await Catch(() => context.APIRequest.GetAsync("http://foo.is.the.another.test/target.html"));
             Assert.That(error.Message, Is.Not.Empty);
-            Assert.That(proxyServer.ConnectHosts, Is.EqualTo(Array.Empty<string>()));
+            Assert.That(ProxyServer.ConnectHosts, Is.EqualTo(Array.Empty<string>()));
         }
 
         {
@@ -155,25 +155,25 @@ public class FetchProxyTests
     }
 
     [UpstreamTest("PR-045 should use socks proxy")]
-    public async Task ShouldUseSocksProxy(IPlaywright playwright, Server server, int socksPort)
+    public async Task ShouldUseSocksProxy()
     {
         Info.Skip(!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("INSIDE_DOCKER")), "connect ECONNREFUSED 127.0.0.1:<port>");
 
-        var request = await playwright.APIRequest.NewContextAsync(new()
+        var request = await Playwright.APIRequest.NewContextAsync(new()
         {
             Proxy = new()
             {
-                Server = $"socks5://localhost:{socksPort}",
+                Server = $"socks5://localhost:{SocksPort}",
             },
         });
-        var response = await request.GetAsync(server.EmptyPage);
+        var response = await request.GetAsync(Server.EmptyPage);
         Assert.That(await response.TextAsync(), Does.Contain("Served by the SOCKS proxy"));
     }
 
     [UpstreamTest("PR-046 should send correct ALPN protocol to HTTPS proxy")]
-    public async Task ShouldSendCorrectALPNProtocolToHTTPSProxy(IPlaywright playwright, Server server, (int Major, int Minor, int Patch) nodeVersion)
+    public async Task ShouldSendCorrectALPNProtocolToHTTPSProxy()
     {
-        Info.Skip(nodeVersion.Major < 22, "ALPNCallback is supported starting from Node 22");
+        Info.Skip(NodeVersion.Major < 22, "ALPNCallback is supported starting from Node 22");
 
         string[] offeredProtocols = null;
         // .NET: https.createServer({ ...(await TestServer.certOptions()), ALPNCallback }) is the ALPNCallbackServer below.
@@ -186,13 +186,13 @@ public class FetchProxyTests
 
         var port = proxy.Listen(0);
 
-        var request = await playwright.APIRequest.NewContextAsync(new()
+        var request = await Playwright.APIRequest.NewContextAsync(new()
         {
             Proxy = new() { Server = $"https://localhost:{port}" },
             IgnoreHTTPSErrors = true,
         });
 
-        await ThrowsAsync<PlaywrightException>(() => request.GetAsync(server.EmptyPage));
+        await ThrowsAsync<PlaywrightException>(() => request.GetAsync(Server.EmptyPage));
 
         Assert.That(offeredProtocols, Does.Contain("http/1.1"));
 
@@ -201,34 +201,34 @@ public class FetchProxyTests
     }
 
     [UpstreamTest("PR-047 should apply proxy.bypass to redirect targets")]
-    public async Task ShouldApplyProxyBypassToRedirectTargets(ContextFactory contextFactory, Server server, TestProxy proxyServer)
+    public async Task ShouldApplyProxyBypassToRedirectTargets()
     {
-        var crossProcessHost = new Uri(server.CrossProcessPrefix).Authority;
-        Info.Skip(crossProcessHost == server.Host, "Needs two different host names for the same server");
+        var crossProcessHost = new Uri(Server.CrossProcessPrefix).Authority;
+        Info.Skip(crossProcessHost == Server.Host, "Needs two different host names for the same server");
 
-        proxyServer.ForwardTo(server.Port, new() { AllowConnectRequests = true });
-        server.SetRedirect("/redirect-to-cross-process", server.CrossProcessPrefix + "/simple.json");
-        server.SetRedirect("/redirect-to-same-origin", server.Prefix + "/simple.json");
-        var context = await contextFactory(new()
+        ProxyServer.ForwardTo(Server.Port, new() { AllowConnectRequests = true });
+        Server.SetRedirect("/redirect-to-cross-process", Server.CrossProcessPrefix + "/simple.json");
+        Server.SetRedirect("/redirect-to-same-origin", Server.Prefix + "/simple.json");
+        var context = await ContextFactory(new()
         {
-            Proxy = new() { Server = $"localhost:{proxyServer.Port}", Bypass = server.Hostname },
+            Proxy = new() { Server = $"localhost:{ProxyServer.Port}", Bypass = Server.Hostname },
         });
 
         {
             // Bypassed first hop redirects to a host that must go through the proxy.
-            var response = await context.APIRequest.GetAsync(server.Prefix + "/redirect-to-cross-process");
-            Assert.That(response.Url, Is.EqualTo(server.CrossProcessPrefix + "/simple.json"));
+            var response = await context.APIRequest.GetAsync(Server.Prefix + "/redirect-to-cross-process");
+            Assert.That(response.Url, Is.EqualTo(Server.CrossProcessPrefix + "/simple.json"));
             ExpectToEqual(await response.JsonAsync(), new { foo = "bar" });
-            Assert.That(proxyServer.ConnectHosts, Is.EqualTo(new[] { crossProcessHost }));
-            proxyServer.ConnectHosts = [];
+            Assert.That(ProxyServer.ConnectHosts, Is.EqualTo(new[] { crossProcessHost }));
+            ProxyServer.ConnectHosts = [];
         }
 
         {
             // Proxied first hop redirects to a bypassed host.
-            var response = await context.APIRequest.GetAsync(server.CrossProcessPrefix + "/redirect-to-same-origin");
-            Assert.That(response.Url, Is.EqualTo(server.Prefix + "/simple.json"));
+            var response = await context.APIRequest.GetAsync(Server.CrossProcessPrefix + "/redirect-to-same-origin");
+            Assert.That(response.Url, Is.EqualTo(Server.Prefix + "/simple.json"));
             ExpectToEqual(await response.JsonAsync(), new { foo = "bar" });
-            Assert.That(proxyServer.ConnectHosts, Is.EqualTo(new[] { crossProcessHost }));
+            Assert.That(ProxyServer.ConnectHosts, Is.EqualTo(new[] { crossProcessHost }));
         }
     }
 

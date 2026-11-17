@@ -20,39 +20,39 @@ using static Microsoft.Playwright.Tests.Fixtures.Utils;
 namespace Microsoft.Playwright.Tests.Page;
 
 /// <summary>Port of tests/page/page-request-gc.spec.ts.</summary>
-public class PageRequestGcTests
+public class PageRequestGcTests : UpstreamPageTest
 {
     [UpstreamTest("RO-149 should work")]
-    public async Task ShouldWork(IPage page)
+    public async Task ShouldWork()
     {
-        await page.EvaluateAsync(@"() => {
+        await Page.EvaluateAsync(@"() => {
     globalThis.objectToDestroy = { hello: 'world' };
     globalThis.weakRef = new WeakRef(globalThis.objectToDestroy);
   }");
 
-        await page.RequestGCAsync();
-        ExpectToEqual(await page.EvaluateAsync<object>("() => globalThis.weakRef.deref()"), new { hello = "world" });
+        await Page.RequestGCAsync();
+        ExpectToEqual(await Page.EvaluateAsync<object>("() => globalThis.weakRef.deref()"), new { hello = "world" });
 
-        await page.RequestGCAsync();
-        ExpectToEqual(await page.EvaluateAsync<object>("() => globalThis.weakRef.deref()"), new { hello = "world" });
+        await Page.RequestGCAsync();
+        ExpectToEqual(await Page.EvaluateAsync<object>("() => globalThis.weakRef.deref()"), new { hello = "world" });
 
-        await page.EvaluateAsync("() => globalThis.objectToDestroy = null");
-        await page.RequestGCAsync();
-        Assert.That(await page.EvaluateAsync<object>("() => globalThis.weakRef.deref()"), Is.Null);
+        await Page.EvaluateAsync("() => globalThis.objectToDestroy = null");
+        await Page.RequestGCAsync();
+        Assert.That(await Page.EvaluateAsync<object>("() => globalThis.weakRef.deref()"), Is.Null);
     }
 
     [UpstreamTest("RO-150 should collect element retained by locator hit-target interceptor after detach")]
-    public async Task ShouldCollectElementRetainedByLocatorHitTargetInterceptorAfterDetach(IPage page, string browserName)
+    public async Task ShouldCollectElementRetainedByLocatorHitTargetInterceptorAfterDetach()
     {
-        Info.Fixme(browserName == "firefox", "Firefox hit-target interceptor does not release its element reference on detach");
-        Info.Fixme(browserName == "chromium", "Chromium retains a native reference to the last hit-tested element; fix pending upstream discussion, see #41575");
-        await page.SetContentAsync("<button id=\"btn\">click me</button>");
-        await page.Locator("#btn").ClickAsync();
-        await page.EvaluateAsync(@"() => {
+        Info.Fixme(BrowserName == "firefox", "Firefox hit-target interceptor does not release its element reference on detach");
+        Info.Fixme(BrowserName == "chromium", "Chromium retains a native reference to the last hit-tested element; fix pending upstream discussion, see #41575");
+        await Page.SetContentAsync("<button id=\"btn\">click me</button>");
+        await Page.Locator("#btn").ClickAsync();
+        await Page.EvaluateAsync(@"() => {
     globalThis.weakRef = new WeakRef(document.getElementById('btn'));
     document.getElementById('btn').remove();
   }");
-        await page.RequestGCAsync();
-        Assert.That(await page.EvaluateAsync<object>("() => globalThis.weakRef.deref()"), Is.Null);
+        await Page.RequestGCAsync();
+        Assert.That(await Page.EvaluateAsync<object>("() => globalThis.weakRef.deref()"), Is.Null);
     }
 }

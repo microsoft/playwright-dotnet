@@ -21,12 +21,12 @@ using static Microsoft.Playwright.Tests.Fixtures.Utils;
 namespace Microsoft.Playwright.Tests.Library;
 
 /// <summary>Port of tests/library/browsercontext-pages.spec.ts.</summary>
-public class BrowsercontextPagesTests
+public class BrowsercontextPagesTests : UpstreamBrowserTest
 {
     [UpstreamTest("BC-051 should not be visible in context.pages")]
-    public async Task ShouldNotBeVisibleInContextPages(ContextFactory contextFactory)
+    public async Task ShouldNotBeVisibleInContextPages()
     {
-        var context = await contextFactory();
+        var context = await ContextFactory();
         var page = await context.NewPageAsync();
         Assert.That(context.Pages, Does.Contain(page));
         await page.CloseAsync();
@@ -34,17 +34,17 @@ public class BrowsercontextPagesTests
     }
 
     [UpstreamTest("BC-052 page.context should return the correct instance")]
-    public async Task PageContextShouldReturnTheCorrectInstance(ContextFactory contextFactory)
+    public async Task PageContextShouldReturnTheCorrectInstance()
     {
-        var context = await contextFactory();
+        var context = await ContextFactory();
         var page = await context.NewPageAsync();
         Assert.That(page.Context, Is.SameAs(context));
     }
 
     [UpstreamTest("BC-053 frame.focus should work multiple times")]
-    public async Task FrameFocusShouldWorkMultipleTimes(ContextFactory contextFactory)
+    public async Task FrameFocusShouldWorkMultipleTimes()
     {
-        var context = await contextFactory();
+        var context = await ContextFactory();
         var page1 = await context.NewPageAsync();
         var page2 = await context.NewPageAsync();
         foreach (var page in new[] { page1, page2 })
@@ -56,25 +56,25 @@ public class BrowsercontextPagesTests
     }
 
     [UpstreamTest("BC-054 should click with disabled javascript")]
-    public async Task ShouldClickWithDisabledJavascript(IBrowser browser, Server server, BrowserNewContextOptions contextOptions)
+    public async Task ShouldClickWithDisabledJavascript()
     {
-        var context = await browser.NewContextAsync(new(contextOptions) { JavaScriptEnabled = false });
+        var context = await Browser.NewContextAsync(new(ContextOptions()) { JavaScriptEnabled = false });
         var page = await context.NewPageAsync();
-        await page.GotoAsync(server.Prefix + "/wrappedlink.html");
+        await page.GotoAsync(Server.Prefix + "/wrappedlink.html");
         await PromiseAll(
             page.ClickAsync("a"),
             page.WaitForNavigationAsync());
-        Assert.That(page.Url, Is.EqualTo(server.Prefix + "/wrappedlink.html#clicked"));
+        Assert.That(page.Url, Is.EqualTo(Server.Prefix + "/wrappedlink.html#clicked"));
         await context.CloseAsync();
     }
 
     [UpstreamTest("BC-055 should not hang with touch-enabled viewports")]
-    public async Task ShouldNotHangWithTouchEnabledViewports(IBrowser browser, IPlaywright playwright, BrowserNewContextOptions contextOptions)
+    public async Task ShouldNotHangWithTouchEnabledViewports()
     {
         // @see https://github.com/GoogleChrome/puppeteer/issues/161
         // .NET: const { viewport, hasTouch } = playwright.devices['iPhone 6'];
-        var (viewport, hasTouch) = (playwright.Devices["iPhone 6"].ViewportSize, playwright.Devices["iPhone 6"].HasTouch);
-        var context = await browser.NewContextAsync(new(contextOptions) { ViewportSize = viewport, HasTouch = hasTouch });
+        var (viewport, hasTouch) = (Playwright.Devices["iPhone 6"].ViewportSize, Playwright.Devices["iPhone 6"].HasTouch);
+        var context = await Browser.NewContextAsync(new(ContextOptions()) { ViewportSize = viewport, HasTouch = hasTouch });
         var page = await context.NewPageAsync();
         await page.Mouse.DownAsync();
         await page.Mouse.MoveAsync(100, 10);
@@ -83,13 +83,13 @@ public class BrowsercontextPagesTests
     }
 
     [UpstreamTest("BC-056 should click the button with deviceScaleFactor set")]
-    public async Task ShouldClickTheButtonWithDeviceScaleFactorSet(IBrowser browser, Server server, BrowserNewContextOptions contextOptions)
+    public async Task ShouldClickTheButtonWithDeviceScaleFactorSet()
     {
-        var context = await browser.NewContextAsync(new(contextOptions) { ViewportSize = new() { Width = 400, Height = 400 }, DeviceScaleFactor = 5 });
+        var context = await Browser.NewContextAsync(new(ContextOptions()) { ViewportSize = new() { Width = 400, Height = 400 }, DeviceScaleFactor = 5 });
         var page = await context.NewPageAsync();
         Assert.That(await page.EvaluateAsync<int>("() => window.devicePixelRatio"), Is.EqualTo(5));
         await page.SetContentAsync("<div style=\"width:100px;height:100px\">spacer</div>");
-        await AttachFrame(page, "button-test", server.Prefix + "/input/button.html");
+        await AttachFrame(page, "button-test", Server.Prefix + "/input/button.html");
         var frame = page.Frames[1];
         var button = await frame.QuerySelectorAsync("button");
         await button.ClickAsync();
@@ -98,13 +98,13 @@ public class BrowsercontextPagesTests
     }
 
     [UpstreamTest("BC-057 should click the button with offset with page scale")]
-    public async Task ShouldClickTheButtonWithOffsetWithPageScale(IBrowser browser, Server server, string browserName, bool isBidi, BrowserNewContextOptions contextOptions)
+    public async Task ShouldClickTheButtonWithOffsetWithPageScale()
     {
-        Info.Skip(browserName == "firefox" && !isBidi);
+        Info.Skip(BrowserName == "firefox" && !IsBidi);
 
-        var context = await browser.NewContextAsync(new(contextOptions) { ViewportSize = new() { Width = 400, Height = 400 }, IsMobile = true });
+        var context = await Browser.NewContextAsync(new(ContextOptions()) { ViewportSize = new() { Width = 400, Height = 400 }, IsMobile = true });
         var page = await context.NewPageAsync();
-        await page.GotoAsync(server.Prefix + "/input/button.html");
+        await page.GotoAsync(Server.Prefix + "/input/button.html");
         await page.EvalOnSelectorAsync("button", @"button => {
     button.style.borderWidth = '8px';
     document.body.style.margin = '0';
@@ -126,13 +126,13 @@ public class BrowsercontextPagesTests
     }
 
     [UpstreamTest("BC-058 should return bounding box with page scale")]
-    public async Task ShouldReturnBoundingBoxWithPageScale(IBrowser browser, Server server, string browserName, bool isBidi, BrowserNewContextOptions contextOptions)
+    public async Task ShouldReturnBoundingBoxWithPageScale()
     {
-        Info.Skip(browserName == "firefox" && !isBidi);
+        Info.Skip(BrowserName == "firefox" && !IsBidi);
 
-        var context = await browser.NewContextAsync(new(contextOptions) { ViewportSize = new() { Width = 400, Height = 400 }, IsMobile = true });
+        var context = await Browser.NewContextAsync(new(ContextOptions()) { ViewportSize = new() { Width = 400, Height = 400 }, IsMobile = true });
         var page = await context.NewPageAsync();
-        await page.GotoAsync(server.Prefix + "/input/button.html");
+        await page.GotoAsync(Server.Prefix + "/input/button.html");
         var button = await page.QuerySelectorAsync("button");
         await button.EvaluateAsync(@"button => {
     document.body.style.margin = '0';
@@ -151,9 +151,10 @@ public class BrowsercontextPagesTests
     }
 
     [UpstreamTest("BC-060 should close page while a reload is committing")]
-    public async Task ShouldClosePageWhileAReloadIsCommitting(IBrowserContext context, string browserName)
+    public async Task ShouldClosePageWhileAReloadIsCommitting()
     {
-        Info.Fixme(browserName == "chromium", "Chromium loses the close when the reload commits into a new RenderFrameHost; fix is not rolled yet");
+        var context = await ContextFixture();
+        Info.Fixme(BrowserName == "chromium", "Chromium loses the close when the reload commits into a new RenderFrameHost; fix is not rolled yet");
         // The evaluate never settles on its own, so it only rejects once the reload
         // commits. Closing right after that races the commit. Repeat a few times,
         // since whether the close or the commit wins is timing-dependent.
@@ -170,8 +171,9 @@ public class BrowsercontextPagesTests
     }
 
     [UpstreamTest("BC-061 should keep selection in multiple pages")]
-    public async Task ShouldKeepSelectionInMultiplePages(IBrowserContext context)
+    public async Task ShouldKeepSelectionInMultiplePages()
     {
+        var context = await ContextFixture();
         var page1 = await context.NewPageAsync();
         var page2 = await context.NewPageAsync();
         foreach (var page in new[] { page1, page2 })

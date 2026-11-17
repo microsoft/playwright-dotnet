@@ -21,11 +21,12 @@ using static Microsoft.Playwright.Tests.Fixtures.Utils;
 namespace Microsoft.Playwright.Tests.Library;
 
 /// <summary>Port of tests/library/debugger.spec.ts.</summary>
-public class DebuggerTests
+public class DebuggerTests : UpstreamBrowserTest
 {
     [UpstreamTest("DB-001 should pause at next and resume")]
-    public async Task ShouldPauseAtNextAndResume(IBrowserContext context, Server server)
+    public async Task ShouldPauseAtNextAndResume()
     {
+        var context = await ContextFixture();
         var page = await context.NewPageAsync();
         await page.SetContentAsync("<div>click me</div>");
         var dbg = context.Debugger;
@@ -57,8 +58,9 @@ public class DebuggerTests
     }
 
     [UpstreamTest("DB-002 should pause at pause call")]
-    public async Task ShouldPauseAtPauseCall(IBrowserContext context, Server server)
+    public async Task ShouldPauseAtPauseCall()
     {
+        var context = await ContextFixture();
         var page = await context.NewPageAsync();
         await page.SetContentAsync("<div>click me</div>");
         var dbg = context.Debugger;
@@ -80,8 +82,9 @@ public class DebuggerTests
     }
 
     [UpstreamTest("DB-003 should run to location")]
-    public async Task ShouldRunToLocation(IBrowserContext context, Server server)
+    public async Task ShouldRunToLocation()
     {
+        var context = await ContextFixture();
         var page = await context.NewPageAsync();
         await page.SetContentAsync("<div>click me</div>");
         var dbg = context.Debugger;

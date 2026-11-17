@@ -21,12 +21,12 @@ using static Microsoft.Playwright.Tests.Fixtures.Utils;
 namespace Microsoft.Playwright.Tests.Library;
 
 /// <summary>Port of tests/library/browsercontext-set-extra-http-headers.spec.ts.</summary>
-public class BrowsercontextSetExtraHttpHeadersTests
+public class BrowsercontextSetExtraHttpHeadersTests : UpstreamBrowserTest
 {
     [UpstreamTest("NE-119 should override extra headers from browser context")]
-    public async Task ShouldOverrideExtraHeadersFromBrowserContext(IBrowser browser, Server server, BrowserNewContextOptions contextOptions)
+    public async Task ShouldOverrideExtraHeadersFromBrowserContext()
     {
-        var context = await browser.NewContextAsync(new(contextOptions)
+        var context = await Browser.NewContextAsync(new(ContextOptions())
         {
             ExtraHTTPHeaders = new Dictionary<string, string> { ["fOo"] = "bAr", ["baR"] = "foO" },
         });
@@ -36,8 +36,8 @@ public class BrowsercontextSetExtraHttpHeadersTests
             ["Foo"] = "Bar",
         });
         var (request, _) = await PromiseAll(
-            server.WaitForRequest("/empty.html"),
-            page.GotoAsync(server.EmptyPage));
+            Server.WaitForRequest("/empty.html"),
+            page.GotoAsync(Server.EmptyPage));
         await context.CloseAsync();
         Assert.That(request.Headers["foo"], Is.EqualTo("Bar"));
         Assert.That(request.Headers["bar"], Is.EqualTo("foO"));
@@ -45,9 +45,9 @@ public class BrowsercontextSetExtraHttpHeadersTests
 
     [UpstreamTest("NE-120 should throw for non-string header values")]
     [LocalFixme("dotnet: the client does not check the values of ExtraHTTPHeaders: a null value goes to the driver, and the message is 'extraHTTPHeaders[0].value: expected string, got undefined'. Upstream expects 'Expected value of header \"foo\" to be String, but \"object\" is found.'")]
-    public async Task ShouldThrowForNonStringHeaderValues(IBrowser browser, BrowserNewContextOptions contextOptions)
+    public async Task ShouldThrowForNonStringHeaderValues()
     {
-        var error3 = await Catch(() => browser.NewContextAsync(new(contextOptions) { ExtraHTTPHeaders = new Dictionary<string, string> { ["foo"] = null } }));
+        var error3 = await Catch(() => Browser.NewContextAsync(new(ContextOptions()) { ExtraHTTPHeaders = new Dictionary<string, string> { ["foo"] = null } }));
         Assert.That(error3.Message, Does.Contain("Expected value of header \"foo\" to be String, but \"object\" is found."));
     }
 }

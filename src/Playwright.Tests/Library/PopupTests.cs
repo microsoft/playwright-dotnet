@@ -20,21 +20,21 @@ using static Microsoft.Playwright.Tests.Fixtures.Utils;
 namespace Microsoft.Playwright.Tests.Library;
 
 /// <summary>Port of tests/library/popup.spec.ts.</summary>
-public class PopupTests
+public class PopupTests : UpstreamBrowserTest
 {
     [UpstreamTest("PO-014 should inherit user agent from browser context @smoke")]
-    public async Task ShouldInheritUserAgentFromBrowserContext(IBrowser browser, Server server, bool isFrozenWebkit, BrowserNewContextOptions contextOptions)
+    public async Task ShouldInheritUserAgentFromBrowserContext()
     {
-        Info.Skip(isFrozenWebkit);
+        Info.Skip(IsFrozenWebkit);
 
-        var context = await browser.NewContextAsync(new(contextOptions)
+        var context = await Browser.NewContextAsync(new(ContextOptions())
         {
             UserAgent = "hey",
         });
         var page = await context.NewPageAsync();
-        await page.GotoAsync(server.EmptyPage);
+        await page.GotoAsync(Server.EmptyPage);
         await page.SetContentAsync("<a target=_blank rel=noopener href=\"/popup/popup.html\">link</a>");
-        var requestPromise = server.WaitForRequest("/popup/popup.html");
+        var requestPromise = Server.WaitForRequest("/popup/popup.html");
         var popup = await PromiseAll(
             context.WaitForPageAsync(),
             page.ClickAsync("a"));
@@ -47,11 +47,11 @@ public class PopupTests
     }
 
     [UpstreamTest("PO-015 should respect routes from browser context")]
-    public async Task ShouldRespectRoutesFromBrowserContext(IBrowser browser, Server server, BrowserNewContextOptions contextOptions)
+    public async Task ShouldRespectRoutesFromBrowserContext()
     {
-        var context = await browser.NewContextAsync(contextOptions);
+        var context = await Browser.NewContextAsync(ContextOptions());
         var page = await context.NewPageAsync();
-        await page.GotoAsync(server.EmptyPage);
+        await page.GotoAsync(Server.EmptyPage);
         await page.SetContentAsync("<a target=_blank rel=noopener href=\"empty.html\">link</a>");
         var intercepted = false;
         await context.RouteAsync("**/empty.html", route =>
@@ -67,64 +67,64 @@ public class PopupTests
     }
 
     [UpstreamTest("PO-016 should inherit extra headers from browser context")]
-    public async Task ShouldInheritExtraHeadersFromBrowserContext(IBrowser browser, Server server, BrowserNewContextOptions contextOptions)
+    public async Task ShouldInheritExtraHeadersFromBrowserContext()
     {
-        var context = await browser.NewContextAsync(new(contextOptions)
+        var context = await Browser.NewContextAsync(new(ContextOptions())
         {
             ExtraHTTPHeaders = new Dictionary<string, string> { ["foo"] = "bar" },
         });
         var page = await context.NewPageAsync();
-        await page.GotoAsync(server.EmptyPage);
-        var requestPromise = server.WaitForRequest("/dummy.html");
-        await page.EvaluateAsync("url => window['_popup'] = window.open(url)", server.Prefix + "/dummy.html");
+        await page.GotoAsync(Server.EmptyPage);
+        var requestPromise = Server.WaitForRequest("/dummy.html");
+        await page.EvaluateAsync("url => window['_popup'] = window.open(url)", Server.Prefix + "/dummy.html");
         var request = await requestPromise;
         await context.CloseAsync();
         Assert.That(request.Headers["foo"], Is.EqualTo("bar"));
     }
 
     [UpstreamTest("PO-017 should inherit offline from browser context")]
-    public async Task ShouldInheritOfflineFromBrowserContext(IBrowser browser, Server server, BrowserNewContextOptions contextOptions)
+    public async Task ShouldInheritOfflineFromBrowserContext()
     {
-        var context = await browser.NewContextAsync(contextOptions);
+        var context = await Browser.NewContextAsync(ContextOptions());
         var page = await context.NewPageAsync();
-        await page.GotoAsync(server.EmptyPage);
+        await page.GotoAsync(Server.EmptyPage);
         await context.SetOfflineAsync(true);
         var online = await page.EvaluateAsync<bool>(@"url => {
     const win = window.open(url);
     return win.navigator.onLine;
-  }", server.Prefix + "/dummy.html");
+  }", Server.Prefix + "/dummy.html");
         await context.CloseAsync();
         Assert.That(online, Is.EqualTo(false));
     }
 
     [UpstreamTest("PO-018 should inherit http credentials from browser context")]
-    public async Task ShouldInheritHttpCredentialsFromBrowserContext(IBrowser browser, Server server, BrowserNewContextOptions contextOptions)
+    public async Task ShouldInheritHttpCredentialsFromBrowserContext()
     {
-        server.SetAuth("/title.html", "user", "pass");
-        var context = await browser.NewContextAsync(new(contextOptions)
+        Server.SetAuth("/title.html", "user", "pass");
+        var context = await Browser.NewContextAsync(new(ContextOptions())
         {
             HttpCredentials = new() { Username = "user", Password = "pass" },
         });
         var page = await context.NewPageAsync();
-        await page.GotoAsync(server.EmptyPage);
+        await page.GotoAsync(Server.EmptyPage);
         var (popup, _) = await PromiseAll(
             page.WaitForPopupAsync(),
-            page.EvaluateAsync("url => window['_popup'] = window.open(url)", server.Prefix + "/title.html"));
+            page.EvaluateAsync("url => window['_popup'] = window.open(url)", Server.Prefix + "/title.html"));
         await popup.WaitForLoadStateAsync(LoadState.DOMContentLoaded);
         Assert.That(await popup.TitleAsync(), Is.EqualTo("Woof-Woof"));
         await context.CloseAsync();
     }
 
     [UpstreamTest("PO-019 should inherit touch support from browser context")]
-    public async Task ShouldInheritTouchSupportFromBrowserContext(IBrowser browser, Server server, BrowserNewContextOptions contextOptions)
+    public async Task ShouldInheritTouchSupportFromBrowserContext()
     {
-        var context = await browser.NewContextAsync(new(contextOptions)
+        var context = await Browser.NewContextAsync(new(ContextOptions())
         {
             ViewportSize = new() { Width = 400, Height = 500 },
             HasTouch = true,
         });
         var page = await context.NewPageAsync();
-        await page.GotoAsync(server.EmptyPage);
+        await page.GotoAsync(Server.EmptyPage);
         var hasTouch = await page.EvaluateAsync<bool>(@"() => {
     const win = window.open('');
     return 'ontouchstart' in win;
@@ -134,14 +134,14 @@ public class PopupTests
     }
 
     [UpstreamTest("PO-020 should inherit viewport size from browser context")]
-    public async Task ShouldInheritViewportSizeFromBrowserContext(IBrowser browser, Server server, BrowserNewContextOptions contextOptions)
+    public async Task ShouldInheritViewportSizeFromBrowserContext()
     {
-        var context = await browser.NewContextAsync(new(contextOptions)
+        var context = await Browser.NewContextAsync(new(ContextOptions())
         {
             ViewportSize = new() { Width = 400, Height = 500 },
         });
         var page = await context.NewPageAsync();
-        await page.GotoAsync(server.EmptyPage);
+        await page.GotoAsync(Server.EmptyPage);
         var size = await page.EvaluateAsync<object>(@"() => {
     const win = window.open('about:blank');
     return { width: win.innerWidth, height: win.innerHeight };
@@ -151,14 +151,14 @@ public class PopupTests
     }
 
     [UpstreamTest("PO-021 should use viewport size from window features")]
-    public async Task ShouldUseViewportSizeFromWindowFeatures(IBrowser browser, Server server, string browserName, BrowserNewContextOptions contextOptions)
+    public async Task ShouldUseViewportSizeFromWindowFeatures()
     {
-        var context = await browser.NewContextAsync(new(contextOptions)
+        var context = await Browser.NewContextAsync(new(ContextOptions())
         {
             ViewportSize = new() { Width = 700, Height = 700 },
         });
         var page = await context.NewPageAsync();
-        await page.GotoAsync(server.EmptyPage);
+        await page.GotoAsync(Server.EmptyPage);
         var (size, popup) = await PromiseAll(
             page.EvaluateAsync<object>(@"async () => {
       const win = window.open(window.location.href, 'Title', 'toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=600,height=300,top=0,left=0');
@@ -182,11 +182,11 @@ public class PopupTests
     }
 
     [UpstreamTest("PO-022 should respect routes from browser context when using window.open")]
-    public async Task ShouldRespectRoutesFromBrowserContextWhenUsingWindowOpen(IBrowser browser, Server server, BrowserNewContextOptions contextOptions)
+    public async Task ShouldRespectRoutesFromBrowserContextWhenUsingWindowOpen()
     {
-        var context = await browser.NewContextAsync(contextOptions);
+        var context = await Browser.NewContextAsync(ContextOptions());
         var page = await context.NewPageAsync();
-        await page.GotoAsync(server.EmptyPage);
+        await page.GotoAsync(Server.EmptyPage);
         var intercepted = false;
         await context.RouteAsync("**/empty.html", route =>
         {
@@ -195,33 +195,33 @@ public class PopupTests
         });
         await PromiseAll(
             page.WaitForPopupAsync(),
-            page.EvaluateAsync("url => window['__popup'] = window.open(url)", server.EmptyPage));
+            page.EvaluateAsync("url => window['__popup'] = window.open(url)", Server.EmptyPage));
         Assert.That(intercepted, Is.EqualTo(true));
         await context.CloseAsync();
     }
 
     [UpstreamTest("PO-029 should load subresources of an about:blank popup when the opener has routes")]
-    public async Task ShouldLoadSubresourcesOfAnAboutBlankPopupWhenTheOpenerHasRoutes(IBrowser browser, Server server, string browserName, BrowserNewContextOptions contextOptions)
+    public async Task ShouldLoadSubresourcesOfAnAboutBlankPopupWhenTheOpenerHasRoutes()
     {
-        Info.Fixme(browserName == "chromium", "Subresources of an about:blank popup are paused on the opener target and never continued");
-        var context = await browser.NewContextAsync(contextOptions);
+        Info.Fixme(BrowserName == "chromium", "Subresources of an about:blank popup are paused on the opener target and never continued");
+        var context = await Browser.NewContextAsync(ContextOptions());
         var page = await context.NewPageAsync();
         await page.RouteAsync("**/*", route => route.ContinueAsync());
-        await page.GotoAsync(server.EmptyPage);
+        await page.GotoAsync(Server.EmptyPage);
         var (popup, _) = await PromiseAll(
             page.WaitForPopupAsync(),
-            page.EvaluateAsync("url => window.open('').document.write(`<img src=\"${url}\">`)", server.Prefix + "/pptr.png"));
+            page.EvaluateAsync("url => window.open('').document.write(`<img src=\"${url}\">`)", Server.Prefix + "/pptr.png"));
         await popup.WaitForFunctionAsync("() => document.querySelector('img')?.naturalWidth > 0");
         await context.CloseAsync();
     }
 
     [UpstreamTest("PO-023 BrowserContext.addInitScript should apply to an in-process popup")]
-    public async Task BrowserContextAddInitScriptShouldApplyToAnInProcessPopup(IBrowser browser, Server server, BrowserNewContextOptions contextOptions)
+    public async Task BrowserContextAddInitScriptShouldApplyToAnInProcessPopup()
     {
-        var context = await browser.NewContextAsync(contextOptions);
+        var context = await Browser.NewContextAsync(ContextOptions());
         await context.AddInitScriptAsync("(() => window['injected'] = 123)()");
         var page = await context.NewPageAsync();
-        await page.GotoAsync(server.EmptyPage);
+        await page.GotoAsync(Server.EmptyPage);
         var injected = await page.EvaluateAsync<int>(@"() => {
     const win = window.open('about:blank');
     return win['injected'];
@@ -231,15 +231,15 @@ public class PopupTests
     }
 
     [UpstreamTest("PO-024 BrowserContext.addInitScript should apply to a cross-process popup")]
-    public async Task BrowserContextAddInitScriptShouldApplyToACrossProcessPopup(IBrowser browser, Server server, BrowserNewContextOptions contextOptions)
+    public async Task BrowserContextAddInitScriptShouldApplyToACrossProcessPopup()
     {
-        var context = await browser.NewContextAsync(contextOptions);
+        var context = await Browser.NewContextAsync(ContextOptions());
         await context.AddInitScriptAsync("(() => window['injected'] = 123)()");
         var page = await context.NewPageAsync();
-        await page.GotoAsync(server.EmptyPage);
+        await page.GotoAsync(Server.EmptyPage);
         var (popup, _) = await PromiseAll(
             page.WaitForPopupAsync(),
-            page.EvaluateAsync("url => window.open(url)", server.CrossProcessPrefix + "/title.html"));
+            page.EvaluateAsync("url => window.open(url)", Server.CrossProcessPrefix + "/title.html"));
         Assert.That(await popup.EvaluateAsync<int>("injected"), Is.EqualTo(123));
         await popup.ReloadAsync();
         Assert.That(await popup.EvaluateAsync<int>("injected"), Is.EqualTo(123));
@@ -247,9 +247,9 @@ public class PopupTests
     }
 
     [UpstreamTest("PO-025 should expose function from browser context")]
-    public async Task ShouldExposeFunctionFromBrowserContext(IBrowser browser, Server server, BrowserNewContextOptions contextOptions)
+    public async Task ShouldExposeFunctionFromBrowserContext()
     {
-        var context = await browser.NewContextAsync(contextOptions);
+        var context = await Browser.NewContextAsync(ContextOptions());
         var messages = new List<string>();
         await context.ExposeFunctionAsync("add", (int a, int b) =>
         {
@@ -258,7 +258,7 @@ public class PopupTests
         });
         var page = await context.NewPageAsync();
         context.Page += (_, _) => messages.Add("page");
-        await page.GotoAsync(server.EmptyPage);
+        await page.GotoAsync(Server.EmptyPage);
         var added = await page.EvaluateAsync<int>(@"async () => {
     const win = window.open('about:blank');
     return win['add'](9, 4);
@@ -269,9 +269,9 @@ public class PopupTests
     }
 
     [UpstreamTest("PO-026 should not dispatch binding on a closed page")]
-    public async Task ShouldNotDispatchBindingOnAClosedPage(IBrowser browser, Server server, string browserName, BrowserNewContextOptions contextOptions)
+    public async Task ShouldNotDispatchBindingOnAClosedPage()
     {
-        var context = await browser.NewContextAsync(contextOptions);
+        var context = await Browser.NewContextAsync(ContextOptions());
         bool? wasClosed = null;
         await context.ExposeBindingAsync("add", (BindingSource source, int a, int b) =>
         {
@@ -279,7 +279,7 @@ public class PopupTests
             return a + b;
         });
         var page = await context.NewPageAsync();
-        await page.GotoAsync(server.EmptyPage);
+        await page.GotoAsync(Server.EmptyPage);
         await PromiseAll(
             page.WaitForPopupAsync(),
             page.EvaluateAsync(@"async () => {
@@ -294,9 +294,10 @@ public class PopupTests
     }
 
     [UpstreamTest("PO-027 should not throttle rAF in the opener page")]
-    public async Task ShouldNotThrottleRAFInTheOpenerPage(IPage page, Server server)
+    public async Task ShouldNotThrottleRAFInTheOpenerPage()
     {
-        await page.GotoAsync(server.EmptyPage);
+        var page = await PageFixture();
+        await page.GotoAsync(Server.EmptyPage);
         var (popup, _) = await PromiseAll(
             page.WaitForPopupAsync(),
             page.EvaluateAsync("() => { window.open('about:blank'); }"));
@@ -306,11 +307,12 @@ public class PopupTests
     }
 
     [UpstreamTest("PO-028 should not throw when click closes popup")]
-    public async Task ShouldNotThrowWhenClickClosesPopup(string browserName, IPage page, Server server)
+    public async Task ShouldNotThrowWhenClickClosesPopup()
     {
-        Info.Fixme(browserName == "firefox", "locator.click: Target page, context or browser has been closed");
+        var page = await PageFixture();
+        Info.Fixme(BrowserName == "firefox", "locator.click: Target page, context or browser has been closed");
 
-        await page.GotoAsync(server.EmptyPage);
+        await page.GotoAsync(Server.EmptyPage);
         var (popup, _) = await PromiseAll(
             page.WaitForPopupAsync(),
             page.EvaluateAsync(@"async browserName => {
@@ -318,7 +320,7 @@ public class PopupTests
       if (browserName === 'firefox')
         await new Promise(x => w.onload = x);
       w.document.body.innerHTML = `<button onclick=""window.close()"">close</button>`;
-    }", browserName));
+    }", BrowserName));
         await popup.GetByRole(AriaRole.Button).ClickAsync();
     }
 

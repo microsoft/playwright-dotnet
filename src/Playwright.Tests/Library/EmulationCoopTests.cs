@@ -20,7 +20,7 @@ using static Microsoft.Playwright.Tests.Fixtures.Utils;
 namespace Microsoft.Playwright.Tests.Library;
 
 /// <summary>Port of tests/library/emulation-coop.spec.ts.</summary>
-public class EmulationCoopTests
+public class EmulationCoopTests : UpstreamBrowserTest
 {
     private static void SetupRoutes(Server server)
     {
@@ -67,13 +67,13 @@ public class EmulationCoopTests
         return result;
     }
 
-    public class EmulationWithCOOP
+    public class EmulationWithCOOP : UpstreamBrowserTest
     {
         [UpstreamTest("EM-025 should preserve context options")]
-        public async Task ShouldPreserveContextOptions(IBrowser browser, Server server, BrowserNewContextOptions contextOptions)
+        public async Task ShouldPreserveContextOptions()
         {
-            SetupRoutes(server);
-            var options = new BrowserNewContextOptions(contextOptions)
+            SetupRoutes(Server);
+            var options = new BrowserNewContextOptions(ContextOptions())
             {
                 ColorScheme = ColorScheme.Dark,
                 DeviceScaleFactor = 2,
@@ -85,7 +85,7 @@ public class EmulationCoopTests
                 HasTouch = true,
                 ViewportSize = new() { Width = 500, Height = 600 },
             };
-            var plain = await Probe(browser, server, options, "/plain.html");
+            var plain = await Probe(Browser, Server, options, "/plain.html");
             ExpectToEqual(plain, ObjectContaining(new
             {
                 dark = true,
@@ -98,16 +98,16 @@ public class EmulationCoopTests
                 touch = true,
                 viewport = new[] { 500, 600 },
             }));
-            var coop = await Probe(browser, server, options, "/coop.html");
+            var coop = await Probe(Browser, Server, options, "/coop.html");
             ExpectToEqual(coop, plain);
         }
 
         [UpstreamTest("EM-026 should preserve page.emulateMedia")]
-        public async Task ShouldPreservePageEmulateMedia(IBrowser browser, Server server, BrowserNewContextOptions contextOptions)
+        public async Task ShouldPreservePageEmulateMedia()
         {
-            SetupRoutes(server);
+            SetupRoutes(Server);
             var media = new PageEmulateMediaOptions { Media = Media.Print, ColorScheme = ColorScheme.Dark, ReducedMotion = ReducedMotion.Reduce, Contrast = Contrast.More, ForcedColors = ForcedColors.Active };
-            var plain = await Probe(browser, server, new(contextOptions), "/plain.html", media);
+            var plain = await Probe(Browser, Server, new(ContextOptions()), "/plain.html", media);
             ExpectToEqual(plain, ObjectContaining(new
             {
                 print = true,
@@ -115,28 +115,28 @@ public class EmulationCoopTests
                 contrast = true,
                 forcedColors = true,
             }));
-            var coop = await Probe(browser, server, new(contextOptions), "/coop.html", media);
+            var coop = await Probe(Browser, Server, new(ContextOptions()), "/coop.html", media);
             ExpectToEqual(coop, plain);
         }
 
         [UpstreamTest("EM-027 should preserve mobile emulation")]
-        public async Task ShouldPreserveMobileEmulation(IBrowser browser, Server server, BrowserNewContextOptions contextOptions)
+        public async Task ShouldPreserveMobileEmulation()
         {
-            SetupRoutes(server);
-            var options = new BrowserNewContextOptions(contextOptions)
+            SetupRoutes(Server);
+            var options = new BrowserNewContextOptions(ContextOptions())
             {
                 IsMobile = true,
                 HasTouch = true,
                 ViewportSize = new() { Width = 500, Height = 600 },
                 ScreenSize = new() { Width = 700, Height = 900 },
             };
-            var plain = await Probe(browser, server, options, "/plain.html");
+            var plain = await Probe(Browser, Server, options, "/plain.html");
             ExpectToEqual(plain, ObjectContaining(new
             {
                 coarse = true,
                 orientation = "portrait-primary",
             }));
-            var coop = await Probe(browser, server, options, "/coop.html");
+            var coop = await Probe(Browser, Server, options, "/coop.html");
             ExpectToEqual(coop, plain);
         }
     }

@@ -21,16 +21,16 @@ using static Microsoft.Playwright.Tests.Fixtures.Utils;
 namespace Microsoft.Playwright.Tests.Library;
 
 /// <summary>Port of tests/library/resource-timing.spec.ts.</summary>
-public class ResourceTimingTests
+public class ResourceTimingTests : UpstreamBrowserTest
 {
     [UpstreamTest("NE-131 should work @smoke")]
-    public async Task ShouldWork(ContextFactory contextFactory, Server server)
+    public async Task ShouldWork()
     {
-        var context = await contextFactory();
+        var context = await ContextFactory();
         var page = await context.NewPageAsync();
         var (request, _) = await PromiseAll(
             page.WaitForRequestFinishedAsync(),
-            page.GotoAsync(server.EmptyPage));
+            page.GotoAsync(Server.EmptyPage));
         var timing = request.Timing;
         VerifyConnectionTimingConsistency(timing);
         Assert.That(timing.RequestStart, Is.GreaterThanOrEqualTo(timing.ConnectEnd));
@@ -41,14 +41,14 @@ public class ResourceTimingTests
     }
 
     [UpstreamTest("NE-132 should work for subresource")]
-    public async Task ShouldWorkForSubresource(ContextFactory contextFactory, Server server, string browserName, string platform)
+    public async Task ShouldWorkForSubresource()
     {
-        Info.Fixme(browserName == "webkit" && platform == "win32", "responseStart is wrong due upstream webkit/libcurl bug");
-        var context = await contextFactory();
+        Info.Fixme(BrowserName == "webkit" && Platform == "win32", "responseStart is wrong due upstream webkit/libcurl bug");
+        var context = await ContextFactory();
         var page = await context.NewPageAsync();
         var requests = new List<IRequest>();
         page.RequestFinished += (_, request) => requests.Add(request);
-        await page.GotoAsync(server.Prefix + "/one-style.html");
+        await page.GotoAsync(Server.Prefix + "/one-style.html");
         Assert.That(requests.Count, Is.EqualTo(2));
         var timing = requests[1].Timing;
         VerifyConnectionTimingConsistency(timing);
@@ -60,12 +60,12 @@ public class ResourceTimingTests
     }
 
     [UpstreamTest("NE-133 should work for SSL")]
-    public async Task ShouldWorkForSSL(IBrowser browser, Server httpsServer, string browserName, string platform, BrowserNewPageOptions newPageOptions)
+    public async Task ShouldWorkForSSL()
     {
-        var page = await browser.NewPageAsync(new(newPageOptions) { IgnoreHTTPSErrors = true });
+        var page = await Browser.NewPageAsync(new(NewPageOptions()) { IgnoreHTTPSErrors = true });
         var (request, _) = await PromiseAll(
             page.WaitForRequestFinishedAsync(),
-            page.GotoAsync(httpsServer.EmptyPage));
+            page.GotoAsync(HttpsServer.EmptyPage));
         var timing = request.Timing;
         VerifyConnectionTimingConsistency(timing);
         Assert.That(timing.RequestStart, Is.GreaterThanOrEqualTo(timing.ConnectEnd));
@@ -76,21 +76,21 @@ public class ResourceTimingTests
     }
 
     [UpstreamTest("NE-134 should work for redirect")]
-    public async Task ShouldWorkForRedirect(ContextFactory contextFactory, string browserName, Server server)
+    public async Task ShouldWorkForRedirect()
     {
-        Info.Fixme(browserName == "webkit", "In WebKit, redirects don't carry the timing info");
+        Info.Fixme(BrowserName == "webkit", "In WebKit, redirects don't carry the timing info");
 
-        var context = await contextFactory();
+        var context = await ContextFactory();
         var page = await context.NewPageAsync();
-        server.SetRedirect("/foo.html", "/empty.html");
+        Server.SetRedirect("/foo.html", "/empty.html");
         var responses = new List<IResponse>();
         page.Response += (_, response) => responses.Add(response);
-        await page.GotoAsync(server.Prefix + "/foo.html");
+        await page.GotoAsync(Server.Prefix + "/foo.html");
         await PromiseAll(responses.Select(r => r.FinishedAsync()));
 
         Assert.That(responses.Count, Is.EqualTo(2));
-        Assert.That(responses[0].Url, Is.EqualTo(server.Prefix + "/foo.html"));
-        Assert.That(responses[1].Url, Is.EqualTo(server.Prefix + "/empty.html"));
+        Assert.That(responses[0].Url, Is.EqualTo(Server.Prefix + "/foo.html"));
+        Assert.That(responses[1].Url, Is.EqualTo(Server.Prefix + "/empty.html"));
 
         var timing1 = responses[0].Request.Timing;
         VerifyConnectionTimingConsistency(timing1);
@@ -110,10 +110,10 @@ public class ResourceTimingTests
     }
 
     [UpstreamTest("NE-135 should work when serving from memory cache")]
-    public async Task ShouldWorkWhenServingFromMemoryCache(ContextFactory contextFactory, Server server, string browserName, bool isBidi)
+    public async Task ShouldWorkWhenServingFromMemoryCache()
     {
-        Info.Fixme(browserName == "firefox" && !isBidi, "Response event is not fired in Firefox");
-        server.SetRoute("/one-style.css", (req, res) =>
+        Info.Fixme(BrowserName == "firefox" && !IsBidi, "Response event is not fired in Firefox");
+        Server.SetRoute("/one-style.css", (req, res) =>
         {
             res.WriteHead(200, new()
             {
@@ -123,9 +123,9 @@ public class ResourceTimingTests
             res.End("body { background: red }");
         });
 
-        var context = await contextFactory();
+        var context = await ContextFactory();
         var page = await context.NewPageAsync();
-        await page.GotoAsync(server.Prefix + "/one-style.html");
+        await page.GotoAsync(Server.Prefix + "/one-style.html");
         var (response, _) = await PromiseAll(
             page.WaitForResponseAsync("**/one-style.css"),
             page.ReloadAsync());

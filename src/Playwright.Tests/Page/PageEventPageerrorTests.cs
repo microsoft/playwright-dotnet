@@ -22,20 +22,20 @@ using static Microsoft.Playwright.Tests.Fixtures.Utils;
 namespace Microsoft.Playwright.Tests.Page;
 
 /// <summary>Port of tests/page/page-event-pageerror.spec.ts.</summary>
-public class PageEventPageerrorTests
+public class PageEventPageerrorTests : UpstreamPageTest
 {
     [UpstreamTest("ER-001 should fire")]
     [LocalFixme("dotnet: the page error is a string, the stack of the error, which starts with 'Error: Fancy error!\\n    at c (': upstream expects error.message 'Fancy error!'")]
-    public async Task ShouldFire(IPage page, Server server, string browserName, int browserMajorVersion, bool isBidi)
+    public async Task ShouldFire()
     {
-        var url = server.Prefix + "/error.html";
+        var url = Server.Prefix + "/error.html";
         var (error, _) = await PromiseAll(
-            Once<string>(h => page.PageError += h, h => page.PageError -= h),
-            page.GotoAsync(url));
+            Once<string>(h => Page.PageError += h, h => Page.PageError -= h),
+            Page.GotoAsync(url));
         // .NET: expect(error.name).toBe('Error') is left out: the page error is a string, error.name is not in the API.
         // .NET: error.message and error.stack are the page error itself, a string.
         Assert.That(error, Is.EqualTo("Fancy error!"));
-        if (browserName == "chromium" || (browserName == "firefox" && isBidi))
+        if (BrowserName == "chromium" || (BrowserName == "firefox" && IsBidi))
         {
             Assert.That(error, Is.EqualTo(@"Error: Fancy error!
     at c (myscript.js:14:11)
@@ -43,7 +43,7 @@ public class PageEventPageerrorTests
     at a (myscript.js:6:5)
     at myscript.js:3:1"));
         }
-        else if (browserName == "webkit")
+        else if (BrowserName == "webkit")
         {
             Assert.That(error, Is.EqualTo($@"Error: Fancy error!
     at c ({url}:14:36)
@@ -51,7 +51,7 @@ public class PageEventPageerrorTests
     at a ({url}:6:6)
     at global code ({url}:3:2)"));
         }
-        else if (browserName == "firefox")
+        else if (BrowserName == "firefox")
         {
             Assert.That(error, Is.EqualTo(@"Error: Fancy error!
     at c (myscript.js:14:11)
@@ -62,8 +62,8 @@ public class PageEventPageerrorTests
 
         // The same script from another origin: Chromium reports it without an exception object,
         // so the stack is built from the CDP call frames, which are zero-based.
-        var crossOriginUrl = server.CrossProcessPrefix + "/error.js";
-        server.SetRoute("/error.js", (req, res) =>
+        var crossOriginUrl = Server.CrossProcessPrefix + "/error.js";
+        Server.SetRoute("/error.js", (req, res) =>
         {
             res.SetHeader("Content-Type", "text/javascript");
             // Same lines as error.html, so the stack has the same locations.
@@ -84,16 +84,16 @@ function c() {
 }
 ");
         });
-        server.SetRoute("/cross-origin-error.html", (req, res) =>
+        Server.SetRoute("/cross-origin-error.html", (req, res) =>
         {
             res.SetHeader("Content-Type", "text/html");
             res.End($"<script src=\"{crossOriginUrl}\"></script>");
         });
         var (crossOriginError, _) = await PromiseAll(
-            Once<string>(h => page.PageError += h, h => page.PageError -= h),
-            page.GotoAsync(server.Prefix + "/cross-origin-error.html"));
+            Once<string>(h => Page.PageError += h, h => Page.PageError -= h),
+            Page.GotoAsync(Server.Prefix + "/cross-origin-error.html"));
         Assert.That(crossOriginError, Is.EqualTo("Fancy error!"));
-        if (browserName == "chromium" && browserMajorVersion >= 155)
+        if (BrowserName == "chromium" && BrowserMajorVersion >= 155)
         {
             Assert.That(crossOriginError, Is.EqualTo($@"Uncaught Error: Fancy error!
     at c ({crossOriginUrl}:14:11)
@@ -101,7 +101,7 @@ function c() {
     at a ({crossOriginUrl}:6:5)
     at <anonymous> ({crossOriginUrl}:3:1)"));
         }
-        else if (browserName == "webkit")
+        else if (BrowserName == "webkit")
         {
             Assert.That(crossOriginError, Is.EqualTo($@"Error: Fancy error!
     at c ({crossOriginUrl}:14:36)
@@ -109,7 +109,7 @@ function c() {
     at a ({crossOriginUrl}:6:6)
     at global code ({crossOriginUrl}:3:2)"));
         }
-        else if (browserName == "firefox" && !isBidi)
+        else if (BrowserName == "firefox" && !IsBidi)
         {
             Assert.That(crossOriginError, Is.EqualTo($@"Error: Fancy error!
     at c ({crossOriginUrl}:14:11)
@@ -120,35 +120,35 @@ function c() {
     }
 
     [UpstreamTest("ER-002 should not receive console message for pageError")]
-    public async Task ShouldNotReceiveConsoleMessageForPageError(IPage page, Server server)
+    public async Task ShouldNotReceiveConsoleMessageForPageError()
     {
         var messages = new List<IConsoleMessage>();
-        page.Console += (_, e) => messages.Add(e);
+        Page.Console += (_, e) => messages.Add(e);
         await PromiseAll(
-            Once<string>(h => page.PageError += h, h => page.PageError -= h),
-            page.GotoAsync(server.Prefix + "/error.html"));
+            Once<string>(h => Page.PageError += h, h => Page.PageError -= h),
+            Page.GotoAsync(Server.Prefix + "/error.html"));
         Assert.That(messages.Count, Is.EqualTo(1));
     }
 
     [UpstreamTest("ER-003 should contain sourceURL")]
-    public async Task ShouldContainSourceURL(IPage page, Server server, string browserName)
+    public async Task ShouldContainSourceURL()
     {
-        Info.Fixme(browserName == "webkit");
+        Info.Fixme(BrowserName == "webkit");
 
         var (error, _) = await PromiseAll(
-            Once<string>(h => page.PageError += h, h => page.PageError -= h),
-            page.GotoAsync(server.Prefix + "/error.html"));
+            Once<string>(h => Page.PageError += h, h => Page.PageError -= h),
+            Page.GotoAsync(Server.Prefix + "/error.html"));
         // .NET: error.stack is the page error itself, a string.
         Assert.That(error, Does.Contain("myscript.js"));
     }
 
     [UpstreamTest("ER-004 should contain the Error.name property")]
     [LocalFixme("dotnet: the page error is a string, the stack of the error, which starts with 'my-name: my-message\\n    at ': upstream expects error.message 'my-message'")]
-    public async Task ShouldContainTheErrorNameProperty(IPage page)
+    public async Task ShouldContainTheErrorNameProperty()
     {
         var (error, _) = await PromiseAll(
-            Once<string>(h => page.PageError += h, h => page.PageError -= h),
-            page.EvaluateAsync(@"() => {
+            Once<string>(h => Page.PageError += h, h => Page.PageError -= h),
+            Page.EvaluateAsync(@"() => {
       window.builtins.setTimeout(() => {
         const error = new Error('my-message');
         error.name = 'my-name';
@@ -162,11 +162,11 @@ function c() {
 
     [UpstreamTest("ER-005 should support an empty Error.name property")]
     [LocalFixme("dotnet: the page error is a string, the stack of the error, which starts with 'Error: my-message\\n    at eval (': upstream expects error.message 'my-message' (only in chromium); dotnet: the page error is a string, the stack of the error, which starts with ': my-message\\n    at  (': upstream expects error.message 'my-message' (only in firefox); dotnet: the page error is a string, the stack of the error, 'my-message\\n    at unknown (undefined:3:32)': upstream expects error.message 'my-message' (only in webkit)")]
-    public async Task ShouldSupportAnEmptyErrorNameProperty(IPage page)
+    public async Task ShouldSupportAnEmptyErrorNameProperty()
     {
         var (error, _) = await PromiseAll(
-            Once<string>(h => page.PageError += h, h => page.PageError -= h),
-            page.EvaluateAsync(@"() => {
+            Once<string>(h => Page.PageError += h, h => Page.PageError -= h),
+            Page.EvaluateAsync(@"() => {
       window.builtins.setTimeout(() => {
         const error = new Error('my-message');
         error.name = '';
@@ -180,7 +180,7 @@ function c() {
 
     [UpstreamTest("ER-006 should handle odd values")]
     [LocalFixme("dotnet: the page error is a string, ': null' for a value without a stack (name: message, with an empty name): upstream expects error.message 'null' (only in chromium); dotnet: the page error is a string, the stack of the error, which starts with 'uncaught exception: null\\n    at  (': upstream expects error.message 'null' (only in firefox); dotnet: the page error is a string, the stack of the error, 'null\\n    at unknown (:2:55)': upstream expects error.message 'null' (only in webkit)")]
-    public async Task ShouldHandleOddValues(IPage page)
+    public async Task ShouldHandleOddValues()
     {
         // .NET: the case [undefined, 'undefined'] is left out: a null argument of EvaluateAsync is null in the page, and .NET has no undefined.
         var cases = new (object, string)[]
@@ -192,8 +192,8 @@ function c() {
         foreach (var (value, message) in cases)
         {
             var (error, _) = await PromiseAll(
-                Once<string>(h => page.PageError += h, h => page.PageError -= h),
-                page.EvaluateAsync(@"value => {
+                Once<string>(h => Page.PageError += h, h => Page.PageError -= h),
+                Page.EvaluateAsync(@"value => {
         window.builtins.setTimeout(() => { throw value; }, 0);
       }", value));
             // .NET: error.message is the page error itself, a string.
@@ -203,42 +203,42 @@ function c() {
 
     [UpstreamTest("ER-007 should handle object")]
     [LocalFixme("dotnet: the page error is a string, ': Object' for a value without a stack (name: message, with an empty name): upstream expects error.message 'Object' (only in chromium); dotnet: the page error is a string, the stack of the error, which starts with 'uncaught exception: [object Object]\\n    at  (': upstream expects error.message '[object Object]' (only in firefox); dotnet: the page error is a string, the stack of the error, '[object Object]\\n    at unknown (:2:50)': upstream expects error.message '[object Object]' (only in webkit)")]
-    public async Task ShouldHandleObject(IPage page, string browserName)
+    public async Task ShouldHandleObject()
     {
         var (error, _) = await PromiseAll(
-            Once<string>(h => page.PageError += h, h => page.PageError -= h),
-            page.EvaluateAsync(@"() => {
+            Once<string>(h => Page.PageError += h, h => Page.PageError -= h),
+            Page.EvaluateAsync(@"() => {
       window.builtins.setTimeout(() => { throw {}; }, 0);
     }"));
         // .NET: error.message is the page error itself, a string.
-        Assert.That(error, Is.EqualTo(browserName == "chromium" ? "Object" : "[object Object]"));
+        Assert.That(error, Is.EqualTo(BrowserName == "chromium" ? "Object" : "[object Object]"));
     }
 
     [UpstreamTest("ER-008 should handle window")]
     [LocalFixme("dotnet: the page error is a string, ': Window' for a value without a stack (name: message, with an empty name): upstream expects error.message 'Window' (only in chromium); dotnet: the page error is a string, the stack of the error, which starts with 'uncaught exception: [object Window]\\n    at  (': upstream expects error.message '[object Window]' (only in firefox); dotnet: the page error is a string, the stack of the error, '[object Window]\\n    at unknown (:2:54)': upstream expects error.message '[object Window]' (only in webkit)")]
-    public async Task ShouldHandleWindow(IPage page, string browserName)
+    public async Task ShouldHandleWindow()
     {
         var (error, _) = await PromiseAll(
-            Once<string>(h => page.PageError += h, h => page.PageError -= h),
-            page.EvaluateAsync(@"() => {
+            Once<string>(h => Page.PageError += h, h => Page.PageError -= h),
+            Page.EvaluateAsync(@"() => {
       window.builtins.setTimeout(() => { throw window; }, 0);
     }"));
         // .NET: error.message is the page error itself, a string.
-        Assert.That(error, Is.EqualTo(browserName == "chromium" ? "Window" : "[object Window]"));
+        Assert.That(error, Is.EqualTo(BrowserName == "chromium" ? "Window" : "[object Window]"));
     }
 
     [UpstreamTest("ER-009 should remove a listener of a non-existing event handler")]
-    public async Task ShouldRemoveAListenerOfANonExistingEventHandler(IPage page)
+    public async Task ShouldRemoveAListenerOfANonExistingEventHandler()
     {
-        page.PageError -= (_, _) => { };
+        Page.PageError -= (_, _) => { };
     }
 
     [UpstreamTest("ER-010 should emit error from unhandled rejects")]
-    public async Task ShouldEmitErrorFromUnhandledRejects(IPage page, string browserName)
+    public async Task ShouldEmitErrorFromUnhandledRejects()
     {
         var error = await PromiseAll(
-            Once<string>(h => page.PageError += h, h => page.PageError -= h),
-            page.SetContentAsync(@"
+            Once<string>(h => Page.PageError += h, h => Page.PageError -= h),
+            Page.SetContentAsync(@"
         <script>
           Promise.reject(new Error('sad :('));
         </script>
@@ -249,15 +249,15 @@ function c() {
 
     [UpstreamTest("ER-011 pageErrors should work")]
     [LocalFixme("dotnet: a page error is a string, the stack of the error, which starts with 'Error: error201\\n    at ': upstream expects error.message 'error201'")]
-    public async Task PageErrorsShouldWork(IPage page)
+    public async Task PageErrorsShouldWork()
     {
-        await page.EvaluateAsync(@"async () => {
+        await Page.EvaluateAsync(@"async () => {
     for (let i = 0; i < 301; i++)
       window.builtins.setTimeout(() => { throw new Error('error' + i); }, 0);
     await new Promise(f => window.builtins.setTimeout(f, 2000));
   }");
 
-        var errors = await page.PageErrorsAsync();
+        var errors = await Page.PageErrorsAsync();
         // .NET: error.message is the page error itself, a string.
         var messages = errors.Select(e => e).ToArray();
 
@@ -273,38 +273,38 @@ function c() {
 
     [UpstreamTest("ER-012 clearPageErrors should work")]
     [LocalFixme("dotnet: a page error is a string, the stack of the error, which starts with 'Error: error1\\n    at ': upstream expects error.message 'error1'")]
-    public async Task ClearPageErrorsShouldWork(IPage page)
+    public async Task ClearPageErrorsShouldWork()
     {
-        await page.EvaluateAsync(@"() => {
+        await Page.EvaluateAsync(@"() => {
     window.builtins.setTimeout(() => { throw new Error('error1'); }, 0);
     window.builtins.setTimeout(() => { throw new Error('error2'); }, 0);
   }");
-        await page.WaitForTimeoutAsync(1000);
+        await Page.WaitForTimeoutAsync(1000);
 
-        var errors = await page.PageErrorsAsync();
+        var errors = await Page.PageErrorsAsync();
         // .NET: error.message is the page error itself, a string.
         Assert.That(errors.Select(e => e), Does.Contain("error1"));
         Assert.That(errors.Select(e => e), Does.Contain("error2"));
 
-        await page.ClearPageErrorsAsync();
+        await Page.ClearPageErrorsAsync();
 
-        errors = await page.PageErrorsAsync();
+        errors = await Page.PageErrorsAsync();
         Assert.That(errors, Is.EqualTo(Array.Empty<string>()));
 
-        await page.EvaluateAsync(@"() => {
+        await Page.EvaluateAsync(@"() => {
     window.builtins.setTimeout(() => { throw new Error('error3'); }, 0);
   }");
-        await page.WaitForTimeoutAsync(1000);
+        await Page.WaitForTimeoutAsync(1000);
 
-        errors = await page.PageErrorsAsync();
+        errors = await Page.PageErrorsAsync();
         Assert.That(errors.Count, Is.EqualTo(1));
         Assert.That(errors[0], Does.Contain("error3"));
     }
 
     [UpstreamTest("ER-013 should fire illegal character error")]
-    public async Task ShouldFireIllegalCharacterError(IPage page, Server server, string browserName, bool isWindows, string channel)
+    public async Task ShouldFireIllegalCharacterError()
     {
-        server.SetRoute("/error.html", (req, res) =>
+        Server.SetRoute("/error.html", (req, res) =>
         {
             res.End(@"
       <!doctype html>
@@ -323,20 +323,20 @@ function c() {
       </html>
     ");
         });
-        var url = server.Prefix + "/error.html";
+        var url = Server.Prefix + "/error.html";
         var (error, _) = await PromiseAll(
-            Once<string>(h => page.PageError += h, h => page.PageError -= h),
-            page.GotoAsync(url));
+            Once<string>(h => Page.PageError += h, h => Page.PageError -= h),
+            Page.GotoAsync(url));
         // .NET: error.message is the page error itself, a string.
-        if (browserName == "chromium")
+        if (BrowserName == "chromium")
         {
             Assert.That(error, Does.Contain("Invalid or unexpected token"));
         }
-        else if (browserName == "webkit" && isWindows && channel != "webkit-wsl")
+        else if (BrowserName == "webkit" && IsWindows && Channel != "webkit-wsl")
         {
             Assert.That(error, Does.Contain("No identifiers allowed directly after numeric literal"));
         }
-        else if (browserName == "webkit")
+        else if (BrowserName == "webkit")
         {
             Assert.That(error, Does.Contain("Invalid character"));
         }
@@ -348,22 +348,22 @@ function c() {
 
     [UpstreamTest("ER-022 should not fire for a caught fetch rejected by a pending navigation")]
     [LocalFixme("dotnet: the page error is a string, the stack of the error, which starts with 'Error: genuine error\\n    at ': upstream expects error.message 'genuine error'")]
-    public async Task ShouldNotFireForACaughtFetchRejectedByAPendingNavigation(IPage page, Server server)
+    public async Task ShouldNotFireForACaughtFetchRejectedByAPendingNavigation()
     {
-        await page.GotoAsync(server.EmptyPage);
+        await Page.GotoAsync(Server.EmptyPage);
         var errors = new List<string>();
         // .NET: error.message is the page error itself, a string.
-        page.PageError += (_, error) => errors.Add(error);
+        Page.PageError += (_, error) => errors.Add(error);
         var waitResponse = new TaskCompletionSource<ServerResponse>(TaskCreationOptions.RunContinuationsAsynchronously);
-        server.SetRoute("/wait", (req, res) => waitResponse.TrySetResult(res));
+        Server.SetRoute("/wait", (req, res) => waitResponse.TrySetResult(res));
         var replacementResponse = new TaskCompletionSource<ServerResponse>(TaskCreationOptions.RunContinuationsAsynchronously);
-        server.SetRoute("/replacement", (req, res) => replacementResponse.TrySetResult(res));
-        var fetchDone = page.WaitForConsoleMessageAsync(new() { Predicate = message => message.Text == "fetch done" });
+        Server.SetRoute("/replacement", (req, res) => replacementResponse.TrySetResult(res));
+        var fetchDone = Page.WaitForConsoleMessageAsync(new() { Predicate = message => message.Text == "fetch done" });
         // Chromium does not run evaluate during a pending navigation, so the page starts the second fetch.
-        await page.EvaluateAsync(@"() => {
+        await Page.EvaluateAsync(@"() => {
     void fetch('/wait').catch(() => {}).then(() => fetch('/empty.html')).catch(() => {}).then(() => console.log('fetch done'));
   }");
-        var navigation = page.GotoAsync(server.Prefix + "/replacement");
+        var navigation = Page.GotoAsync(Server.Prefix + "/replacement");
         var response = await replacementResponse.Task;
         // WebKit rejects the second fetch, because the document is about to go away.
         (await waitResponse.Task).End();
@@ -371,8 +371,8 @@ function c() {
         response.End("replacement");
         await navigation;
         var (error, _) = await PromiseAll(
-            Once<string>(h => page.PageError += h, h => page.PageError -= h),
-            page.EvaluateAsync("() => setTimeout(() => { throw new Error('genuine error'); }, 0)"));
+            Once<string>(h => Page.PageError += h, h => Page.PageError -= h),
+            Page.EvaluateAsync("() => setTimeout(() => { throw new Error('genuine error'); }, 0)"));
         Assert.That(error, Is.EqualTo("genuine error"));
         Assert.That(errors, Is.EqualTo(new[] { "genuine error" }));
     }

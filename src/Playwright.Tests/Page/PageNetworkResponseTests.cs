@@ -25,18 +25,18 @@ using static Microsoft.Playwright.Tests.Fixtures.Utils;
 namespace Microsoft.Playwright.Tests.Page;
 
 /// <summary>Port of tests/page/page-network-response.spec.ts.</summary>
-public class PageNetworkResponseTests
+public class PageNetworkResponseTests : UpstreamPageTest
 {
     [UpstreamTest("NE-030 should work @smoke")]
-    public async Task ShouldWork(IPage page, Server server)
+    public async Task ShouldWork()
     {
-        server.SetRoute("/empty.html", (req, res) =>
+        Server.SetRoute("/empty.html", (req, res) =>
         {
             res.SetHeader("foo", "bar");
             res.SetHeader("BaZ", "bAz");
             res.End();
         });
-        var response = await page.GotoAsync(server.EmptyPage);
+        var response = await Page.GotoAsync(Server.EmptyPage);
         Assert.That((await response.AllHeadersAsync())["foo"], Is.EqualTo("bar"));
         Assert.That((await response.AllHeadersAsync())["baz"], Is.EqualTo("bAz"));
         // .NET: a dictionary throws for a key that it does not have, where an object gives undefined.
@@ -44,11 +44,11 @@ public class PageNetworkResponseTests
     }
 
     [UpstreamTest("NE-031 should return multiple header value")]
-    public async Task ShouldReturnMultipleHeaderValue(IPage page, Server server, string browserName, string platform)
+    public async Task ShouldReturnMultipleHeaderValue()
     {
-        Info.Skip(browserName == "webkit" && platform == "win32", "libcurl does not support non-set-cookie multivalue headers");
+        Info.Skip(BrowserName == "webkit" && Platform == "win32", "libcurl does not support non-set-cookie multivalue headers");
 
-        server.SetRoute("/headers", (req, res) =>
+        Server.SetRoute("/headers", (req, res) =>
         {
             // Headers array is only supported since Node v14.14.0 so we write directly to the socket.
             // res.writeHead(200, ['name-a', 'v1','name-b', 'v4','Name-a', 'v2', 'name-A', 'v3']);
@@ -61,31 +61,31 @@ public class PageNetworkResponseTests
             conn.Uncork();
             conn.End();
         });
-        var response = await page.GotoAsync($"{server.Prefix}/headers");
+        var response = await Page.GotoAsync($"{Server.Prefix}/headers");
         Assert.That(response.Status, Is.EqualTo(200));
         Assert.That(response.Headers["name-a"], Is.EqualTo("v1, v2, v3"));
     }
 
     [UpstreamTest("NE-032 should return text")]
-    public async Task ShouldReturnText(IPage page, Server server)
+    public async Task ShouldReturnText()
     {
-        var response = await page.GotoAsync(server.Prefix + "/simple.json");
+        var response = await Page.GotoAsync(Server.Prefix + "/simple.json");
         Assert.That(await response.TextAsync(), Is.EqualTo("{\"foo\": \"bar\"}\n"));
     }
 
     [UpstreamTest("NE-033 should return uncompressed text")]
-    public async Task ShouldReturnUncompressedText(IPage page, Server server)
+    public async Task ShouldReturnUncompressedText()
     {
-        server.EnableGzip("/simple.json");
-        var response = await page.GotoAsync(server.Prefix + "/simple.json");
+        Server.EnableGzip("/simple.json");
+        var response = await Page.GotoAsync(Server.Prefix + "/simple.json");
         Assert.That(response.Headers["content-encoding"], Is.EqualTo("gzip"));
         Assert.That(await response.TextAsync(), Is.EqualTo("{\"foo\": \"bar\"}\n"));
     }
 
     [UpstreamTest("NE-034 should return uncompressed text for brotli encoding")]
-    public async Task ShouldReturnUncompressedTextForBrotliEncoding(IPage page, Server server, string browserName, bool isAndroid)
+    public async Task ShouldReturnUncompressedTextForBrotliEncoding()
     {
-        Info.Fixme(isAndroid, "net::ERR_CONTENT_DECODING_FAILED");
+        Info.Fixme(IsAndroid, "net::ERR_CONTENT_DECODING_FAILED");
 
         var text = "{\"foo\": \"bar\"}\n";
         // .NET: zlib.brotliCompressSync(Buffer.from(text)) is a BrotliStream.
@@ -98,7 +98,7 @@ public class PageNetworkResponseTests
             }
             compressed = stream.ToArray();
         }
-        server.SetRoute("/brotli.json", (req, res) =>
+        Server.SetRoute("/brotli.json", (req, res) =>
         {
             res.WriteHead(200, new()
             {
@@ -107,16 +107,16 @@ public class PageNetworkResponseTests
             });
             res.End(compressed);
         });
-        var response = await page.GotoAsync(server.Prefix + "/brotli.json");
+        var response = await Page.GotoAsync(Server.Prefix + "/brotli.json");
         Assert.That(response.Headers["content-encoding"], Is.EqualTo("br"));
         Assert.That(await response.TextAsync(), Is.EqualTo(text));
     }
 
     [UpstreamTest("NE-035 should return text for identity encoding")]
-    public async Task ShouldReturnTextForIdentityEncoding(IPage page, Server server)
+    public async Task ShouldReturnTextForIdentityEncoding()
     {
         var text = "<div>hello</div>";
-        server.SetRoute("/identity.html", (req, res) =>
+        Server.SetRoute("/identity.html", (req, res) =>
         {
             res.WriteHead(200, new()
             {
@@ -125,16 +125,16 @@ public class PageNetworkResponseTests
             });
             res.End(text);
         });
-        var response = await page.GotoAsync(server.Prefix + "/identity.html");
+        var response = await Page.GotoAsync(Server.Prefix + "/identity.html");
         Assert.That(response.Headers["content-encoding"], Is.EqualTo("Identity"));
         Assert.That(await response.TextAsync(), Is.EqualTo(text));
     }
 
     [UpstreamTest("NE-036 should throw when requesting body of redirected response")]
-    public async Task ShouldThrowWhenRequestingBodyOfRedirectedResponse(IPage page, Server server)
+    public async Task ShouldThrowWhenRequestingBodyOfRedirectedResponse()
     {
-        server.SetRedirect("/foo.html", "/empty.html");
-        var response = await page.GotoAsync(server.Prefix + "/foo.html");
+        Server.SetRedirect("/foo.html", "/empty.html");
+        var response = await Page.GotoAsync(Server.Prefix + "/foo.html");
         var redirectedFrom = response.Request.RedirectedFrom;
         Assert.That(redirectedFrom, Is.Not.Null);
         var redirected = await redirectedFrom.ResponseAsync();
@@ -145,12 +145,12 @@ public class PageNetworkResponseTests
     }
 
     [UpstreamTest("NE-037 should wait until response completes")]
-    public async Task ShouldWaitUntilResponseCompletes(IPage page, Server server)
+    public async Task ShouldWaitUntilResponseCompletes()
     {
-        await page.GotoAsync(server.EmptyPage);
+        await Page.GotoAsync(Server.EmptyPage);
         // Setup server to trap request.
         ServerResponse serverResponse = null;
-        server.SetRoute("/get", (req, res) =>
+        Server.SetRoute("/get", (req, res) =>
         {
             serverResponse = res;
             // In Firefox, |fetch| will be hanging until it receives |Content-Type| header
@@ -160,12 +160,12 @@ public class PageNetworkResponseTests
         });
         // Setup page to trap response.
         var requestFinished = false;
-        page.RequestFinished += (_, r) => requestFinished = requestFinished || r.Url.Contains("/get");
+        Page.RequestFinished += (_, r) => requestFinished = requestFinished || r.Url.Contains("/get");
         // send request and wait for server response
         var (pageResponse, _, _) = await PromiseAll(
-            page.WaitForResponseAsync(_ => true),
-            page.EvaluateAsync("() => fetch('./get', { method: 'GET' })"),
-            server.WaitForRequest("/get"));
+            Page.WaitForResponseAsync(_ => true),
+            Page.EvaluateAsync("() => fetch('./get', { method: 'GET' })"),
+            Server.WaitForRequest("/get"));
 
         Assert.That(serverResponse, Is.Not.Null);
         Assert.That(pageResponse, Is.Not.Null);
@@ -181,41 +181,41 @@ public class PageNetworkResponseTests
     }
 
     [UpstreamTest("NE-038 should return json")]
-    public async Task ShouldReturnJson(IPage page, Server server)
+    public async Task ShouldReturnJson()
     {
-        var response = await page.GotoAsync(server.Prefix + "/simple.json");
+        var response = await Page.GotoAsync(Server.Prefix + "/simple.json");
         ExpectToEqual(await response.JsonAsync(), new { foo = "bar" });
     }
 
     [UpstreamTest("NE-039 should return body")]
-    public async Task ShouldReturnBody(IPage page, Server server, Func<string, string> asset)
+    public async Task ShouldReturnBody()
     {
-        var response = await page.GotoAsync(server.Prefix + "/pptr.png");
-        var imageBuffer = File.ReadAllBytes(asset("pptr.png"));
+        var response = await Page.GotoAsync(Server.Prefix + "/pptr.png");
+        var imageBuffer = File.ReadAllBytes(Asset("pptr.png"));
         var responseBuffer = await response.BodyAsync();
         Assert.That(responseBuffer.SequenceEqual(imageBuffer), Is.EqualTo(true));
     }
 
     [UpstreamTest("NE-040 should return body with compression")]
-    public async Task ShouldReturnBodyWithCompression(IPage page, Server server, Func<string, string> asset)
+    public async Task ShouldReturnBodyWithCompression()
     {
-        server.EnableGzip("/pptr.png");
-        var response = await page.GotoAsync(server.Prefix + "/pptr.png");
-        var imageBuffer = File.ReadAllBytes(asset("pptr.png"));
+        Server.EnableGzip("/pptr.png");
+        var response = await Page.GotoAsync(Server.Prefix + "/pptr.png");
+        var imageBuffer = File.ReadAllBytes(Asset("pptr.png"));
         var responseBuffer = await response.BodyAsync();
         Assert.That(responseBuffer.SequenceEqual(imageBuffer), Is.EqualTo(true));
     }
 
     [UpstreamTest("NE-041 should return non-utf8 body even when content-type says utf8")]
-    public async Task ShouldReturnNonUtf8BodyEvenWhenContentTypeSaysUtf8(IPage page, Server server, string browserName, int browserMajorVersion)
+    public async Task ShouldReturnNonUtf8BodyEvenWhenContentTypeSaysUtf8()
     {
-        Info.Fixme(browserName == "webkit", "webkit encodes the response body");
-        Info.Fixme(browserName == "chromium" && browserMajorVersion < 151, "older chromium re-encodes the non-utf8 response body and lacks Response.bytes()");
+        Info.Fixme(BrowserName == "webkit", "webkit encodes the response body");
+        Info.Fixme(BrowserName == "chromium" && BrowserMajorVersion < 151, "older chromium re-encodes the non-utf8 response body and lacks Response.bytes()");
 
         // Binary data with bytes that are invalid UTF-8.
         var bytes = new byte[] { 0x80, 0x81, 0x82, 0xFF, 0xFE, 0x00, 0x01, 0x02 };
         var buffer = bytes.ToArray();
-        server.SetRoute("/binary-as-text", (req, res) =>
+        Server.SetRoute("/binary-as-text", (req, res) =>
         {
             res.WriteHead(200, new()
             {
@@ -224,48 +224,48 @@ public class PageNetworkResponseTests
             });
             res.End(buffer);
         });
-        await page.GotoAsync(server.EmptyPage);
+        await Page.GotoAsync(Server.EmptyPage);
         var (response, bytesReceived) = await PromiseAll(
-            page.WaitForResponseAsync(server.Prefix + "/binary-as-text"),
-            page.EvaluateAsync<byte[]>("url => fetch(url).then(r => r.bytes())", server.Prefix + "/binary-as-text"));
+            Page.WaitForResponseAsync(Server.Prefix + "/binary-as-text"),
+            Page.EvaluateAsync<byte[]>("url => fetch(url).then(r => r.bytes())", Server.Prefix + "/binary-as-text"));
         var body = await response.BodyAsync();
         Assert.That(body.SequenceEqual(buffer), Is.EqualTo(true));
         Assert.That(bytesReceived, Is.EqualTo(bytes));
     }
 
     [UpstreamTest("NE-042 should return status text")]
-    public async Task ShouldReturnStatusText(IPage page, Server server)
+    public async Task ShouldReturnStatusText()
     {
-        server.SetRoute("/cool", (req, res) =>
+        Server.SetRoute("/cool", (req, res) =>
         {
             res.WriteHead(200, "cool!");
             res.End();
         });
-        var response = await page.GotoAsync(server.Prefix + "/cool");
+        var response = await Page.GotoAsync(Server.Prefix + "/cool");
         Assert.That(response.StatusText, Is.EqualTo("cool!"));
     }
 
     [UpstreamTest("NE-043 should report all headers")]
-    public async Task ShouldReportAllHeaders(IPage page, Server server, string browserName, string platform, bool isElectron, int browserMajorVersion)
+    public async Task ShouldReportAllHeaders()
     {
-        Info.Skip(isElectron && browserMajorVersion < 99, "This needs Chromium >= 99");
-        Info.Skip(browserName == "webkit" && platform == "win32", "libcurl does not support non-set-cookie multivalue headers");
+        Info.Skip(IsElectron && BrowserMajorVersion < 99, "This needs Chromium >= 99");
+        Info.Skip(BrowserName == "webkit" && Platform == "win32", "libcurl does not support non-set-cookie multivalue headers");
 
         var expectedHeaders = new Dictionary<string, object>
         {
             ["header-a"] = new[] { "value-a", "value-a-1", "value-a-2" },
             ["header-b"] = new[] { "value-b" },
         };
-        server.SetRoute("/headers", (req, res) =>
+        Server.SetRoute("/headers", (req, res) =>
         {
             res.WriteHead(200, expectedHeaders);
             res.End();
         });
 
-        await page.GotoAsync(server.EmptyPage);
+        await Page.GotoAsync(Server.EmptyPage);
         var (response, _) = await PromiseAll(
-            page.WaitForResponseAsync("**/*"),
-            page.EvaluateAsync("() => fetch('/headers')"));
+            Page.WaitForResponseAsync("**/*"),
+            Page.EvaluateAsync("() => fetch('/headers')"));
         var headers = await response.HeadersArrayAsync();
         var actualHeaders = new Dictionary<string, List<string>>();
         foreach (var header in headers)
@@ -288,11 +288,11 @@ public class PageNetworkResponseTests
     }
 
     [UpstreamTest("NE-044 should report multiple set-cookie headers")]
-    public async Task ShouldReportMultipleSetCookieHeaders(IPage page, Server server, bool isElectron, int browserMajorVersion)
+    public async Task ShouldReportMultipleSetCookieHeaders()
     {
-        Info.Skip(isElectron && browserMajorVersion < 99, "This needs Chromium >= 99");
+        Info.Skip(IsElectron && BrowserMajorVersion < 99, "This needs Chromium >= 99");
 
-        server.SetRoute("/headers", (req, res) =>
+        Server.SetRoute("/headers", (req, res) =>
         {
             res.WriteHead(200, new()
             {
@@ -302,10 +302,10 @@ public class PageNetworkResponseTests
             res.End();
         });
 
-        await page.GotoAsync(server.EmptyPage);
+        await Page.GotoAsync(Server.EmptyPage);
         var (response, _) = await PromiseAll(
-            page.WaitForResponseAsync("**/*"),
-            page.EvaluateAsync("() => fetch('/headers')"));
+            Page.WaitForResponseAsync("**/*"),
+            Page.EvaluateAsync("() => fetch('/headers')"));
         var headers = await response.HeadersArrayAsync();
         var cookies = headers.Where(header => header.Name.ToLowerInvariant() == "set-cookie").Select(header => header.Value);
         Assert.That(cookies, Is.EqualTo(new[] { "a=b", "c=d" }));
@@ -315,10 +315,10 @@ public class PageNetworkResponseTests
     }
 
     [UpstreamTest("NE-045 should behave the same way for headers and allHeaders")]
-    public async Task ShouldBehaveTheSameWayForHeadersAndAllHeaders(IPage page, Server server, string browserName, string platform)
+    public async Task ShouldBehaveTheSameWayForHeadersAndAllHeaders()
     {
-        Info.Skip(browserName == "webkit" && platform == "win32", "libcurl does not support non-set-cookie multivalue headers");
-        server.SetRoute("/headers", (req, res) =>
+        Info.Skip(BrowserName == "webkit" && Platform == "win32", "libcurl does not support non-set-cookie multivalue headers");
+        Server.SetRoute("/headers", (req, res) =>
         {
             var headers = new Dictionary<string, object>
             {
@@ -330,7 +330,7 @@ public class PageNetworkResponseTests
                 ["name-A"] = "v3",
             };
             // Chromium does not report set-cookie headers immediately, so they are missing from .headers()
-            if (browserName == "chromium")
+            if (BrowserName == "chromium")
             {
                 headers.Remove("Set-Cookie");
             }
@@ -340,10 +340,10 @@ public class PageNetworkResponseTests
             res.End();
         });
 
-        await page.GotoAsync(server.EmptyPage);
+        await Page.GotoAsync(Server.EmptyPage);
         var (response, _) = await PromiseAll(
-            page.WaitForResponseAsync("**/*"),
-            page.EvaluateAsync("() => fetch('/headers')"));
+            Page.WaitForResponseAsync("**/*"),
+            Page.EvaluateAsync("() => fetch('/headers')"));
         var allHeaders = await response.AllHeadersAsync();
         ExpectToEqual(response.Headers, allHeaders);
         Assert.That(allHeaders["header-a"], Is.EqualTo("a=b, c=d"));
@@ -352,15 +352,15 @@ public class PageNetworkResponseTests
     }
 
     [UpstreamTest("NE-046 should provide a Response with a file URL")]
-    public async Task ShouldProvideAResponseWithAFileURL(IPage page, Func<string, string> asset, bool isAndroid, bool isElectron, bool isWindows, string browserName, string mode, string channel)
+    public async Task ShouldProvideAResponseWithAFileURL()
     {
-        Info.Skip(isAndroid, "No files on Android");
-        Info.Skip(browserName == "firefox", "Firefox does return null for file:// URLs");
-        Info.Skip(channel == "webkit-wsl");
+        Info.Skip(IsAndroid, "No files on Android");
+        Info.Skip(BrowserName == "firefox", "Firefox does return null for file:// URLs");
+        Info.Skip(Channel == "webkit-wsl");
 
-        var fileurl = new Uri(asset("frames/two-frames.html")).AbsoluteUri;
-        var response = await page.GotoAsync(fileurl);
-        if (isElectron || (browserName == "chromium") || (browserName == "webkit" && isWindows))
+        var fileurl = new Uri(Asset("frames/two-frames.html")).AbsoluteUri;
+        var response = await Page.GotoAsync(fileurl);
+        if (IsElectron || (BrowserName == "chromium") || (BrowserName == "webkit" && IsWindows))
         {
             Assert.That(response.Status, Is.EqualTo(200));
         }
@@ -372,10 +372,10 @@ public class PageNetworkResponseTests
     }
 
     [UpstreamTest("NE-047 should return set-cookie header after route.fulfill")]
-    public async Task ShouldReturnSetCookieHeaderAfterRouteFulfill(IPage page, Server server, string browserName)
+    public async Task ShouldReturnSetCookieHeaderAfterRouteFulfill()
     {
-        Info.Fixme(browserName == "webkit" || browserName == "chromium", "https://github.com/microsoft/playwright/issues/11035");
-        await page.RouteAsync("**/*", async route =>
+        Info.Fixme(BrowserName == "webkit" || BrowserName == "chromium", "https://github.com/microsoft/playwright/issues/11035");
+        await Page.RouteAsync("**/*", async route =>
         {
             await route.FulfillAsync(new()
             {
@@ -388,15 +388,15 @@ public class PageNetworkResponseTests
                 Body = "",
             });
         });
-        var response = await page.GotoAsync(server.EmptyPage);
+        var response = await Page.GotoAsync(Server.EmptyPage);
         var headers = await response.AllHeadersAsync();
         Assert.That(headers["set-cookie"], Is.EqualTo("a=b"));
     }
 
     [UpstreamTest("NE-048 should return headers after route.fulfill")]
-    public async Task ShouldReturnHeadersAfterRouteFulfill(IPage page, Server server)
+    public async Task ShouldReturnHeadersAfterRouteFulfill()
     {
-        await page.RouteAsync("**/*", async route =>
+        await Page.RouteAsync("**/*", async route =>
         {
             await route.FulfillAsync(new()
             {
@@ -410,7 +410,7 @@ public class PageNetworkResponseTests
                 Body = "done",
             });
         });
-        var response = await page.GotoAsync(server.EmptyPage);
+        var response = await Page.GotoAsync(Server.EmptyPage);
         ExpectToEqual(await response.AllHeadersAsync(), new Dictionary<string, object>
         {
             ["foo"] = "bar",
@@ -421,66 +421,66 @@ public class PageNetworkResponseTests
     }
 
     [UpstreamTest("NE-049 should report if request was fromServiceWorker")]
-    public async Task ShouldReportIfRequestWasFromServiceWorker(IPage page, Server server, bool isAndroid, bool isElectron)
+    public async Task ShouldReportIfRequestWasFromServiceWorker()
     {
-        Info.Skip(isAndroid || isElectron);
+        Info.Skip(IsAndroid || IsElectron);
         {
-            var res = await page.GotoAsync(server.Prefix + "/serviceworkers/fetch/sw.html");
+            var res = await Page.GotoAsync(Server.Prefix + "/serviceworkers/fetch/sw.html");
             Assert.That(res.FromServiceWorker, Is.EqualTo(false));
         }
-        await page.EvaluateAsync("() => window['activationPromise']");
+        await Page.EvaluateAsync("() => window['activationPromise']");
         {
             var (res, _) = await PromiseAll(
-                page.WaitForResponseAsync(new Regex("example\\.txt")),
-                page.EvaluateAsync("() => fetch('/example.txt')"));
+                Page.WaitForResponseAsync(new Regex("example\\.txt")),
+                Page.EvaluateAsync("() => fetch('/example.txt')"));
             Assert.That(res.FromServiceWorker, Is.EqualTo(true));
         }
     }
 
     [UpstreamTest("NE-050 should return body for prefetch script")]
-    public async Task ShouldReturnBodyForPrefetchScript(IPage page, Server server, string browserName, int browserMajorVersion)
+    public async Task ShouldReturnBodyForPrefetchScript()
     {
-        Info.Skip(browserName == "webkit", "No prefetch in WebKit: https://caniuse.com/link-rel-prefetch");
-        Info.Skip(browserName == "chromium" && browserMajorVersion < 138, "Requires Sec-Purpose header, shipped in Chrome 138");
+        Info.Skip(BrowserName == "webkit", "No prefetch in WebKit: https://caniuse.com/link-rel-prefetch");
+        Info.Skip(BrowserName == "chromium" && BrowserMajorVersion < 138, "Requires Sec-Purpose header, shipped in Chrome 138");
         var (response, _) = await PromiseAll(
-            page.WaitForResponseAsync("**/prefetch.js"),
-            page.GotoAsync(server.Prefix + "/prefetch.html"));
+            Page.WaitForResponseAsync("**/prefetch.js"),
+            Page.GotoAsync(Server.Prefix + "/prefetch.html"));
         var body = await response.BodyAsync();
         Assert.That(Encoding.UTF8.GetString(body), Is.EqualTo("// Scripts will be pre-fetched"));
     }
 
     [UpstreamTest("NE-051 should return body for image with evicted body")]
-    public async Task ShouldReturnBodyForImageWithEvictedBody(IPage page, Server server, bool isMac, string browserName)
+    public async Task ShouldReturnBodyForImageWithEvictedBody()
     {
-        Info.Fixme(isMac && browserName == "webkit", "WebKit on Mac evicts the body and returns empty buffer");
+        Info.Fixme(IsMac && BrowserName == "webkit", "WebKit on Mac evicts the body and returns empty buffer");
         var imageBase64 = "R0lGODlhAQABAAAAACw="; // truncated 1x1 gif, Chromium evicts its body
-        server.SetRoute("/pixel.gif", (req, res) =>
+        Server.SetRoute("/pixel.gif", (req, res) =>
         {
             res.SetHeader("content-type", "image/gif");
             res.End(Convert.FromBase64String(imageBase64));
         });
-        server.SetRoute("/page.html", (req, res) =>
+        Server.SetRoute("/page.html", (req, res) =>
         {
             res.SetHeader("content-type", "text/html");
             res.End("<html><body><img src=\"/pixel.gif\"></body></html>");
         });
         var (response, _) = await PromiseAll(
-            page.WaitForResponseAsync("**/pixel.gif"),
-            page.GotoAsync(server.Prefix + "/page.html"));
+            Page.WaitForResponseAsync("**/pixel.gif"),
+            Page.GotoAsync(Server.Prefix + "/page.html"));
         var body = await response.BodyAsync();
         Assert.That(Convert.ToBase64String(body), Is.EqualTo(imageBase64));
     }
 
     [UpstreamTest("NE-145 should return source for a module script loaded from cache")]
-    public async Task ShouldReturnSourceForAModuleScriptLoadedFromCache(IPage page, Server server)
+    public async Task ShouldReturnSourceForAModuleScriptLoadedFromCache()
     {
         var source = string.Join("\n", Enumerable.Range(0, 400).Select(i => $"export function f{i}() {{ return {i}; }}"));
-        server.SetRoute("/module.js", (req, res) =>
+        Server.SetRoute("/module.js", (req, res) =>
         {
             res.WriteHead(200, new() { ["Content-Type"] = "text/javascript", ["Cache-Control"] = "max-age=3600" });
             res.End(source);
         });
-        server.SetRoute("/module.html", (req, res) =>
+        Server.SetRoute("/module.html", (req, res) =>
         {
             res.SetHeader("Content-Type", "text/html");
             res.End("<script type=\"module\" src=\"/module.js\"></script>");
@@ -489,21 +489,21 @@ public class PageNetworkResponseTests
         for (var i = 0; i < 5; ++i)
         {
             var (response, _) = await PromiseAll(
-                page.WaitForResponseAsync("**/module.js"),
-                page.GotoAsync(server.Prefix + "/module.html"));
+                Page.WaitForResponseAsync("**/module.js"),
+                Page.GotoAsync(Server.Prefix + "/module.html"));
             Assert.That(Encoding.UTF8.GetString(await response.BodyAsync()), Is.EqualTo(source));
-            await page.WaitForTimeoutAsync(500);
+            await Page.WaitForTimeoutAsync(500);
         }
     }
 
     [UpstreamTest("NE-052 should bypass disk cache when page interception is enabled")]
-    public async Task ShouldBypassDiskCacheWhenPageInterceptionIsEnabled(IPage page, Server server)
+    public async Task ShouldBypassDiskCacheWhenPageInterceptionIsEnabled()
     {
-        await page.GotoAsync(server.Prefix + "/frames/one-frame.html");
-        await page.RouteAsync("**/api*", route => route.ContinueAsync());
+        await Page.GotoAsync(Server.Prefix + "/frames/one-frame.html");
+        await Page.RouteAsync("**/api*", route => route.ContinueAsync());
         {
             var requests = new List<ServerRequest>();
-            server.SetRoute("/api", (req, res) =>
+            Server.SetRoute("/api", (req, res) =>
             {
                 requests.Add(req);
                 res.StatusCode = 200;
@@ -515,8 +515,8 @@ public class PageNetworkResponseTests
             {
                 await Info.Step($"main frame iteration {i}", async () =>
                 {
-                    var respPromise = page.WaitForResponseAsync("**/api");
-                    await page.EvaluateAsync(@"async () => {
+                    var respPromise = Page.WaitForResponseAsync("**/api");
+                    await Page.EvaluateAsync(@"async () => {
           const response = await fetch('/api');
           return response.status;
         }");
@@ -529,7 +529,7 @@ public class PageNetworkResponseTests
 
         {
             var requests = new List<ServerRequest>();
-            server.SetRoute("/frame/api", (req, res) =>
+            Server.SetRoute("/frame/api", (req, res) =>
             {
                 requests.Add(req);
                 res.StatusCode = 200;
@@ -541,8 +541,8 @@ public class PageNetworkResponseTests
             {
                 await Info.Step($"subframe iteration {i}", async () =>
                 {
-                    var respPromise = page.WaitForResponseAsync("**/frame/api");
-                    await page.FrameByUrl("**/frame.html").EvaluateAsync(@"async () => {
+                    var respPromise = Page.WaitForResponseAsync("**/frame/api");
+                    await Page.FrameByUrl("**/frame.html").EvaluateAsync(@"async () => {
           const response = await fetch('/frame/api');
           return response.status;
         }");
@@ -555,20 +555,20 @@ public class PageNetworkResponseTests
     }
 
     [UpstreamTest("NE-053 request.existingResponse should return null before response is received")]
-    public async Task RequestExistingResponseShouldReturnNullBeforeResponseIsReceived(IPage page, Server server)
+    public async Task RequestExistingResponseShouldReturnNullBeforeResponseIsReceived()
     {
-        await page.GotoAsync(server.EmptyPage);
+        await Page.GotoAsync(Server.EmptyPage);
         ServerResponse serverResponse = null;
-        server.SetRoute("/get", (req, res) =>
+        Server.SetRoute("/get", (req, res) =>
         {
             serverResponse = res;
             // Don't end the response yet
         });
 
         var (request, _, _) = await PromiseAll(
-            page.WaitForRequestAsync(_ => true),
-            server.WaitForRequest("/get"),
-            page.EvaluateAsync("() => { void fetch('./get', { method: 'GET' }); }"));
+            Page.WaitForRequestAsync(_ => true),
+            Server.WaitForRequest("/get"),
+            Page.EvaluateAsync("() => { void fetch('./get', { method: 'GET' }); }"));
 
         // Response hasn't been received yet
         Assert.That(request.ExistingResponse, Is.Null);
@@ -576,7 +576,7 @@ public class PageNetworkResponseTests
         // Now send the response
         serverResponse.SetHeader("Content-Type", "text/plain; charset=utf-8");
         serverResponse.End("done");
-        await page.WaitForResponseAsync(_ => true);
+        await Page.WaitForResponseAsync(_ => true);
 
         // After response is received, existingResponse should return the response
         var existingResponse = request.ExistingResponse;
@@ -585,25 +585,25 @@ public class PageNetworkResponseTests
     }
 
     [UpstreamTest("NE-054 request.existingResponse should return the response after it is received")]
-    public async Task RequestExistingResponseShouldReturnTheResponseAfterItIsReceived(IPage page, Server server)
+    public async Task RequestExistingResponseShouldReturnTheResponseAfterItIsReceived()
     {
-        var response = await page.GotoAsync(server.EmptyPage);
+        var response = await Page.GotoAsync(Server.EmptyPage);
         var request = response.Request;
         Assert.That(request.ExistingResponse, Is.SameAs(response));
     }
 
     [UpstreamTest("NE-055 should return http version")]
-    public async Task ShouldReturnHttpVersion(IPage page, Server server)
+    public async Task ShouldReturnHttpVersion()
     {
-        var response = await page.GotoAsync(server.EmptyPage);
+        var response = await Page.GotoAsync(Server.EmptyPage);
         Assert.That(await response.HttpVersionAsync(), Is.EqualTo("HTTP/1.1"));
     }
 
     [UpstreamTest("NE-056 Response.formData() should parse multipart/form-data in page context")]
-    public async Task ResponseFormDataShouldParseMultipartFormDataInPageContext(IPage page, Server server, string browserName)
+    public async Task ResponseFormDataShouldParseMultipartFormDataInPageContext()
     {
-        await page.GotoAsync(server.EmptyPage);
-        var result = await page.EvaluateAsync<JsonElement>(@"async () => {
+        await Page.GotoAsync(Server.EmptyPage);
+        var result = await Page.EvaluateAsync<JsonElement>(@"async () => {
     const boundary = '----WebKitFormBoundary1234';
     const body = [
       `--${boundary}`,
@@ -634,15 +634,15 @@ public class PageNetworkResponseTests
     }
 
     [UpstreamTest("NE-057 should give a readable error when response.body() races with navigation")]
-    public async Task ShouldGiveAReadableErrorWhenResponseBodyRacesWithNavigation(IPage page, Server server, string browserName)
+    public async Task ShouldGiveAReadableErrorWhenResponseBodyRacesWithNavigation()
     {
-        Info.Skip(browserName == "firefox", "Firefox keeps the response body available after navigating away, so it never throws");
+        Info.Skip(BrowserName == "firefox", "Firefox keeps the response body available after navigating away, so it never throws");
         var (response, _) = await PromiseAll(
-            page.WaitForResponseAsync(server.Prefix + "/title.html"),
-            page.GotoAsync(server.Prefix + "/title.html"));
+            Page.WaitForResponseAsync(Server.Prefix + "/title.html"),
+            Page.GotoAsync(Server.Prefix + "/title.html"));
         // Navigate away — the browser frees the network resource from the first page load.
         // The first page must have a non-empty body, otherwise WebKit returns an empty buffer instead of throwing.
-        await page.GotoAsync(server.Prefix + "/grid.html");
+        await Page.GotoAsync(Server.Prefix + "/grid.html");
         var error = await Catch(() => response.BodyAsync());
         Assert.That(error, Is.InstanceOf<Exception>());
         Assert.That(error.Message, Does.Contain("navigated away"));

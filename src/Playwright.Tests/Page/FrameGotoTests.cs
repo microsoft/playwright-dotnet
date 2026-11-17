@@ -22,32 +22,32 @@ using static Microsoft.Playwright.Tests.Fixtures.Utils;
 namespace Microsoft.Playwright.Tests.Page;
 
 /// <summary>Port of tests/page/frame-goto.spec.ts.</summary>
-public class FrameGotoTests
+public class FrameGotoTests : UpstreamPageTest
 {
     [UpstreamTest("FR-020 should navigate subframes @smoke")]
-    public async Task ShouldNavigateSubframes(IPage page, Server server)
+    public async Task ShouldNavigateSubframes()
     {
-        await page.GotoAsync(server.Prefix + "/frames/one-frame.html");
-        Assert.That(page.Frames[0].Url, Does.Contain("/frames/one-frame.html"));
-        Assert.That(page.Frames[1].Url, Does.Contain("/frames/frame.html"));
+        await Page.GotoAsync(Server.Prefix + "/frames/one-frame.html");
+        Assert.That(Page.Frames[0].Url, Does.Contain("/frames/one-frame.html"));
+        Assert.That(Page.Frames[1].Url, Does.Contain("/frames/frame.html"));
 
-        var response = await page.Frames[1].GotoAsync(server.EmptyPage);
+        var response = await Page.Frames[1].GotoAsync(Server.EmptyPage);
         Assert.That(response.Ok, Is.EqualTo(true));
-        Assert.That(response.Frame, Is.SameAs(page.Frames[1]));
+        Assert.That(response.Frame, Is.SameAs(Page.Frames[1]));
     }
 
     [UpstreamTest("FR-021 should reject when frame detaches")]
-    public async Task ShouldRejectWhenFrameDetaches(IPage page, Server server, string browserName)
+    public async Task ShouldRejectWhenFrameDetaches()
     {
-        await page.GotoAsync(server.Prefix + "/frames/one-frame.html");
+        await Page.GotoAsync(Server.Prefix + "/frames/one-frame.html");
 
-        server.SetRoute("/one-style.css", (req, res) => { });
-        var navigationPromise = Catch(() => page.Frames[1].GotoAsync(server.Prefix + "/one-style.html"));
-        await server.WaitForRequest("/one-style.css");
+        Server.SetRoute("/one-style.css", (req, res) => { });
+        var navigationPromise = Catch(() => Page.Frames[1].GotoAsync(Server.Prefix + "/one-style.html"));
+        await Server.WaitForRequest("/one-style.css");
 
-        await page.EvalOnSelectorAsync("iframe", "frame => frame.remove()");
+        await Page.EvalOnSelectorAsync("iframe", "frame => frame.remove()");
         var error = await navigationPromise;
-        if (browserName == "chromium")
+        if (BrowserName == "chromium")
         {
             Assert.That(error.Message.Contains("net::ERR_ABORTED", StringComparison.Ordinal) || error.Message.ToLowerInvariant().Contains("frame was detached", StringComparison.Ordinal), Is.EqualTo(true));
         }
@@ -59,38 +59,38 @@ public class FrameGotoTests
 
     [UpstreamTest("FR-022 should continue after client redirect")]
     [LocalFixme("dotnet: the message is 'Timeout 5000ms exceeded.', without the 'page.goto: ' prefix of the call (only in chromium and webkit)")]
-    public async Task ShouldContinueAfterClientRedirect(IPage page, Server server, bool isAndroid, string browserName, bool isBidi)
+    public async Task ShouldContinueAfterClientRedirect()
     {
-        Info.Fixme(isAndroid);
-        Info.Fixme(browserName == "firefox" && !isBidi, "script.js is requested before navigationCommitted arrives");
+        Info.Fixme(IsAndroid);
+        Info.Fixme(BrowserName == "firefox" && !IsBidi, "script.js is requested before navigationCommitted arrives");
 
-        server.SetRoute("/frames/script.js", (req, res) => { });
-        var url = server.Prefix + "/frames/child-redirect.html";
-        var error = await Catch(() => page.GotoAsync(url, new() { Timeout = 5000, WaitUntil = WaitUntilState.NetworkIdle }));
+        Server.SetRoute("/frames/script.js", (req, res) => { });
+        var url = Server.Prefix + "/frames/child-redirect.html";
+        var error = await Catch(() => Page.GotoAsync(url, new() { Timeout = 5000, WaitUntil = WaitUntilState.NetworkIdle }));
         Assert.That(error.Message, Does.Contain("page.goto: Timeout 5000ms exceeded."));
         Assert.That(error.Message, Does.Contain($"navigating to \"{url}\", waiting until \"networkidle\""));
     }
 
     [UpstreamTest("FR-023 should return matching responses")]
-    public async Task ShouldReturnMatchingResponses(IPage page, Server server)
+    public async Task ShouldReturnMatchingResponses()
     {
-        await page.GotoAsync(server.EmptyPage);
+        await Page.GotoAsync(Server.EmptyPage);
         // Attach three frames.
         var frames = new[]
         {
-            await AttachFrame(page, "frame1", server.EmptyPage),
-            await AttachFrame(page, "frame2", server.EmptyPage),
-            await AttachFrame(page, "frame3", server.EmptyPage),
+            await AttachFrame(Page, "frame1", Server.EmptyPage),
+            await AttachFrame(Page, "frame2", Server.EmptyPage),
+            await AttachFrame(Page, "frame3", Server.EmptyPage),
         };
         var serverResponses = new List<ServerResponse>();
-        server.SetRoute("/0.html", (req, res) => serverResponses.Add(res));
-        server.SetRoute("/1.html", (req, res) => serverResponses.Add(res));
-        server.SetRoute("/2.html", (req, res) => serverResponses.Add(res));
+        Server.SetRoute("/0.html", (req, res) => serverResponses.Add(res));
+        Server.SetRoute("/1.html", (req, res) => serverResponses.Add(res));
+        Server.SetRoute("/2.html", (req, res) => serverResponses.Add(res));
         var navigations = new List<Task<IResponse>>();
         for (var i = 0; i < 3; ++i)
         {
-            navigations.Add(frames[i].GotoAsync(server.Prefix + "/" + i.ToString(CultureInfo.InvariantCulture) + ".html"));
-            await server.WaitForRequest("/" + i.ToString(CultureInfo.InvariantCulture) + ".html");
+            navigations.Add(frames[i].GotoAsync(Server.Prefix + "/" + i.ToString(CultureInfo.InvariantCulture) + ".html"));
+            await Server.WaitForRequest("/" + i.ToString(CultureInfo.InvariantCulture) + ".html");
         }
         // Respond from server out-of-order.
         var serverResponseTexts = new[] { "AAA", "BBB", "CCC" };

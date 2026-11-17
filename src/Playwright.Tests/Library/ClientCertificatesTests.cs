@@ -34,7 +34,7 @@ using static Microsoft.Playwright.Tests.Fixtures.Utils;
 namespace Microsoft.Playwright.Tests.Library;
 
 /// <summary>Port of tests/library/client-certificates.spec.ts.</summary>
-public class ClientCertificatesTests
+public class ClientCertificatesTests : UpstreamBrowserTest
 {
     public sealed class StartCCServerOptions
     {
@@ -47,57 +47,58 @@ public class ClientCertificatesTests
         public bool? RejectUnauthorized { get; set; }
     }
 
-    public delegate Task<string> StartCCServerFixture(StartCCServerOptions options = null);
+    private TlsServer _ccServer;
 
-    [Fixture]
-    public static async Task StartCCServer(Func<string, string> asset, Func<StartCCServerFixture, Task> use)
+    private async Task<string> StartCCServer(StartCCServerOptions options = null)
     {
-        Environment.SetEnvironmentVariable("PWTEST_UNSUPPORTED_CUSTOM_CA", asset("client-certificates/server/server_cert.pem"));
-        TlsServer server = null;
-        await use(async options =>
+        Environment.SetEnvironmentVariable("PWTEST_UNSUPPORTED_CUSTOM_CA", Asset("client-certificates/server/server_cert.pem"));
+        _ccServer = (options?.Http2 == true ? (Func<TlsServerOptions, Action<TlsServerRequest, TlsServerResponse>, TlsServer>)CreateHttp2Server : CreateHttpsServer)(new()
         {
-            server = (options?.Http2 == true ? (Func<TlsServerOptions, Action<TlsServerRequest, TlsServerResponse>, TlsServer>)CreateHttp2Server : CreateHttpsServer)(new()
+            Key = File.ReadAllBytes(Asset("client-certificates/server/server_key.pem")),
+            Cert = File.ReadAllBytes(Asset("client-certificates/server/server_cert.pem")),
+            Ca =
+            [
+                File.ReadAllBytes(Asset("client-certificates/server/server_cert.pem")),
+            ],
+            RequestCert = true,
+            RejectUnauthorized = options?.RejectUnauthorized ?? false,
+            AllowHTTP1 = options?.EnableHTTP1FallbackWhenUsingHttp2,
+        }, (req, res) =>
+        {
+            var tlsSocket = req.Socket;
+            var parts = new List<(string key, object value)>();
+            parts.Add(("alpn-protocol", tlsSocket.AlpnProtocol));
+            parts.Add(("servername", tlsSocket.Servername));
+            var cert = tlsSocket.GetPeerCertificate();
+            if (tlsSocket.Authorized)
             {
-                Key = File.ReadAllBytes(asset("client-certificates/server/server_key.pem")),
-                Cert = File.ReadAllBytes(asset("client-certificates/server/server_cert.pem")),
-                Ca =
-                [
-                    File.ReadAllBytes(asset("client-certificates/server/server_cert.pem")),
-                ],
-                RequestCert = true,
-                RejectUnauthorized = options?.RejectUnauthorized ?? false,
-                AllowHTTP1 = options?.EnableHTTP1FallbackWhenUsingHttp2,
-            }, (req, res) =>
+                res.WriteHead(200, new() { ["Content-Type"] = "text/html" });
+                parts.Add(("message", $"Hello {cert.Subject.CN}, your certificate was issued by {cert.Issuer.CN}!"));
+            }
+            else if (cert.Subject != null)
             {
-                var tlsSocket = req.Socket;
-                var parts = new List<(string key, object value)>();
-                parts.Add(("alpn-protocol", tlsSocket.AlpnProtocol));
-                parts.Add(("servername", tlsSocket.Servername));
-                var cert = tlsSocket.GetPeerCertificate();
-                if (tlsSocket.Authorized)
-                {
-                    res.WriteHead(200, new() { ["Content-Type"] = "text/html" });
-                    parts.Add(("message", $"Hello {cert.Subject.CN}, your certificate was issued by {cert.Issuer.CN}!"));
-                }
-                else if (cert.Subject != null)
-                {
-                    res.WriteHead(403, new() { ["Content-Type"] = "text/html" });
-                    parts.Add(("message", $"Sorry {cert.Subject.CN}, certificates from {cert.Issuer.CN} are not welcome here."));
-                }
-                else
-                {
-                    res.WriteHead(401, new() { ["Content-Type"] = "text/html" });
-                    parts.Add(("message", "Sorry, but you need to provide a client certificate to continue."));
-                }
-                res.End(string.Join(string.Empty, parts.Select(part => $"<div data-testid=\"{part.key}\">{part.value}</div>")));
-            });
-            await server.Listen(0, "127.0.0.1");
-            var host = options?.UseFakeLocalhost == true ? "local.playwright" : "127.0.0.1";
-            return $"https://{host}:{server.Address().Port}/";
+                res.WriteHead(403, new() { ["Content-Type"] = "text/html" });
+                parts.Add(("message", $"Sorry {cert.Subject.CN}, certificates from {cert.Issuer.CN} are not welcome here."));
+            }
+            else
+            {
+                res.WriteHead(401, new() { ["Content-Type"] = "text/html" });
+                parts.Add(("message", "Sorry, but you need to provide a client certificate to continue."));
+            }
+            res.End(string.Join(string.Empty, parts.Select(part => $"<div data-testid=\"{part.key}\">{part.value}</div>")));
         });
-        if (server != null)
+        await _ccServer.Listen(0, "127.0.0.1");
+        var host = options?.UseFakeLocalhost == true ? "local.playwright" : "127.0.0.1";
+        return $"https://{host}:{_ccServer.Address().Port}/";
+    }
+
+    [TearDown]
+    public async Task StartCCServerTearDown()
+    {
+        if (_ccServer != null)
         {
-            await server.Close();
+            await _ccServer.Close();
+            _ccServer = null;
         }
     }
 
@@ -123,23 +124,24 @@ public class ClientCertificatesTests
 
     private static string Filename([CallerFilePath] string filename = null) => filename;
 
-    public class Fetch
+    // .NET: the class around has no tests of its own, so the describes derive from it for its fixture.
+    public class Fetch : ClientCertificatesTests
     {
         [UpstreamTest("CC-001 validate input")]
-        public async Task ValidateInput(IPlaywright playwright)
+        public async Task ValidateInput()
         {
             foreach (var (clientCertificates, expected) in kValidationSubTests)
             {
-                var error = await ThrowsAsync<PlaywrightException>(() => playwright.APIRequest.NewContextAsync(new() { ClientCertificates = clientCertificates }));
+                var error = await ThrowsAsync<PlaywrightException>(() => Playwright.APIRequest.NewContextAsync(new() { ClientCertificates = clientCertificates }));
                 Assert.That(error.Message, Does.Contain(expected));
             }
         }
 
         [UpstreamTest("CC-002 should fail with no client certificates provided")]
-        public async Task ShouldFailWithNoClientCertificatesProvided(IPlaywright playwright, StartCCServerFixture startCCServer)
+        public async Task ShouldFailWithNoClientCertificatesProvided()
         {
-            var serverURL = await startCCServer();
-            var request = await playwright.APIRequest.NewContextAsync(new() { IgnoreHTTPSErrors = true });
+            var serverURL = await StartCCServer();
+            var request = await Playwright.APIRequest.NewContextAsync(new() { IgnoreHTTPSErrors = true });
             var response = await request.GetAsync(serverURL);
             Assert.That(response.Status, Is.EqualTo(401));
             Assert.That(await response.TextAsync(), Does.Contain("Sorry, but you need to provide a client certificate to continue."));
@@ -147,33 +149,33 @@ public class ClientCertificatesTests
         }
 
         [UpstreamTest("CC-003 should keep supporting http")]
-        public async Task ShouldKeepSupportingHttp(IPlaywright playwright, Server server, Func<string, string> asset)
+        public async Task ShouldKeepSupportingHttp()
         {
-            var request = await playwright.APIRequest.NewContextAsync(new()
+            var request = await Playwright.APIRequest.NewContextAsync(new()
             {
                 IgnoreHTTPSErrors = true,
                 ClientCertificates =
                 [
                     new()
                     {
-                        Origin = new Uri(server.Prefix).GetLeftPart(UriPartial.Authority),
-                        CertPath = asset("client-certificates/client/trusted/cert.pem"),
-                        KeyPath = asset("client-certificates/client/trusted/key.pem"),
+                        Origin = new Uri(Server.Prefix).GetLeftPart(UriPartial.Authority),
+                        CertPath = Asset("client-certificates/client/trusted/cert.pem"),
+                        KeyPath = Asset("client-certificates/client/trusted/key.pem"),
                     }
                 ],
             });
-            var response = await request.GetAsync(server.Prefix + "/one-style.html");
-            Assert.That(response.Url, Is.EqualTo(server.Prefix + "/one-style.html"));
+            var response = await request.GetAsync(Server.Prefix + "/one-style.html");
+            Assert.That(response.Url, Is.EqualTo(Server.Prefix + "/one-style.html"));
             Assert.That(response.Status, Is.EqualTo(200));
             Assert.That(await response.TextAsync(), Does.Contain("<div>hello, world!</div>"));
             await request.DisposeAsync();
         }
 
         [UpstreamTest("CC-004 should throw with untrusted client certs")]
-        public async Task ShouldThrowWithUntrustedClientCerts(IPlaywright playwright, StartCCServerFixture startCCServer, Func<string, string> asset)
+        public async Task ShouldThrowWithUntrustedClientCerts()
         {
-            var serverURL = await startCCServer();
-            var request = await playwright.APIRequest.NewContextAsync(new()
+            var serverURL = await StartCCServer();
+            var request = await Playwright.APIRequest.NewContextAsync(new()
             {
                 IgnoreHTTPSErrors = true,
                 ClientCertificates =
@@ -181,8 +183,8 @@ public class ClientCertificatesTests
                     new()
                     {
                         Origin = new Uri(serverURL).GetLeftPart(UriPartial.Authority),
-                        CertPath = asset("client-certificates/client/self-signed/cert.pem"),
-                        KeyPath = asset("client-certificates/client/self-signed/key.pem"),
+                        CertPath = Asset("client-certificates/client/self-signed/cert.pem"),
+                        KeyPath = Asset("client-certificates/client/self-signed/key.pem"),
                     }
                 ],
             });
@@ -194,10 +196,10 @@ public class ClientCertificatesTests
         }
 
         [UpstreamTest("CC-005 pass with trusted client certificates")]
-        public async Task PassWithTrustedClientCertificates(IPlaywright playwright, StartCCServerFixture startCCServer, Func<string, string> asset)
+        public async Task PassWithTrustedClientCertificates()
         {
-            var serverURL = await startCCServer();
-            var request = await playwright.APIRequest.NewContextAsync(new()
+            var serverURL = await StartCCServer();
+            var request = await Playwright.APIRequest.NewContextAsync(new()
             {
                 IgnoreHTTPSErrors = true,
                 ClientCertificates =
@@ -205,8 +207,8 @@ public class ClientCertificatesTests
                     new()
                     {
                         Origin = new Uri(serverURL).GetLeftPart(UriPartial.Authority),
-                        CertPath = asset("client-certificates/client/trusted/cert.pem"),
-                        KeyPath = asset("client-certificates/client/trusted/key.pem"),
+                        CertPath = Asset("client-certificates/client/trusted/cert.pem"),
+                        KeyPath = Asset("client-certificates/client/trusted/key.pem"),
                     }
                 ],
             });
@@ -218,13 +220,13 @@ public class ClientCertificatesTests
         }
 
         [UpstreamTest("CC-006 should not leak client certificate to cross-origin redirect target")]
-        public async Task ShouldNotLeakClientCertificateToCrossOriginRedirectTarget(IPlaywright playwright, StartCCServerFixture startCCServer, Func<string, string> asset)
+        public async Task ShouldNotLeakClientCertificateToCrossOriginRedirectTarget()
         {
-            var targetURL = await startCCServer();
+            var targetURL = await StartCCServer();
 
             // Standalone HTTPS server (not cert-required) that 302-redirects to the cert-required server.
             // .NET: createHttpsServer({ key, cert }, (req, res) => { ... }) that listens on the port 0 is a Server with a route.
-            var redirectServer = Server.CreateHttps(Env.AssetsDir, 0, null, Server.Certificate(asset("client-certificates/server/server_cert.pem"), asset("client-certificates/server/server_key.pem")));
+            var redirectServer = Server.CreateHttps(Env.AssetsDir, 0, null, Server.Certificate(Asset("client-certificates/server/server_cert.pem"), Asset("client-certificates/server/server_key.pem")));
             redirectServer.SetRoute("/redir", (req, res) =>
             {
                 res.WriteHead(302, new() { ["Location"] = targetURL });
@@ -234,7 +236,7 @@ public class ClientCertificatesTests
             // even though both resolve to the loopback interface and share the same trusted CA.
             var redirectURL = $"https://localhost:{redirectServer.Port}/redir";
 
-            var request = await playwright.APIRequest.NewContextAsync(new()
+            var request = await Playwright.APIRequest.NewContextAsync(new()
             {
                 IgnoreHTTPSErrors = true,
                 // Cert is scoped to the redirect *origin*, not the target — it must not follow the redirect.
@@ -243,8 +245,8 @@ public class ClientCertificatesTests
                     new()
                     {
                         Origin = new Uri(redirectURL).GetLeftPart(UriPartial.Authority),
-                        CertPath = asset("client-certificates/client/trusted/cert.pem"),
-                        KeyPath = asset("client-certificates/client/trusted/key.pem"),
+                        CertPath = Asset("client-certificates/client/trusted/cert.pem"),
+                        KeyPath = Asset("client-certificates/client/trusted/key.pem"),
                     }
                 ],
             });
@@ -257,10 +259,10 @@ public class ClientCertificatesTests
         }
 
         [UpstreamTest("CC-007 pass with trusted client certificates in pfx format")]
-        public async Task PassWithTrustedClientCertificatesInPfxFormat(IPlaywright playwright, StartCCServerFixture startCCServer, Func<string, string> asset)
+        public async Task PassWithTrustedClientCertificatesInPfxFormat()
         {
-            var serverURL = await startCCServer();
-            var request = await playwright.APIRequest.NewContextAsync(new()
+            var serverURL = await StartCCServer();
+            var request = await Playwright.APIRequest.NewContextAsync(new()
             {
                 IgnoreHTTPSErrors = true,
                 ClientCertificates =
@@ -268,7 +270,7 @@ public class ClientCertificatesTests
                     new()
                     {
                         Origin = new Uri(serverURL).GetLeftPart(UriPartial.Authority),
-                        PfxPath = asset("client-certificates/client/trusted/cert.pfx"),
+                        PfxPath = Asset("client-certificates/client/trusted/cert.pfx"),
                         Passphrase = "secure",
                     }
                 ],
@@ -281,11 +283,11 @@ public class ClientCertificatesTests
         }
 
         [UpstreamTest("CC-008 pass with trusted client certificates and when a http proxy is used")]
-        public async Task PassWithTrustedClientCertificatesAndWhenAHttpProxyIsUsed(IPlaywright playwright, StartCCServerFixture startCCServer, TestProxy proxyServer, Func<string, string> asset)
+        public async Task PassWithTrustedClientCertificatesAndWhenAHttpProxyIsUsed()
         {
-            var serverURL = await startCCServer();
-            proxyServer.ForwardTo(new Uri(serverURL).Port, new() { AllowConnectRequests = true });
-            var request = await playwright.APIRequest.NewContextAsync(new()
+            var serverURL = await StartCCServer();
+            ProxyServer.ForwardTo(new Uri(serverURL).Port, new() { AllowConnectRequests = true });
+            var request = await Playwright.APIRequest.NewContextAsync(new()
             {
                 IgnoreHTTPSErrors = true,
                 ClientCertificates =
@@ -293,15 +295,15 @@ public class ClientCertificatesTests
                     new()
                     {
                         Origin = new Uri(serverURL).GetLeftPart(UriPartial.Authority),
-                        CertPath = asset("client-certificates/client/trusted/cert.pem"),
-                        KeyPath = asset("client-certificates/client/trusted/key.pem"),
+                        CertPath = Asset("client-certificates/client/trusted/cert.pem"),
+                        KeyPath = Asset("client-certificates/client/trusted/key.pem"),
                     }
                 ],
-                Proxy = new() { Server = $"localhost:{proxyServer.Port}" },
+                Proxy = new() { Server = $"localhost:{ProxyServer.Port}" },
             });
-            Assert.That(proxyServer.ConnectHosts, Is.EqualTo(Array.Empty<string>()));
+            Assert.That(ProxyServer.ConnectHosts, Is.EqualTo(Array.Empty<string>()));
             var response = await request.GetAsync(serverURL);
-            Assert.That(proxyServer.ConnectHosts, Is.EqualTo(new[] { new Uri(serverURL).Authority }));
+            Assert.That(ProxyServer.ConnectHosts, Is.EqualTo(new[] { new Uri(serverURL).Authority }));
             Assert.That(response.Url, Is.EqualTo(serverURL));
             Assert.That(response.Status, Is.EqualTo(200));
             Assert.That(await response.TextAsync(), Does.Contain("Hello Alice, your certificate was issued by localhost!"));
@@ -309,9 +311,9 @@ public class ClientCertificatesTests
         }
 
         [UpstreamTest("CC-009 pass with trusted client certificates and when a socks proxy is used")]
-        public async Task PassWithTrustedClientCertificatesAndWhenASocksProxyIsUsed(IPlaywright playwright, StartCCServerFixture startCCServer, Func<string, string> asset)
+        public async Task PassWithTrustedClientCertificatesAndWhenASocksProxyIsUsed()
         {
-            var serverURL = await startCCServer();
+            var serverURL = await StartCCServer();
             var serverPort = new Uri(serverURL).Port;
             // .NET: connectHosts of upstream is a list that the server keeps adding to: here it is read from the server each time.
             var socksForwardingServer = await TestProxy.SetupSocksForwardingServer(
@@ -320,7 +322,7 @@ public class ClientCertificatesTests
                 allowedTargetPort: serverPort);
             var proxyServerAddr = socksForwardingServer.ProxyServerAddr;
             var closeProxyServer = socksForwardingServer.CloseProxyServer;
-            var request = await playwright.APIRequest.NewContextAsync(new()
+            var request = await Playwright.APIRequest.NewContextAsync(new()
             {
                 IgnoreHTTPSErrors = true,
                 ClientCertificates =
@@ -328,8 +330,8 @@ public class ClientCertificatesTests
                     new()
                     {
                         Origin = new Uri(serverURL).GetLeftPart(UriPartial.Authority),
-                        CertPath = asset("client-certificates/client/trusted/cert.pem"),
-                        KeyPath = asset("client-certificates/client/trusted/key.pem"),
+                        CertPath = Asset("client-certificates/client/trusted/cert.pem"),
+                        KeyPath = Asset("client-certificates/client/trusted/key.pem"),
                     }
                 ],
                 Proxy = new() { Server = proxyServerAddr },
@@ -345,10 +347,10 @@ public class ClientCertificatesTests
         }
 
         [UpstreamTest("CC-010 should throw a http error if the pfx passphrase is incorect")]
-        public async Task ShouldThrowAHttpErrorIfThePfxPassphraseIsIncorect(IPlaywright playwright, StartCCServerFixture startCCServer, Func<string, string> asset, string browserName)
+        public async Task ShouldThrowAHttpErrorIfThePfxPassphraseIsIncorect()
         {
-            var serverURL = await startCCServer();
-            var request = await playwright.APIRequest.NewContextAsync(new()
+            var serverURL = await StartCCServer();
+            var request = await Playwright.APIRequest.NewContextAsync(new()
             {
                 IgnoreHTTPSErrors = true,
                 ClientCertificates =
@@ -356,7 +358,7 @@ public class ClientCertificatesTests
                     new()
                     {
                         Origin = new Uri(serverURL).GetLeftPart(UriPartial.Authority),
-                        PfxPath = asset("client-certificates/client/trusted/cert.pfx"),
+                        PfxPath = Asset("client-certificates/client/trusted/cert.pfx"),
                         Passphrase = "this-password-is-incorrect",
                     }
                 ],
@@ -367,10 +369,10 @@ public class ClientCertificatesTests
         }
 
         [UpstreamTest("CC-011 should fail with matching certificates in legacy pfx format")]
-        public async Task ShouldFailWithMatchingCertificatesInLegacyPfxFormat(IPlaywright playwright, StartCCServerFixture startCCServer, Func<string, string> asset, string browserName)
+        public async Task ShouldFailWithMatchingCertificatesInLegacyPfxFormat()
         {
-            var serverURL = await startCCServer();
-            var request = await playwright.APIRequest.NewContextAsync(new()
+            var serverURL = await StartCCServer();
+            var request = await Playwright.APIRequest.NewContextAsync(new()
             {
                 IgnoreHTTPSErrors = true,
                 ClientCertificates =
@@ -378,7 +380,7 @@ public class ClientCertificatesTests
                     new()
                     {
                         Origin = new Uri(serverURL).GetLeftPart(UriPartial.Authority),
-                        PfxPath = asset("client-certificates/client/trusted/cert-legacy.pfx"),
+                        PfxPath = Asset("client-certificates/client/trusted/cert-legacy.pfx"),
                         Passphrase = "secure",
                     }
                 ],
@@ -389,10 +391,10 @@ public class ClientCertificatesTests
         }
 
         [UpstreamTest("CC-012 should work in the browser with request interception")]
-        public async Task ShouldWorkInTheBrowserWithRequestInterception(IBrowser browser, IPlaywright playwright, StartCCServerFixture startCCServer, Func<string, string> asset, BrowserNewPageOptions newPageOptions)
+        public async Task ShouldWorkInTheBrowserWithRequestInterception()
         {
-            var serverURL = await startCCServer();
-            var request = await playwright.APIRequest.NewContextAsync(new()
+            var serverURL = await StartCCServer();
+            var request = await Playwright.APIRequest.NewContextAsync(new()
             {
                 IgnoreHTTPSErrors = true,
                 ClientCertificates =
@@ -400,12 +402,12 @@ public class ClientCertificatesTests
                     new()
                     {
                         Origin = new Uri(serverURL).GetLeftPart(UriPartial.Authority),
-                        CertPath = asset("client-certificates/client/trusted/cert.pem"),
-                        KeyPath = asset("client-certificates/client/trusted/key.pem"),
+                        CertPath = Asset("client-certificates/client/trusted/cert.pem"),
+                        KeyPath = Asset("client-certificates/client/trusted/key.pem"),
                     }
                 ],
             });
-            var page = await browser.NewPageAsync(new(newPageOptions) { IgnoreHTTPSErrors = true });
+            var page = await Browser.NewPageAsync(new(NewPageOptions()) { IgnoreHTTPSErrors = true });
             await page.RouteAsync("**/*", async route =>
             {
                 var response = await request.FetchAsync(route.Request);
@@ -418,82 +420,82 @@ public class ClientCertificatesTests
         }
     }
 
-    public class Browser
+    public class BrowserDescribe : ClientCertificatesTests
     {
         [UpstreamTest("CC-013 validate input")]
-        public async Task ValidateInput(IBrowser browser, BrowserNewContextOptions contextOptions)
+        public async Task ValidateInput()
         {
             foreach (var (clientCertificates, expected) in kValidationSubTests)
             {
-                var error = await ThrowsAsync<PlaywrightException>(() => browser.NewContextAsync(new(contextOptions) { ClientCertificates = clientCertificates }));
+                var error = await ThrowsAsync<PlaywrightException>(() => Browser.NewContextAsync(new(ContextOptions()) { ClientCertificates = clientCertificates }));
                 Assert.That(error.Message, Does.Contain(expected));
             }
         }
 
         [UpstreamTest("CC-014 should keep supporting http")]
-        public async Task ShouldKeepSupportingHttp(IBrowser browser, Server server, Func<string, string> asset, BrowserNewPageOptions newPageOptions)
+        public async Task ShouldKeepSupportingHttp()
         {
-            var page = await browser.NewPageAsync(new(newPageOptions)
+            var page = await Browser.NewPageAsync(new(NewPageOptions())
             {
                 ClientCertificates =
                 [
                     new()
                     {
-                        Origin = new Uri(server.Prefix).GetLeftPart(UriPartial.Authority),
-                        CertPath = asset("client-certificates/client/trusted/cert.pem"),
-                        KeyPath = asset("client-certificates/client/trusted/key.pem"),
+                        Origin = new Uri(Server.Prefix).GetLeftPart(UriPartial.Authority),
+                        CertPath = Asset("client-certificates/client/trusted/cert.pem"),
+                        KeyPath = Asset("client-certificates/client/trusted/key.pem"),
                     }
                 ],
             });
-            await page.GotoAsync(server.Prefix + "/one-style.html");
+            await page.GotoAsync(Server.Prefix + "/one-style.html");
             await Expect(page.GetByText("hello, world!")).ToBeVisibleAsync();
             await Expect(page.Locator("body")).ToHaveCSSAsync("background-color", "rgb(255, 192, 203)");
             await page.CloseAsync();
         }
 
         [UpstreamTest("CC-015 should pass through to non-matching origin with self-signed cert")]
-        public async Task ShouldPassThroughToNonMatchingOriginWithSelfSignedCert(IBrowser browser, Func<string, string> asset, Server httpsServer, BrowserNewPageOptions newPageOptions)
+        public async Task ShouldPassThroughToNonMatchingOriginWithSelfSignedCert()
         {
-            httpsServer.SetRoute("/hello.html", (req, res) =>
+            HttpsServer.SetRoute("/hello.html", (req, res) =>
             {
                 res.WriteHead(200, new() { ["Content-Type"] = "text/html" });
                 res.End("<html><body><div data-testid=\"message\">hello</div></body></html>");
             });
-            var page = await browser.NewPageAsync(new(newPageOptions)
+            var page = await Browser.NewPageAsync(new(NewPageOptions())
             {
                 ClientCertificates =
                 [
                     new()
                     {
                         Origin = "https://not-matching.com",
-                        CertPath = asset("client-certificates/client/trusted/cert.pem"),
-                        KeyPath = asset("client-certificates/client/trusted/key.pem"),
+                        CertPath = Asset("client-certificates/client/trusted/cert.pem"),
+                        KeyPath = Asset("client-certificates/client/trusted/key.pem"),
                     }
                 ],
             });
-            await page.GotoAsync(httpsServer.Prefix + "/hello.html");
+            await page.GotoAsync(HttpsServer.Prefix + "/hello.html");
             await Expect(page.GetByTestId("message")).ToHaveTextAsync("hello");
             await page.CloseAsync();
         }
 
         [UpstreamTest("CC-016 should not intercept TLS for origins without a client certificate")]
-        public async Task ShouldNotInterceptTLSForOriginsWithoutAClientCertificate(IBrowser browser, Func<string, string> asset, Server httpsServer, BrowserNewPageOptions newPageOptions)
+        public async Task ShouldNotInterceptTLSForOriginsWithoutAClientCertificate()
         {
             // If the proxy intercepted this origin, the browser would see its self-signed cert (CN=localhost)
             // instead of the real server cert (CN=playwright-test).
-            var page = await browser.NewPageAsync(new(newPageOptions)
+            var page = await Browser.NewPageAsync(new(NewPageOptions())
             {
                 ClientCertificates =
                 [
                     new()
                     {
                         Origin = "https://not-matching.com",
-                        CertPath = asset("client-certificates/client/trusted/cert.pem"),
-                        KeyPath = asset("client-certificates/client/trusted/key.pem"),
+                        CertPath = Asset("client-certificates/client/trusted/cert.pem"),
+                        KeyPath = Asset("client-certificates/client/trusted/key.pem"),
                     }
                 ],
             });
-            var response = await page.GotoAsync(httpsServer.EmptyPage);
+            var response = await page.GotoAsync(HttpsServer.EmptyPage);
             Assert.That(response.Ok, Is.EqualTo(true));
             var securityDetails = await response.SecurityDetailsAsync();
             Assert.That(securityDetails.SubjectName, Does.Contain("playwright-test"));
@@ -501,10 +503,10 @@ public class ClientCertificatesTests
         }
 
         [UpstreamTest("CC-017 should fail with no client certificates")]
-        public async Task ShouldFailWithNoClientCertificates(IBrowser browser, StartCCServerFixture startCCServer, Func<string, string> asset, string browserName, bool isMac, BrowserNewPageOptions newPageOptions)
+        public async Task ShouldFailWithNoClientCertificates()
         {
-            var serverURL = await startCCServer(new() { UseFakeLocalhost = browserName == "webkit" && isMac });
-            var page = await browser.NewPageAsync(new(newPageOptions)
+            var serverURL = await StartCCServer(new() { UseFakeLocalhost = BrowserName == "webkit" && IsMac });
+            var page = await Browser.NewPageAsync(new(NewPageOptions())
             {
                 IgnoreHTTPSErrors = true,
                 ClientCertificates =
@@ -512,8 +514,8 @@ public class ClientCertificatesTests
                     new()
                     {
                         Origin = "https://not-matching.com",
-                        CertPath = asset("client-certificates/client/trusted/cert.pem"),
-                        KeyPath = asset("client-certificates/client/trusted/key.pem"),
+                        CertPath = Asset("client-certificates/client/trusted/cert.pem"),
+                        KeyPath = Asset("client-certificates/client/trusted/key.pem"),
                     }
                 ],
             });
@@ -523,10 +525,10 @@ public class ClientCertificatesTests
         }
 
         [UpstreamTest("CC-018 should fail with self-signed client certificates")]
-        public async Task ShouldFailWithSelfSignedClientCertificates(IBrowser browser, StartCCServerFixture startCCServer, Func<string, string> asset, string browserName, bool isMac, BrowserNewPageOptions newPageOptions)
+        public async Task ShouldFailWithSelfSignedClientCertificates()
         {
-            var serverURL = await startCCServer(new() { UseFakeLocalhost = browserName == "webkit" && isMac });
-            var page = await browser.NewPageAsync(new(newPageOptions)
+            var serverURL = await StartCCServer(new() { UseFakeLocalhost = BrowserName == "webkit" && IsMac });
+            var page = await Browser.NewPageAsync(new(NewPageOptions())
             {
                 IgnoreHTTPSErrors = true,
                 ClientCertificates =
@@ -534,8 +536,8 @@ public class ClientCertificatesTests
                     new()
                     {
                         Origin = new Uri(serverURL).GetLeftPart(UriPartial.Authority),
-                        CertPath = asset("client-certificates/client/self-signed/cert.pem"),
-                        KeyPath = asset("client-certificates/client/self-signed/key.pem"),
+                        CertPath = Asset("client-certificates/client/self-signed/cert.pem"),
+                        KeyPath = Asset("client-certificates/client/self-signed/key.pem"),
                     }
                 ],
             });
@@ -545,10 +547,10 @@ public class ClientCertificatesTests
         }
 
         [UpstreamTest("CC-019 should complete browser TLS handshake when server rejects client certificate after it")]
-        public async Task ShouldCompleteBrowserTLSHandshakeWhenServerRejectsClientCertificateAfterIt(IBrowser browser, StartCCServerFixture startCCServer, Func<string, string> asset, string browserName, bool isMac, BrowserNewPageOptions newPageOptions)
+        public async Task ShouldCompleteBrowserTLSHandshakeWhenServerRejectsClientCertificateAfterIt()
         {
-            var serverURL = await startCCServer(new() { RejectUnauthorized = true, UseFakeLocalhost = browserName == "webkit" && isMac });
-            var page = await browser.NewPageAsync(new(newPageOptions)
+            var serverURL = await StartCCServer(new() { RejectUnauthorized = true, UseFakeLocalhost = BrowserName == "webkit" && IsMac });
+            var page = await Browser.NewPageAsync(new(NewPageOptions())
             {
                 IgnoreHTTPSErrors = true,
                 ClientCertificates =
@@ -556,8 +558,8 @@ public class ClientCertificatesTests
                     new()
                     {
                         Origin = new Uri(serverURL).GetLeftPart(UriPartial.Authority),
-                        CertPath = asset("client-certificates/client/self-signed/cert.pem"),
-                        KeyPath = asset("client-certificates/client/self-signed/key.pem"),
+                        CertPath = Asset("client-certificates/client/self-signed/cert.pem"),
+                        KeyPath = Asset("client-certificates/client/self-signed/key.pem"),
                     }
                 ],
             });
@@ -579,10 +581,10 @@ public class ClientCertificatesTests
         }
 
         [UpstreamTest("CC-020 should pass with matching certificates")]
-        public async Task ShouldPassWithMatchingCertificates(IBrowser browser, StartCCServerFixture startCCServer, Func<string, string> asset, string browserName, bool isMac, BrowserNewPageOptions newPageOptions)
+        public async Task ShouldPassWithMatchingCertificates()
         {
-            var serverURL = await startCCServer(new() { UseFakeLocalhost = browserName == "webkit" && isMac });
-            var page = await browser.NewPageAsync(new(newPageOptions)
+            var serverURL = await StartCCServer(new() { UseFakeLocalhost = BrowserName == "webkit" && IsMac });
+            var page = await Browser.NewPageAsync(new(NewPageOptions())
             {
                 IgnoreHTTPSErrors = true,
                 ClientCertificates =
@@ -590,8 +592,8 @@ public class ClientCertificatesTests
                     new()
                     {
                         Origin = new Uri(serverURL).GetLeftPart(UriPartial.Authority),
-                        CertPath = asset("client-certificates/client/trusted/cert.pem"),
-                        KeyPath = asset("client-certificates/client/trusted/key.pem"),
+                        CertPath = Asset("client-certificates/client/trusted/cert.pem"),
+                        KeyPath = Asset("client-certificates/client/trusted/key.pem"),
                     }
                 ],
             });
@@ -601,10 +603,10 @@ public class ClientCertificatesTests
         }
 
         [UpstreamTest("CC-021 should pass with matching certificates when passing as content")]
-        public async Task ShouldPassWithMatchingCertificatesWhenPassingAsContent(IBrowser browser, StartCCServerFixture startCCServer, Func<string, string> asset, string browserName, bool isMac, BrowserNewPageOptions newPageOptions)
+        public async Task ShouldPassWithMatchingCertificatesWhenPassingAsContent()
         {
-            var serverURL = await startCCServer(new() { UseFakeLocalhost = browserName == "webkit" && isMac });
-            var page = await browser.NewPageAsync(new(newPageOptions)
+            var serverURL = await StartCCServer(new() { UseFakeLocalhost = BrowserName == "webkit" && IsMac });
+            var page = await Browser.NewPageAsync(new(NewPageOptions())
             {
                 IgnoreHTTPSErrors = true,
                 ClientCertificates =
@@ -612,8 +614,8 @@ public class ClientCertificatesTests
                     new()
                     {
                         Origin = new Uri(serverURL).GetLeftPart(UriPartial.Authority),
-                        Cert = await File.ReadAllBytesAsync(asset("client-certificates/client/trusted/cert.pem")),
-                        Key = await File.ReadAllBytesAsync(asset("client-certificates/client/trusted/key.pem")),
+                        Cert = await File.ReadAllBytesAsync(Asset("client-certificates/client/trusted/cert.pem")),
+                        Key = await File.ReadAllBytesAsync(Asset("client-certificates/client/trusted/key.pem")),
                     }
                 ],
             });
@@ -623,11 +625,11 @@ public class ClientCertificatesTests
         }
 
         [UpstreamTest("CC-022 should pass with matching certificates and when a http proxy is used")]
-        public async Task ShouldPassWithMatchingCertificatesAndWhenAHttpProxyIsUsed(IBrowser browser, StartCCServerFixture startCCServer, Func<string, string> asset, string browserName, TestProxy proxyServer, bool isMac, BrowserNewPageOptions newPageOptions)
+        public async Task ShouldPassWithMatchingCertificatesAndWhenAHttpProxyIsUsed()
         {
-            var serverURL = await startCCServer(new() { UseFakeLocalhost = browserName == "webkit" && isMac });
-            proxyServer.ForwardTo(new Uri(serverURL).Port, new() { AllowConnectRequests = true });
-            var page = await browser.NewPageAsync(new(newPageOptions)
+            var serverURL = await StartCCServer(new() { UseFakeLocalhost = BrowserName == "webkit" && IsMac });
+            ProxyServer.ForwardTo(new Uri(serverURL).Port, new() { AllowConnectRequests = true });
+            var page = await Browser.NewPageAsync(new(NewPageOptions())
             {
                 IgnoreHTTPSErrors = true,
                 ClientCertificates =
@@ -635,61 +637,61 @@ public class ClientCertificatesTests
                     new()
                     {
                         Origin = new Uri(serverURL).GetLeftPart(UriPartial.Authority),
-                        CertPath = asset("client-certificates/client/trusted/cert.pem"),
-                        KeyPath = asset("client-certificates/client/trusted/key.pem"),
+                        CertPath = Asset("client-certificates/client/trusted/cert.pem"),
+                        KeyPath = Asset("client-certificates/client/trusted/key.pem"),
                     }
                 ],
-                Proxy = new() { Server = $"localhost:{proxyServer.Port}" },
+                Proxy = new() { Server = $"localhost:{ProxyServer.Port}" },
             });
-            Assert.That(proxyServer.ConnectHosts, Is.EqualTo(Array.Empty<string>()));
+            Assert.That(ProxyServer.ConnectHosts, Is.EqualTo(Array.Empty<string>()));
             await page.GotoAsync(serverURL);
-            var host = browserName == "webkit" && isMac ? "localhost" : "127.0.0.1";
-            Assert.That(proxyServer.ConnectHosts.Distinct(), Is.EqualTo(new[] { $"{host}:{new Uri(serverURL).Port}" }));
+            var host = BrowserName == "webkit" && IsMac ? "localhost" : "127.0.0.1";
+            Assert.That(ProxyServer.ConnectHosts.Distinct(), Is.EqualTo(new[] { $"{host}:{new Uri(serverURL).Port}" }));
             await Expect(page.GetByTestId("message")).ToHaveTextAsync("Hello Alice, your certificate was issued by localhost!");
             await page.CloseAsync();
         }
 
         [UpstreamTest("CC-025 should respect launch proxy and proxy bypass")]
-        public async Task ShouldRespectLaunchProxyAndProxyBypass(IBrowserType browserType, StartCCServerFixture startCCServer, Func<string, string> asset, string browserName, TestProxy proxyServer, bool isMac, BrowserTypeLaunchOptions launchOptions, BrowserNewPageOptions newPageOptions)
+        public async Task ShouldRespectLaunchProxyAndProxyBypass()
         {
-            var serverURL = await startCCServer(new() { UseFakeLocalhost = browserName == "webkit" && isMac });
+            var serverURL = await StartCCServer(new() { UseFakeLocalhost = BrowserName == "webkit" && IsMac });
             var (origin, hostname, port) = (new Uri(serverURL).GetLeftPart(UriPartial.Authority), new Uri(serverURL).Host, new Uri(serverURL).Port);
-            proxyServer.ForwardTo(port, new() { AllowConnectRequests = true });
-            var proxy = new Proxy { Server = $"localhost:{proxyServer.Port}" };
-            var serverHost = $"{(browserName == "webkit" && isMac ? "localhost" : "127.0.0.1")}:{port}";
+            ProxyServer.ForwardTo(port, new() { AllowConnectRequests = true });
+            var proxy = new Proxy { Server = $"localhost:{ProxyServer.Port}" };
+            var serverHost = $"{(BrowserName == "webkit" && IsMac ? "localhost" : "127.0.0.1")}:{port}";
             var clientCertificates = new ClientCertificate[]
             {
                 new()
                 {
                     Origin = origin,
-                    CertPath = asset("client-certificates/client/trusted/cert.pem"),
-                    KeyPath = asset("client-certificates/client/trusted/key.pem"),
+                    CertPath = Asset("client-certificates/client/trusted/cert.pem"),
+                    KeyPath = Asset("client-certificates/client/trusted/key.pem"),
                 },
             };
-            var browser = await browserType.LaunchAsync(new(launchOptions) { Proxy = proxy });
+            var browser = await BrowserType.LaunchAsync(new(LaunchOptions()) { Proxy = proxy });
             {
-                var page = await browser.NewPageAsync(new(newPageOptions) { IgnoreHTTPSErrors = true, ClientCertificates = clientCertificates });
+                var page = await browser.NewPageAsync(new(NewPageOptions()) { IgnoreHTTPSErrors = true, ClientCertificates = clientCertificates });
                 await page.GotoAsync(serverURL);
                 await Expect(page.GetByTestId("message")).ToHaveTextAsync("Hello Alice, your certificate was issued by localhost!");
                 // Headed Chromium also sends its own background requests through the launch proxy.
-                Assert.That(proxyServer.ConnectHosts, Does.Contain(serverHost));
+                Assert.That(ProxyServer.ConnectHosts, Does.Contain(serverHost));
                 await page.CloseAsync();
             }
-            proxyServer.ConnectHosts = [];
+            ProxyServer.ConnectHosts = [];
             {
-                var page = await browser.NewPageAsync(new(newPageOptions) { IgnoreHTTPSErrors = true, ClientCertificates = clientCertificates, Proxy = new() { Server = proxy.Server, Bypass = hostname } });
+                var page = await browser.NewPageAsync(new(NewPageOptions()) { IgnoreHTTPSErrors = true, ClientCertificates = clientCertificates, Proxy = new() { Server = proxy.Server, Bypass = hostname } });
                 await page.GotoAsync(serverURL);
                 await Expect(page.GetByTestId("message")).ToHaveTextAsync("Hello Alice, your certificate was issued by localhost!");
-                Assert.That(proxyServer.ConnectHosts, Does.Not.Contain(serverHost));
+                Assert.That(ProxyServer.ConnectHosts, Does.Not.Contain(serverHost));
                 await page.CloseAsync();
             }
             await browser.CloseAsync();
         }
 
         [UpstreamTest("CC-026 should pass with matching certificates and when a socks proxy is used")]
-        public async Task ShouldPassWithMatchingCertificatesAndWhenASocksProxyIsUsed(IBrowser browser, StartCCServerFixture startCCServer, Func<string, string> asset, string browserName, bool isMac, BrowserNewPageOptions newPageOptions)
+        public async Task ShouldPassWithMatchingCertificatesAndWhenASocksProxyIsUsed()
         {
-            var serverURL = await startCCServer(new() { UseFakeLocalhost = browserName == "webkit" && isMac });
+            var serverURL = await StartCCServer(new() { UseFakeLocalhost = BrowserName == "webkit" && IsMac });
             var serverPort = new Uri(serverURL).Port;
             // .NET: connectHosts of upstream is a list that the server keeps adding to: here it is read from the server each time.
             var socksForwardingServer = await TestProxy.SetupSocksForwardingServer(
@@ -698,7 +700,7 @@ public class ClientCertificatesTests
                 allowedTargetPort: serverPort);
             var proxyServerAddr = socksForwardingServer.ProxyServerAddr;
             var closeProxyServer = socksForwardingServer.CloseProxyServer;
-            var page = await browser.NewPageAsync(new(newPageOptions)
+            var page = await Browser.NewPageAsync(new(NewPageOptions())
             {
                 IgnoreHTTPSErrors = true,
                 ClientCertificates =
@@ -706,15 +708,15 @@ public class ClientCertificatesTests
                     new()
                     {
                         Origin = new Uri(serverURL).GetLeftPart(UriPartial.Authority),
-                        CertPath = asset("client-certificates/client/trusted/cert.pem"),
-                        KeyPath = asset("client-certificates/client/trusted/key.pem"),
+                        CertPath = Asset("client-certificates/client/trusted/cert.pem"),
+                        KeyPath = Asset("client-certificates/client/trusted/key.pem"),
                     }
                 ],
                 Proxy = new() { Server = proxyServerAddr },
             });
             Assert.That(socksForwardingServer.ConnectHosts, Is.EqualTo(Array.Empty<string>()));
             await page.GotoAsync(serverURL);
-            var host = browserName == "webkit" && isMac ? "localhost" : "127.0.0.1";
+            var host = BrowserName == "webkit" && IsMac ? "localhost" : "127.0.0.1";
             Assert.That(socksForwardingServer.ConnectHosts, Is.EqualTo(new[] { $"{host}:{serverPort}" }));
             await Expect(page.GetByTestId("message")).ToHaveTextAsync("Hello Alice, your certificate was issued by localhost!");
             await page.CloseAsync();
@@ -722,7 +724,7 @@ public class ClientCertificatesTests
         }
 
         [UpstreamTest("CC-027 should not hang on tls errors during TLS 1.2 handshake")]
-        public async Task ShouldNotHangOnTlsErrorsDuringTLS12Handshake(IBrowser browser, Func<string, string> asset, string platform, string browserName, BrowserNewPageOptions newPageOptions)
+        public async Task ShouldNotHangOnTlsErrorsDuringTLS12Handshake()
         {
             foreach (var tlsVersion in new[] { "TLSv1.3", "TLSv1.2" })
             {
@@ -730,11 +732,11 @@ public class ClientCertificatesTests
                 {
                     var server = CreateTlsServer(new()
                     {
-                        Key = File.ReadAllBytes(asset("client-certificates/server/server_key.pem")),
-                        Cert = File.ReadAllBytes(asset("client-certificates/server/server_cert.pem")),
+                        Key = File.ReadAllBytes(Asset("client-certificates/server/server_key.pem")),
+                        Cert = File.ReadAllBytes(Asset("client-certificates/server/server_cert.pem")),
                         Ca =
                         [
-                            File.ReadAllBytes(asset("client-certificates/server/server_cert.pem")),
+                            File.ReadAllBytes(Asset("client-certificates/server/server_cert.pem")),
                         ],
                         RequestCert = true,
                         RejectUnauthorized = true,
@@ -752,9 +754,9 @@ public class ClientCertificatesTests
                     });
                     // .NET: upstream makes the URL in the callback of listen().
                     await server.Listen(0, "localhost");
-                    var host = browserName == "webkit" && platform == "darwin" ? "local.playwright" : "localhost";
+                    var host = BrowserName == "webkit" && Platform == "darwin" ? "local.playwright" : "localhost";
                     var serverURL = $"https://{host}:{server.Address().Port}/";
-                    var page = await browser.NewPageAsync(new(newPageOptions)
+                    var page = await Browser.NewPageAsync(new(NewPageOptions())
                     {
                         IgnoreHTTPSErrors = true,
                         ClientCertificates =
@@ -762,8 +764,8 @@ public class ClientCertificatesTests
                             new()
                             {
                                 Origin = new Uri(serverURL).GetLeftPart(UriPartial.Authority),
-                                CertPath = asset("client-certificates/client/self-signed/cert.pem"),
-                                KeyPath = asset("client-certificates/client/self-signed/key.pem"),
+                                CertPath = Asset("client-certificates/client/self-signed/cert.pem"),
+                                KeyPath = Asset("client-certificates/client/self-signed/key.pem"),
                             }
                         ],
                     });
@@ -776,10 +778,10 @@ public class ClientCertificatesTests
         }
 
         [UpstreamTest("CC-028 should pass with matching certificates in pfx format")]
-        public async Task ShouldPassWithMatchingCertificatesInPfxFormat(IBrowser browser, StartCCServerFixture startCCServer, Func<string, string> asset, string browserName, bool isMac, BrowserNewPageOptions newPageOptions)
+        public async Task ShouldPassWithMatchingCertificatesInPfxFormat()
         {
-            var serverURL = await startCCServer(new() { UseFakeLocalhost = browserName == "webkit" && isMac });
-            var page = await browser.NewPageAsync(new(newPageOptions)
+            var serverURL = await StartCCServer(new() { UseFakeLocalhost = BrowserName == "webkit" && IsMac });
+            var page = await Browser.NewPageAsync(new(NewPageOptions())
             {
                 IgnoreHTTPSErrors = true,
                 ClientCertificates =
@@ -787,7 +789,7 @@ public class ClientCertificatesTests
                     new()
                     {
                         Origin = new Uri(serverURL).GetLeftPart(UriPartial.Authority),
-                        PfxPath = asset("client-certificates/client/trusted/cert.pfx"),
+                        PfxPath = Asset("client-certificates/client/trusted/cert.pfx"),
                         Passphrase = "secure",
                     }
                 ],
@@ -798,10 +800,10 @@ public class ClientCertificatesTests
         }
 
         [UpstreamTest("CC-030 should pass with matching certificates in pfx format when passing as content")]
-        public async Task ShouldPassWithMatchingCertificatesInPfxFormatWhenPassingAsContent(IBrowser browser, StartCCServerFixture startCCServer, Func<string, string> asset, string browserName, bool isMac, BrowserNewPageOptions newPageOptions)
+        public async Task ShouldPassWithMatchingCertificatesInPfxFormatWhenPassingAsContent()
         {
-            var serverURL = await startCCServer(new() { UseFakeLocalhost = browserName == "webkit" && isMac });
-            var page = await browser.NewPageAsync(new(newPageOptions)
+            var serverURL = await StartCCServer(new() { UseFakeLocalhost = BrowserName == "webkit" && IsMac });
+            var page = await Browser.NewPageAsync(new(NewPageOptions())
             {
                 IgnoreHTTPSErrors = true,
                 ClientCertificates =
@@ -809,7 +811,7 @@ public class ClientCertificatesTests
                     new()
                     {
                         Origin = new Uri(serverURL).GetLeftPart(UriPartial.Authority),
-                        Pfx = await File.ReadAllBytesAsync(asset("client-certificates/client/trusted/cert.pfx")),
+                        Pfx = await File.ReadAllBytesAsync(Asset("client-certificates/client/trusted/cert.pfx")),
                         Passphrase = "secure",
                     }
                 ],
@@ -820,10 +822,10 @@ public class ClientCertificatesTests
         }
 
         [UpstreamTest("CC-031 should fail with matching certificates in legacy pfx format")]
-        public async Task ShouldFailWithMatchingCertificatesInLegacyPfxFormat(IBrowser browser, StartCCServerFixture startCCServer, Func<string, string> asset, string browserName, bool isMac, BrowserNewPageOptions newPageOptions)
+        public async Task ShouldFailWithMatchingCertificatesInLegacyPfxFormat()
         {
-            var serverURL = await startCCServer(new() { UseFakeLocalhost = browserName == "webkit" && isMac });
-            var error = await ThrowsAsync<PlaywrightException>(() => browser.NewPageAsync(new(newPageOptions)
+            var serverURL = await StartCCServer(new() { UseFakeLocalhost = BrowserName == "webkit" && IsMac });
+            var error = await ThrowsAsync<PlaywrightException>(() => Browser.NewPageAsync(new(NewPageOptions())
             {
                 IgnoreHTTPSErrors = true,
                 ClientCertificates =
@@ -831,7 +833,7 @@ public class ClientCertificatesTests
                     new()
                     {
                         Origin = new Uri(serverURL).GetLeftPart(UriPartial.Authority),
-                        PfxPath = asset("client-certificates/client/trusted/cert-legacy.pfx"),
+                        PfxPath = Asset("client-certificates/client/trusted/cert-legacy.pfx"),
                         Passphrase = "secure",
                     }
                 ],
@@ -840,10 +842,10 @@ public class ClientCertificatesTests
         }
 
         [UpstreamTest("CC-032 should throw a http error if the pfx passphrase is incorect")]
-        public async Task ShouldThrowAHttpErrorIfThePfxPassphraseIsIncorect(IBrowser browser, StartCCServerFixture startCCServer, Func<string, string> asset, string browserName, bool isMac, BrowserNewPageOptions newPageOptions)
+        public async Task ShouldThrowAHttpErrorIfThePfxPassphraseIsIncorect()
         {
-            var serverURL = await startCCServer(new() { UseFakeLocalhost = browserName == "webkit" && isMac });
-            var error = await ThrowsAsync<PlaywrightException>(() => browser.NewPageAsync(new(newPageOptions)
+            var serverURL = await StartCCServer(new() { UseFakeLocalhost = BrowserName == "webkit" && IsMac });
+            var error = await ThrowsAsync<PlaywrightException>(() => Browser.NewPageAsync(new(NewPageOptions())
             {
                 IgnoreHTTPSErrors = true,
                 ClientCertificates =
@@ -851,7 +853,7 @@ public class ClientCertificatesTests
                     new()
                     {
                         Origin = new Uri(serverURL).GetLeftPart(UriPartial.Authority),
-                        PfxPath = asset("client-certificates/client/trusted/cert.pfx"),
+                        PfxPath = Asset("client-certificates/client/trusted/cert.pfx"),
                         Passphrase = "this-password-is-incorrect",
                     }
                 ],
@@ -860,15 +862,15 @@ public class ClientCertificatesTests
         }
 
         [UpstreamTest("CC-033 should pass with matching certificates on context APIRequestContext instance")]
-        public async Task ShouldPassWithMatchingCertificatesOnContextAPIRequestContextInstance(IBrowser browser, StartCCServerFixture startCCServer, Func<string, string> asset, string browserName, BrowserNewPageOptions newPageOptions)
+        public async Task ShouldPassWithMatchingCertificatesOnContextAPIRequestContextInstance()
         {
-            var serverURL = await startCCServer();
+            var serverURL = await StartCCServer();
             var baseOptions = new ClientCertificate
             {
-                CertPath = asset("client-certificates/client/trusted/cert.pem"),
-                KeyPath = asset("client-certificates/client/trusted/key.pem"),
+                CertPath = Asset("client-certificates/client/trusted/cert.pem"),
+                KeyPath = Asset("client-certificates/client/trusted/key.pem"),
             };
-            var page = await browser.NewPageAsync(new(newPageOptions)
+            var page = await Browser.NewPageAsync(new(NewPageOptions())
             {
                 IgnoreHTTPSErrors = true,
                 // .NET: the spread of baseOptions is its two properties.
@@ -898,10 +900,10 @@ public class ClientCertificatesTests
         }
 
         [UpstreamTest("CC-034 should pass with matching certificates and trailing slash")]
-        public async Task ShouldPassWithMatchingCertificatesAndTrailingSlash(IBrowser browser, StartCCServerFixture startCCServer, Func<string, string> asset, string browserName, bool isMac, BrowserNewPageOptions newPageOptions)
+        public async Task ShouldPassWithMatchingCertificatesAndTrailingSlash()
         {
-            var serverURL = await startCCServer(new() { UseFakeLocalhost = browserName == "webkit" && isMac });
-            var page = await browser.NewPageAsync(new(newPageOptions)
+            var serverURL = await StartCCServer(new() { UseFakeLocalhost = BrowserName == "webkit" && IsMac });
+            var page = await Browser.NewPageAsync(new(NewPageOptions())
             {
                 IgnoreHTTPSErrors = true,
                 ClientCertificates =
@@ -909,8 +911,8 @@ public class ClientCertificatesTests
                     new()
                     {
                         Origin = serverURL,
-                        CertPath = asset("client-certificates/client/trusted/cert.pem"),
-                        KeyPath = asset("client-certificates/client/trusted/key.pem"),
+                        CertPath = Asset("client-certificates/client/trusted/cert.pem"),
+                        KeyPath = Asset("client-certificates/client/trusted/key.pem"),
                     }
                 ],
             });
@@ -920,18 +922,18 @@ public class ClientCertificatesTests
         }
 
         [UpstreamTest("CC-035 should have ignoreHTTPSErrors=false by default")]
-        public async Task ShouldHaveIgnoreHTTPSErrorsFalseByDefault(IBrowser browser, Server httpsServer, Func<string, string> asset, string browserName, string platform, BrowserNewPageOptions newPageOptions)
+        public async Task ShouldHaveIgnoreHTTPSErrorsFalseByDefault()
         {
-            var targetURL = browserName == "webkit" && platform == "darwin" ? ReplaceFirst(httpsServer.EmptyPage, "localhost", "local.playwright") : httpsServer.EmptyPage;
-            var page = await browser.NewPageAsync(new(newPageOptions)
+            var targetURL = BrowserName == "webkit" && Platform == "darwin" ? ReplaceFirst(HttpsServer.EmptyPage, "localhost", "local.playwright") : HttpsServer.EmptyPage;
+            var page = await Browser.NewPageAsync(new(NewPageOptions())
             {
                 ClientCertificates =
                 [
                     new()
                     {
                         Origin = new Uri(targetURL).GetLeftPart(UriPartial.Authority),
-                        CertPath = asset("client-certificates/client/trusted/cert.pem"),
-                        KeyPath = asset("client-certificates/client/trusted/key.pem"),
+                        CertPath = Asset("client-certificates/client/trusted/cert.pem"),
+                        KeyPath = Asset("client-certificates/client/trusted/key.pem"),
                     }
                 ],
             });
@@ -941,11 +943,11 @@ public class ClientCertificatesTests
         }
 
         [UpstreamTest("CC-036 support http2")]
-        public async Task SupportHttp2(IBrowser browser, StartCCServerFixture startCCServer, Func<string, string> asset, string browserName, bool isMac, BrowserNewPageOptions newPageOptions)
+        public async Task SupportHttp2()
         {
-            Info.Skip(browserName == "webkit" && isMac, "WebKit on macOS doesn\n proxy localhost");
-            var serverURL = await startCCServer(new() { Http2 = true });
-            var page = await browser.NewPageAsync(new(newPageOptions)
+            Info.Skip(BrowserName == "webkit" && IsMac, "WebKit on macOS doesn\n proxy localhost");
+            var serverURL = await StartCCServer(new() { Http2 = true });
+            var page = await Browser.NewPageAsync(new(NewPageOptions())
             {
                 IgnoreHTTPSErrors = true,
                 ClientCertificates =
@@ -953,8 +955,8 @@ public class ClientCertificatesTests
                     new()
                     {
                         Origin = new Uri(serverURL).GetLeftPart(UriPartial.Authority),
-                        CertPath = asset("client-certificates/client/trusted/cert.pem"),
-                        KeyPath = asset("client-certificates/client/trusted/key.pem"),
+                        CertPath = Asset("client-certificates/client/trusted/cert.pem"),
+                        KeyPath = Asset("client-certificates/client/trusted/key.pem"),
                     }
                 ],
             });
@@ -973,12 +975,12 @@ public class ClientCertificatesTests
         }
 
         [UpstreamTest("CC-037 support http2 if the browser only supports http1.1")]
-        public async Task SupportHttp2IfTheBrowserOnlySupportsHttp11(IBrowserType browserType, string browserName, StartCCServerFixture startCCServer, Func<string, string> asset, BrowserTypeLaunchOptions launchOptions, BrowserNewPageOptions newPageOptions)
+        public async Task SupportHttp2IfTheBrowserOnlySupportsHttp11()
         {
-            Info.Skip(browserName != "chromium");
-            var serverURL = await startCCServer(new() { Http2 = true, EnableHTTP1FallbackWhenUsingHttp2 = true });
-            var browser = await browserType.LaunchAsync(new(launchOptions) { Args = ["--disable-http2"] });
-            var page = await browser.NewPageAsync(new(newPageOptions)
+            Info.Skip(BrowserName != "chromium");
+            var serverURL = await StartCCServer(new() { Http2 = true, EnableHTTP1FallbackWhenUsingHttp2 = true });
+            var browser = await BrowserType.LaunchAsync(new(LaunchOptions()) { Args = ["--disable-http2"] });
+            var page = await browser.NewPageAsync(new(NewPageOptions())
             {
                 IgnoreHTTPSErrors = true,
                 ClientCertificates =
@@ -986,8 +988,8 @@ public class ClientCertificatesTests
                     new()
                     {
                         Origin = new Uri(serverURL).GetLeftPart(UriPartial.Authority),
-                        CertPath = asset("client-certificates/client/trusted/cert.pem"),
-                        KeyPath = asset("client-certificates/client/trusted/key.pem"),
+                        CertPath = Asset("client-certificates/client/trusted/cert.pem"),
+                        KeyPath = Asset("client-certificates/client/trusted/key.pem"),
                     }
                 ],
             });
@@ -1005,21 +1007,21 @@ public class ClientCertificatesTests
         }
 
         [UpstreamTest("CC-038 should return target connection errors when using http2")]
-        public async Task ShouldReturnTargetConnectionErrorsWhenUsingHttp2(IBrowser browser, StartCCServerFixture startCCServer, Func<string, string> asset, string browserName, bool isMac, (int Major, int Minor, int Patch) nodeVersion, BrowserNewPageOptions newPageOptions)
+        public async Task ShouldReturnTargetConnectionErrorsWhenUsingHttp2()
         {
-            Info.Skip(browserName == "webkit" && isMac, "WebKit on macOS does not proxy localhost");
-            Info.Skip(nodeVersion.Major < 20, "http2.performServerHandshake is not supported in older Node.js versions");
+            Info.Skip(BrowserName == "webkit" && IsMac, "WebKit on macOS does not proxy localhost");
+            Info.Skip(NodeVersion.Major < 20, "http2.performServerHandshake is not supported in older Node.js versions");
 
-            var serverURL = await startCCServer(new() { Http2 = true });
-            var page = await browser.NewPageAsync(new(newPageOptions)
+            var serverURL = await StartCCServer(new() { Http2 = true });
+            var page = await Browser.NewPageAsync(new(NewPageOptions())
             {
                 ClientCertificates =
                 [
                     new()
                     {
                         Origin = new Uri(serverURL).GetLeftPart(UriPartial.Authority),
-                        CertPath = asset("client-certificates/client/trusted/cert.pem"),
-                        KeyPath = asset("client-certificates/client/trusted/key.pem"),
+                        CertPath = Asset("client-certificates/client/trusted/cert.pem"),
+                        KeyPath = Asset("client-certificates/client/trusted/key.pem"),
                     }
                 ],
             });
@@ -1029,13 +1031,13 @@ public class ClientCertificatesTests
         }
 
         [UpstreamTest("CC-039 should handle rejected certificate in handshake with HTTP/2")]
-        public async Task ShouldHandleRejectedCertificateInHandshakeWithHTTP2(IBrowser browser, Func<string, string> asset, string browserName, string platform, BrowserNewContextOptions contextOptions)
+        public async Task ShouldHandleRejectedCertificateInHandshakeWithHTTP2()
         {
             var server = CreateHttp2Server(new()
             {
-                Key = File.ReadAllBytes(asset("client-certificates/server/server_key.pem")),
-                Cert = File.ReadAllBytes(asset("client-certificates/server/server_cert.pem")),
-                Ca = [File.ReadAllBytes(asset("client-certificates/server/server_cert.pem"))],
+                Key = File.ReadAllBytes(Asset("client-certificates/server/server_key.pem")),
+                Cert = File.ReadAllBytes(Asset("client-certificates/server/server_cert.pem")),
+                Ca = [File.ReadAllBytes(Asset("client-certificates/server/server_cert.pem"))],
                 RequestCert = true,
             }, (req, res) =>
             {
@@ -1045,9 +1047,9 @@ public class ClientCertificatesTests
 
             await server.Listen(0, "localhost");
             var port = server.Address().Port;
-            var serverUrl = "https://" + (browserName == "webkit" && platform == "darwin" ? "local.playwright" : "localhost") + ":" + port;
+            var serverUrl = "https://" + (BrowserName == "webkit" && Platform == "darwin" ? "local.playwright" : "localhost") + ":" + port;
 
-            var context = await browser.NewContextAsync(new(contextOptions)
+            var context = await Browser.NewContextAsync(new(ContextOptions())
             {
                 IgnoreHTTPSErrors = true,
                 ClientCertificates =
@@ -1055,8 +1057,8 @@ public class ClientCertificatesTests
                     new()
                     {
                         Origin = "https://just-there-that-the-client-certificates-proxy-server-is-getting-launched.com",
-                        CertPath = asset("client-certificates/client/trusted/cert.pem"),
-                        KeyPath = asset("client-certificates/client/trusted/key.pem"),
+                        CertPath = Asset("client-certificates/client/trusted/cert.pem"),
+                        KeyPath = Asset("client-certificates/client/trusted/key.pem"),
                     }
                 ],
             });
@@ -1070,24 +1072,24 @@ public class ClientCertificatesTests
             await server.Close();
         }
 
-        public class PersistentContext
+        public class PersistentContext : ClientCertificatesTests
         {
             [UpstreamTest("CC-040 validate input")]
-            public async Task ValidateInput(LaunchPersistent launchPersistent)
+            public async Task ValidateInput()
             {
                 Info.Slow();
                 foreach (var (clientCertificates, expected) in kValidationSubTests)
                 {
-                    var error = await ThrowsAsync<PlaywrightException>(() => launchPersistent(new() { ClientCertificates = clientCertificates }));
+                    var error = await ThrowsAsync<PlaywrightException>(() => LaunchPersistent(new() { ClientCertificates = clientCertificates }));
                     Assert.That(error.Message, Does.Contain(expected));
                 }
             }
 
             [UpstreamTest("CC-041 should pass with matching certificates")]
-            public async Task ShouldPassWithMatchingCertificates(LaunchPersistent launchPersistent, StartCCServerFixture startCCServer, Func<string, string> asset, string browserName, bool isMac)
+            public async Task ShouldPassWithMatchingCertificates()
             {
-                var serverURL = await startCCServer(new() { UseFakeLocalhost = browserName == "webkit" && isMac });
-                var (_, page) = await launchPersistent(new()
+                var serverURL = await StartCCServer(new() { UseFakeLocalhost = BrowserName == "webkit" && IsMac });
+                var (_, page) = await LaunchPersistent(new()
                 {
                     IgnoreHTTPSErrors = true,
                     ClientCertificates =
@@ -1095,8 +1097,8 @@ public class ClientCertificatesTests
                         new()
                         {
                             Origin = new Uri(serverURL).GetLeftPart(UriPartial.Authority),
-                            CertPath = asset("client-certificates/client/trusted/cert.pem"),
-                            KeyPath = asset("client-certificates/client/trusted/key.pem"),
+                            CertPath = Asset("client-certificates/client/trusted/cert.pem"),
+                            KeyPath = Asset("client-certificates/client/trusted/key.pem"),
                         }
                     ],
                 });

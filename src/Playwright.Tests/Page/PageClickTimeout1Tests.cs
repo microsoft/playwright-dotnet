@@ -21,15 +21,15 @@ using static Microsoft.Playwright.Tests.Fixtures.Utils;
 namespace Microsoft.Playwright.Tests.Page;
 
 /// <summary>Port of tests/page/page-click-timeout-1.spec.ts.</summary>
-public class PageClickTimeout1Tests
+public class PageClickTimeout1Tests : UpstreamPageTest
 {
     [UpstreamTest("CL-111 should timeout waiting for button to be enabled")]
     [LocalFixme("dotnet: the message is 'Timeout 3000ms exceeded.', without the 'page.click: ' prefix of the call")]
-    public async Task ShouldTimeoutWaitingForButtonToBeEnabled(IPage page)
+    public async Task ShouldTimeoutWaitingForButtonToBeEnabled()
     {
-        await page.SetContentAsync("<button onclick=\"javascript:window.__CLICKED=true;\" disabled><span>Click target</span></button>");
-        var error = await Catch(() => page.ClickAsync("text=Click target", new() { Timeout = 3000 }));
-        Assert.That(await page.EvaluateAsync<object>("window.__CLICKED"), Is.Null);
+        await Page.SetContentAsync("<button onclick=\"javascript:window.__CLICKED=true;\" disabled><span>Click target</span></button>");
+        var error = await Catch(() => Page.ClickAsync("text=Click target", new() { Timeout = 3000 }));
+        Assert.That(await Page.EvaluateAsync<object>("window.__CLICKED"), Is.Null);
         Assert.That(error.Message, Does.Contain("page.click: Timeout 3000ms exceeded."));
         Assert.That(error.Message, Does.Contain("element is not enabled"));
         Assert.That(error.Message, Does.Contain("retrying click action"));
@@ -37,11 +37,11 @@ public class PageClickTimeout1Tests
 
     [UpstreamTest("CL-112 should timeout waiting for inert element to become non-inert")]
     [LocalFixme("dotnet: the message is 'Timeout 3000ms exceeded.', without the 'page.click: ' prefix of the call")]
-    public async Task ShouldTimeoutWaitingForInertElementToBecomeNonInert(IPage page)
+    public async Task ShouldTimeoutWaitingForInertElementToBecomeNonInert()
     {
-        await page.SetContentAsync("<div inert><button onclick=\"javascript:window.__CLICKED=true;\">Click target</button></div>");
-        var error = await Catch(() => page.ClickAsync("text=Click target", new() { Timeout = 3000 }));
-        Assert.That(await page.EvaluateAsync<object>("window.__CLICKED"), Is.Null);
+        await Page.SetContentAsync("<div inert><button onclick=\"javascript:window.__CLICKED=true;\">Click target</button></div>");
+        var error = await Catch(() => Page.ClickAsync("text=Click target", new() { Timeout = 3000 }));
+        Assert.That(await Page.EvaluateAsync<object>("window.__CLICKED"), Is.Null);
         Assert.That(error.Message, Does.Contain("page.click: Timeout 3000ms exceeded."));
         Assert.That(error.Message, Does.Contain("element is inert"));
         Assert.That(error.Message, Does.Contain("retrying click action"));

@@ -19,23 +19,25 @@ using static Microsoft.Playwright.Tests.Fixtures.Utils;
 
 namespace Microsoft.Playwright.Tests.Library;
 
-/// <summary>Port of tests/library/tap.spec.ts.</summary>
-public class TapTests
+public abstract class TapTestsBase : UpstreamPageTest
 {
     // it.use({ hasTouch: true });
-    [Fixture]
-    public static BrowserNewContextOptions ContextOptions(BrowserNewContextOptions contextOptions) => new(contextOptions) { HasTouch = true };
+    public override BrowserNewContextOptions ContextOptions() => new(base.ContextOptions()) { HasTouch = true };
+}
 
+/// <summary>Port of tests/library/tap.spec.ts.</summary>
+public class TapTests : TapTestsBase
+{
     [UpstreamTest("TA-001 should send all of the correct events @smoke")]
-    public async Task ShouldSendAllOfTheCorrectEvents(IPage page)
+    public async Task ShouldSendAllOfTheCorrectEvents()
     {
-        await page.SetContentAsync(@"
+        await Page.SetContentAsync(@"
   <div id=""a"" style=""background: lightblue; width: 50px; height: 50px"">a</div>
   <div id=""b"" style=""background: pink; width: 50px; height: 50px"">b</div>
 ");
-        await page.TapAsync("#a");
-        var eventsHandle = await TrackEvents(await page.QuerySelectorAsync("#b"));
-        await page.TapAsync("#b");
+        await Page.TapAsync("#a");
+        var eventsHandle = await TrackEvents(await Page.QuerySelectorAsync("#b"));
+        await Page.TapAsync("#b");
         // webkit doesn't send pointerenter or pointerleave or mouseout
         Assert.That(await eventsHandle.JsonValueAsync<string[]>(), Is.EqualTo(new[]
         {
@@ -49,38 +51,38 @@ public class TapTests
         }));
 
         await eventsHandle.EvaluateAsync("events => events.length = 0");
-        await page.Locator("#b").EvaluateAsync(@"target => {
+        await Page.Locator("#b").EvaluateAsync(@"target => {
     target.addEventListener('pointerdown', event => event.preventDefault(), { once: true });
   }");
-        await page.TapAsync("#b");
+        await Page.TapAsync("#b");
         var events = (await eventsHandle.JsonValueAsync<string[]>()).Where(@event => new[] { "pointerdown", "pointerup", "mousedown", "mouseup", "click" }.Contains(@event)).ToArray();
         Assert.That(events, Is.EqualTo(new[] { "pointerdown", "pointerup", "click" }));
     }
 
     [UpstreamTest("TA-002 trial run should not tap")]
-    public async Task TrialRunShouldNotTap(IPage page)
+    public async Task TrialRunShouldNotTap()
     {
-        await page.SetContentAsync(@"
+        await Page.SetContentAsync(@"
     <div id=""a"" style=""background: lightblue; width: 50px; height: 50px"">a</div>
     <div id=""b"" style=""background: pink; width: 50px; height: 50px"">b</div>
   ");
-        await page.TapAsync("#a");
-        var eventsHandle = await TrackEvents(await page.QuerySelectorAsync("#b"));
-        await page.TapAsync("#b", new() { Trial = true });
+        await Page.TapAsync("#a");
+        var eventsHandle = await TrackEvents(await Page.QuerySelectorAsync("#b"));
+        await Page.TapAsync("#b", new() { Trial = true });
         var expected = new[] { "pointerover", "pointerenter", "pointerout", "pointerleave" };
         Assert.That(await eventsHandle.JsonValueAsync<string[]>(), Is.EqualTo(expected));
     }
 
     [UpstreamTest("TA-003 should not send mouse events touchstart is canceled")]
-    public async Task ShouldNotSendMouseEventsTouchstartIsCanceled(IPage page)
+    public async Task ShouldNotSendMouseEventsTouchstartIsCanceled()
     {
-        await page.SetContentAsync("<div style=\"width: 50px; height: 50px; background: red\">");
-        await page.EvaluateAsync(@"() => {
+        await Page.SetContentAsync("<div style=\"width: 50px; height: 50px; background: red\">");
+        await Page.EvaluateAsync(@"() => {
     // touchstart is not cancelable unless passive is false
     document.addEventListener('touchstart', t => t.preventDefault(), { passive: false });
   }");
-        var eventsHandle = await TrackEvents(await page.QuerySelectorAsync("div"));
-        await page.TapAsync("div");
+        var eventsHandle = await TrackEvents(await Page.QuerySelectorAsync("div"));
+        await Page.TapAsync("div");
         Assert.That(await eventsHandle.JsonValueAsync<string[]>(), Is.EqualTo(new[]
         {
             "pointerover",  "pointerenter",
@@ -91,14 +93,14 @@ public class TapTests
     }
 
     [UpstreamTest("TA-004 should not send mouse events when touchend is canceled")]
-    public async Task ShouldNotSendMouseEventsWhenTouchendIsCanceled(IPage page)
+    public async Task ShouldNotSendMouseEventsWhenTouchendIsCanceled()
     {
-        await page.SetContentAsync("<div style=\"width: 50px; height: 50px; background: red\">");
-        await page.EvaluateAsync(@"() => {
+        await Page.SetContentAsync("<div style=\"width: 50px; height: 50px; background: red\">");
+        await Page.EvaluateAsync(@"() => {
     document.addEventListener('touchend', t => t.preventDefault());
   }");
-        var eventsHandle = await TrackEvents(await page.QuerySelectorAsync("div"));
-        await page.TapAsync("div");
+        var eventsHandle = await TrackEvents(await Page.QuerySelectorAsync("div"));
+        await Page.TapAsync("div");
         Assert.That(await eventsHandle.JsonValueAsync<string[]>(), Is.EqualTo(new[]
         {
             "pointerover",  "pointerenter",
@@ -109,30 +111,30 @@ public class TapTests
     }
 
     [UpstreamTest("TA-005 should not wait for a navigation caused by a tap")]
-    public async Task ShouldNotWaitForANavigationCausedByATap(IPage page, Server server)
+    public async Task ShouldNotWaitForANavigationCausedByATap()
     {
-        await page.GotoAsync(server.EmptyPage);
-        await page.SetContentAsync("<a href=\"/intercept-this.html\">link</a>;");
+        await Page.GotoAsync(Server.EmptyPage);
+        await Page.SetContentAsync("<a href=\"/intercept-this.html\">link</a>;");
         // .NET: new Promise(resolve => server.setRoute('/intercept-this.html', resolve)) is a TaskCompletionSource that the route completes.
         var promise = new TaskCompletionSource<ServerRequest>(TaskCreationOptions.RunContinuationsAsynchronously);
-        server.SetRoute("/intercept-this.html", (req, res) => promise.TrySetResult(req));
+        Server.SetRoute("/intercept-this.html", (req, res) => promise.TrySetResult(req));
         await PromiseAll(
             promise.Task,
-            page.TapAsync("a"));
+            Page.TapAsync("a"));
     }
 
     [UpstreamTest("TA-006 should work with modifiers")]
-    public async Task ShouldWorkWithModifiers(IPage page)
+    public async Task ShouldWorkWithModifiers()
     {
-        await page.SetContentAsync("hello world");
-        var altKeyPromise = page.EvaluateAsync<bool>(@"() => new Promise(resolve => {
+        await Page.SetContentAsync("hello world");
+        var altKeyPromise = Page.EvaluateAsync<bool>(@"() => new Promise(resolve => {
     document.addEventListener('touchstart', event => {
       resolve(event.altKey);
     }, { passive: false });
   })");
         // make sure the evals hit the page
-        await page.EvaluateAsync("() => void 0");
-        await page.TapAsync("body", new()
+        await Page.EvaluateAsync("() => void 0");
+        await Page.TapAsync("body", new()
         {
             Modifiers = new[] { KeyboardModifier.Alt },
         });
@@ -140,10 +142,10 @@ public class TapTests
     }
 
     [UpstreamTest("TA-007 should send well formed touch points")]
-    public async Task ShouldSendWellFormedTouchPoints(IPage page)
+    public async Task ShouldSendWellFormedTouchPoints()
     {
         var promises = PromiseAll(
-            page.EvaluateAsync<object>(@"() => new Promise(resolve => {
+            Page.EvaluateAsync<object>(@"() => new Promise(resolve => {
       document.addEventListener('touchstart', event => {
         resolve([...event.touches].map(t => ({
           identifier: t.identifier,
@@ -158,7 +160,7 @@ public class TapTests
         })));
       }, false);
     })"),
-            page.EvaluateAsync<object>(@"() => new Promise(resolve => {
+            Page.EvaluateAsync<object>(@"() => new Promise(resolve => {
       document.addEventListener('touchend', event => {
         resolve([...event.touches].map(t => ({
           identifier: t.identifier,
@@ -174,8 +176,8 @@ public class TapTests
       }, false);
     })"));
         // make sure the evals hit the page
-        await page.EvaluateAsync("() => void 0");
-        await page.Touchscreen.TapAsync(40, 60);
+        await Page.EvaluateAsync("() => void 0");
+        await Page.Touchscreen.TapAsync(40, 60);
         var (touchstart, touchend) = await promises;
 
         ExpectToEqual(touchstart, new[]
@@ -197,9 +199,9 @@ public class TapTests
     }
 
     [UpstreamTest("TA-008 should wait until an element is visible to tap it")]
-    public async Task ShouldWaitUntilAnElementIsVisibleToTapIt(IPage page)
+    public async Task ShouldWaitUntilAnElementIsVisibleToTapIt()
     {
-        var div = (IElementHandle)await page.EvaluateHandleAsync(@"() => {
+        var div = (IElementHandle)await Page.EvaluateHandleAsync(@"() => {
     const button = document.createElement('button');
     button.textContent = 'not clicked';
     document.body.appendChild(button);
@@ -228,17 +230,17 @@ public class TapTests
         return eventsHandle;
     }
 
-    public class Locators
+    public class Locators : TapTestsBase
     {
         [UpstreamTest("TA-009 should send all of the correct events")]
-        public async Task ShouldSendAllOfTheCorrectEvents(IPage page)
+        public async Task ShouldSendAllOfTheCorrectEvents()
         {
-            await page.SetContentAsync(@"
+            await Page.SetContentAsync(@"
       <div id=""a"" style=""background: lightblue; width: 50px; height: 50px"">a</div>
       <div id=""b"" style=""background: pink; width: 50px; height: 50px"">b</div>
     ");
-            await page.Locator("#a").TapAsync();
-            await page.Locator("#b").TapAsync();
+            await Page.Locator("#a").TapAsync();
+            await Page.Locator("#b").TapAsync();
         }
     }
 }

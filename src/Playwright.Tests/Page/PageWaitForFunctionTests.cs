@@ -21,31 +21,31 @@ using static Microsoft.Playwright.Tests.Fixtures.Utils;
 namespace Microsoft.Playwright.Tests.Page;
 
 /// <summary>Port of tests/page/page-wait-for-function.spec.ts.</summary>
-public class PageWaitForFunctionTests
+public class PageWaitForFunctionTests : UpstreamPageTest
 {
     [UpstreamTest("WA-001 should timeout")]
-    public async Task ShouldTimeout(IPage page)
+    public async Task ShouldTimeout()
     {
         var startTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
         var timeout = 42;
-        await page.WaitForTimeoutAsync(timeout);
+        await Page.WaitForTimeoutAsync(timeout);
         Assert.That(DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() - startTime, Is.Not.LessThan(timeout / 2));
     }
 
     [UpstreamTest("WA-002 should accept a string")]
-    public async Task ShouldAcceptAString(IPage page)
+    public async Task ShouldAcceptAString()
     {
-        var watchdog = page.WaitForFunctionAsync("window.__FOO === 1");
-        await page.EvaluateAsync("() => window['__FOO'] = 1");
+        var watchdog = Page.WaitForFunctionAsync("window.__FOO === 1");
+        await Page.EvaluateAsync("() => window['__FOO'] = 1");
         await watchdog;
     }
 
     [UpstreamTest("WA-003 should work when resolved right before execution context disposal")]
-    public async Task ShouldWorkWhenResolvedRightBeforeExecutionContextDisposal(IPage page)
+    public async Task ShouldWorkWhenResolvedRightBeforeExecutionContextDisposal()
     {
         // .NET: AddInitScriptAsync takes the source of a script, not a function: the source calls the function, as the Node.js client does.
-        await page.AddInitScriptAsync("(() => window['__RELOADED'] = true)()");
-        await page.WaitForFunctionAsync(@"() => {
+        await Page.AddInitScriptAsync("(() => window['__RELOADED'] = true)()");
+        await Page.WaitForFunctionAsync(@"() => {
     if (!window['__RELOADED'])
       window.location.reload();
     return true;
@@ -53,10 +53,10 @@ public class PageWaitForFunctionTests
     }
 
     [UpstreamTest("WA-004 should poll on interval")]
-    public async Task ShouldPollOnInterval(IPage page, Server server)
+    public async Task ShouldPollOnInterval()
     {
         var polling = 100;
-        var timeDelta = await page.WaitForFunctionAsync(@"() => {
+        var timeDelta = await Page.WaitForFunctionAsync(@"() => {
     if (!window['__startTime']) {
       window['__startTime'] = window.builtins.Date.now();
       return false;
@@ -69,34 +69,34 @@ public class PageWaitForFunctionTests
     [UpstreamTest("WA-005 should avoid side effects after timeout")]
 
     [LocalFixme("dotnet: the message is 'Timeout 1000ms exceeded.', without the 'page.waitForFunction: ' prefix of the call")]
-    public async Task ShouldAvoidSideEffectsAfterTimeout(IPage page)
+    public async Task ShouldAvoidSideEffectsAfterTimeout()
     {
         var counter = 0;
-        page.Console += (_, _) => ++counter;
+        Page.Console += (_, _) => ++counter;
 
-        var error = await Catch(() => page.WaitForFunctionAsync(@"() => {
+        var error = await Catch(() => Page.WaitForFunctionAsync(@"() => {
     window['counter'] = (window['counter'] || 0) + 1;
     console.log(window['counter']);
   }", new { }, new() { PollingInterval = 1, Timeout = 1000 }));
 
         var savedCounter = counter;
-        await page.WaitForTimeoutAsync(2000); // Give it some time to produce more logs.
+        await Page.WaitForTimeoutAsync(2000); // Give it some time to produce more logs.
 
         Assert.That(error.Message, Does.Contain("page.waitForFunction: Timeout 1000ms exceeded"));
         Assert.That(counter, Is.EqualTo(savedCounter));
     }
 
     [UpstreamTest("WA-008 should fail with predicate throwing on first call")]
-    public async Task ShouldFailWithPredicateThrowingOnFirstCall(IPage page)
+    public async Task ShouldFailWithPredicateThrowingOnFirstCall()
     {
-        var error = await Catch(() => page.WaitForFunctionAsync("() => { throw new Error('oh my'); }"));
+        var error = await Catch(() => Page.WaitForFunctionAsync("() => { throw new Error('oh my'); }"));
         Assert.That(error.Message, Does.Contain("oh my"));
     }
 
     [UpstreamTest("WA-009 should fail with predicate throwing sometimes")]
-    public async Task ShouldFailWithPredicateThrowingSometimes(IPage page)
+    public async Task ShouldFailWithPredicateThrowingSometimes()
     {
-        var error = await Catch(() => page.WaitForFunctionAsync(@"() => {
+        var error = await Catch(() => Page.WaitForFunctionAsync(@"() => {
     window['counter'] = (window['counter'] || 0) + 1;
     if (window['counter'] === 3)
       throw new Error('Bad counter!');
@@ -106,38 +106,38 @@ public class PageWaitForFunctionTests
     }
 
     [UpstreamTest("WA-010 should fail with ReferenceError on wrong page")]
-    public async Task ShouldFailWithReferenceErrorOnWrongPage(IPage page)
+    public async Task ShouldFailWithReferenceErrorOnWrongPage()
     {
-        var error = await Catch(() => page.WaitForFunctionAsync("() => globalVar === 123"));
+        var error = await Catch(() => Page.WaitForFunctionAsync("() => globalVar === 123"));
         Assert.That(error.Message, Does.Contain("globalVar"));
     }
 
     [UpstreamTest("WA-011 should work with strict CSP policy")]
-    public async Task ShouldWorkWithStrictCSPPolicy(IPage page, Server server)
+    public async Task ShouldWorkWithStrictCSPPolicy()
     {
-        server.SetCSP("/empty.html", "script-src " + server.Prefix);
-        await page.GotoAsync(server.EmptyPage);
+        Server.SetCSP("/empty.html", "script-src " + Server.Prefix);
+        await Page.GotoAsync(Server.EmptyPage);
         Exception error = null;
         // .NET: waitForFunction(...).catch(e => error = e) is a local function that is called in its place.
         // .NET: { polling: 'raf' } is left out: the .NET option takes an interval only, and 'raf' is the default.
         async Task WaitForFunction()
         {
-            error = await Catch(() => page.WaitForFunctionAsync("() => window['__FOO'] === 'hit'", new { }));
+            error = await Catch(() => Page.WaitForFunctionAsync("() => window['__FOO'] === 'hit'", new { }));
         }
         var p = WaitForFunction();
-        await page.WaitForTimeoutAsync(1000);
-        await page.EvaluateAsync("() => window['__FOO'] = 'hit'");
+        await Page.WaitForTimeoutAsync(1000);
+        await Page.EvaluateAsync("() => window['__FOO'] = 'hit'");
         await p;
         Assert.That(error, Is.Null);
     }
 
     [UpstreamTest("WA-013 should throw negative polling interval")]
-    public async Task ShouldThrowNegativePollingInterval(IPage page)
+    public async Task ShouldThrowNegativePollingInterval()
     {
         Exception error = null;
         try
         {
-            await page.WaitForFunctionAsync("() => !!document.body", new { }, new() { PollingInterval = -10 });
+            await Page.WaitForFunctionAsync("() => !!document.body", new { }, new() { PollingInterval = -10 });
         }
         catch (Exception e)
         {
@@ -148,42 +148,42 @@ public class PageWaitForFunctionTests
     }
 
     [UpstreamTest("WA-014 should return the success value as a JSHandle")]
-    public async Task ShouldReturnTheSuccessValueAsAJSHandle(IPage page)
+    public async Task ShouldReturnTheSuccessValueAsAJSHandle()
     {
-        Assert.That(await (await page.WaitForFunctionAsync("() => 5")).JsonValueAsync<int>(), Is.EqualTo(5));
+        Assert.That(await (await Page.WaitForFunctionAsync("() => 5")).JsonValueAsync<int>(), Is.EqualTo(5));
     }
 
     [UpstreamTest("WA-015 should return the window as a success value")]
-    public async Task ShouldReturnTheWindowAsASuccessValue(IPage page)
+    public async Task ShouldReturnTheWindowAsASuccessValue()
     {
-        Assert.That(await page.WaitForFunctionAsync("() => window"), Is.Not.Null);
+        Assert.That(await Page.WaitForFunctionAsync("() => window"), Is.Not.Null);
     }
 
     [UpstreamTest("WA-016 should accept ElementHandle arguments")]
-    public async Task ShouldAcceptElementHandleArguments(IPage page)
+    public async Task ShouldAcceptElementHandleArguments()
     {
-        await page.SetContentAsync("<div></div>");
-        var div = await page.QuerySelectorAsync("div");
+        await Page.SetContentAsync("<div></div>");
+        var div = await Page.QuerySelectorAsync("div");
         var resolved = false;
         // .NET: waitForFunction(...).then(() => resolved = true) is a local function that is called in its place.
         async Task WaitForFunction()
         {
-            await page.WaitForFunctionAsync("element => !element.parentElement", div);
+            await Page.WaitForFunctionAsync("element => !element.parentElement", div);
             resolved = true;
         }
         var waitForFunction = WaitForFunction();
         Assert.That(resolved, Is.EqualTo(false));
-        await page.EvaluateAsync("element => element.remove()", div);
+        await Page.EvaluateAsync("element => element.remove()", div);
         await waitForFunction;
     }
 
     [UpstreamTest("WA-017 should respect timeout")]
 
     [LocalFixme("dotnet: the message is 'Timeout 10ms exceeded.', without the 'page.waitForFunction: ' prefix of the call")]
-    public async Task ShouldRespectTimeout(IPage page, IPlaywright playwright)
+    public async Task ShouldRespectTimeout()
     {
         Exception error = null;
-        error = await Catch(() => page.WaitForFunctionAsync("false", new { }, new() { Timeout = 10 }));
+        error = await Catch(() => Page.WaitForFunctionAsync("false", new { }, new() { Timeout = 10 }));
         Assert.That(error, Is.Not.Null);
         Assert.That(error.Message, Does.Contain("page.waitForFunction: Timeout 10ms exceeded"));
         Assert.That(error, Is.InstanceOf<TimeoutException>());
@@ -192,81 +192,81 @@ public class PageWaitForFunctionTests
     [UpstreamTest("WA-018 should respect default timeout")]
 
     [LocalFixme("dotnet: the message is 'Timeout 1ms exceeded.', without the 'page.waitForFunction: ' prefix of the call")]
-    public async Task ShouldRespectDefaultTimeout(IPage page, IPlaywright playwright)
+    public async Task ShouldRespectDefaultTimeout()
     {
-        page.SetDefaultTimeout(1);
+        Page.SetDefaultTimeout(1);
         Exception error = null;
-        error = await Catch(() => page.WaitForFunctionAsync("false"));
+        error = await Catch(() => Page.WaitForFunctionAsync("false"));
         Assert.That(error, Is.InstanceOf<TimeoutException>());
         Assert.That(error.Message, Does.Contain("page.waitForFunction: Timeout 1ms exceeded"));
     }
 
     [UpstreamTest("WA-019 should disable timeout when its set to 0")]
-    public async Task ShouldDisableTimeoutWhenItsSetTo0(IPage page)
+    public async Task ShouldDisableTimeoutWhenItsSetTo0()
     {
-        var watchdog = page.WaitForFunctionAsync(@"() => {
+        var watchdog = Page.WaitForFunctionAsync(@"() => {
     window['__counter'] = (window['__counter'] || 0) + 1;
     return window['__injected'];
   }", new { }, new() { Timeout = 0, PollingInterval = 10 });
-        await page.WaitForFunctionAsync("() => window['__counter'] > 10");
-        await page.EvaluateAsync("() => window['__injected'] = true");
+        await Page.WaitForFunctionAsync("() => window['__counter'] > 10");
+        await Page.EvaluateAsync("() => window['__injected'] = true");
         await watchdog;
     }
 
     [UpstreamTest("WA-020 should survive cross-process navigation")]
-    public async Task ShouldSurviveCrossProcessNavigation(IPage page, Server server)
+    public async Task ShouldSurviveCrossProcessNavigation()
     {
         var fooFound = false;
         // .NET: waitForFunction(...).then(() => fooFound = true) is a local function that is called in its place.
         async Task WaitForFunction()
         {
-            await page.WaitForFunctionAsync("window.__FOO === 1");
+            await Page.WaitForFunctionAsync("window.__FOO === 1");
             fooFound = true;
         }
         var waitForFunction = WaitForFunction();
-        await page.GotoAsync(server.EmptyPage);
+        await Page.GotoAsync(Server.EmptyPage);
         Assert.That(fooFound, Is.EqualTo(false));
-        await page.ReloadAsync();
+        await Page.ReloadAsync();
         Assert.That(fooFound, Is.EqualTo(false));
-        await page.GotoAsync(server.CrossProcessPrefix + "/grid.html");
+        await Page.GotoAsync(Server.CrossProcessPrefix + "/grid.html");
         Assert.That(fooFound, Is.EqualTo(false));
-        await page.EvaluateAsync("() => window['__FOO'] = 1");
+        await Page.EvaluateAsync("() => window['__FOO'] = 1");
         await waitForFunction;
         Assert.That(fooFound, Is.EqualTo(true));
     }
 
     [UpstreamTest("WA-021 should survive navigations")]
-    public async Task ShouldSurviveNavigations(IPage page, Server server)
+    public async Task ShouldSurviveNavigations()
     {
-        var watchdog = page.WaitForFunctionAsync("() => window['__done']");
-        await page.GotoAsync(server.EmptyPage);
-        await page.GotoAsync(server.Prefix + "/consolelog.html");
-        await page.EvaluateAsync("() => window['__done'] = true");
+        var watchdog = Page.WaitForFunctionAsync("() => window['__done']");
+        await Page.GotoAsync(Server.EmptyPage);
+        await Page.GotoAsync(Server.Prefix + "/consolelog.html");
+        await Page.EvaluateAsync("() => window['__done'] = true");
         await watchdog;
     }
 
     [UpstreamTest("WA-022 should work with multiline body")]
-    public async Task ShouldWorkWithMultilineBody(IPage page)
+    public async Task ShouldWorkWithMultilineBody()
     {
-        var result = await page.WaitForFunctionAsync(@"
+        var result = await Page.WaitForFunctionAsync(@"
     (() => true)()
   ");
         Assert.That(await result.JsonValueAsync<bool>(), Is.EqualTo(true));
     }
 
     [UpstreamTest("WA-023 should wait for predicate with arguments")]
-    public async Task ShouldWaitForPredicateWithArguments(IPage page)
+    public async Task ShouldWaitForPredicateWithArguments()
     {
-        await page.WaitForFunctionAsync("({ arg1, arg2 }) => arg1 + arg2 === 3", new { arg1 = 1, arg2 = 2 });
+        await Page.WaitForFunctionAsync("({ arg1, arg2 }) => arg1 + arg2 === 3", new { arg1 = 1, arg2 = 2 });
     }
 
     [UpstreamTest("WA-024 should not be called after finishing successfully")]
-    public async Task ShouldNotBeCalledAfterFinishingSuccessfully(IPage page, Server server)
+    public async Task ShouldNotBeCalledAfterFinishingSuccessfully()
     {
-        await page.GotoAsync(server.EmptyPage);
+        await Page.GotoAsync(Server.EmptyPage);
 
         var messages = new List<string>();
-        page.Console += (_, msg) =>
+        Page.Console += (_, msg) =>
         {
             if (msg.Text.StartsWith("waitForFunction", StringComparison.Ordinal))
             {
@@ -274,17 +274,17 @@ public class PageWaitForFunctionTests
             }
         };
 
-        await page.WaitForFunctionAsync(@"() => {
+        await Page.WaitForFunctionAsync(@"() => {
     console.log('waitForFunction1');
     return true;
   }");
-        await page.ReloadAsync();
-        await page.WaitForFunctionAsync(@"() => {
+        await Page.ReloadAsync();
+        await Page.WaitForFunctionAsync(@"() => {
     console.log('waitForFunction2');
     return true;
   }");
-        await page.ReloadAsync();
-        await page.WaitForFunctionAsync(@"() => {
+        await Page.ReloadAsync();
+        await Page.WaitForFunctionAsync(@"() => {
     console.log('waitForFunction3');
     return true;
   }");
@@ -293,12 +293,12 @@ public class PageWaitForFunctionTests
     }
 
     [UpstreamTest("WA-025 should not be called after finishing unsuccessfully")]
-    public async Task ShouldNotBeCalledAfterFinishingUnsuccessfully(IPage page, Server server)
+    public async Task ShouldNotBeCalledAfterFinishingUnsuccessfully()
     {
-        await page.GotoAsync(server.EmptyPage);
+        await Page.GotoAsync(Server.EmptyPage);
 
         var messages = new List<string>();
-        page.Console += (_, msg) =>
+        Page.Console += (_, msg) =>
         {
             if (msg.Text.StartsWith("waitForFunction", StringComparison.Ordinal))
             {
@@ -306,17 +306,17 @@ public class PageWaitForFunctionTests
             }
         };
 
-        await Catch(() => page.WaitForFunctionAsync(@"() => {
+        await Catch(() => Page.WaitForFunctionAsync(@"() => {
     console.log('waitForFunction1');
     throw new Error('waitForFunction1');
   }"));
-        await page.ReloadAsync();
-        await Catch(() => page.WaitForFunctionAsync(@"() => {
+        await Page.ReloadAsync();
+        await Catch(() => Page.WaitForFunctionAsync(@"() => {
     console.log('waitForFunction2');
     throw new Error('waitForFunction2');
   }"));
-        await page.ReloadAsync();
-        await Catch(() => page.WaitForFunctionAsync(@"() => {
+        await Page.ReloadAsync();
+        await Catch(() => Page.WaitForFunctionAsync(@"() => {
     console.log('waitForFunction3');
     throw new Error('waitForFunction3');
   }"));
@@ -327,12 +327,12 @@ public class PageWaitForFunctionTests
     [UpstreamTest("WA-026 should throw when frame is detached")]
 
     [LocalFixme("dotnet: the message is 'Frame was detached', without the 'frame.waitForFunction: ' prefix of the call")]
-    public async Task ShouldThrowWhenFrameIsDetached(IPage page, Server server)
+    public async Task ShouldThrowWhenFrameIsDetached()
     {
-        await AttachFrame(page, "frame1", server.EmptyPage);
-        var frame = page.Frames[1];
+        await AttachFrame(Page, "frame1", Server.EmptyPage);
+        var frame = Page.Frames[1];
         var promise = Catch(() => frame.WaitForFunctionAsync("() => false"));
-        await DetachFrame(page, "frame1");
+        await DetachFrame(Page, "frame1");
         var error = await promise;
         Assert.That(error, Is.Not.Null);
         Assert.That(error.Message, Does.Match("frame.waitForFunction: (Frame was detached|Execution context was destroyed)"));

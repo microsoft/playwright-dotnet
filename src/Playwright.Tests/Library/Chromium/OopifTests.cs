@@ -22,32 +22,33 @@ using static Microsoft.Playwright.Tests.Fixtures.Utils;
 namespace Microsoft.Playwright.Tests.Library.Chromium;
 
 /// <summary>Port of tests/library/chromium/oopif.spec.ts.</summary>
-public class OopifTests
+public class OopifTests : UpstreamBrowserTest
 {
     // .NET: upstream runs the files of library/chromium/ in the Chromium project only.
-    [BeforeEach]
-    public static void Skip(string browserName) => Info.Skip(browserName != "chromium", "chromium only");
+    [SetUp]
+    public void Skip() => Info.Skip(BrowserName != "chromium", "chromium only");
 
-    [Fixture]
-    public static BrowserTypeLaunchOptions LaunchOptions(BrowserTypeLaunchOptions launchOptions) => new(launchOptions) { Args = ["--site-per-process"] };
+    public override BrowserTypeLaunchOptions LaunchOptions() => new(base.LaunchOptions()) { Args = ["--site-per-process"] };
 
     [UpstreamTest("OO-001 should report oopif frames")]
-    public async Task ShouldReportOopifFrames(IPage page, IBrowser browser, Server server)
+    public async Task ShouldReportOopifFrames()
     {
-        await page.GotoAsync(server.Prefix + "/dynamic-oopif.html");
-        await AssertOOPIFCount(browser, 1);
+        var page = await PageFixture();
+        await page.GotoAsync(Server.Prefix + "/dynamic-oopif.html");
+        await AssertOOPIFCount(Browser, 1);
         Assert.That(page.Frames.Count, Is.EqualTo(2));
-        Assert.That(await page.Frames[1].EvaluateAsync<string>("() => '' + location.href"), Is.EqualTo(server.CrossProcessPrefix + "/grid.html"));
+        Assert.That(await page.Frames[1].EvaluateAsync<string>("() => '' + location.href"), Is.EqualTo(Server.CrossProcessPrefix + "/grid.html"));
     }
 
     [UpstreamTest("OO-002 should handle oopif detach")]
-    public async Task ShouldHandleOopifDetach(IPage page, IBrowser browser, Server server)
+    public async Task ShouldHandleOopifDetach()
     {
-        await page.GotoAsync(server.Prefix + "/dynamic-oopif.html");
-        await AssertOOPIFCount(browser, 1);
+        var page = await PageFixture();
+        await page.GotoAsync(Server.Prefix + "/dynamic-oopif.html");
+        await AssertOOPIFCount(Browser, 1);
         Assert.That(page.Frames.Count, Is.EqualTo(2));
         var frame = page.Frames[1];
-        Assert.That(await frame.EvaluateAsync<string>("() => '' + location.href"), Is.EqualTo(server.CrossProcessPrefix + "/grid.html"));
+        Assert.That(await frame.EvaluateAsync<string>("() => '' + location.href"), Is.EqualTo(Server.CrossProcessPrefix + "/grid.html"));
         var (detachedFrame, _) = await PromiseAll(
             Once<IFrame>(h => page.FrameDetached += h, h => page.FrameDetached -= h),
             page.EvaluateAsync("() => document.querySelector('iframe').remove()"));
@@ -55,60 +56,65 @@ public class OopifTests
     }
 
     [UpstreamTest("OO-003 should remove workers of a detached oopif")]
-    public async Task ShouldRemoveWorkersOfADetachedOopif(IPage page, IBrowser browser, Server server)
+    public async Task ShouldRemoveWorkersOfADetachedOopif()
     {
-        await page.GotoAsync(server.EmptyPage);
+        var page = await PageFixture();
+        await page.GotoAsync(Server.EmptyPage);
         var (worker, _) = await PromiseAll(
             page.WaitForWorkerAsync(),
-            AttachFrame(page, "frame1", server.CrossProcessPrefix + "/worker/worker.html"));
-        await AssertOOPIFCount(browser, 1);
+            AttachFrame(page, "frame1", Server.CrossProcessPrefix + "/worker/worker.html"));
+        await AssertOOPIFCount(Browser, 1);
         Assert.That(page.Workers.Count, Is.EqualTo(1));
         await PromiseAll(
             Once<IWorker>(h => worker.Close += h, h => worker.Close -= h),
-            page.GotoAsync(server.Prefix + "/title.html"));
+            page.GotoAsync(Server.Prefix + "/title.html"));
         Assert.That(page.Workers.Count, Is.EqualTo(0));
     }
 
     [UpstreamTest("OO-004 should not hang in unrouteAll when oopif worker is gone")]
-    public async Task ShouldNotHangInUnrouteAllWhenOopifWorkerIsGone(IPage page, IBrowserContext context, IBrowser browser, Server server)
+    public async Task ShouldNotHangInUnrouteAllWhenOopifWorkerIsGone()
     {
+        var page = await PageFixture();
+        var context = await ContextFixture();
         await context.RouteAsync("**/*", route => route.ContinueAsync());
-        await page.GotoAsync(server.EmptyPage);
+        await page.GotoAsync(Server.EmptyPage);
         await PromiseAll(
             page.WaitForWorkerAsync(),
-            AttachFrame(page, "frame1", server.CrossProcessPrefix + "/worker/worker.html"));
-        await AssertOOPIFCount(browser, 1);
-        await page.GotoAsync(server.CrossProcessPrefix + "/title.html");
+            AttachFrame(page, "frame1", Server.CrossProcessPrefix + "/worker/worker.html"));
+        await AssertOOPIFCount(Browser, 1);
+        await page.GotoAsync(Server.CrossProcessPrefix + "/title.html");
         await context.UnrouteAllAsync();
     }
 
     [UpstreamTest("OO-005 should handle remote -> local -> remote transitions")]
-    public async Task ShouldHandleRemoteLocalRemoteTransitions(IPage page, IBrowser browser, Server server)
+    public async Task ShouldHandleRemoteLocalRemoteTransitions()
     {
-        await page.GotoAsync(server.Prefix + "/dynamic-oopif.html");
+        var page = await PageFixture();
+        await page.GotoAsync(Server.Prefix + "/dynamic-oopif.html");
         Assert.That(page.Frames.Count, Is.EqualTo(2));
-        await AssertOOPIFCount(browser, 1);
-        Assert.That(await page.Frames[1].EvaluateAsync<string>("() => '' + location.href"), Is.EqualTo(server.CrossProcessPrefix + "/grid.html"));
+        await AssertOOPIFCount(Browser, 1);
+        Assert.That(await page.Frames[1].EvaluateAsync<string>("() => '' + location.href"), Is.EqualTo(Server.CrossProcessPrefix + "/grid.html"));
         await PromiseAll(
             page.Frames[1].WaitForNavigationAsync(),
             page.EvaluateAsync("goLocal()"));
-        Assert.That(await page.Frames[1].EvaluateAsync<string>("() => '' + location.href"), Is.EqualTo(server.Prefix + "/grid.html"));
-        await AssertOOPIFCount(browser, 0);
+        Assert.That(await page.Frames[1].EvaluateAsync<string>("() => '' + location.href"), Is.EqualTo(Server.Prefix + "/grid.html"));
+        await AssertOOPIFCount(Browser, 0);
         await PromiseAll(
             page.Frames[1].WaitForNavigationAsync(),
             page.EvaluateAsync("goRemote()"));
-        Assert.That(await page.Frames[1].EvaluateAsync<string>("() => '' + location.href"), Is.EqualTo(server.CrossProcessPrefix + "/grid.html"));
-        await AssertOOPIFCount(browser, 1);
+        Assert.That(await page.Frames[1].EvaluateAsync<string>("() => '' + location.href"), Is.EqualTo(Server.CrossProcessPrefix + "/grid.html"));
+        await AssertOOPIFCount(Browser, 1);
     }
 
     [UpstreamTest("OO-006 should get the proper viewport")]
     [Ignore("fixme")]
-    public async Task ShouldGetTheProperViewport(IPage page, IBrowser browser, Server server)
+    public async Task ShouldGetTheProperViewport()
     {
+        var page = await PageFixture();
         ExpectToEqual(page.ViewportSize, new { width = 1280, height = 720 });
-        await page.GotoAsync(server.Prefix + "/dynamic-oopif.html");
+        await page.GotoAsync(Server.Prefix + "/dynamic-oopif.html");
         Assert.That(page.Frames.Count, Is.EqualTo(2));
-        await AssertOOPIFCount(browser, 1);
+        await AssertOOPIFCount(Browser, 1);
         var oopif = page.Frames[1];
         Assert.That(await oopif.EvaluateAsync<int>("() => screen.width"), Is.EqualTo(1280));
         Assert.That(await oopif.EvaluateAsync<int>("() => screen.height"), Is.EqualTo(720));
@@ -124,11 +130,12 @@ public class OopifTests
     }
 
     [UpstreamTest("OO-007 should expose function")]
-    public async Task ShouldExposeFunction(IPage page, IBrowser browser, Server server)
+    public async Task ShouldExposeFunction()
     {
-        await page.GotoAsync(server.Prefix + "/dynamic-oopif.html");
+        var page = await PageFixture();
+        await page.GotoAsync(Server.Prefix + "/dynamic-oopif.html");
         Assert.That(page.Frames.Count, Is.EqualTo(2));
-        await AssertOOPIFCount(browser, 1);
+        await AssertOOPIFCount(Browser, 1);
         var oopif = page.Frames[1];
         await page.ExposeFunctionAsync("mul", (int a, int b) => a * b);
         var result = await oopif.EvaluateAsync<int>(@"async function() {
@@ -138,11 +145,12 @@ public class OopifTests
     }
 
     [UpstreamTest("OO-008 should emulate media")]
-    public async Task ShouldEmulateMedia(IPage page, IBrowser browser, Server server)
+    public async Task ShouldEmulateMedia()
     {
-        await page.GotoAsync(server.Prefix + "/dynamic-oopif.html");
+        var page = await PageFixture();
+        await page.GotoAsync(Server.Prefix + "/dynamic-oopif.html");
         Assert.That(page.Frames.Count, Is.EqualTo(2));
-        await AssertOOPIFCount(browser, 1);
+        await AssertOOPIFCount(Browser, 1);
         var oopif = page.Frames[1];
         Assert.That(await oopif.EvaluateAsync<bool>("() => matchMedia('(prefers-color-scheme: dark)').matches"), Is.EqualTo(false));
         await page.EmulateMediaAsync(new() { ColorScheme = ColorScheme.Dark });
@@ -150,11 +158,12 @@ public class OopifTests
     }
 
     [UpstreamTest("OO-009 should emulate offline")]
-    public async Task ShouldEmulateOffline(IPage page, IBrowser browser, Server server)
+    public async Task ShouldEmulateOffline()
     {
-        await page.GotoAsync(server.Prefix + "/dynamic-oopif.html");
+        var page = await PageFixture();
+        await page.GotoAsync(Server.Prefix + "/dynamic-oopif.html");
         Assert.That(page.Frames.Count, Is.EqualTo(2));
-        await AssertOOPIFCount(browser, 1);
+        await AssertOOPIFCount(Browser, 1);
         var oopif = page.Frames[1];
         Assert.That(await oopif.EvaluateAsync<bool>("() => navigator.onLine"), Is.EqualTo(true));
         await page.Context.SetOfflineAsync(true);
@@ -162,17 +171,17 @@ public class OopifTests
     }
 
     [UpstreamTest("OO-010 should support context options")]
-    public async Task ShouldSupportContextOptions(IBrowser browser, Server server, IPlaywright playwright, BrowserNewContextOptions contextOptions)
+    public async Task ShouldSupportContextOptions()
     {
-        var iPhone = playwright.Devices["iPhone 6"];
-        var context = await browser.NewContextAsync(MergeOptions(new BrowserNewContextOptions(iPhone) { TimezoneId = "America/Jamaica", Locale = "fr-CH", UserAgent = "UA" }, contextOptions));
+        var iPhone = Playwright.Devices["iPhone 6"];
+        var context = await Browser.NewContextAsync(MergeOptions(new BrowserNewContextOptions(iPhone) { TimezoneId = "America/Jamaica", Locale = "fr-CH", UserAgent = "UA" }, ContextOptions()));
         var page = await context.NewPageAsync();
 
         var (request, _) = await PromiseAll(
-            server.WaitForRequest("/grid.html"),
-            page.GotoAsync(server.Prefix + "/dynamic-oopif.html"));
+            Server.WaitForRequest("/grid.html"),
+            page.GotoAsync(Server.Prefix + "/dynamic-oopif.html"));
         Assert.That(page.Frames.Count, Is.EqualTo(2));
-        await AssertOOPIFCount(browser, 1);
+        await AssertOOPIFCount(Browser, 1);
         var oopif = page.Frames[1];
 
         Assert.That(await oopif.EvaluateAsync<bool>("() => 'ontouchstart' in window"), Is.EqualTo(true));
@@ -185,48 +194,52 @@ public class OopifTests
     }
 
     [UpstreamTest("OO-011 should respect route")]
-    public async Task ShouldRespectRoute(IPage page, IBrowser browser, Server server)
+    public async Task ShouldRespectRoute()
     {
+        var page = await PageFixture();
         var intercepted = false;
         await page.RouteAsync("**/digits/0.png", route =>
         {
             intercepted = true;
             IgnoreErrors(route.ContinueAsync());
         });
-        await page.GotoAsync(server.Prefix + "/dynamic-oopif.html");
+        await page.GotoAsync(Server.Prefix + "/dynamic-oopif.html");
         Assert.That(page.Frames.Count, Is.EqualTo(2));
-        await AssertOOPIFCount(browser, 1);
+        await AssertOOPIFCount(Browser, 1);
         Assert.That(intercepted, Is.EqualTo(true));
     }
 
     [UpstreamTest("OO-012 should take screenshot")]
-    public async Task ShouldTakeScreenshot(IPage page, IBrowser browser, Server server)
+    public async Task ShouldTakeScreenshot()
     {
+        var page = await PageFixture();
         await page.SetViewportSizeAsync(500, 500);
-        await page.GotoAsync(server.Prefix + "/dynamic-oopif.html");
+        await page.GotoAsync(Server.Prefix + "/dynamic-oopif.html");
         Assert.That(page.Frames.Count, Is.EqualTo(2));
-        await AssertOOPIFCount(browser, 1);
+        await AssertOOPIFCount(Browser, 1);
         await Rafraf(page.Frames[1]);
         ExpectToMatchSnapshot(await page.ScreenshotAsync(), "screenshot-oopif.png");
     }
 
     [UpstreamTest("OO-013 should load oopif iframes with subresources and route")]
-    public async Task ShouldLoadOopifIframesWithSubresourcesAndRoute(IPage page, IBrowser browser, Server server)
+    public async Task ShouldLoadOopifIframesWithSubresourcesAndRoute()
     {
+        var page = await PageFixture();
         await page.RouteAsync("**/*", route => route.ContinueAsync());
-        await page.GotoAsync(server.Prefix + "/dynamic-oopif.html");
-        await AssertOOPIFCount(browser, 1);
+        await page.GotoAsync(Server.Prefix + "/dynamic-oopif.html");
+        await AssertOOPIFCount(Browser, 1);
     }
 
     [UpstreamTest("OO-014 should report main requests")]
-    public async Task ShouldReportMainRequests(IPage page, IBrowser browser, Server server)
+    public async Task ShouldReportMainRequests()
     {
+        var page = await PageFixture();
         var requestFrames = new List<IFrame>();
         page.Request += (_, r) => requestFrames.Add(r.Frame);
         var finishedFrames = new List<IFrame>();
         page.RequestFinished += (_, r) => finishedFrames.Add(r.Frame);
 
-        await page.GotoAsync(server.Prefix + "/empty.html");
+        await page.GotoAsync(Server.Prefix + "/empty.html");
         var main = page.MainFrame;
 
         await main.EvaluateAsync(@"url => {
@@ -234,7 +247,7 @@ public class OopifTests
     iframe.src = url;
     document.body.appendChild(iframe);
     return new Promise(f => iframe.onload = f);
-  }", server.CrossProcessPrefix + "/empty.html");
+  }", Server.CrossProcessPrefix + "/empty.html");
         Assert.That(page.Frames.Count, Is.EqualTo(2));
         var child = main.ChildFrames[0];
         await child.WaitForLoadStateAsync(LoadState.DOMContentLoaded);
@@ -244,12 +257,12 @@ public class OopifTests
     iframe.src = url;
     document.body.appendChild(iframe);
     return new Promise(f => iframe.onload = f);
-  }", server.Prefix + "/empty.html");
+  }", Server.Prefix + "/empty.html");
         Assert.That(page.Frames.Count, Is.EqualTo(3));
         var grandChild = child.ChildFrames[0];
         await grandChild.WaitForLoadStateAsync(LoadState.DOMContentLoaded);
 
-        await AssertOOPIFCount(browser, 2);
+        await AssertOOPIFCount(Browser, 2);
         Assert.That(requestFrames[0], Is.SameAs(main));
         Assert.That(finishedFrames[0], Is.SameAs(main));
         Assert.That(requestFrames[1], Is.SameAs(child));
@@ -259,12 +272,13 @@ public class OopifTests
     }
 
     [UpstreamTest("OO-015 should support exposeFunction")]
-    public async Task ShouldSupportExposeFunction(IPage page, IBrowser browser, Server server)
+    public async Task ShouldSupportExposeFunction()
     {
+        var page = await PageFixture();
         await page.Context.ExposeFunctionAsync("dec", (int a) => a - 1);
         await page.ExposeFunctionAsync("inc", (int a) => a + 1);
-        await page.GotoAsync(server.Prefix + "/dynamic-oopif.html");
-        await AssertOOPIFCount(browser, 1);
+        await page.GotoAsync(Server.Prefix + "/dynamic-oopif.html");
+        await AssertOOPIFCount(Browser, 1);
         Assert.That(page.Frames.Count, Is.EqualTo(2));
         Assert.That(await page.Frames[0].EvaluateAsync<int>("() => window['inc'](3)"), Is.EqualTo(4));
         Assert.That(await page.Frames[1].EvaluateAsync<int>("() => window['inc'](4)"), Is.EqualTo(5));
@@ -273,14 +287,15 @@ public class OopifTests
     }
 
     [UpstreamTest("OO-016 should support addInitScript")]
-    public async Task ShouldSupportAddInitScript(IPage page, IBrowser browser, Server server)
+    public async Task ShouldSupportAddInitScript()
     {
+        var page = await PageFixture();
         // .NET: AddInitScriptAsync takes the source of a script, not a function: the source calls the function, as the Node.js client does.
         await page.Context.AddInitScriptAsync("(() => window['bar'] = 17)()");
         // .NET: AddInitScriptAsync takes the source of a script, not a function: the source calls the function, as the Node.js client does.
         await page.AddInitScriptAsync("(() => window['foo'] = 42)()");
-        await page.GotoAsync(server.Prefix + "/dynamic-oopif.html");
-        await AssertOOPIFCount(browser, 1);
+        await page.GotoAsync(Server.Prefix + "/dynamic-oopif.html");
+        await AssertOOPIFCount(Browser, 1);
         Assert.That(page.Frames.Count, Is.EqualTo(2));
         Assert.That(await page.Frames[0].EvaluateAsync<int>("() => window['foo']"), Is.EqualTo(42));
         Assert.That(await page.Frames[1].EvaluateAsync<int>("() => window['foo']"), Is.EqualTo(42));
@@ -290,23 +305,24 @@ public class OopifTests
 
     // @see https://github.com/microsoft/playwright/issues/1240
     [UpstreamTest("OO-017 should click a button when it overlays oopif")]
-    public async Task ShouldClickAButtonWhenItOverlaysOopif(IPage page, IBrowser browser, Server server)
+    public async Task ShouldClickAButtonWhenItOverlaysOopif()
     {
-        await page.GotoAsync(server.Prefix + "/button-overlay-oopif.html");
-        await AssertOOPIFCount(browser, 1);
+        var page = await PageFixture();
+        await page.GotoAsync(Server.Prefix + "/button-overlay-oopif.html");
+        await AssertOOPIFCount(Browser, 1);
         await page.ClickAsync("button");
         Assert.That(await page.EvaluateAsync<bool>("() => window['BUTTON_CLICKED']"), Is.EqualTo(true));
     }
 
     [UpstreamTest("OO-018 should report google.com frame with headed")]
-    public async Task ShouldReportGoogleComFrameWithHeaded(IBrowserType browserType, Server server, string channel, BrowserTypeLaunchOptions launchOptions, BrowserNewPageOptions newPageOptions)
+    public async Task ShouldReportGoogleComFrameWithHeaded()
     {
-        Info.Skip(channel == "chromium-headless-shell", "Headless Shell does not support headed mode");
+        Info.Skip(Channel == "chromium-headless-shell", "Headless Shell does not support headed mode");
         // @see https://github.com/GoogleChrome/puppeteer/issues/2548
         // https://google.com is isolated by default in Chromium embedder.
-        var browser = await browserType.LaunchAsync(new(launchOptions) { Headless = false });
-        var page = await browser.NewPageAsync(newPageOptions);
-        await page.GotoAsync(server.EmptyPage);
+        var browser = await BrowserType.LaunchAsync(new(LaunchOptions()) { Headless = false });
+        var page = await browser.NewPageAsync(NewPageOptions());
+        await page.GotoAsync(Server.EmptyPage);
         await page.RouteAsync("**/*", route =>
         {
             IgnoreErrors(route.FulfillAsync(new() { Body = "YO, GOOGLE.COM" }));
@@ -322,16 +338,17 @@ public class OopifTests
         var urls = page.Frames.Select(frame => frame.Url);
         Assert.That(urls, Is.EqualTo(new[]
         {
-            server.EmptyPage,
+            Server.EmptyPage,
             "https://google.com/",
         }));
         await browser.CloseAsync();
     }
 
     [UpstreamTest("OO-019 ElementHandle.boundingBox() should work")]
-    public async Task ElementHandleBoundingBoxShouldWork(IPage page, IBrowser browser, Server server)
+    public async Task ElementHandleBoundingBoxShouldWork()
     {
-        await page.GotoAsync(server.Prefix + "/dynamic-oopif.html");
+        var page = await PageFixture();
+        await page.GotoAsync(Server.Prefix + "/dynamic-oopif.html");
         await page.EvalOnSelectorAsync("iframe", @"iframe => {
     iframe.style.width = '520px';
     iframe.style.height = '520px';
@@ -340,22 +357,23 @@ public class OopifTests
   }");
         await page.Frames[1].GotoAsync(page.Frames[1].Url);
 
-        await AssertOOPIFCount(browser, 1);
+        await AssertOOPIFCount(Browser, 1);
         var handle1 = await page.Frames[1].QuerySelectorAsync(".box:nth-of-type(13)");
         await Expect(async () => ExpectToEqual(await handle1.BoundingBoxAsync(), new { x = 100 + 42, y = 50 + 17, width = 50, height = 50 })).ToPassAsync();
 
         await PromiseAll(
             page.Frames[1].WaitForNavigationAsync(),
             page.EvaluateAsync("goLocal()"));
-        await AssertOOPIFCount(browser, 0);
+        await AssertOOPIFCount(Browser, 0);
         var handle2 = await page.Frames[1].QuerySelectorAsync(".box:nth-of-type(13)");
         await Expect(async () => ExpectToEqual(await handle2.BoundingBoxAsync(), new { x = 100 + 42, y = 50 + 17, width = 50, height = 50 })).ToPassAsync();
     }
 
     [UpstreamTest("OO-020 should click")]
-    public async Task ShouldClick(IPage page, IBrowser browser, Server server)
+    public async Task ShouldClick()
     {
-        await page.GotoAsync(server.Prefix + "/dynamic-oopif.html");
+        var page = await PageFixture();
+        await page.GotoAsync(Server.Prefix + "/dynamic-oopif.html");
         await page.EvalOnSelectorAsync("iframe", @"iframe => {
     iframe.style.width = '500px';
     iframe.style.height = '500px';
@@ -364,7 +382,7 @@ public class OopifTests
   }");
         await page.Frames[1].GotoAsync(page.Frames[1].Url);
 
-        await AssertOOPIFCount(browser, 1);
+        await AssertOOPIFCount(Browser, 1);
         var handle1 = await page.Frames[1].QuerySelectorAsync(".box:nth-of-type(13)");
         await handle1.EvaluateAsync("div => div.addEventListener('click', () => window['_clicked'] = true, false)");
         await handle1.ClickAsync();
@@ -372,11 +390,12 @@ public class OopifTests
     }
 
     [UpstreamTest("OO-021 contentFrame should work")]
-    public async Task ContentFrameShouldWork(IPage page, IBrowser browser, Server server)
+    public async Task ContentFrameShouldWork()
     {
-        await page.GotoAsync(server.Prefix + "/dynamic-oopif.html");
+        var page = await PageFixture();
+        await page.GotoAsync(Server.Prefix + "/dynamic-oopif.html");
         Assert.That(page.Frames.Count, Is.EqualTo(2));
-        await AssertOOPIFCount(browser, 1);
+        await AssertOOPIFCount(Browser, 1);
         Assert.That(await page.Locator("iframe").ContentFrame.Locator("div").CountAsync(), Is.EqualTo(200));
         var oopif = await page.QuerySelectorAsync("iframe");
         var content = await oopif.ContentFrameAsync();
@@ -384,12 +403,13 @@ public class OopifTests
     }
 
     [UpstreamTest("OO-022 should allow cdp sessions on oopifs")]
-    public async Task ShouldAllowCdpSessionsOnOopifs(IPage page, IBrowser browser, Server server)
+    public async Task ShouldAllowCdpSessionsOnOopifs()
     {
-        await page.GotoAsync(server.Prefix + "/dynamic-oopif.html");
-        await AssertOOPIFCount(browser, 1);
+        var page = await PageFixture();
+        await page.GotoAsync(Server.Prefix + "/dynamic-oopif.html");
+        await AssertOOPIFCount(Browser, 1);
         Assert.That(page.Frames.Count, Is.EqualTo(2));
-        Assert.That(await page.Frames[1].EvaluateAsync<string>("() => '' + location.href"), Is.EqualTo(server.CrossProcessPrefix + "/grid.html"));
+        Assert.That(await page.Frames[1].EvaluateAsync<string>("() => '' + location.href"), Is.EqualTo(Server.CrossProcessPrefix + "/grid.html"));
 
         var parentCDP = await page.Context.NewCDPSessionAsync(page.Frames[0]);
         var parent = await parentCDP.SendAsync("DOM.getDocument", new() { ["pierce"] = true, ["depth"] = -1 });
@@ -401,12 +421,13 @@ public class OopifTests
     }
 
     [UpstreamTest("OO-023 should emit filechooser event for iframe")]
-    public async Task ShouldEmitFilechooserEventForIframe(IPage page, Server server, IBrowser browser)
+    public async Task ShouldEmitFilechooserEventForIframe()
     {
+        var page = await PageFixture();
         // Add listener before OOPIF is created.
         var chooserPromise = page.WaitForFileChooserAsync();
-        await page.GotoAsync(server.Prefix + "/dynamic-oopif.html");
-        await AssertOOPIFCount(browser, 1);
+        await page.GotoAsync(Server.Prefix + "/dynamic-oopif.html");
+        await AssertOOPIFCount(Browser, 1);
         Assert.That(page.Frames.Count, Is.EqualTo(2));
         var frame = page.Frames[1];
         await frame.SetContentAsync("<input type=file>");
@@ -417,10 +438,11 @@ public class OopifTests
     }
 
     [UpstreamTest("OO-024 should be able to click in iframe")]
-    public async Task ShouldBeAbleToClickInIframe(IPage page, Server server, IBrowser browser)
+    public async Task ShouldBeAbleToClickInIframe()
     {
-        await page.GotoAsync(server.Prefix + "/dynamic-oopif.html");
-        await AssertOOPIFCount(browser, 1);
+        var page = await PageFixture();
+        await page.GotoAsync(Server.Prefix + "/dynamic-oopif.html");
+        await AssertOOPIFCount(Browser, 1);
         Assert.That(page.Frames.Count, Is.EqualTo(2));
         var frame = page.Frames[1];
         await frame.SetContentAsync("<button onclick=\"console.log('clicked')\">OK</button>");
@@ -431,10 +453,11 @@ public class OopifTests
     }
 
     [UpstreamTest("OO-025 should not throw on exposeFunction when oopif detaches")]
-    public async Task ShouldNotThrowOnExposeFunctionWhenOopifDetaches(IPage page, IBrowser browser, Server server)
+    public async Task ShouldNotThrowOnExposeFunctionWhenOopifDetaches()
     {
-        await page.GotoAsync(server.Prefix + "/dynamic-oopif.html");
-        await AssertOOPIFCount(browser, 1);
+        var page = await PageFixture();
+        await page.GotoAsync(Server.Prefix + "/dynamic-oopif.html");
+        await AssertOOPIFCount(Browser, 1);
         await PromiseAll(
             page.ExposeFunctionAsync("myFunc", () => 2022),
             page.EvaluateAsync("() => document.querySelector('iframe').remove()"));
@@ -442,94 +465,96 @@ public class OopifTests
     }
 
     [UpstreamTest("OO-026 should intercept response body from oopif")]
-    public async Task ShouldInterceptResponseBodyFromOopif(IPage page, IBrowser browser, Server server)
+    public async Task ShouldInterceptResponseBodyFromOopif()
     {
+        var page = await PageFixture();
         var (response, _) = await PromiseAll(
             page.WaitForResponseAsync("**/grid.html"),
-            page.GotoAsync(server.Prefix + "/dynamic-oopif.html"));
+            page.GotoAsync(Server.Prefix + "/dynamic-oopif.html"));
         Assert.That(await response.TextAsync(), Is.Not.Empty);
     }
 
     [UpstreamTest("OO-027 should navigate a local frame to oopif with frame.goto")]
-    public async Task ShouldNavigateALocalFrameToOopifWithFrameGoto(IPage page, IBrowser browser, Server server)
+    public async Task ShouldNavigateALocalFrameToOopifWithFrameGoto()
     {
-        await page.GotoAsync(server.Prefix + "/frames/one-frame.html");
-        await AssertOOPIFCount(browser, 0);
+        var page = await PageFixture();
+        await page.GotoAsync(Server.Prefix + "/frames/one-frame.html");
+        await AssertOOPIFCount(Browser, 0);
         var frame = page.Frames[1];
-        Assert.That(frame.Url, Is.EqualTo(server.Prefix + "/frames/frame.html"));
+        Assert.That(frame.Url, Is.EqualTo(Server.Prefix + "/frames/frame.html"));
 
         var navigations = new List<string>();
         page.FrameNavigated += (_, f) => navigations.Add(f.Url);
 
-        var response = await frame.GotoAsync(server.CrossProcessPrefix + "/grid.html");
-        await AssertOOPIFCount(browser, 1);
-        Assert.That(response.Url, Is.EqualTo(server.CrossProcessPrefix + "/grid.html"));
+        var response = await frame.GotoAsync(Server.CrossProcessPrefix + "/grid.html");
+        await AssertOOPIFCount(Browser, 1);
+        Assert.That(response.Url, Is.EqualTo(Server.CrossProcessPrefix + "/grid.html"));
         Assert.That(response.Frame, Is.SameAs(frame));
-        Assert.That(frame.Url, Is.EqualTo(server.CrossProcessPrefix + "/grid.html"));
-        Assert.That(await frame.EvaluateAsync<string>("() => '' + location.href"), Is.EqualTo(server.CrossProcessPrefix + "/grid.html"));
-        Assert.That(navigations, Is.EqualTo(new[] { server.CrossProcessPrefix + "/grid.html" }));
+        Assert.That(frame.Url, Is.EqualTo(Server.CrossProcessPrefix + "/grid.html"));
+        Assert.That(await frame.EvaluateAsync<string>("() => '' + location.href"), Is.EqualTo(Server.CrossProcessPrefix + "/grid.html"));
+        Assert.That(navigations, Is.EqualTo(new[] { Server.CrossProcessPrefix + "/grid.html" }));
         Assert.That(page.Frames.Count, Is.EqualTo(2));
     }
 
     [UpstreamTest("OO-028 should allow to re-connect to OOPIFs with CDP when iframes were there already")]
-    public async Task ShouldAllowToReConnectToOOPIFsWithCDPWhenIframesWereThereAlready(IBrowserType browserType, Server server, BrowserTypeLaunchOptions launchOptions, BrowserNewPageOptions newPageOptions)
+    public async Task ShouldAllowToReConnectToOOPIFsWithCDPWhenIframesWereThereAlready()
     {
         Info.Skip(!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("PWTEST_CHANNEL")), "Test default channel only");
 
         var cdpPort = 10123 + (Info.ParallelIndex * 4);
-        var hostBrowser = await browserType.LaunchAsync(new(launchOptions) { Channel = "chromium", Args = ["--remote-debugging-port=" + cdpPort] });
-        var hostPage = await hostBrowser.NewPageAsync(newPageOptions);
-        await hostPage.GotoAsync(server.Prefix + "/dynamic-oopif.html");
+        var hostBrowser = await BrowserType.LaunchAsync(new(LaunchOptions()) { Channel = "chromium", Args = ["--remote-debugging-port=" + cdpPort] });
+        var hostPage = await hostBrowser.NewPageAsync(NewPageOptions());
+        await hostPage.GotoAsync(Server.Prefix + "/dynamic-oopif.html");
 
-        var browser = await browserType.ConnectOverCDPAsync($"http://localhost:{cdpPort}");
+        var browser = await BrowserType.ConnectOverCDPAsync($"http://localhost:{cdpPort}");
         var page = browser.Contexts[0].Pages[0];
         Assert.That(page.Frames.Count, Is.EqualTo(2));
         await AssertOOPIFCount(browser, 1);
-        Assert.That(await page.Frames[1].EvaluateAsync<string>("() => '' + location.href"), Is.EqualTo(server.CrossProcessPrefix + "/grid.html"));
+        Assert.That(await page.Frames[1].EvaluateAsync<string>("() => '' + location.href"), Is.EqualTo(Server.CrossProcessPrefix + "/grid.html"));
         await browser.CloseAsync();
         await hostBrowser.CloseAsync();
     }
 
     [UpstreamTest("OO-029 should report the whole frame tree when connecting over CDP to nested OOPIFs")]
-    public async Task ShouldReportTheWholeFrameTreeWhenConnectingOverCDPToNestedOOPIFs(IBrowserType browserType, Server server, BrowserTypeLaunchOptions launchOptions, BrowserNewPageOptions newPageOptions)
+    public async Task ShouldReportTheWholeFrameTreeWhenConnectingOverCDPToNestedOOPIFs()
     {
         Info.Skip(!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("PWTEST_CHANNEL")), "Test default channel only");
 
         // top > cross-site iframe (oopif) > same-process child iframe > sandboxed srcdoc iframe (oopif).
-        server.SetRoute("/nested-top.html", (req, res) =>
+        Server.SetRoute("/nested-top.html", (req, res) =>
         {
             res.SetHeader("Content-Type", "text/html");
-            res.End($"<h1 id=top>TOP</h1><iframe src=\"{server.CrossProcessPrefix}/nested-b.html\"></iframe>");
+            res.End($"<h1 id=top>TOP</h1><iframe src=\"{Server.CrossProcessPrefix}/nested-b.html\"></iframe>");
         });
-        server.SetRoute("/nested-b.html", (req, res) =>
+        Server.SetRoute("/nested-b.html", (req, res) =>
         {
             res.SetHeader("Content-Type", "text/html");
             res.End("<iframe src=\"/nested-c.html\"></iframe>");
         });
-        server.SetRoute("/nested-c.html", (req, res) =>
+        Server.SetRoute("/nested-c.html", (req, res) =>
         {
             res.SetHeader("Content-Type", "text/html");
             res.End("<iframe sandbox=\"allow-scripts\" srcdoc=\"<p>D</p>\"></iframe>");
         });
 
         var cdpPort = 10123 + (Info.ParallelIndex * 4);
-        var hostBrowser = await browserType.LaunchAsync(new(launchOptions)
+        var hostBrowser = await BrowserType.LaunchAsync(new(LaunchOptions())
         {
             Channel = "chromium",
             Args = ["--remote-debugging-port=" + cdpPort, "--site-per-process", "--enable-features=IsolateSandboxedIframes"],
         });
-        var hostPage = await hostBrowser.NewPageAsync(newPageOptions);
-        await hostPage.GotoAsync(server.Prefix + "/nested-top.html");
+        var hostPage = await hostBrowser.NewPageAsync(NewPageOptions());
+        await hostPage.GotoAsync(Server.Prefix + "/nested-top.html");
 
-        var browser = await browserType.ConnectOverCDPAsync($"http://localhost:{cdpPort}");
+        var browser = await BrowserType.ConnectOverCDPAsync($"http://localhost:{cdpPort}");
         await AssertOOPIFCount(browser, 2);
         var page = browser.Contexts[0].Pages[0];
 
         var expectedTree = new[]
         {
-            server.Prefix + "/nested-top.html",
-            "    " + server.CrossProcessPrefix + "/nested-b.html",
-            "        " + server.CrossProcessPrefix + "/nested-c.html",
+            Server.Prefix + "/nested-top.html",
+            "    " + Server.CrossProcessPrefix + "/nested-b.html",
+            "        " + Server.CrossProcessPrefix + "/nested-c.html",
             "            about:srcdoc",
         };
         async Task<List<string>> dumpFrames(IFrame frame, string indent = "")
@@ -545,7 +570,7 @@ public class OopifTests
         Assert.That(await dumpFrames(page.MainFrame), Is.EqualTo(expectedTree));
         Assert.That(page.Frames.Count, Is.EqualTo(4));
 
-        Assert.That(page.Url, Is.EqualTo(server.Prefix + "/nested-top.html"));
+        Assert.That(page.Url, Is.EqualTo(Server.Prefix + "/nested-top.html"));
         Assert.That(await page.EvaluateAsync<bool>("() => window.top === window"), Is.EqualTo(true));
         await Expect(page.Locator("#top")).ToHaveTextAsync("TOP");
         await Expect(page.FrameLocator("iframe").FrameLocator("iframe").FrameLocator("iframe").Locator("p")).ToHaveTextAsync("D");

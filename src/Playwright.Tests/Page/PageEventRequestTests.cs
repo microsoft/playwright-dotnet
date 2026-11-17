@@ -21,182 +21,182 @@ using static Microsoft.Playwright.Tests.Fixtures.Utils;
 namespace Microsoft.Playwright.Tests.Page;
 
 /// <summary>Port of tests/page/page-event-request.spec.ts.</summary>
-public class PageEventRequestTests
+public class PageEventRequestTests : UpstreamPageTest
 {
     [UpstreamTest("NE-091 should fire for navigation requests")]
-    public async Task ShouldFireForNavigationRequests(IPage page, Server server)
+    public async Task ShouldFireForNavigationRequests()
     {
         var requests = new List<IRequest>();
-        page.Request += (_, request) => requests.Add(request);
-        await page.GotoAsync(server.EmptyPage);
+        Page.Request += (_, request) => requests.Add(request);
+        await Page.GotoAsync(Server.EmptyPage);
         Assert.That(requests.Count, Is.EqualTo(1));
     }
 
     [UpstreamTest("NE-092 should fire for iframes")]
-    public async Task ShouldFireForIframes(IPage page, Server server)
+    public async Task ShouldFireForIframes()
     {
         var requests = new List<IRequest>();
-        page.Request += (_, request) => requests.Add(request);
-        await page.GotoAsync(server.EmptyPage);
-        await AttachFrame(page, "frame1", server.EmptyPage);
+        Page.Request += (_, request) => requests.Add(request);
+        await Page.GotoAsync(Server.EmptyPage);
+        await AttachFrame(Page, "frame1", Server.EmptyPage);
         Assert.That(requests.Count, Is.EqualTo(2));
     }
 
     [UpstreamTest("NE-093 should fire for fetches")]
-    public async Task ShouldFireForFetches(IPage page, Server server)
+    public async Task ShouldFireForFetches()
     {
         var requests = new List<IRequest>();
-        page.Request += (_, request) => requests.Add(request);
-        await page.GotoAsync(server.EmptyPage);
-        await page.EvaluateAsync("() => fetch('/empty.html')");
+        Page.Request += (_, request) => requests.Add(request);
+        await Page.GotoAsync(Server.EmptyPage);
+        await Page.EvaluateAsync("() => fetch('/empty.html')");
         Assert.That(requests.Count, Is.EqualTo(2));
     }
 
     [UpstreamTest("NE-094 should fire for fetches with keepalive: true")]
-    public async Task ShouldFireForFetchesWithKeepaliveTrue(IPage page, Server server, string browserName)
+    public async Task ShouldFireForFetchesWithKeepaliveTrue()
     {
         var requests = new List<IRequest>();
-        page.Request += (_, request) => requests.Add(request);
-        await page.GotoAsync(server.EmptyPage);
-        await page.EvaluateAsync("() => fetch('/empty.html', { keepalive: true })");
+        Page.Request += (_, request) => requests.Add(request);
+        await Page.GotoAsync(Server.EmptyPage);
+        await Page.EvaluateAsync("() => fetch('/empty.html', { keepalive: true })");
         Assert.That(requests.Count, Is.EqualTo(2));
     }
 
     [UpstreamTest("NE-095 should report requests and responses handled by service worker")]
-    public async Task ShouldReportRequestsAndResponsesHandledByServiceWorker(IPage page, Server server, bool isAndroid, bool isElectron)
+    public async Task ShouldReportRequestsAndResponsesHandledByServiceWorker()
     {
-        Info.Fixme(isAndroid);
-        Info.Fixme(isElectron);
+        Info.Fixme(IsAndroid);
+        Info.Fixme(IsElectron);
 
-        await page.GotoAsync(server.Prefix + "/serviceworkers/fetchdummy/sw.html");
-        await page.EvaluateAsync("() => window['activationPromise']");
+        await Page.GotoAsync(Server.Prefix + "/serviceworkers/fetchdummy/sw.html");
+        await Page.EvaluateAsync("() => window['activationPromise']");
         var (request, swResponse) = await PromiseAll(
-            page.WaitForRequestAsync(_ => true),
-            page.EvaluateAsync<string>("() => window['fetchDummy']('foo')"));
+            Page.WaitForRequestAsync(_ => true),
+            Page.EvaluateAsync<string>("() => window['fetchDummy']('foo')"));
         Assert.That(swResponse, Is.EqualTo("responseFromServiceWorker:foo"));
-        Assert.That(request.Url, Is.EqualTo(server.Prefix + "/serviceworkers/fetchdummy/foo"));
+        Assert.That(request.Url, Is.EqualTo(Server.Prefix + "/serviceworkers/fetchdummy/foo"));
         // .NET: expect(request.serviceWorker()).toBe(null) is left out: request.serviceWorker() is not in the .NET API.
         var response = await request.ResponseAsync();
-        Assert.That(response.Url, Is.EqualTo(server.Prefix + "/serviceworkers/fetchdummy/foo"));
+        Assert.That(response.Url, Is.EqualTo(Server.Prefix + "/serviceworkers/fetchdummy/foo"));
         Assert.That(await response.TextAsync(), Is.EqualTo("responseFromServiceWorker:foo"));
         Assert.That(response.FromServiceWorker, Is.EqualTo(true));
 
         var (failedRequest, _) = await PromiseAll(
-            Once<IRequest>(h => page.RequestFailed += h, h => page.RequestFailed -= h),
-            Catch(() => page.EvaluateAsync("() => window['fetchDummy']('error')")));
-        Assert.That(failedRequest.Url, Is.EqualTo(server.Prefix + "/serviceworkers/fetchdummy/error"));
+            Once<IRequest>(h => Page.RequestFailed += h, h => Page.RequestFailed -= h),
+            Catch(() => Page.EvaluateAsync("() => window['fetchDummy']('error')")));
+        Assert.That(failedRequest.Url, Is.EqualTo(Server.Prefix + "/serviceworkers/fetchdummy/error"));
         Assert.That(failedRequest.Failure, Is.Not.Null);
         // .NET: expect(failedRequest.serviceWorker()).toBe(null) is left out: request.serviceWorker() is not in the .NET API.
         Assert.That(await failedRequest.ResponseAsync(), Is.Null);
     }
 
     [UpstreamTest("NE-096 should report requests and responses handled by service worker with routing")]
-    public async Task ShouldReportRequestsAndResponsesHandledByServiceWorkerWithRouting(IPage page, Server server, bool isAndroid, bool isElectron, string mode, string browserName, string platform)
+    public async Task ShouldReportRequestsAndResponsesHandledByServiceWorkerWithRouting()
     {
-        Info.Fixme(isAndroid);
-        Info.Fixme(isElectron);
+        Info.Fixme(IsAndroid);
+        Info.Fixme(IsElectron);
 
         var interceptedUrls = new List<string>();
-        await page.RouteAsync("**/*", route =>
+        await Page.RouteAsync("**/*", route =>
         {
             interceptedUrls.Add(route.Request.Url);
             IgnoreErrors(route.ContinueAsync());
         });
-        await page.GotoAsync(server.Prefix + "/serviceworkers/fetchdummy/sw.html");
-        await page.EvaluateAsync("() => window['activationPromise']");
+        await Page.GotoAsync(Server.Prefix + "/serviceworkers/fetchdummy/sw.html");
+        await Page.EvaluateAsync("() => window['activationPromise']");
         var (swResponse, request) = await PromiseAll(
-            page.EvaluateAsync<string>("() => window['fetchDummy']('foo')"),
-            page.WaitForRequestAsync(_ => true));
+            Page.EvaluateAsync<string>("() => window['fetchDummy']('foo')"),
+            Page.WaitForRequestAsync(_ => true));
         Assert.That(swResponse, Is.EqualTo("responseFromServiceWorker:foo"));
-        Assert.That(request.Url, Is.EqualTo(server.Prefix + "/serviceworkers/fetchdummy/foo"));
+        Assert.That(request.Url, Is.EqualTo(Server.Prefix + "/serviceworkers/fetchdummy/foo"));
         // .NET: expect(request.serviceWorker()).toBe(null) is left out: request.serviceWorker() is not in the .NET API.
         var response = await request.ResponseAsync();
-        Assert.That(response.Url, Is.EqualTo(server.Prefix + "/serviceworkers/fetchdummy/foo"));
+        Assert.That(response.Url, Is.EqualTo(Server.Prefix + "/serviceworkers/fetchdummy/foo"));
         Assert.That(await response.TextAsync(), Is.EqualTo("responseFromServiceWorker:foo"));
 
         var (failedRequest, _) = await PromiseAll(
-            Once<IRequest>(h => page.RequestFailed += h, h => page.RequestFailed -= h),
-            Catch(() => page.EvaluateAsync("() => window['fetchDummy']('error')")));
-        Assert.That(failedRequest.Url, Is.EqualTo(server.Prefix + "/serviceworkers/fetchdummy/error"));
+            Once<IRequest>(h => Page.RequestFailed += h, h => Page.RequestFailed -= h),
+            Catch(() => Page.EvaluateAsync("() => window['fetchDummy']('error')")));
+        Assert.That(failedRequest.Url, Is.EqualTo(Server.Prefix + "/serviceworkers/fetchdummy/error"));
         Assert.That(failedRequest.Failure, Is.Not.Null);
         // .NET: expect(failedRequest.serviceWorker()).toBe(null) is left out: request.serviceWorker() is not in the .NET API.
         Assert.That(await failedRequest.ResponseAsync(), Is.Null);
 
-        var expectedUrls = new List<string> { server.Prefix + "/serviceworkers/fetchdummy/sw.html" };
-        if (browserName == "webkit")
+        var expectedUrls = new List<string> { Server.Prefix + "/serviceworkers/fetchdummy/sw.html" };
+        if (BrowserName == "webkit")
         {
-            expectedUrls.Add(server.Prefix + "/serviceworkers/fetchdummy/sw.js");
+            expectedUrls.Add(Server.Prefix + "/serviceworkers/fetchdummy/sw.js");
         }
         Assert.That(interceptedUrls, Is.EqualTo(expectedUrls));
     }
 
     [UpstreamTest("NE-097 should report navigation requests and responses handled by service worker")]
-    public async Task ShouldReportNavigationRequestsAndResponsesHandledByServiceWorker(IPage page, Server server, bool isAndroid, string browserName)
+    public async Task ShouldReportNavigationRequestsAndResponsesHandledByServiceWorker()
     {
-        Info.Fixme(isAndroid);
+        Info.Fixme(IsAndroid);
 
-        await page.GotoAsync(server.Prefix + "/serviceworkers/stub/sw.html");
-        await page.EvaluateAsync("() => window['activationPromise']");
+        await Page.GotoAsync(Server.Prefix + "/serviceworkers/stub/sw.html");
+        await Page.EvaluateAsync("() => window['activationPromise']");
 
-        var reloadResponse = await page.ReloadAsync();
-        Assert.That(await page.EvaluateAsync<bool>("window.fromSW"), Is.EqualTo(true));
-        Assert.That(reloadResponse.Url, Is.EqualTo(server.Prefix + "/serviceworkers/stub/sw.html"));
-        await page.EvaluateAsync("() => window['activationPromise']");
+        var reloadResponse = await Page.ReloadAsync();
+        Assert.That(await Page.EvaluateAsync<bool>("window.fromSW"), Is.EqualTo(true));
+        Assert.That(reloadResponse.Url, Is.EqualTo(Server.Prefix + "/serviceworkers/stub/sw.html"));
+        await Page.EvaluateAsync("() => window['activationPromise']");
 
-        if (browserName != "firefox")
+        if (BrowserName != "firefox")
         {
             // When SW fetch throws, Firefox does not fail the navigation,
             // but rather falls back to the real network.
 
             var (_, failedRequest) = await PromiseAll(
-                page.EvaluateAsync(@"() => {
+                Page.EvaluateAsync(@"() => {
         window.location.href = '/serviceworkers/stub/error.html';
       }"),
-                Once<IRequest>(h => page.RequestFailed += h, h => page.RequestFailed -= h));
-            Assert.That(failedRequest.Url, Is.EqualTo(server.Prefix + "/serviceworkers/stub/error.html"));
-            Assert.That(failedRequest.Failure, Does.Contain(browserName == "chromium" ? "net::ERR_FAILED" : "uh oh"));
+                Once<IRequest>(h => Page.RequestFailed += h, h => Page.RequestFailed -= h));
+            Assert.That(failedRequest.Url, Is.EqualTo(Server.Prefix + "/serviceworkers/stub/error.html"));
+            Assert.That(failedRequest.Failure, Does.Contain(BrowserName == "chromium" ? "net::ERR_FAILED" : "uh oh"));
             // .NET: expect(failedRequest.serviceWorker()).toBe(null) is left out: request.serviceWorker() is not in the .NET API.
             Assert.That(await failedRequest.ResponseAsync(), Is.Null);
         }
     }
 
     [UpstreamTest("NE-098 should report navigation requests and responses handled by service worker with routing")]
-    public async Task ShouldReportNavigationRequestsAndResponsesHandledByServiceWorkerWithRouting(IPage page, Server server, bool isAndroid, string browserName)
+    public async Task ShouldReportNavigationRequestsAndResponsesHandledByServiceWorkerWithRouting()
     {
-        Info.Fixme(isAndroid);
+        Info.Fixme(IsAndroid);
 
-        await page.RouteAsync("**/*", route => route.ContinueAsync());
-        await page.GotoAsync(server.Prefix + "/serviceworkers/stub/sw.html");
-        await page.EvaluateAsync("() => window['activationPromise']");
+        await Page.RouteAsync("**/*", route => route.ContinueAsync());
+        await Page.GotoAsync(Server.Prefix + "/serviceworkers/stub/sw.html");
+        await Page.EvaluateAsync("() => window['activationPromise']");
 
-        var reloadResponse = await page.ReloadAsync();
-        Assert.That(await page.EvaluateAsync<bool>("window.fromSW"), Is.EqualTo(true));
-        Assert.That(reloadResponse.Url, Is.EqualTo(server.Prefix + "/serviceworkers/stub/sw.html"));
-        await page.EvaluateAsync("() => window['activationPromise']");
+        var reloadResponse = await Page.ReloadAsync();
+        Assert.That(await Page.EvaluateAsync<bool>("window.fromSW"), Is.EqualTo(true));
+        Assert.That(reloadResponse.Url, Is.EqualTo(Server.Prefix + "/serviceworkers/stub/sw.html"));
+        await Page.EvaluateAsync("() => window['activationPromise']");
 
-        if (browserName != "firefox")
+        if (BrowserName != "firefox")
         {
             // When SW fetch throws, Firefox does not fail the navigation,
             // but rather falls back to the real network.
 
             var (_, failedRequest) = await PromiseAll(
-                page.EvaluateAsync(@"() => {
+                Page.EvaluateAsync(@"() => {
         window.location.href = '/serviceworkers/stub/error.html';
         // eslint-disable-next-line
         undefined
       }"),
-                Once<IRequest>(h => page.RequestFailed += h, h => page.RequestFailed -= h));
-            Assert.That(failedRequest.Url, Is.EqualTo(server.Prefix + "/serviceworkers/stub/error.html"));
-            Assert.That(failedRequest.Failure, Does.Contain(browserName == "chromium" ? "net::ERR_FAILED" : "uh oh"));
+                Once<IRequest>(h => Page.RequestFailed += h, h => Page.RequestFailed -= h));
+            Assert.That(failedRequest.Url, Is.EqualTo(Server.Prefix + "/serviceworkers/stub/error.html"));
+            Assert.That(failedRequest.Failure, Does.Contain(BrowserName == "chromium" ? "net::ERR_FAILED" : "uh oh"));
             // .NET: expect(failedRequest.serviceWorker()).toBe(null) is left out: request.serviceWorker() is not in the .NET API.
             Assert.That(await failedRequest.ResponseAsync(), Is.Null);
         }
     }
 
     [UpstreamTest("NE-099 should return response body when Cross-Origin-Opener-Policy is set")]
-    public async Task ShouldReturnResponseBodyWhenCrossOriginOpenerPolicyIsSet(IPage page, Server server, string browserName)
+    public async Task ShouldReturnResponseBodyWhenCrossOriginOpenerPolicyIsSet()
     {
-        server.SetRoute("/empty.html", (req, res) =>
+        Server.SetRoute("/empty.html", (req, res) =>
         {
             res.SetHeader("Cross-Origin-Opener-Policy", "same-origin");
             // Note: without 'onload', Firefox sometimes does not fire the load event
@@ -206,30 +206,30 @@ public class PageEventRequestTests
       <script>window.onload = () => console.log('onload')</script>
     ");
         });
-        var response = await page.GotoAsync(server.EmptyPage);
-        Assert.That(page.Url, Is.EqualTo(server.EmptyPage));
+        var response = await Page.GotoAsync(Server.EmptyPage);
+        Assert.That(Page.Url, Is.EqualTo(Server.EmptyPage));
         await response.FinishedAsync();
         Assert.That(response.Request.Failure, Is.Null);
         Assert.That(await response.TextAsync(), Does.Contain("Hello there!"));
     }
 
     [UpstreamTest("NE-100 should fire requestfailed when intercepting race")]
-    public async Task ShouldFireRequestfailedWhenInterceptingRace(IPage page, Server server, string browserName)
+    public async Task ShouldFireRequestfailedWhenInterceptingRace()
     {
-        Info.Skip(browserName != "chromium", "This test is specifically testing Chromium race");
+        Info.Skip(BrowserName != "chromium", "This test is specifically testing Chromium race");
 
         var promise = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
         {
             var counter = 0;
             var failures = new HashSet<IRequest>();
             var alive = new HashSet<IRequest>();
-            page.Request += (_, request) =>
+            Page.Request += (_, request) =>
             {
                 Assert.That(alive.Contains(request), Is.EqualTo(false));
                 Assert.That(failures.Contains(request), Is.EqualTo(false));
                 alive.Add(request);
             };
-            page.RequestFailed += (_, request) =>
+            Page.RequestFailed += (_, request) =>
             {
                 Assert.That(failures.Contains(request), Is.EqualTo(false));
                 Assert.That(alive.Contains(request), Is.EqualTo(true));
@@ -243,19 +243,19 @@ public class PageEventRequestTests
         }
 
         // Stall requests to make sure we don't get requestfinished.
-        await page.RouteAsync("**", route => { });
+        await Page.RouteAsync("**", route => { });
 
-        await page.SetContentAsync($@"
-    <iframe src=""{server.EmptyPage}""></iframe>
-    <iframe src=""{server.EmptyPage}""></iframe>
-    <iframe src=""{server.EmptyPage}""></iframe>
-    <iframe src=""{server.EmptyPage}""></iframe>
-    <iframe src=""{server.EmptyPage}""></iframe>
-    <iframe src=""{server.EmptyPage}""></iframe>
-    <iframe src=""{server.EmptyPage}""></iframe>
-    <iframe src=""{server.EmptyPage}""></iframe>
-    <iframe src=""{server.EmptyPage}""></iframe>
-    <iframe src=""{server.EmptyPage}""></iframe>
+        await Page.SetContentAsync($@"
+    <iframe src=""{Server.EmptyPage}""></iframe>
+    <iframe src=""{Server.EmptyPage}""></iframe>
+    <iframe src=""{Server.EmptyPage}""></iframe>
+    <iframe src=""{Server.EmptyPage}""></iframe>
+    <iframe src=""{Server.EmptyPage}""></iframe>
+    <iframe src=""{Server.EmptyPage}""></iframe>
+    <iframe src=""{Server.EmptyPage}""></iframe>
+    <iframe src=""{Server.EmptyPage}""></iframe>
+    <iframe src=""{Server.EmptyPage}""></iframe>
+    <iframe src=""{Server.EmptyPage}""></iframe>
     <script>
       function abortAll() {{
         const frames = document.querySelectorAll(""iframe"");
@@ -270,12 +270,12 @@ public class PageEventRequestTests
     }
 
     [UpstreamTest("NE-101 main resource xhr should have type xhr")]
-    public async Task MainResourceXhrShouldHaveTypeXhr(IPage page, Server server)
+    public async Task MainResourceXhrShouldHaveTypeXhr()
     {
-        await page.GotoAsync(server.EmptyPage);
+        await Page.GotoAsync(Server.EmptyPage);
         var (request, _) = await PromiseAll(
-            page.WaitForRequestAsync(_ => true),
-            page.EvaluateAsync(@"() => {
+            Page.WaitForRequestAsync(_ => true),
+            Page.EvaluateAsync(@"() => {
       const x = new XMLHttpRequest();
       x.open('GET', location.href, false);
       x.send();
@@ -285,66 +285,66 @@ public class PageEventRequestTests
     }
 
     [UpstreamTest("NE-102 should finish 204 request")]
-    public async Task ShouldFinish204Request(IPage page, Server server)
+    public async Task ShouldFinish204Request()
     {
-        server.SetRoute("/204", (req, res) =>
+        Server.SetRoute("/204", (req, res) =>
         {
             res.WriteHead(204, new() { ["Content-type"] = "text/plain" });
             res.End();
         });
-        await page.GotoAsync(server.EmptyPage);
+        await Page.GotoAsync(Server.EmptyPage);
         // .NET: page.waitForEvent('requestfailed', ...).then(() => 'requestfailed') and page.waitForEvent('requestfinished', ...).then(() => 'requestfinished') are local functions that are called in their place.
         async Task<string> RequestFailed()
         {
-            await Once<IRequest>(h => page.RequestFailed += h, h => page.RequestFailed -= h, r => r.Url.EndsWith("/204", StringComparison.Ordinal));
+            await Once<IRequest>(h => Page.RequestFailed += h, h => Page.RequestFailed -= h, r => r.Url.EndsWith("/204", StringComparison.Ordinal));
             return "requestfailed";
         }
         async Task<string> RequestFinished()
         {
-            await page.WaitForRequestFinishedAsync(new() { Predicate = r => r.Url.EndsWith("/204", StringComparison.Ordinal) });
+            await Page.WaitForRequestFinishedAsync(new() { Predicate = r => r.Url.EndsWith("/204", StringComparison.Ordinal) });
             return "requestfinished";
         }
         var reqPromise = Task.WhenAny(
             RequestFailed(),
             RequestFinished());
-        IgnoreErrors(page.EvaluateAsync("async url => { await fetch(url); }", server.Prefix + "/204"));
+        IgnoreErrors(Page.EvaluateAsync("async url => { await fetch(url); }", Server.Prefix + "/204"));
         Assert.That(await await reqPromise, Is.EqualTo("requestfinished"));
     }
 
     [UpstreamTest("NE-103 should fail 204 navigation request")]
-    public async Task ShouldFail204NavigationRequest(IPage page, Server server)
+    public async Task ShouldFail204NavigationRequest()
     {
-        server.SetRoute("/204", (req, res) =>
+        Server.SetRoute("/204", (req, res) =>
         {
             res.StatusCode = 204;
             res.End();
         });
-        await page.GotoAsync(server.EmptyPage);
+        await Page.GotoAsync(Server.EmptyPage);
         // .NET: page.waitForEvent('requestfailed', ...).then(() => 'requestfailed') and page.waitForEvent('requestfinished', ...).then(() => 'requestfinished') are local functions that are called in their place.
         async Task<string> RequestFailed()
         {
-            await Once<IRequest>(h => page.RequestFailed += h, h => page.RequestFailed -= h, r => r.Url.EndsWith("/204", StringComparison.Ordinal));
+            await Once<IRequest>(h => Page.RequestFailed += h, h => Page.RequestFailed -= h, r => r.Url.EndsWith("/204", StringComparison.Ordinal));
             return "requestfailed";
         }
         async Task<string> RequestFinished()
         {
-            await page.WaitForRequestFinishedAsync(new() { Predicate = r => r.Url.EndsWith("/204", StringComparison.Ordinal) });
+            await Page.WaitForRequestFinishedAsync(new() { Predicate = r => r.Url.EndsWith("/204", StringComparison.Ordinal) });
             return "requestfinished";
         }
         var reqPromise = Task.WhenAny(
             RequestFailed(),
             RequestFinished());
-        await page.SetContentAsync($"<a href=\"{server.Prefix}/204\">link</a>");
-        await page.ClickAsync("a", new() { NoWaitAfter = true });
+        await Page.SetContentAsync($"<a href=\"{Server.Prefix}/204\">link</a>");
+        await Page.ClickAsync("a", new() { NoWaitAfter = true });
         Assert.That(await await reqPromise, Is.EqualTo("requestfailed"));
     }
 
     [UpstreamTest("NE-104 <picture> resource should have type image")]
-    public async Task PictureResourceShouldHaveTypeImage(IPage page)
+    public async Task PictureResourceShouldHaveTypeImage()
     {
         var request = await PromiseAll(
-            page.WaitForRequestAsync(_ => true),
-            page.SetContentAsync(@"
+            Page.WaitForRequestAsync(_ => true),
+            Page.SetContentAsync(@"
       <picture>
         <source>
           <img src=""https://www.wikipedia.org/portal/wikipedia.org/assets/img/Wikipedia-logo-v2@2x.png"">
@@ -358,10 +358,10 @@ public class PageEventRequestTests
     // WebKit: no requestWillBeSent event in the protocol for OPTIONS (at least on Mac).
     // Firefox: OPTIONS request can be dispatched.
     [UpstreamTest("NE-105 should not expose preflight OPTIONS request")]
-    public async Task ShouldNotExposePreflightOPTIONSRequest(IPage page, Server server, string browserName)
+    public async Task ShouldNotExposePreflightOPTIONSRequest()
     {
         var serverRequests = new List<string>();
-        server.SetRoute("/cors", (req, res) =>
+        Server.SetRoute("/cors", (req, res) =>
         {
             serverRequests.Add($"{req.Method} {req.Url}");
             if (req.Method == "OPTIONS")
@@ -379,7 +379,7 @@ public class PageEventRequestTests
             res.End("Hello there!");
         });
         var clientRequests = new List<string>();
-        page.Request += (_, request) =>
+        Page.Request += (_, request) =>
         {
             clientRequests.Add($"{request.Method} {request.Url}");
         };
@@ -387,7 +387,7 @@ public class PageEventRequestTests
         string response = null;
         try
         {
-            response = await page.EvaluateAsync<string>(
+            response = await Page.EvaluateAsync<string>(
                 @"async url => {
     const response = await fetch(url, {
       method: 'POST',
@@ -399,7 +399,7 @@ public class PageEventRequestTests
     });
     return await response.text();
   }",
-                server.CrossProcessPrefix + "/cors");
+                Server.CrossProcessPrefix + "/cors");
         }
         catch (Exception)
         {
@@ -412,15 +412,15 @@ public class PageEventRequestTests
         }));
         Assert.That(clientRequests, Is.EqualTo(new[]
         {
-            $"POST {server.CrossProcessPrefix}/cors",
+            $"POST {Server.CrossProcessPrefix}/cors",
         }));
     }
 
     [UpstreamTest("NE-106 should not expose preflight OPTIONS request with network interception")]
-    public async Task ShouldNotExposePreflightOPTIONSRequestWithNetworkInterception(IPage page, Server server, string browserName, bool isBidi)
+    public async Task ShouldNotExposePreflightOPTIONSRequestWithNetworkInterception()
     {
         var serverRequests = new List<string>();
-        server.SetRoute("/cors", (req, res) =>
+        Server.SetRoute("/cors", (req, res) =>
         {
             serverRequests.Add($"{req.Method} {req.Url}");
             if (req.Method == "OPTIONS")
@@ -437,9 +437,9 @@ public class PageEventRequestTests
             res.WriteHead(200, new() { ["Content-type"] = "text/plain", ["Access-Control-Allow-Origin"] = "*" });
             res.End("Hello there!");
         });
-        await page.RouteAsync("**/*", route => route.ContinueAsync());
+        await Page.RouteAsync("**/*", route => route.ContinueAsync());
         var clientRequests = new List<string>();
-        page.Request += (_, request) =>
+        Page.Request += (_, request) =>
         {
             clientRequests.Add($"{request.Method} {request.Url}");
         };
@@ -447,7 +447,7 @@ public class PageEventRequestTests
         string response = null;
         try
         {
-            response = await page.EvaluateAsync<string>(
+            response = await Page.EvaluateAsync<string>(
                 @"async url => {
     const response = await fetch(url, {
       method: 'POST',
@@ -459,43 +459,43 @@ public class PageEventRequestTests
     });
     return await response.text();
   }",
-                server.CrossProcessPrefix + "/cors");
+                Server.CrossProcessPrefix + "/cors");
         }
         catch (Exception)
         {
         }
         Assert.That(response, Is.EqualTo("Hello there!"));
         Assert.That(serverRequests, Is.EqualTo((string[])[
-            .. (browserName == "chromium" || isBidi ? [] : new[] { "OPTIONS /cors" }),
+            .. (BrowserName == "chromium" || IsBidi ? [] : new[] { "OPTIONS /cors" }),
             "POST /cors",
         ]));
         Assert.That(clientRequests, Is.EqualTo(new[]
         {
-            $"POST {server.CrossProcessPrefix}/cors",
+            $"POST {Server.CrossProcessPrefix}/cors",
         }));
     }
 
     [UpstreamTest("NE-107 should return last requests")]
-    public async Task ShouldReturnLastRequests(IPage page, Server server)
+    public async Task ShouldReturnLastRequests()
     {
-        await page.GotoAsync(server.Prefix + "/title.html");
+        await Page.GotoAsync(Server.Prefix + "/title.html");
         for (var i = 0; i < 200; ++i)
         {
-            server.SetRoute("/fetch?" + i, (req, res) => res.End("url:" + server.Prefix + req.Url));
+            Server.SetRoute("/fetch?" + i, (req, res) => res.End("url:" + Server.Prefix + req.Url));
         }
 
         // #0 is the navigation request, so start with #1.
         for (var i = 0; i < 99; ++i)
         {
-            await page.EvaluateAsync("url => fetch(url)", server.Prefix + "/fetch?" + i);
+            await Page.EvaluateAsync("url => fetch(url)", Server.Prefix + "/fetch?" + i);
         }
-        var first99Requests = (await page.RequestsAsync()).ToList();
+        var first99Requests = (await Page.RequestsAsync()).ToList();
         first99Requests.RemoveAt(0);
         for (var i = 99; i < 199; ++i)
         {
-            await page.EvaluateAsync("url => fetch(url)", server.Prefix + "/fetch?" + i);
+            await Page.EvaluateAsync("url => fetch(url)", Server.Prefix + "/fetch?" + i);
         }
-        var last100Requests = await page.RequestsAsync();
+        var last100Requests = await Page.RequestsAsync();
         IRequest[] allRequests = [.. first99Requests, .. last100Requests];
 
         // All 199 requests are fully functional.
@@ -507,7 +507,7 @@ public class PageEventRequestTests
         var expected = new List<object>();
         for (var i = 0; i < 199; ++i)
         {
-            var url = server.Prefix + "/fetch?" + i;
+            var url = Server.Prefix + "/fetch?" + i;
             expected.Add(new { url, text = "url:" + url });
         }
         ExpectToEqual(received, expected);

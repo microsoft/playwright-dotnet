@@ -24,7 +24,7 @@ using static Microsoft.Playwright.Tests.Fixtures.Utils;
 namespace Microsoft.Playwright.Tests.Page;
 
 /// <summary>Port of tests/page/page-network-request.spec.ts.</summary>
-public class PageNetworkRequestTests
+public class PageNetworkRequestTests : UpstreamPageTest
 {
     private static Dictionary<string, string> AdjustServerHeaders(ServerHeaders headers, string browserName)
     {
@@ -38,116 +38,116 @@ public class PageNetworkRequestTests
     }
 
     [UpstreamTest("NE-001 should work for main frame navigation request")]
-    public async Task ShouldWorkForMainFrameNavigationRequest(IPage page, Server server)
+    public async Task ShouldWorkForMainFrameNavigationRequest()
     {
         var requests = new List<IRequest>();
-        page.Request += (_, request) => requests.Add(request);
-        await page.GotoAsync(server.EmptyPage);
+        Page.Request += (_, request) => requests.Add(request);
+        await Page.GotoAsync(Server.EmptyPage);
         Assert.That(requests.Count, Is.EqualTo(1));
-        Assert.That(requests[0].Frame, Is.SameAs(page.MainFrame));
+        Assert.That(requests[0].Frame, Is.SameAs(Page.MainFrame));
     }
 
     [UpstreamTest("NE-002 should work for subframe navigation request")]
-    public async Task ShouldWorkForSubframeNavigationRequest(IPage page, Server server)
+    public async Task ShouldWorkForSubframeNavigationRequest()
     {
-        await page.GotoAsync(server.EmptyPage);
+        await Page.GotoAsync(Server.EmptyPage);
         var requests = new List<IRequest>();
-        page.Request += (_, request) => requests.Add(request);
-        await AttachFrame(page, "frame1", server.EmptyPage);
+        Page.Request += (_, request) => requests.Add(request);
+        await AttachFrame(Page, "frame1", Server.EmptyPage);
         Assert.That(requests.Count, Is.EqualTo(1));
-        Assert.That(requests[0].Frame, Is.SameAs(page.Frames[1]));
+        Assert.That(requests[0].Frame, Is.SameAs(Page.Frames[1]));
     }
 
     [UpstreamTest("NE-003 should work for fetch requests @smoke")]
-    public async Task ShouldWorkForFetchRequests(IPage page, Server server)
+    public async Task ShouldWorkForFetchRequests()
     {
-        await page.GotoAsync(server.EmptyPage);
+        await Page.GotoAsync(Server.EmptyPage);
         var requests = new List<IRequest>();
-        page.Request += (_, request) => requests.Add(request);
-        await page.EvaluateAsync("() => fetch('/digits/1.png')");
+        Page.Request += (_, request) => requests.Add(request);
+        await Page.EvaluateAsync("() => fetch('/digits/1.png')");
         Assert.That(requests.Count, Is.EqualTo(1));
-        Assert.That(requests[0].Frame, Is.SameAs(page.MainFrame));
+        Assert.That(requests[0].Frame, Is.SameAs(Page.MainFrame));
     }
 
     [UpstreamTest("NE-004 should work for a redirect")]
-    public async Task ShouldWorkForARedirect(IPage page, Server server)
+    public async Task ShouldWorkForARedirect()
     {
-        server.SetRedirect("/foo.html", "/empty.html");
+        Server.SetRedirect("/foo.html", "/empty.html");
         var requests = new List<IRequest>();
-        page.Request += (_, request) => requests.Add(request);
-        await page.GotoAsync(server.Prefix + "/foo.html");
+        Page.Request += (_, request) => requests.Add(request);
+        await Page.GotoAsync(Server.Prefix + "/foo.html");
 
         Assert.That(requests.Count, Is.EqualTo(2));
-        Assert.That(requests[0].Url, Is.EqualTo(server.Prefix + "/foo.html"));
-        Assert.That(requests[1].Url, Is.EqualTo(server.Prefix + "/empty.html"));
+        Assert.That(requests[0].Url, Is.EqualTo(Server.Prefix + "/foo.html"));
+        Assert.That(requests[1].Url, Is.EqualTo(Server.Prefix + "/empty.html"));
     }
 
     // https://github.com/microsoft/playwright/issues/3993
     [UpstreamTest("NE-005 should not work for a redirect and interception")]
-    public async Task ShouldNotWorkForARedirectAndInterception(IPage page, Server server)
+    public async Task ShouldNotWorkForARedirectAndInterception()
     {
-        server.SetRedirect("/foo.html", "/empty.html");
+        Server.SetRedirect("/foo.html", "/empty.html");
         var requests = new List<IRequest>();
-        await page.RouteAsync("**", route =>
+        await Page.RouteAsync("**", route =>
         {
             requests.Add(route.Request);
             IgnoreErrors(route.ContinueAsync());
         });
-        await page.GotoAsync(server.Prefix + "/foo.html");
+        await Page.GotoAsync(Server.Prefix + "/foo.html");
 
-        Assert.That(page.Url, Is.EqualTo(server.Prefix + "/empty.html"));
+        Assert.That(Page.Url, Is.EqualTo(Server.Prefix + "/empty.html"));
 
         Assert.That(requests.Count, Is.EqualTo(1));
-        Assert.That(requests[0].Url, Is.EqualTo(server.Prefix + "/foo.html"));
+        Assert.That(requests[0].Url, Is.EqualTo(Server.Prefix + "/foo.html"));
     }
 
     [UpstreamTest("NE-006 should return headers")]
-    public async Task ShouldReturnHeaders(IPage page, Server server, string browserName)
+    public async Task ShouldReturnHeaders()
     {
-        var response = await page.GotoAsync(server.EmptyPage);
-        if (browserName == "chromium")
+        var response = await Page.GotoAsync(Server.EmptyPage);
+        if (BrowserName == "chromium")
         {
             Assert.That(response.Request.Headers["user-agent"], Does.Contain("Chrome"));
         }
-        else if (browserName == "firefox")
+        else if (BrowserName == "firefox")
         {
             Assert.That(response.Request.Headers["user-agent"], Does.Contain("Firefox"));
         }
-        else if (browserName == "webkit")
+        else if (BrowserName == "webkit")
         {
             Assert.That(response.Request.Headers["user-agent"], Does.Contain("WebKit"));
         }
     }
 
     [UpstreamTest("NE-007 should get the same headers as the server")]
-    public async Task ShouldGetTheSameHeadersAsTheServer(IPage page, Server server, string browserName, string platform, bool isElectron, int browserMajorVersion, string channel)
+    public async Task ShouldGetTheSameHeadersAsTheServer()
     {
-        Info.Skip(isElectron && browserMajorVersion < 99, "This needs Chromium >= 99");
-        Info.Fixme(browserName == "webkit" && platform == "win32" && channel != "webkit-wsl", "Curl does not show accept-encoding and accept-language");
+        Info.Skip(IsElectron && BrowserMajorVersion < 99, "This needs Chromium >= 99");
+        Info.Fixme(BrowserName == "webkit" && Platform == "win32" && Channel != "webkit-wsl", "Curl does not show accept-encoding and accept-language");
         ServerRequest serverRequest = null;
-        server.SetRoute("/empty.html", (request, response) =>
+        Server.SetRoute("/empty.html", (request, response) =>
         {
             serverRequest = request;
             response.End("done");
         });
-        var response = await page.GotoAsync(server.Prefix + "/empty.html");
+        var response = await Page.GotoAsync(Server.Prefix + "/empty.html");
         var headers = await response.Request.AllHeadersAsync();
-        ExpectToEqual(headers, AdjustServerHeaders(serverRequest.Headers, browserName));
+        ExpectToEqual(headers, AdjustServerHeaders(serverRequest.Headers, BrowserName));
     }
 
     [UpstreamTest("NE-008 should not return allHeaders() until they are available")]
-    public async Task ShouldNotReturnAllHeadersUntilTheyAreAvailable(IPage page, Server server, string browserName, string platform, bool isElectron, int browserMajorVersion, string channel)
+    public async Task ShouldNotReturnAllHeadersUntilTheyAreAvailable()
     {
-        Info.Skip(isElectron && browserMajorVersion < 99, "This needs Chromium >= 99");
-        Info.Fixme(browserName == "webkit" && platform == "win32" && channel != "webkit-wsl", "Curl does not show accept-encoding and accept-language");
+        Info.Skip(IsElectron && BrowserMajorVersion < 99, "This needs Chromium >= 99");
+        Info.Fixme(BrowserName == "webkit" && Platform == "win32" && Channel != "webkit-wsl", "Curl does not show accept-encoding and accept-language");
 
         Task<Dictionary<string, string>> requestHeadersPromise = null;
-        page.Request += (_, request) => requestHeadersPromise = request.AllHeadersAsync();
+        Page.Request += (_, request) => requestHeadersPromise = request.AllHeadersAsync();
         Task<Dictionary<string, string>> responseHeadersPromise = null;
-        page.Response += (_, response) => responseHeadersPromise = response.AllHeadersAsync();
+        Page.Response += (_, response) => responseHeadersPromise = response.AllHeadersAsync();
 
         ServerRequest serverRequest = null;
-        server.SetRoute("/empty.html", async (request, response) =>
+        Server.SetRoute("/empty.html", async (request, response) =>
         {
             serverRequest = request;
             response.WriteHead(200, new() { ["foo"] = "bar" });
@@ -155,47 +155,47 @@ public class PageNetworkRequestTests
             response.End("done");
         });
 
-        await page.GotoAsync(server.Prefix + "/empty.html");
+        await Page.GotoAsync(Server.Prefix + "/empty.html");
         var requestHeaders = await requestHeadersPromise;
-        ExpectToEqual(requestHeaders, AdjustServerHeaders(serverRequest.Headers, browserName));
+        ExpectToEqual(requestHeaders, AdjustServerHeaders(serverRequest.Headers, BrowserName));
 
         var responseHeaders = await responseHeadersPromise;
         Assert.That(responseHeaders["foo"], Is.EqualTo("bar"));
     }
 
     [UpstreamTest("NE-009 should get the same headers as the server CORS")]
-    public async Task ShouldGetTheSameHeadersAsTheServerCORS(IPage page, Server server, string browserName, string platform, bool isElectron, int browserMajorVersion, string channel)
+    public async Task ShouldGetTheSameHeadersAsTheServerCORS()
     {
-        Info.Skip(isElectron && browserMajorVersion < 99, "This needs Chromium >= 99");
-        Info.Fixme(browserName == "webkit" && platform == "win32" && channel != "webkit-wsl", "Curl does not show accept-encoding and accept-language");
+        Info.Skip(IsElectron && BrowserMajorVersion < 99, "This needs Chromium >= 99");
+        Info.Fixme(BrowserName == "webkit" && Platform == "win32" && Channel != "webkit-wsl", "Curl does not show accept-encoding and accept-language");
 
-        await page.GotoAsync(server.Prefix + "/empty.html");
+        await Page.GotoAsync(Server.Prefix + "/empty.html");
         ServerRequest serverRequest = null;
-        server.SetRoute("/something", (request, response) =>
+        Server.SetRoute("/something", (request, response) =>
         {
             serverRequest = request;
             response.WriteHead(200, new() { ["Access-Control-Allow-Origin"] = "*" });
             response.End("done");
         });
-        var responsePromise = page.WaitForResponseAsync(_ => true);
-        var text = await page.EvaluateAsync<string>(@"async url => {
+        var responsePromise = Page.WaitForResponseAsync(_ => true);
+        var text = await Page.EvaluateAsync<string>(@"async url => {
     const data = await fetch(url);
     return data.text();
-  }", server.CrossProcessPrefix + "/something");
+  }", Server.CrossProcessPrefix + "/something");
         Assert.That(text, Is.EqualTo("done"));
         var response = await responsePromise;
         var headers = await response.Request.AllHeadersAsync();
-        ExpectToEqual(headers, AdjustServerHeaders(serverRequest.Headers, browserName));
+        ExpectToEqual(headers, AdjustServerHeaders(serverRequest.Headers, BrowserName));
     }
 
     [UpstreamTest("NE-010 should not get preflight CORS requests when intercepting")]
-    public async Task ShouldNotGetPreflightCORSRequestsWhenIntercepting(IPage page, Server server, string browserName, bool isAndroid, bool isBidi)
+    public async Task ShouldNotGetPreflightCORSRequestsWhenIntercepting()
     {
-        Info.Fixme(isAndroid, "Playwright does not get CORS pre-flight on Android");
-        await page.GotoAsync(server.Prefix + "/empty.html");
+        Info.Fixme(IsAndroid, "Playwright does not get CORS pre-flight on Android");
+        await Page.GotoAsync(Server.Prefix + "/empty.html");
 
         var requests = new List<string>();
-        server.SetRoute("/something", (request, response) =>
+        Server.SetRoute("/something", (request, response) =>
         {
             requests.Add(request.Method);
             if (request.Method == "OPTIONS")
@@ -215,13 +215,13 @@ public class PageNetworkRequestTests
         });
         // First check the browser will send preflight request when interception is OFF.
         {
-            var text = await page.EvaluateAsync<string>(@"async url => {
+            var text = await Page.EvaluateAsync<string>(@"async url => {
       const data = await fetch(url, {
         method: 'DELETE',
         headers: { 'X-PINGOTHER': 'pingpong' }
       });
       return data.text();
-    }", server.CrossProcessPrefix + "/something");
+    }", Server.CrossProcessPrefix + "/something");
             Assert.That(text, Is.EqualTo("done"));
             Assert.That(requests, Is.EqualTo(new[] { "OPTIONS", "DELETE" }));
         }
@@ -230,23 +230,23 @@ public class PageNetworkRequestTests
         {
             requests.Clear();
             var routed = new List<string>();
-            await page.RouteAsync("**/something", route =>
+            await Page.RouteAsync("**/something", route =>
             {
                 routed.Add(route.Request.Method);
                 IgnoreErrors(route.ContinueAsync());
             });
 
-            var text = await page.EvaluateAsync<string>(@"async url => {
+            var text = await Page.EvaluateAsync<string>(@"async url => {
       const data = await fetch(url, {
         method: 'DELETE',
         headers: { 'X-PINGOTHER': 'pingpong' }
       });
       return data.text();
-    }", server.CrossProcessPrefix + "/something");
+    }", Server.CrossProcessPrefix + "/something");
             Assert.That(text, Is.EqualTo("done"));
             // Check that there was no preflight (OPTIONS) request.
             Assert.That(routed, Is.EqualTo(new[] { "DELETE" }));
-            if (browserName == "firefox" && !isBidi)
+            if (BrowserName == "firefox" && !IsBidi)
             {
                 Assert.That(requests, Is.EqualTo(new[] { "OPTIONS", "DELETE" }));
             }
@@ -258,25 +258,25 @@ public class PageNetworkRequestTests
     }
 
     [UpstreamTest("NE-011 should return postData")]
-    public async Task ShouldReturnPostData(IPage page, Server server)
+    public async Task ShouldReturnPostData()
     {
-        await page.GotoAsync(server.EmptyPage);
-        server.SetRoute("/post", (req, res) => res.End());
+        await Page.GotoAsync(Server.EmptyPage);
+        Server.SetRoute("/post", (req, res) => res.End());
         IRequest request = null;
-        page.Request += (_, r) => request = r;
-        await page.EvaluateAsync("() => fetch('./post', { method: 'POST', body: JSON.stringify({ foo: 'bar' }) })");
+        Page.Request += (_, r) => request = r;
+        await Page.EvaluateAsync("() => fetch('./post', { method: 'POST', body: JSON.stringify({ foo: 'bar' }) })");
         Assert.That(request, Is.Not.Null);
         Assert.That(request.PostData, Is.EqualTo("{\"foo\":\"bar\"}"));
     }
 
     [UpstreamTest("NE-012 should work with binary post data")]
-    public async Task ShouldWorkWithBinaryPostData(IPage page, Server server)
+    public async Task ShouldWorkWithBinaryPostData()
     {
-        await page.GotoAsync(server.EmptyPage);
-        server.SetRoute("/post", (req, res) => res.End());
+        await Page.GotoAsync(Server.EmptyPage);
+        Server.SetRoute("/post", (req, res) => res.End());
         IRequest request = null;
-        page.Request += (_, r) => request = r;
-        await page.EvaluateAsync(@"async () => {
+        Page.Request += (_, r) => request = r;
+        await Page.EvaluateAsync(@"async () => {
     await fetch('./post', { method: 'POST', body: new Uint8Array(Array.from(Array(256).keys())) });
   }");
         Assert.That(request, Is.Not.Null);
@@ -289,14 +289,14 @@ public class PageNetworkRequestTests
     }
 
     [UpstreamTest("NE-013 should work with binary post data and interception")]
-    public async Task ShouldWorkWithBinaryPostDataAndInterception(IPage page, Server server)
+    public async Task ShouldWorkWithBinaryPostDataAndInterception()
     {
-        await page.GotoAsync(server.EmptyPage);
-        server.SetRoute("/post", (req, res) => res.End());
+        await Page.GotoAsync(Server.EmptyPage);
+        Server.SetRoute("/post", (req, res) => res.End());
         IRequest request = null;
-        await page.RouteAsync("/post", route => route.ContinueAsync());
-        page.Request += (_, r) => request = r;
-        await page.EvaluateAsync(@"async () => {
+        await Page.RouteAsync("/post", route => route.ContinueAsync());
+        Page.Request += (_, r) => request = r;
+        await Page.EvaluateAsync(@"async () => {
     await fetch('./post', { method: 'POST', body: new Uint8Array(Array.from(Array(256).keys())) });
   }");
         Assert.That(request, Is.Not.Null);
@@ -309,16 +309,16 @@ public class PageNetworkRequestTests
     }
 
     [UpstreamTest("NE-014 should override post data content type")]
-    public async Task ShouldOverridePostDataContentType(IPage page, Server server)
+    public async Task ShouldOverridePostDataContentType()
     {
-        await page.GotoAsync(server.EmptyPage);
+        await Page.GotoAsync(Server.EmptyPage);
         ServerRequest request = null;
-        server.SetRoute("/post", (req, res) =>
+        Server.SetRoute("/post", (req, res) =>
         {
             request = req;
             res.End();
         });
-        await page.RouteAsync("**/post", route =>
+        await Page.RouteAsync("**/post", route =>
         {
             var headers = route.Request.Headers;
             headers["content-type"] = "application/x-www-form-urlencoded; charset=UTF-8";
@@ -329,7 +329,7 @@ public class PageNetworkRequestTests
                 PostData = Encoding.UTF8.GetBytes(route.Request.PostData),
             }));
         });
-        await page.EvaluateAsync(@"async () => {
+        await Page.EvaluateAsync(@"async () => {
     await fetch('./post', { method: 'POST', body: 'foo=bar' });
   }");
         Assert.That(request, Is.Not.Null);
@@ -337,43 +337,43 @@ public class PageNetworkRequestTests
     }
 
     [UpstreamTest("NE-015 should get |undefined| with postData() when there is no post data")]
-    public async Task ShouldGetUndefinedWithPostDataWhenThereIsNoPostData(IPage page, Server server)
+    public async Task ShouldGetUndefinedWithPostDataWhenThereIsNoPostData()
     {
-        var response = await page.GotoAsync(server.EmptyPage);
+        var response = await Page.GotoAsync(Server.EmptyPage);
         Assert.That(response.Request.PostData, Is.Null);
     }
 
     [UpstreamTest("NE-016 should parse the json post data")]
-    public async Task ShouldParseTheJsonPostData(IPage page, Server server)
+    public async Task ShouldParseTheJsonPostData()
     {
-        await page.GotoAsync(server.EmptyPage);
-        server.SetRoute("/post", (req, res) => res.End());
+        await Page.GotoAsync(Server.EmptyPage);
+        Server.SetRoute("/post", (req, res) => res.End());
         IRequest request = null;
-        page.Request += (_, r) => request = r;
-        await page.EvaluateAsync("() => fetch('./post', { method: 'POST', body: JSON.stringify({ foo: 'bar' }) })");
+        Page.Request += (_, r) => request = r;
+        await Page.EvaluateAsync("() => fetch('./post', { method: 'POST', body: JSON.stringify({ foo: 'bar' }) })");
         Assert.That(request, Is.Not.Null);
         ExpectToEqual(request.PostDataJSON(), new { foo = "bar" });
     }
 
     [UpstreamTest("NE-017 should parse the data if content-type is application/x-www-form-urlencoded")]
-    public async Task ShouldParseTheDataIfContentTypeIsApplicationXWwwFormUrlencoded(IPage page, Server server)
+    public async Task ShouldParseTheDataIfContentTypeIsApplicationXWwwFormUrlencoded()
     {
-        await page.GotoAsync(server.EmptyPage);
-        server.SetRoute("/post", (req, res) => res.End());
+        await Page.GotoAsync(Server.EmptyPage);
+        Server.SetRoute("/post", (req, res) => res.End());
         IRequest request = null;
-        page.Request += (_, r) => request = r;
-        await page.SetContentAsync("<form method='POST' action='/post'><input type='text' name='foo' value='bar'><input type='number' name='baz' value='123'><input type='submit'></form>");
-        await page.ClickAsync("input[type=submit]");
+        Page.Request += (_, r) => request = r;
+        await Page.SetContentAsync("<form method='POST' action='/post'><input type='text' name='foo' value='bar'><input type='number' name='baz' value='123'><input type='submit'></form>");
+        await Page.ClickAsync("input[type=submit]");
         Assert.That(request, Is.Not.Null);
         ExpectToEqual(request.PostDataJSON(), new { foo = "bar", baz = "123" });
     }
 
     [UpstreamTest("NE-018 should parse the data if content-type is application/x-www-form-urlencoded; charset=UTF-8")]
-    public async Task ShouldParseTheDataIfContentTypeIsApplicationXWwwFormUrlencodedCharsetUTF8(IPage page, Server server)
+    public async Task ShouldParseTheDataIfContentTypeIsApplicationXWwwFormUrlencodedCharsetUTF8()
     {
-        await page.GotoAsync(server.EmptyPage);
-        var requestPromise = page.WaitForRequestAsync("**/post");
-        await page.EvaluateAsync(@"() => fetch('./post', {
+        await Page.GotoAsync(Server.EmptyPage);
+        var requestPromise = Page.WaitForRequestAsync("**/post");
+        await Page.EvaluateAsync(@"() => fetch('./post', {
     method: 'POST',
     headers: {
       'content-type': 'application/x-www-form-urlencoded; charset=UTF-8',
@@ -384,23 +384,23 @@ public class PageNetworkRequestTests
     }
 
     [UpstreamTest("NE-019 should get |undefined| with postDataJSON() when there is no post data")]
-    public async Task ShouldGetUndefinedWithPostDataJSONWhenThereIsNoPostData(IPage page, Server server)
+    public async Task ShouldGetUndefinedWithPostDataJSONWhenThereIsNoPostData()
     {
-        var response = await page.GotoAsync(server.EmptyPage);
+        var response = await Page.GotoAsync(Server.EmptyPage);
         Assert.That(response.Request.PostDataJSON(), Is.Null);
     }
 
     [UpstreamTest("NE-020 should return multipart/form-data")]
-    public async Task ShouldReturnMultipartFormData(IPage page, Server server, string browserName, int browserMajorVersion)
+    public async Task ShouldReturnMultipartFormData()
     {
-        Info.Fixme(browserName == "webkit", "File content is missing in WebKit");
-        Info.Skip(browserName == "chromium" && browserMajorVersion < 126, "Requires a recent enough protocol");
+        Info.Fixme(BrowserName == "webkit", "File content is missing in WebKit");
+        Info.Skip(BrowserName == "chromium" && BrowserMajorVersion < 126, "Requires a recent enough protocol");
 
-        await page.GotoAsync(server.EmptyPage);
-        server.SetRoute("/post", (req, res) => res.End());
-        await page.RouteAsync("**/*", route => route.ContinueAsync());
-        var requestPromise = page.WaitForRequestAsync("**/post");
-        await page.EvaluateAsync(@"async () => {
+        await Page.GotoAsync(Server.EmptyPage);
+        Server.SetRoute("/post", (req, res) => res.End());
+        await Page.RouteAsync("**/*", route => route.ContinueAsync());
+        var requestPromise = Page.WaitForRequestAsync("**/post");
+        await Page.EvaluateAsync(@"async () => {
     const body = new FormData();
     body.set('name1', 'value1');
     body.set('file', new File(['file-value'], 'foo.txt'));
@@ -418,11 +418,11 @@ public class PageNetworkRequestTests
     }
 
     [UpstreamTest("NE-021 should return event source")]
-    public async Task ShouldReturnEventSource(IPage page, Server server)
+    public async Task ShouldReturnEventSource()
     {
         var SSE_MESSAGE = new { foo = "bar" };
         // 1. Setup server-sent events on server that immediately sends a message to the client.
-        server.SetRoute("/sse", (req, res) =>
+        Server.SetRoute("/sse", (req, res) =>
         {
             res.WriteHead(200, new()
             {
@@ -433,11 +433,11 @@ public class PageNetworkRequestTests
             res.Write($"data: {JsonSerializer.Serialize(SSE_MESSAGE)}\n\n");
         });
         // 2. Subscribe to page request events.
-        await page.GotoAsync(server.EmptyPage);
+        await Page.GotoAsync(Server.EmptyPage);
         var requests = new List<IRequest>();
-        page.Request += (_, request) => requests.Add(request);
+        Page.Request += (_, request) => requests.Add(request);
         // 3. Connect to EventSource in browser and return first message.
-        ExpectToEqual(await page.EvaluateAsync<object>(@"() => {
+        ExpectToEqual(await Page.EvaluateAsync<object>(@"() => {
     const eventSource = new EventSource('/sse');
     return new Promise(resolve => {
       eventSource.onmessage = e => resolve(JSON.parse(e.data));
@@ -447,12 +447,12 @@ public class PageNetworkRequestTests
     }
 
     [UpstreamTest("NE-022 should return navigation bit")]
-    public async Task ShouldReturnNavigationBit(IPage page, Server server)
+    public async Task ShouldReturnNavigationBit()
     {
         var requests = new Dictionary<string, IRequest>();
-        page.Request += (_, request) => requests[request.Url.Split('/').Last()] = request;
-        server.SetRedirect("/rrredirect", "/frames/one-frame.html");
-        await page.GotoAsync(server.Prefix + "/rrredirect");
+        Page.Request += (_, request) => requests[request.Url.Split('/').Last()] = request;
+        Server.SetRedirect("/rrredirect", "/frames/one-frame.html");
+        await Page.GotoAsync(Server.Prefix + "/rrredirect");
         Assert.That(requests["rrredirect"].IsNavigationRequest, Is.EqualTo(true));
         Assert.That(requests["one-frame.html"].IsNavigationRequest, Is.EqualTo(true));
         Assert.That(requests["frame.html"].IsNavigationRequest, Is.EqualTo(true));
@@ -461,28 +461,28 @@ public class PageNetworkRequestTests
     }
 
     [UpstreamTest("NE-023 should return navigation bit when navigating to image")]
-    public async Task ShouldReturnNavigationBitWhenNavigatingToImage(IPage page, Server server)
+    public async Task ShouldReturnNavigationBitWhenNavigatingToImage()
     {
         var requests = new List<IRequest>();
-        page.Request += (_, request) => requests.Add(request);
-        await page.GotoAsync(server.Prefix + "/pptr.png");
+        Page.Request += (_, request) => requests.Add(request);
+        await Page.GotoAsync(Server.Prefix + "/pptr.png");
         Assert.That(requests[0].IsNavigationRequest, Is.EqualTo(true));
     }
 
     [UpstreamTest("NE-024 should report raw headers")]
-    public async Task ShouldReportRawHeaders(IPage page, Server server, string browserName, string platform, bool isElectron, int browserMajorVersion, string channel)
+    public async Task ShouldReportRawHeaders()
     {
-        Info.Skip(isElectron && browserMajorVersion < 99, "This needs Chromium >= 99");
+        Info.Skip(IsElectron && BrowserMajorVersion < 99, "This needs Chromium >= 99");
 
         List<Header> expectedHeaders = null;
-        server.SetRoute("/headers", (req, res) =>
+        Server.SetRoute("/headers", (req, res) =>
         {
             expectedHeaders = [];
             for (var i = 0; i < req.RawHeaders.Count; i += 2)
             {
                 expectedHeaders.Add(new() { Name = req.RawHeaders[i], Value = req.RawHeaders[i + 1] });
             }
-            if (browserName == "webkit" && platform == "win32" && channel != "webkit-wsl")
+            if (BrowserName == "webkit" && Platform == "win32" && Channel != "webkit-wsl")
             {
                 expectedHeaders = expectedHeaders.Where(header => header.Name.ToLowerInvariant() != "accept-encoding").ToList();
                 // Convert "value": "en-US, en-US" => "en-US"
@@ -505,17 +505,17 @@ public class PageNetworkRequestTests
                     return new Header { Name = name, Value = values[0] };
                 }).ToList();
             }
-            if (browserName == "firefox")
+            if (BrowserName == "firefox")
             {
                 expectedHeaders = expectedHeaders.Where(header => header.Name.ToLowerInvariant() != "priority").ToList();
             }
 
             res.End();
         });
-        await page.GotoAsync(server.EmptyPage);
+        await Page.GotoAsync(Server.EmptyPage);
         var (request, _) = await PromiseAll(
-            page.WaitForRequestAsync("**/*"),
-            page.EvaluateAsync(@"() => fetch('/headers', {
+            Page.WaitForRequestAsync("**/*"),
+            Page.EvaluateAsync(@"() => fetch('/headers', {
       headers: [
         ['header-a', 'value-a'],
         ['header-b', 'value-b'],
@@ -531,19 +531,19 @@ public class PageNetworkRequestTests
     }
 
     [UpstreamTest("NE-025 should report raw response headers in redirects")]
-    public async Task ShouldReportRawResponseHeadersInRedirects(IPage page, Server server, string browserName)
+    public async Task ShouldReportRawResponseHeadersInRedirects()
     {
-        Info.Skip(browserName == "webkit", "WebKit won't give us raw headers for redirects");
-        server.SetExtraHeaders("/redirect/1.html", new() { ["sec-test-header"] = "1.html" });
-        server.SetExtraHeaders("/redirect/2.html", new() { ["sec-test-header"] = "2.html" });
-        server.SetExtraHeaders("/empty.html", new() { ["sec-test-header"] = "empty.html" });
-        server.SetRedirect("/redirect/1.html", "/redirect/2.html");
-        server.SetRedirect("/redirect/2.html", "/empty.html");
+        Info.Skip(BrowserName == "webkit", "WebKit won't give us raw headers for redirects");
+        Server.SetExtraHeaders("/redirect/1.html", new() { ["sec-test-header"] = "1.html" });
+        Server.SetExtraHeaders("/redirect/2.html", new() { ["sec-test-header"] = "2.html" });
+        Server.SetExtraHeaders("/empty.html", new() { ["sec-test-header"] = "empty.html" });
+        Server.SetRedirect("/redirect/1.html", "/redirect/2.html");
+        Server.SetRedirect("/redirect/2.html", "/empty.html");
 
-        var expectedUrls = new[] { "/redirect/1.html", "/redirect/2.html", "/empty.html" }.Select(s => server.Prefix + s);
+        var expectedUrls = new[] { "/redirect/1.html", "/redirect/2.html", "/empty.html" }.Select(s => Server.Prefix + s);
         var expectedHeaders = new[] { "1.html", "2.html", "empty.html" };
 
-        var response = await page.GotoAsync(server.Prefix + "/redirect/1.html");
+        var response = await Page.GotoAsync(Server.Prefix + "/redirect/1.html");
         var redirectChain = new List<string>();
         var headersChain = new List<string>();
         for (var req = response.Request; req != null; req = req.RedirectedFrom)
@@ -559,12 +559,12 @@ public class PageNetworkRequestTests
     }
 
     [UpstreamTest("NE-026 should report all cookies in one header")]
-    public async Task ShouldReportAllCookiesInOneHeader(IPage page, Server server, bool isElectron, int browserMajorVersion)
+    public async Task ShouldReportAllCookiesInOneHeader()
     {
-        Info.Skip(isElectron && browserMajorVersion < 99, "This needs Chromium >= 99");
+        Info.Skip(IsElectron && BrowserMajorVersion < 99, "This needs Chromium >= 99");
 
         var expectedHeaders = new Dictionary<string, string>();
-        server.SetRoute("/headers", (req, res) =>
+        Server.SetRoute("/headers", (req, res) =>
         {
             for (var i = 0; i < req.RawHeaders.Count; i += 2)
             {
@@ -573,23 +573,23 @@ public class PageNetworkRequestTests
             res.End();
         });
 
-        await page.GotoAsync(server.EmptyPage);
-        await page.EvaluateAsync(@"() => {
+        await Page.GotoAsync(Server.EmptyPage);
+        await Page.EvaluateAsync(@"() => {
     document.cookie = 'myCookie=myValue';
     document.cookie = 'myOtherCookie=myOtherValue';
   }");
-        var response = await page.GotoAsync(server.EmptyPage);
+        var response = await Page.GotoAsync(Server.EmptyPage);
         var cookie = (await response.Request.AllHeadersAsync())["cookie"];
         Assert.That(cookie, Is.EqualTo("myCookie=myValue; myOtherCookie=myOtherValue"));
     }
 
     [UpstreamTest("NE-027 should not allow to access frame on popup main request")]
-    public async Task ShouldNotAllowToAccessFrameOnPopupMainRequest(IPage page, Server server)
+    public async Task ShouldNotAllowToAccessFrameOnPopupMainRequest()
     {
-        await page.SetContentAsync($"<a target=_blank href=\"{server.EmptyPage}\">click me</a>");
-        var requestPromise = Once<IRequest>(h => page.Context.Request += h, h => page.Context.Request -= h);
-        var popupPromise = page.Context.WaitForPageAsync();
-        var clicked = page.GetByText("click me").ClickAsync();
+        await Page.SetContentAsync($"<a target=_blank href=\"{Server.EmptyPage}\">click me</a>");
+        var requestPromise = Once<IRequest>(h => Page.Context.Request += h, h => Page.Context.Request -= h);
+        var popupPromise = Page.Context.WaitForPageAsync();
+        var clicked = Page.GetByText("click me").ClickAsync();
         var request = await requestPromise;
 
         Assert.That(request.IsNavigationRequest, Is.EqualTo(true));
@@ -612,11 +612,11 @@ public class PageNetworkRequestTests
     }
 
     [UpstreamTest("NE-028 page.reload return 304 status code")]
-    public async Task PageReloadReturn304StatusCode(IPage page, Server server, string browserName, bool isBidi)
+    public async Task PageReloadReturn304StatusCode()
     {
-        Info.Fixme(browserName == "firefox" && !isBidi, "Does not send second request");
+        Info.Fixme(BrowserName == "firefox" && !IsBidi, "Does not send second request");
         var requestNumber = 0;
-        server.SetRoute("/test.html", (req, res) =>
+        Server.SetRoute("/test.html", (req, res) =>
         {
             ++requestNumber;
             var headers = new Dictionary<string, object>
@@ -637,11 +637,11 @@ public class PageNetworkRequestTests
             res.Write("<div>Test</div>");
             res.End();
         });
-        var response1 = await page.GotoAsync(server.Prefix + "/test.html");
+        var response1 = await Page.GotoAsync(Server.Prefix + "/test.html");
         Assert.That(response1.Status, Is.EqualTo(200));
-        var response2 = await page.ReloadAsync();
+        var response2 = await Page.ReloadAsync();
         Assert.That(requestNumber, Is.EqualTo(2));
-        if (browserName == "chromium")
+        if (BrowserName == "chromium")
         {
             Assert.That(response2.Status, Is.EqualTo(200));
             Assert.That(response2.StatusText, Is.EqualTo("OK"));
@@ -655,11 +655,11 @@ public class PageNetworkRequestTests
     }
 
     [UpstreamTest("NE-029 should handle mixed-content blocked requests")]
-    public async Task ShouldHandleMixedContentBlockedRequests(IPage page, Func<string, string> asset, string browserName)
+    public async Task ShouldHandleMixedContentBlockedRequests()
     {
-        Info.Skip(browserName != "chromium", "FF and WK actually succeed with the request, and block afterwards");
+        Info.Skip(BrowserName != "chromium", "FF and WK actually succeed with the request, and block afterwards");
 
-        await page.RouteAsync("**/mixedcontent.html", route =>
+        await Page.RouteAsync("**/mixedcontent.html", route =>
         {
             IgnoreErrors(route.FulfillAsync(new()
             {
@@ -681,15 +681,15 @@ public class PageNetworkRequestTests
     ",
             }));
         });
-        await page.RouteAsync("**/iconfont.woff2", async route =>
+        await Page.RouteAsync("**/iconfont.woff2", async route =>
         {
-            var body = await File.ReadAllBytesAsync(asset("webfont/iconfont2.woff"));
+            var body = await File.ReadAllBytesAsync(Asset("webfont/iconfont2.woff"));
             await route.FulfillAsync(new() { BodyBytes = body });
         });
 
         var (request, _) = await PromiseAll(
-            Once<IRequest>(h => page.RequestFailed += h, h => page.RequestFailed -= h, r => r.Url.Contains("iconfont.woff2")),
-            page.GotoAsync("https://example.com/mixedcontent.html"));
+            Once<IRequest>(h => Page.RequestFailed += h, h => Page.RequestFailed -= h, r => r.Url.Contains("iconfont.woff2")),
+            Page.GotoAsync("https://example.com/mixedcontent.html"));
         var headers = await request.AllHeadersAsync();
         Assert.That(headers["origin"], Is.Not.Empty);
         Assert.That(request.Failure, Is.EqualTo("mixed-content"));

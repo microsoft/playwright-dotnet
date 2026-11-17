@@ -26,10 +26,10 @@ using static Microsoft.Playwright.Tests.Fixtures.Utils;
 namespace Microsoft.Playwright.Tests.Library;
 
 /// <summary>Port of tests/library/browsercontext-fetch.spec.ts.</summary>
-public class BrowsercontextFetchTests
+public class BrowsercontextFetchTests : UpstreamBrowserTest
 {
-    [BeforeEach]
-    public static void Skip(string mode) => Info.Skip(mode != "default");
+    [SetUp]
+    public void Skip() => Info.Skip(Mode != "default");
 
     // .NET: context.request[method](url, options).
     private static Task<IAPIResponse> CallMethod(IAPIRequestContext request, string method, string url, APIRequestContextOptions options) => method switch
@@ -49,10 +49,11 @@ public class BrowsercontextFetchTests
         string.Join("&", searchParams.Select(pair => Uri.EscapeDataString(pair.Key) + "=" + Uri.EscapeDataString((string)pair.Value)));
 
     [UpstreamTest("FE-088 get should work @smoke")]
-    public async Task GetShouldWork(IBrowserContext context, Server server, string mode)
+    public async Task GetShouldWork()
     {
-        var response = await context.APIRequest.GetAsync(server.Prefix + "/simple.json");
-        Assert.That(response.Url, Is.EqualTo(server.Prefix + "/simple.json"));
+        var context = await ContextFixture();
+        var response = await context.APIRequest.GetAsync(Server.Prefix + "/simple.json");
+        Assert.That(response.Url, Is.EqualTo(Server.Prefix + "/simple.json"));
         Assert.That(response.Status, Is.EqualTo(200));
         Assert.That(response.StatusText, Is.EqualTo("OK"));
         Assert.That(response.Ok, Is.True);
@@ -62,10 +63,11 @@ public class BrowsercontextFetchTests
     }
 
     [UpstreamTest("FE-089 fetch should work")]
-    public async Task FetchShouldWork(IBrowserContext context, Server server)
+    public async Task FetchShouldWork()
     {
-        var response = await context.APIRequest.FetchAsync(server.Prefix + "/simple.json");
-        Assert.That(response.Url, Is.EqualTo(server.Prefix + "/simple.json"));
+        var context = await ContextFixture();
+        var response = await context.APIRequest.FetchAsync(Server.Prefix + "/simple.json");
+        Assert.That(response.Url, Is.EqualTo(Server.Prefix + "/simple.json"));
         Assert.That(response.Status, Is.EqualTo(200));
         Assert.That(response.StatusText, Is.EqualTo("OK"));
         Assert.That(response.Ok, Is.True);
@@ -76,8 +78,9 @@ public class BrowsercontextFetchTests
 
     [UpstreamTest("FE-090 should return timing")]
     [LocalFixme("dotnet: RequestTimingResult.StartTime is a float, which holds a time in milliseconds since the epoch in steps of 131072 only: it is up to 65 seconds away from the time of the request, upstream expects it within 5 seconds of Date.now(). The test passes by chance when the request starts within 5 seconds of such a step, about one run in 13")]
-    public async Task ShouldReturnTiming(IBrowserContext context)
+    public async Task ShouldReturnTiming()
     {
+        var context = await ContextFixture();
         // Create a fresh server to guarantee a new connection, because keep-alive
         // sockets from other tests do not have dns/connect timings.
         // .NET: http.createServer((req, res) => res.end('Hello')) that listens on the port 0 is a Server with a route.
@@ -108,8 +111,9 @@ public class BrowsercontextFetchTests
 
     [UpstreamTest("FE-091 should return timing for https")]
     [LocalFixme("dotnet: RequestTimingResult.StartTime is a float, which holds a time in milliseconds since the epoch in steps of 131072 only: it is up to 65 seconds away from the time of the request, upstream expects it within 5 seconds of Date.now(). The test passes by chance when the request starts within 5 seconds of such a step, about one run in 13")]
-    public async Task ShouldReturnTimingForHttps(IBrowserContext context)
+    public async Task ShouldReturnTimingForHttps()
     {
+        var context = await ContextFixture();
         // Create a fresh server to guarantee a new connection, because keep-alive
         // sockets from other tests do not have dns/connect timings.
         // .NET: https.createServer(await TestServer.certOptions(), (req, res) => res.end('Hello')) that listens on the port 0 is a Server with a route.
@@ -139,34 +143,37 @@ public class BrowsercontextFetchTests
 
     [UpstreamTest("FE-092 should throw on network error")]
     [LocalFixme("dotnet: the message is 'socket hang up (ECONNRESET)', without the 'apiRequestContext.get: ' prefix of the call")]
-    public async Task ShouldThrowOnNetworkError(IBrowserContext context, Server server)
+    public async Task ShouldThrowOnNetworkError()
     {
-        server.SetRoute("/test", (req, res) =>
+        var context = await ContextFixture();
+        Server.SetRoute("/test", (req, res) =>
         {
             req.Socket.Destroy();
         });
-        var error = await Catch(() => context.APIRequest.GetAsync(server.Prefix + "/test"));
+        var error = await Catch(() => context.APIRequest.GetAsync(Server.Prefix + "/test"));
         Assert.That(error.Message, Does.Contain("apiRequestContext.get: socket hang up"));
     }
 
     [UpstreamTest("FE-093 should throw on network error after redirect")]
     [LocalFixme("dotnet: the message is 'socket hang up (ECONNRESET)', without the 'apiRequestContext.get: ' prefix of the call")]
-    public async Task ShouldThrowOnNetworkErrorAfterRedirect(IBrowserContext context, Server server)
+    public async Task ShouldThrowOnNetworkErrorAfterRedirect()
     {
-        server.SetRedirect("/redirect", "/test");
-        server.SetRoute("/test", (req, res) =>
+        var context = await ContextFixture();
+        Server.SetRedirect("/redirect", "/test");
+        Server.SetRoute("/test", (req, res) =>
         {
             req.Socket.Destroy();
         });
-        var error = await Catch(() => context.APIRequest.GetAsync(server.Prefix + "/redirect"));
+        var error = await Catch(() => context.APIRequest.GetAsync(Server.Prefix + "/redirect"));
         Assert.That(error.Message, Does.Contain("apiRequestContext.get: socket hang up"));
     }
 
     [UpstreamTest("FE-094 should throw on network error when sending body")]
     [LocalFixme("dotnet: the message is 'aborted', without the 'apiRequestContext.get: ' prefix of the call")]
-    public async Task ShouldThrowOnNetworkErrorWhenSendingBody(IBrowserContext context, Server server)
+    public async Task ShouldThrowOnNetworkErrorWhenSendingBody()
     {
-        server.SetRoute("/test", (req, res) =>
+        var context = await ContextFixture();
+        Server.SetRoute("/test", (req, res) =>
         {
             res.WriteHead(200, new()
             {
@@ -177,16 +184,17 @@ public class BrowsercontextFetchTests
             res.Uncork();
             req.Socket.Destroy();
         });
-        var error = await Catch(() => context.APIRequest.GetAsync(server.Prefix + "/test"));
+        var error = await Catch(() => context.APIRequest.GetAsync(Server.Prefix + "/test"));
         Assert.That(error.Message, Does.Contain("apiRequestContext.get: aborted"));
     }
 
     [UpstreamTest("FE-095 should throw on network error when sending body after redirect")]
     [LocalFixme("dotnet: the message is 'aborted', without the 'apiRequestContext.get: ' prefix of the call")]
-    public async Task ShouldThrowOnNetworkErrorWhenSendingBodyAfterRedirect(IBrowserContext context, Server server)
+    public async Task ShouldThrowOnNetworkErrorWhenSendingBodyAfterRedirect()
     {
-        server.SetRedirect("/redirect", "/test");
-        server.SetRoute("/test", (req, res) =>
+        var context = await ContextFixture();
+        Server.SetRedirect("/redirect", "/test");
+        Server.SetRoute("/test", (req, res) =>
         {
             res.WriteHead(200, new()
             {
@@ -197,21 +205,22 @@ public class BrowsercontextFetchTests
             res.Uncork();
             req.Socket.Destroy();
         });
-        var error = await Catch(() => context.APIRequest.GetAsync(server.Prefix + "/redirect"));
+        var error = await Catch(() => context.APIRequest.GetAsync(Server.Prefix + "/redirect"));
         Assert.That(error.Message, Does.Contain("apiRequestContext.get: aborted"));
     }
 
     [UpstreamTest("FE-098 ${method} should support params passed as object")]
-    [Case("fetch")]
-    [Case("delete")]
-    [Case("get")]
-    [Case("head")]
-    [Case("patch")]
-    [Case("post")]
-    [Case("put")]
-    public async Task ShouldSupportParamsPassedAsObject(string method, IBrowserContext context, Server server)
+    [TestCase("fetch")]
+    [TestCase("delete")]
+    [TestCase("get")]
+    [TestCase("head")]
+    [TestCase("patch")]
+    [TestCase("post")]
+    [TestCase("put")]
+    public async Task ShouldSupportParamsPassedAsObject(string method)
     {
-        var url = new Uri(server.EmptyPage);
+        var context = await ContextFixture();
+        var url = new Uri(Server.EmptyPage);
         // .NET: url.searchParams.set(name, value) adds to a list of pairs.
         var searchParams = new List<KeyValuePair<string, object>>();
         searchParams.Add(new("param1", "value1"));
@@ -219,8 +228,8 @@ public class BrowsercontextFetchTests
 
         var (request, response) = await PromiseAll(
             // .NET: url.pathname + url.search.
-            server.WaitForRequest(url.AbsolutePath + "?" + SearchParamsToString(searchParams)),
-            CallMethod(context.APIRequest, method, server.EmptyPage, new()
+            Server.WaitForRequest(url.AbsolutePath + "?" + SearchParamsToString(searchParams)),
+            CallMethod(context.APIRequest, method, Server.EmptyPage, new()
             {
                 Params = new Dictionary<string, object>
                 {
@@ -240,16 +249,17 @@ public class BrowsercontextFetchTests
 
     [UpstreamTest("FE-099 ${method} should support params passed as URLSearchParams")]
     [LocalFixme("dotnet: Params with the same name twice throws 'ArgumentException: An item with the same key has already been added. Key: param1': APIRequestContext.FetchAsync makes a dictionary of the params; upstream sends param1=value1&param1=value2")]
-    [Case("fetch")]
-    [Case("delete")]
-    [Case("get")]
-    [Case("head")]
-    [Case("patch")]
-    [Case("post")]
-    [Case("put")]
-    public async Task ShouldSupportParamsPassedAsURLSearchParams(string method, IBrowserContext context, Server server)
+    [TestCase("fetch")]
+    [TestCase("delete")]
+    [TestCase("get")]
+    [TestCase("head")]
+    [TestCase("patch")]
+    [TestCase("post")]
+    [TestCase("put")]
+    public async Task ShouldSupportParamsPassedAsURLSearchParams(string method)
     {
-        var url = new Uri(server.EmptyPage);
+        var context = await ContextFixture();
+        var url = new Uri(Server.EmptyPage);
         // .NET: a URLSearchParams is a list of pairs.
         var searchParams = new List<KeyValuePair<string, object>>();
         searchParams.Add(new("param1", "value1"));
@@ -257,8 +267,8 @@ public class BrowsercontextFetchTests
         searchParams.Add(new("парам2", "знач2"));
 
         var (request, response) = await PromiseAll(
-            server.WaitForRequest(url.AbsolutePath + "?" + SearchParamsToString(searchParams)),
-            CallMethod(context.APIRequest, method, server.EmptyPage, new() { Params = searchParams }));
+            Server.WaitForRequest(url.AbsolutePath + "?" + SearchParamsToString(searchParams)),
+            CallMethod(context.APIRequest, method, Server.EmptyPage, new() { Params = searchParams }));
 
         var requestParams = HttpUtility.ParseQueryString(request.Url.Substring(request.Url.IndexOf('?')));
         Assert.That(requestParams.GetValues("param1"), Is.EqualTo(new[] { "value1", "value2" }));
@@ -270,24 +280,25 @@ public class BrowsercontextFetchTests
     }
 
     [UpstreamTest("FE-100 ${method} should support params passed as string")]
-    [Case("fetch")]
-    [Case("delete")]
-    [Case("get")]
-    [Case("head")]
-    [Case("patch")]
-    [Case("post")]
-    [Case("put")]
-    public async Task ShouldSupportParamsPassedAsString(string method, IBrowserContext context, Server server)
+    [TestCase("fetch")]
+    [TestCase("delete")]
+    [TestCase("get")]
+    [TestCase("head")]
+    [TestCase("patch")]
+    [TestCase("post")]
+    [TestCase("put")]
+    public async Task ShouldSupportParamsPassedAsString(string method)
     {
-        var url = new Uri(server.EmptyPage);
+        var context = await ContextFixture();
+        var url = new Uri(Server.EmptyPage);
         var @params = "?param1=value1&param1=value2&парам2=знач2";
 
         var (request, response) = await PromiseAll(
 #pragma warning disable SYSLIB0013
             // .NET: encodeURI(params).
-            server.WaitForRequest(url.AbsolutePath + Uri.EscapeUriString(@params)),
+            Server.WaitForRequest(url.AbsolutePath + Uri.EscapeUriString(@params)),
 #pragma warning restore SYSLIB0013
-            CallMethod(context.APIRequest, method, server.EmptyPage, new() { ParamsString = @params }));
+            CallMethod(context.APIRequest, method, Server.EmptyPage, new() { ParamsString = @params }));
 
         var requestParams = HttpUtility.ParseQueryString(request.Url.Substring(request.Url.IndexOf('?')));
         Assert.That(requestParams.GetValues("param1"), Is.EqualTo(new[] { "value1", "value2" }));
@@ -299,36 +310,38 @@ public class BrowsercontextFetchTests
     }
 
     [UpstreamTest("FE-101 ${method} should append string and URLSearchParams params to the URL query")]
-    [Case("fetch")]
-    [Case("delete")]
-    [Case("get")]
-    [Case("head")]
-    [Case("patch")]
-    [Case("post")]
-    [Case("put")]
-    public async Task ShouldAppendStringAndURLSearchParamsParamsToTheURLQuery(string method, IBrowserContext context, Server server)
+    [TestCase("fetch")]
+    [TestCase("delete")]
+    [TestCase("get")]
+    [TestCase("head")]
+    [TestCase("patch")]
+    [TestCase("post")]
+    [TestCase("put")]
+    public async Task ShouldAppendStringAndURLSearchParamsParamsToTheURLQuery(string method)
     {
+        var context = await ContextFixture();
         // .NET: a string goes to ParamsString and a URLSearchParams to Params, so the loop is over the options.
         foreach (var options in new APIRequestContextOptions[] { new() { ParamsString = "q=cat" }, new() { ParamsString = "?q=cat" }, new() { Params = new KeyValuePair<string, object>[] { new("q", "cat") } } })
         {
             var (request, _) = await PromiseAll(
-                server.WaitForRequest("/empty.html?page=2&q=cat"),
-                CallMethod(context.APIRequest, method, server.EmptyPage + "?page=2", options));
+                Server.WaitForRequest("/empty.html?page=2&q=cat"),
+                CallMethod(context.APIRequest, method, Server.EmptyPage + "?page=2", options));
             Assert.That(request.Url, Is.EqualTo("/empty.html?page=2&q=cat"));
         }
     }
 
     [UpstreamTest("FE-102 ${method} should support failOnStatusCode")]
-    [Case("fetch")]
-    [Case("delete")]
-    [Case("get")]
-    [Case("head")]
-    [Case("patch")]
-    [Case("post")]
-    [Case("put")]
-    public async Task ShouldSupportFailOnStatusCode(string method, IBrowserContext context, Server server)
+    [TestCase("fetch")]
+    [TestCase("delete")]
+    [TestCase("get")]
+    [TestCase("head")]
+    [TestCase("patch")]
+    [TestCase("post")]
+    [TestCase("put")]
+    public async Task ShouldSupportFailOnStatusCode(string method)
     {
-        var error = await Catch(() => CallMethod(context.APIRequest, method, server.Prefix + "/does-not-exist.html", new()
+        var context = await ContextFixture();
+        var error = await Catch(() => CallMethod(context.APIRequest, method, Server.Prefix + "/does-not-exist.html", new()
         {
             FailOnStatusCode = true,
         }));
@@ -340,45 +353,49 @@ public class BrowsercontextFetchTests
     }
 
     [UpstreamTest("FE-103 ${method}should support ignoreHTTPSErrors option")]
-    [Case("fetch")]
-    [Case("delete")]
-    [Case("get")]
-    [Case("head")]
-    [Case("patch")]
-    [Case("post")]
-    [Case("put")]
-    public async Task ShouldSupportIgnoreHTTPSErrorsOption(string method, IBrowserContext context, Server httpsServer)
+    [TestCase("fetch")]
+    [TestCase("delete")]
+    [TestCase("get")]
+    [TestCase("head")]
+    [TestCase("patch")]
+    [TestCase("post")]
+    [TestCase("put")]
+    public async Task ShouldSupportIgnoreHTTPSErrorsOption(string method)
     {
-        var response = await CallMethod(context.APIRequest, method, httpsServer.EmptyPage, new() { IgnoreHTTPSErrors = true });
+        var context = await ContextFixture();
+        var response = await CallMethod(context.APIRequest, method, HttpsServer.EmptyPage, new() { IgnoreHTTPSErrors = true });
         Assert.That(response.Status, Is.EqualTo(200));
     }
 
     [UpstreamTest("FE-106 should follow redirects correctly when Location header contains UTF-8 characters")]
-    public async Task ShouldFollowRedirectsCorrectlyWhenLocationHeaderContainsUTF8Characters(IBrowserContext context, Server server)
+    public async Task ShouldFollowRedirectsCorrectlyWhenLocationHeaderContainsUTF8Characters()
     {
-        server.SetRoute("/redirect", (req, res) =>
+        var context = await ContextFixture();
+        Server.SetRoute("/redirect", (req, res) =>
         {
             // Node.js only allows US-ASCII, so we can't send invalid headers directly. Sending it as a raw response instead.
             res.Socket.Write("HTTP/1.1 301 Moved Permanently\r\n");
-            res.Socket.Write($"Location: {server.Prefix}/empty.html?message=マスクПривет\r\n");
+            res.Socket.Write($"Location: {Server.Prefix}/empty.html?message=マスクПривет\r\n");
             res.Socket.Write("\r\n");
             res.Socket.Uncork();
             res.Socket.End();
         });
-        var response = await context.APIRequest.GetAsync(server.Prefix + "/redirect");
+        var response = await context.APIRequest.GetAsync(Server.Prefix + "/redirect");
         // .NET: new URLSearchParams({ message: 'マスクПривет' }) is a list of pairs.
-        Assert.That(response.Url, Is.EqualTo(server.Prefix + "/empty.html?" + SearchParamsToString(new KeyValuePair<string, object>[] { new("message", "マスクПривет") })));
+        Assert.That(response.Url, Is.EqualTo(Server.Prefix + "/empty.html?" + SearchParamsToString(new KeyValuePair<string, object>[] { new("message", "マスクПривет") })));
     }
 
     [UpstreamTest("FE-107 should add cookies from Set-Cookie header")]
-    public async Task ShouldAddCookiesFromSetCookieHeader(IBrowserContext context, IPage page, Server server)
+    public async Task ShouldAddCookiesFromSetCookieHeader()
     {
-        server.SetRoute("/setcookie.html", (req, res) =>
+        var context = await ContextFixture();
+        var page = await PageFixture();
+        Server.SetRoute("/setcookie.html", (req, res) =>
         {
             res.SetHeader("Set-Cookie", new[] { "session=value", "foo=bar; max-age=3600" });
             res.End();
         });
-        await context.APIRequest.GetAsync(server.Prefix + "/setcookie.html");
+        await context.APIRequest.GetAsync(Server.Prefix + "/setcookie.html");
         var cookies = await context.CookiesAsync();
         // .NET: toEqual() of two Sets is Is.EquivalentTo, with the comparison of toEqual().
         Assert.That(cookies.Select(c => new { name = c.Name, value = c.Value }), Is.EquivalentTo(new object[]
@@ -394,16 +411,18 @@ public class BrowsercontextFetchTests
                 value = "bar",
             },
         }).Using<object>(DeepEquals));
-        await page.GotoAsync(server.EmptyPage);
+        await page.GotoAsync(Server.EmptyPage);
         Assert.That((await page.EvaluateAsync<string>("() => document.cookie")).Split(';').Select(s => s.Trim()).Order(StringComparer.Ordinal), Is.EqualTo(new[] { "foo=bar", "session=value" }));
     }
 
     [UpstreamTest("FE-108 page.request.addCookies should add cookies to the browser context")]
-    public async Task PageRequestAddCookiesShouldAddCookiesToTheBrowserContext(IBrowserContext context, IPage page, Server server)
+    public async Task PageRequestAddCookiesShouldAddCookiesToTheBrowserContext()
     {
+        var context = await ContextFixture();
+        var page = await PageFixture();
         await page.APIRequest.AddCookiesAsync(new[]
         {
-            new Cookie { Name = "a", Value = "b", Url = server.EmptyPage },
+            new Cookie { Name = "a", Value = "b", Url = Server.EmptyPage },
             new Cookie { Name = "c", Value = "d", Domain = "localhost", Path = "/", Expires = (float)((DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() / 1000d) + 3600) },
         });
         // .NET: sort((a, b) => a.name.localeCompare(b.name)) is a stable sort with the comparison of a culture.
@@ -413,53 +432,59 @@ public class BrowsercontextFetchTests
             new { name = "c", value = "d" },
         });
         var (req, _) = await PromiseAll(
-            server.WaitForRequest("/empty.html"),
-            context.APIRequest.GetAsync(server.EmptyPage));
+            Server.WaitForRequest("/empty.html"),
+            context.APIRequest.GetAsync(Server.EmptyPage));
         Assert.That(req.Headers["cookie"].Split(';').Select(s => s.Trim()).Order(StringComparer.Ordinal), Is.EqualTo(new[] { "a=b", "c=d" }));
-        await page.GotoAsync(server.EmptyPage);
+        await page.GotoAsync(Server.EmptyPage);
         Assert.That((await page.EvaluateAsync<string>("() => document.cookie")).Split(';').Select(s => s.Trim()).Order(StringComparer.Ordinal), Is.EqualTo(new[] { "a=b", "c=d" }));
     }
 
     [UpstreamTest("FE-109 page.request.cookies should return browser context cookies")]
-    public async Task PageRequestCookiesShouldReturnBrowserContextCookies(IBrowserContext context, IPage page, Server server)
+    public async Task PageRequestCookiesShouldReturnBrowserContextCookies()
     {
+        var context = await ContextFixture();
+        var page = await PageFixture();
         await context.AddCookiesAsync(new[]
         {
-            new Cookie { Name = "a", Value = "b", Url = server.EmptyPage },
+            new Cookie { Name = "a", Value = "b", Url = Server.EmptyPage },
             new Cookie { Name = "c", Value = "d", Domain = "example.com", Path = "/" },
         });
         Assert.That((await page.APIRequest.CookiesAsync()).Select(c => c.Name).Order(StringComparer.Ordinal), Is.EqualTo(new[] { "a", "c" }));
-        Assert.That((await page.APIRequest.CookiesAsync(server.EmptyPage)).Select(c => c.Name), Is.EqualTo(new[] { "a" }));
-        ExpectToEqual(await page.APIRequest.CookiesAsync(server.EmptyPage), await context.CookiesAsync(server.EmptyPage));
+        Assert.That((await page.APIRequest.CookiesAsync(Server.EmptyPage)).Select(c => c.Name), Is.EqualTo(new[] { "a" }));
+        ExpectToEqual(await page.APIRequest.CookiesAsync(Server.EmptyPage), await context.CookiesAsync(Server.EmptyPage));
     }
 
     [UpstreamTest("FE-110 page.request.clearCookies should clear browser context cookies")]
-    public async Task PageRequestClearCookiesShouldClearBrowserContextCookies(IBrowserContext context, IPage page, Server server)
+    public async Task PageRequestClearCookiesShouldClearBrowserContextCookies()
     {
+        var context = await ContextFixture();
+        var page = await PageFixture();
         await context.AddCookiesAsync(new[]
         {
-            new Cookie { Name = "a", Value = "b", Url = server.EmptyPage },
-            new Cookie { Name = "c", Value = "d", Url = server.EmptyPage },
+            new Cookie { Name = "a", Value = "b", Url = Server.EmptyPage },
+            new Cookie { Name = "c", Value = "d", Url = Server.EmptyPage },
         });
         await page.APIRequest.ClearCookiesAsync(new() { Name = "a" });
         Assert.That((await context.CookiesAsync()).Select(c => c.Name), Is.EqualTo(new[] { "c" }));
         await page.APIRequest.ClearCookiesAsync();
         Assert.That(await context.CookiesAsync(), Is.Empty);
         var (req, _) = await PromiseAll(
-            server.WaitForRequest("/empty.html"),
-            page.APIRequest.GetAsync(server.EmptyPage));
+            Server.WaitForRequest("/empty.html"),
+            page.APIRequest.GetAsync(Server.EmptyPage));
         Assert.That(req.Headers["cookie"], Is.Null);
     }
 
     [UpstreamTest("FE-111 should preserve cookie order from Set-Cookie header")]
-    public async Task ShouldPreserveCookieOrderFromSetCookieHeader(IBrowserContext context, IPage page, Server server, string browserName, bool isLinux)
+    public async Task ShouldPreserveCookieOrderFromSetCookieHeader()
     {
-        server.SetRoute("/setcookie.html", (req, res) =>
+        var context = await ContextFixture();
+        var page = await PageFixture();
+        Server.SetRoute("/setcookie.html", (req, res) =>
         {
             res.SetHeader("Set-Cookie", new[] { "cookie.0=foo", "cookie.1=bar" });
             res.End();
         });
-        await page.APIRequest.GetAsync(server.Prefix + "/setcookie.html");
+        await page.APIRequest.GetAsync(Server.Prefix + "/setcookie.html");
         var cookies = await context.CookiesAsync();
         ExpectToEqual(cookies.Select(c => new { name = c.Name, value = c.Value }), new[]
         {
@@ -474,24 +499,26 @@ public class BrowsercontextFetchTests
                 value = "bar",
             },
         });
-        await page.GotoAsync(server.EmptyPage);
+        await page.GotoAsync(Server.EmptyPage);
         Assert.That(await page.EvaluateAsync<string>("() => document.cookie"), Is.EqualTo("cookie.0=foo; cookie.1=bar"));
-        var requestPromise = server.WaitForRequest("/empty.html");
-        await page.APIRequest.GetAsync(server.EmptyPage);
+        var requestPromise = Server.WaitForRequest("/empty.html");
+        await page.APIRequest.GetAsync(Server.EmptyPage);
         var request = await requestPromise;
         Assert.That(request.Headers["cookie"], Is.EqualTo("cookie.0=foo; cookie.1=bar"));
     }
 
     [UpstreamTest("FE-112 should support cookie with empty value")]
-    public async Task ShouldSupportCookieWithEmptyValue(IBrowserContext context, IPage page, Server server)
+    public async Task ShouldSupportCookieWithEmptyValue()
     {
-        server.SetRoute("/setcookie.html", (req, res) =>
+        var context = await ContextFixture();
+        var page = await PageFixture();
+        Server.SetRoute("/setcookie.html", (req, res) =>
         {
             res.SetHeader("Set-Cookie", new[] { "first=" });
             res.End();
         });
-        await context.APIRequest.GetAsync(server.Prefix + "/setcookie.html");
-        await page.GotoAsync(server.EmptyPage);
+        await context.APIRequest.GetAsync(Server.Prefix + "/setcookie.html");
+        await page.GotoAsync(Server.EmptyPage);
         Assert.That(await page.EvaluateAsync<string>("() => document.cookie"), Is.EqualTo("first="));
         var cookies = await context.CookiesAsync();
         ExpectToEqual(cookies.Select(c => new { name = c.Name, value = c.Value }), new[]
@@ -505,70 +532,74 @@ public class BrowsercontextFetchTests
     }
 
     [UpstreamTest("FE-113 should not lose body while handling Set-Cookie header")]
-    public async Task ShouldNotLoseBodyWhileHandlingSetCookieHeader(IBrowserContext context, Server server)
+    public async Task ShouldNotLoseBodyWhileHandlingSetCookieHeader()
     {
-        server.SetRoute("/setcookie.html", (req, res) =>
+        var context = await ContextFixture();
+        Server.SetRoute("/setcookie.html", (req, res) =>
         {
             res.SetHeader("Set-Cookie", new[] { "session=value", "foo=bar; max-age=3600" });
             res.End("text content");
         });
-        var response = await context.APIRequest.GetAsync(server.Prefix + "/setcookie.html");
+        var response = await context.APIRequest.GetAsync(Server.Prefix + "/setcookie.html");
         Assert.That(await response.TextAsync(), Is.EqualTo("text content"));
     }
 
     [UpstreamTest("FE-114 should remove cookie with negative max-age")]
-    public async Task ShouldRemoveCookieWithNegativeMaxAge(IPage page, Server server)
+    public async Task ShouldRemoveCookieWithNegativeMaxAge()
     {
-        server.SetRoute("/setcookie.html", (req, res) =>
+        var page = await PageFixture();
+        Server.SetRoute("/setcookie.html", (req, res) =>
         {
             res.SetHeader("Set-Cookie", new[] { "a=v; max-age=100000", "b=v; max-age=100000", "c=v" });
             res.End();
         });
-        server.SetRoute("/removecookie.html", (req, res) =>
+        Server.SetRoute("/removecookie.html", (req, res) =>
         {
             var maxAge = -2 * DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
             res.SetHeader("Set-Cookie", new[] { $"a=v; max-age={maxAge}", "b=v; max-age=-1" });
             res.End();
         });
-        await page.APIRequest.GetAsync($"{server.Prefix}/setcookie.html");
-        await page.APIRequest.GetAsync($"{server.Prefix}/removecookie.html");
+        await page.APIRequest.GetAsync($"{Server.Prefix}/setcookie.html");
+        await page.APIRequest.GetAsync($"{Server.Prefix}/removecookie.html");
         var (serverRequest, _) = await PromiseAll(
-            server.WaitForRequest("/empty.html"),
-            page.APIRequest.GetAsync(server.EmptyPage));
+            Server.WaitForRequest("/empty.html"),
+            page.APIRequest.GetAsync(Server.EmptyPage));
         Assert.That(serverRequest.Headers["cookie"], Is.EqualTo("c=v"));
     }
 
     [UpstreamTest("FE-115 should remove cookie with expires far in the past")]
-    public async Task ShouldRemoveCookieWithExpiresFarInThePast(IPage page, Server server)
+    public async Task ShouldRemoveCookieWithExpiresFarInThePast()
     {
-        server.SetRoute("/setcookie.html", (req, res) =>
+        var page = await PageFixture();
+        Server.SetRoute("/setcookie.html", (req, res) =>
         {
             res.SetHeader("Set-Cookie", new[] { "a=v; max-age=1000000" });
             res.End();
         });
-        server.SetRoute("/removecookie.html", (req, res) =>
+        Server.SetRoute("/removecookie.html", (req, res) =>
         {
             res.SetHeader("Set-Cookie", new[] { "a=v; expires=Wed, 01 Jan 1000 00:00:00 GMT" });
             res.End();
         });
-        await page.APIRequest.GetAsync($"{server.Prefix}/setcookie.html");
-        await page.APIRequest.GetAsync($"{server.Prefix}/removecookie.html");
+        await page.APIRequest.GetAsync($"{Server.Prefix}/setcookie.html");
+        await page.APIRequest.GetAsync($"{Server.Prefix}/removecookie.html");
         var (serverRequest, _) = await PromiseAll(
-            server.WaitForRequest("/empty.html"),
-            page.APIRequest.GetAsync(server.EmptyPage));
+            Server.WaitForRequest("/empty.html"),
+            page.APIRequest.GetAsync(Server.EmptyPage));
         Assert.That(serverRequest.Headers["cookie"], Is.Null.Or.Empty);
     }
 
     [UpstreamTest("FE-116 should handle cookies on redirects")]
-    public async Task ShouldHandleCookiesOnRedirects(IBrowserContext context, Server server, string browserName, bool isWindows, string channel)
+    public async Task ShouldHandleCookiesOnRedirects()
     {
-        server.SetRoute("/redirect1", (req, res) =>
+        var context = await ContextFixture();
+        Server.SetRoute("/redirect1", (req, res) =>
         {
             res.SetHeader("Set-Cookie", "r1=v1;SameSite=Lax");
             res.WriteHead(301, new() { ["location"] = "/a/b/redirect2" });
             res.End();
         });
-        server.SetRoute("/a/b/redirect2", (req, res) =>
+        Server.SetRoute("/a/b/redirect2", (req, res) =>
         {
             res.SetHeader("Set-Cookie", "r2=v2;SameSite=Lax");
             res.WriteHead(302, new() { ["location"] = "/title.html" });
@@ -576,20 +607,20 @@ public class BrowsercontextFetchTests
         });
         {
             var (req1, req2, req3, _) = await PromiseAll(
-                server.WaitForRequest("/redirect1"),
-                server.WaitForRequest("/a/b/redirect2"),
-                server.WaitForRequest("/title.html"),
-                context.APIRequest.GetAsync($"{server.Prefix}/redirect1"));
+                Server.WaitForRequest("/redirect1"),
+                Server.WaitForRequest("/a/b/redirect2"),
+                Server.WaitForRequest("/title.html"),
+                context.APIRequest.GetAsync($"{Server.Prefix}/redirect1"));
             Assert.That(req1.Headers["cookie"], Is.Null.Or.Empty);
             Assert.That(req2.Headers["cookie"], Is.EqualTo("r1=v1"));
             Assert.That(req3.Headers["cookie"], Is.EqualTo("r1=v1"));
         }
         {
             var (req1, req2, req3, _) = await PromiseAll(
-                server.WaitForRequest("/redirect1"),
-                server.WaitForRequest("/a/b/redirect2"),
-                server.WaitForRequest("/title.html"),
-                context.APIRequest.GetAsync($"{server.Prefix}/redirect1"));
+                Server.WaitForRequest("/redirect1"),
+                Server.WaitForRequest("/a/b/redirect2"),
+                Server.WaitForRequest("/title.html"),
+                context.APIRequest.GetAsync($"{Server.Prefix}/redirect1"));
             Assert.That(req1.Headers["cookie"], Is.EqualTo("r1=v1"));
             Assert.That(req2.Headers["cookie"].Split(';').Select(s => s.Trim()).Order(StringComparer.Ordinal), Is.EqualTo(new[] { "r1=v1", "r2=v2" }));
             Assert.That(req3.Headers["cookie"], Is.EqualTo("r1=v1"));
@@ -600,10 +631,10 @@ public class BrowsercontextFetchTests
         {
             new
             {
-                sameSite = (browserName == "webkit" && isWindows && channel != "webkit-wsl") ? "None" : "Lax",
+                sameSite = (BrowserName == "webkit" && IsWindows && Channel != "webkit-wsl") ? "None" : "Lax",
                 name = "r2",
                 value = "v2",
-                domain = server.Hostname,
+                domain = Server.Hostname,
                 path = "/a/b",
                 expires = -1,
                 httpOnly = false,
@@ -611,10 +642,10 @@ public class BrowsercontextFetchTests
             },
             new
             {
-                sameSite = (browserName == "webkit" && isWindows && channel != "webkit-wsl") ? "None" : "Lax",
+                sameSite = (BrowserName == "webkit" && IsWindows && Channel != "webkit-wsl") ? "None" : "Lax",
                 name = "r1",
                 value = "v1",
-                domain = server.Hostname,
+                domain = Server.Hostname,
                 path = "/",
                 expires = -1,
                 httpOnly = false,
@@ -624,9 +655,11 @@ public class BrowsercontextFetchTests
     }
 
     [UpstreamTest("FE-117 should return raw headers")]
-    public async Task ShouldReturnRawHeaders(IBrowserContext context, IPage page, Server server)
+    public async Task ShouldReturnRawHeaders()
     {
-        server.SetRoute("/headers", (req, res) =>
+        var context = await ContextFixture();
+        var page = await PageFixture();
+        Server.SetRoute("/headers", (req, res) =>
         {
             // Headers array is only supported since Node v14.14.0 so we write directly to the socket.
             // res.writeHead(200, ['name-a', 'v1','name-b', 'v4','Name-a', 'v2', 'name-A', 'v3']);
@@ -640,7 +673,7 @@ public class BrowsercontextFetchTests
             conn.Uncork();
             conn.End();
         });
-        var response = await context.APIRequest.GetAsync($"{server.Prefix}/headers");
+        var response = await context.APIRequest.GetAsync($"{Server.Prefix}/headers");
         Assert.That(response.Status, Is.EqualTo(200));
         var headers = response.HeadersArray.Where(header => header.Name.ToLowerInvariant().Contains("name-", StringComparison.Ordinal));
         ExpectToEqual(headers, new[] { new { name = "Name-A", value = "v1" }, new { name = "name-b", value = "v4" }, new { name = "Name-a", value = "v2" }, new { name = "name-A", value = "v3" } });
@@ -650,13 +683,14 @@ public class BrowsercontextFetchTests
     }
 
     [UpstreamTest("FE-118 should work with http credentials")]
-    public async Task ShouldWorkWithHttpCredentials(IBrowserContext context, Server server)
+    public async Task ShouldWorkWithHttpCredentials()
     {
-        server.SetAuth("/empty.html", "user", "pass");
+        var context = await ContextFixture();
+        Server.SetAuth("/empty.html", "user", "pass");
 
         var (request, response) = await PromiseAll(
-            server.WaitForRequest("/empty.html"),
-            context.APIRequest.GetAsync(server.EmptyPage, new()
+            Server.WaitForRequest("/empty.html"),
+            context.APIRequest.GetAsync(Server.EmptyPage, new()
             {
                 Headers = new Dictionary<string, string>
                 {
@@ -668,42 +702,42 @@ public class BrowsercontextFetchTests
     }
 
     [UpstreamTest("FE-121 should support multiple httpCredentials")]
-    public async Task ShouldSupportMultipleHttpCredentials(ContextFactory contextFactory, Server server, string browserName)
+    public async Task ShouldSupportMultipleHttpCredentials()
     {
-        server.SetAuth("/empty.html", "user1", "pass1");
-        var context = await contextFactory(new()
+        Server.SetAuth("/empty.html", "user1", "pass1");
+        var context = await ContextFactory(new()
         {
             HttpCredentialsList = new[]
             {
-                new HttpCredentials { Username = "user1", Password = "pass1", Origin = server.Prefix },
-                new HttpCredentials { Username = "user2", Password = "pass2", Origin = server.CrossProcessPrefix },
+                new HttpCredentials { Username = "user1", Password = "pass1", Origin = Server.Prefix },
+                new HttpCredentials { Username = "user2", Password = "pass2", Origin = Server.CrossProcessPrefix },
             },
         });
-        var response1 = await context.APIRequest.GetAsync(server.EmptyPage);
+        var response1 = await context.APIRequest.GetAsync(Server.EmptyPage);
         Assert.That(response1.Status, Is.EqualTo(200));
         // Wrong credentials are picked for the other origin.
-        var response2 = await context.APIRequest.GetAsync(server.CrossProcessPrefix + "/empty.html");
+        var response2 = await context.APIRequest.GetAsync(Server.CrossProcessPrefix + "/empty.html");
         Assert.That(response2.Status, Is.EqualTo(401));
     }
 
     [UpstreamTest("FE-122 should support HTTPCredentials.send for newContext")]
-    public async Task ShouldSupportHTTPCredentialsSendForNewContext(ContextFactory contextFactory, Server server)
+    public async Task ShouldSupportHTTPCredentialsSendForNewContext()
     {
-        var context = await contextFactory(new()
+        var context = await ContextFactory(new()
         {
-            HttpCredentials = new() { Username = "user", Password = "pass", Origin = server.Prefix.ToUpperInvariant(), Send = HttpCredentialsSend.Always },
+            HttpCredentials = new() { Username = "user", Password = "pass", Origin = Server.Prefix.ToUpperInvariant(), Send = HttpCredentialsSend.Always },
         });
         {
             var (serverRequest, response) = await PromiseAll(
-                server.WaitForRequest("/empty.html"),
-                context.APIRequest.GetAsync(server.EmptyPage));
+                Server.WaitForRequest("/empty.html"),
+                context.APIRequest.GetAsync(Server.EmptyPage));
             Assert.That(serverRequest.Headers["authorization"], Is.EqualTo("Basic " + Convert.ToBase64String(Encoding.UTF8.GetBytes("user:pass"))));
             Assert.That(response.Status, Is.EqualTo(200));
         }
         {
             var (serverRequest, response) = await PromiseAll(
-                server.WaitForRequest("/empty.html"),
-                context.APIRequest.GetAsync(server.CrossProcessPrefix + "/empty.html"));
+                Server.WaitForRequest("/empty.html"),
+                context.APIRequest.GetAsync(Server.CrossProcessPrefix + "/empty.html"));
             // Not sent to another origin.
             Assert.That(serverRequest.Headers["authorization"], Is.Null);
             Assert.That(response.Status, Is.EqualTo(200));
@@ -711,23 +745,23 @@ public class BrowsercontextFetchTests
     }
 
     [UpstreamTest("FE-123 should support HTTPCredentials.send for browser.newPage")]
-    public async Task ShouldSupportHTTPCredentialsSendForBrowserNewPage(ContextFactory contextFactory, Server server, IBrowser browser, BrowserNewPageOptions newPageOptions)
+    public async Task ShouldSupportHTTPCredentialsSendForBrowserNewPage()
     {
-        var page = await browser.NewPageAsync(new(newPageOptions)
+        var page = await Browser.NewPageAsync(new(NewPageOptions())
         {
-            HttpCredentials = new() { Username = "user", Password = "pass", Origin = server.Prefix.ToUpperInvariant(), Send = HttpCredentialsSend.Always },
+            HttpCredentials = new() { Username = "user", Password = "pass", Origin = Server.Prefix.ToUpperInvariant(), Send = HttpCredentialsSend.Always },
         });
         {
             var (serverRequest, response) = await PromiseAll(
-                server.WaitForRequest("/empty.html"),
-                page.APIRequest.GetAsync(server.EmptyPage));
+                Server.WaitForRequest("/empty.html"),
+                page.APIRequest.GetAsync(Server.EmptyPage));
             Assert.That(serverRequest.Headers["authorization"], Is.EqualTo("Basic " + Convert.ToBase64String(Encoding.UTF8.GetBytes("user:pass"))));
             Assert.That(response.Status, Is.EqualTo(200));
         }
         {
             var (serverRequest, response) = await PromiseAll(
-                server.WaitForRequest("/empty.html"),
-                page.APIRequest.GetAsync(server.CrossProcessPrefix + "/empty.html"));
+                Server.WaitForRequest("/empty.html"),
+                page.APIRequest.GetAsync(Server.CrossProcessPrefix + "/empty.html"));
             // Not sent to another origin.
             Assert.That(serverRequest.Headers["authorization"], Is.Null);
             Assert.That(response.Status, Is.EqualTo(200));
@@ -736,11 +770,12 @@ public class BrowsercontextFetchTests
     }
 
     [UpstreamTest("FE-124 delete should support post data")]
-    public async Task DeleteShouldSupportPostData(IBrowserContext context, Server server)
+    public async Task DeleteShouldSupportPostData()
     {
+        var context = await ContextFixture();
         var (request, response) = await PromiseAll(
-            server.WaitForRequest("/simple.json"),
-            context.APIRequest.DeleteAsync($"{server.Prefix}/simple.json", new()
+            Server.WaitForRequest("/simple.json"),
+            context.APIRequest.DeleteAsync($"{Server.Prefix}/simple.json", new()
             {
                 DataString = "My request",
             }));
@@ -751,11 +786,12 @@ public class BrowsercontextFetchTests
     }
 
     [UpstreamTest("FE-125 get should support post data")]
-    public async Task GetShouldSupportPostData(IBrowserContext context, Server server)
+    public async Task GetShouldSupportPostData()
     {
+        var context = await ContextFixture();
         var (request, response) = await PromiseAll(
-            server.WaitForRequest("/simple.json"),
-            context.APIRequest.GetAsync($"{server.Prefix}/simple.json", new()
+            Server.WaitForRequest("/simple.json"),
+            context.APIRequest.GetAsync($"{Server.Prefix}/simple.json", new()
             {
                 DataString = "My request",
             }));
@@ -766,11 +802,12 @@ public class BrowsercontextFetchTests
     }
 
     [UpstreamTest("FE-126 head should support post data")]
-    public async Task HeadShouldSupportPostData(IBrowserContext context, Server server)
+    public async Task HeadShouldSupportPostData()
     {
+        var context = await ContextFixture();
         var (request, response) = await PromiseAll(
-            server.WaitForRequest("/simple.json"),
-            context.APIRequest.HeadAsync($"{server.Prefix}/simple.json", new()
+            Server.WaitForRequest("/simple.json"),
+            context.APIRequest.HeadAsync($"{Server.Prefix}/simple.json", new()
             {
                 DataString = "My request",
             }));
@@ -781,11 +818,12 @@ public class BrowsercontextFetchTests
     }
 
     [UpstreamTest("FE-127 patch should support post data")]
-    public async Task PatchShouldSupportPostData(IBrowserContext context, Server server)
+    public async Task PatchShouldSupportPostData()
     {
+        var context = await ContextFixture();
         var (request, response) = await PromiseAll(
-            server.WaitForRequest("/simple.json"),
-            context.APIRequest.PatchAsync($"{server.Prefix}/simple.json", new()
+            Server.WaitForRequest("/simple.json"),
+            context.APIRequest.PatchAsync($"{Server.Prefix}/simple.json", new()
             {
                 DataString = "My request",
             }));
@@ -796,11 +834,12 @@ public class BrowsercontextFetchTests
     }
 
     [UpstreamTest("FE-128 post should support post data")]
-    public async Task PostShouldSupportPostData(IBrowserContext context, Server server)
+    public async Task PostShouldSupportPostData()
     {
+        var context = await ContextFixture();
         var (request, response) = await PromiseAll(
-            server.WaitForRequest("/simple.json"),
-            context.APIRequest.PostAsync($"{server.Prefix}/simple.json", new()
+            Server.WaitForRequest("/simple.json"),
+            context.APIRequest.PostAsync($"{Server.Prefix}/simple.json", new()
             {
                 DataString = "My request",
             }));
@@ -811,11 +850,12 @@ public class BrowsercontextFetchTests
     }
 
     [UpstreamTest("FE-129 put should support post data")]
-    public async Task PutShouldSupportPostData(IBrowserContext context, Server server)
+    public async Task PutShouldSupportPostData()
     {
+        var context = await ContextFixture();
         var (request, response) = await PromiseAll(
-            server.WaitForRequest("/simple.json"),
-            context.APIRequest.PutAsync($"{server.Prefix}/simple.json", new()
+            Server.WaitForRequest("/simple.json"),
+            context.APIRequest.PutAsync($"{Server.Prefix}/simple.json", new()
             {
                 DataString = "My request",
             }));
@@ -826,11 +866,13 @@ public class BrowsercontextFetchTests
     }
 
     [UpstreamTest("FE-130 should add default headers")]
-    public async Task ShouldAddDefaultHeaders(IBrowserContext context, Server server, IPage page)
+    public async Task ShouldAddDefaultHeaders()
     {
+        var context = await ContextFixture();
+        var page = await PageFixture();
         var (request, _) = await PromiseAll(
-            server.WaitForRequest("/empty.html"),
-            context.APIRequest.GetAsync(server.EmptyPage));
+            Server.WaitForRequest("/empty.html"),
+            context.APIRequest.GetAsync(Server.EmptyPage));
         Assert.That(request.Headers["accept"], Is.EqualTo("*/*"));
         var userAgent = await page.EvaluateAsync<string>("() => navigator.userAgent");
         Assert.That(request.Headers["user-agent"], Is.EqualTo(userAgent));
@@ -838,16 +880,17 @@ public class BrowsercontextFetchTests
     }
 
     [UpstreamTest("FE-131 should send content-length")]
-    public async Task ShouldSendContentLength(IBrowserContext context, Func<string, string> asset, Server server)
+    public async Task ShouldSendContentLength()
     {
+        var context = await ContextFixture();
         var bytes = new List<byte>();
         for (var i = 0; i < 256; i++)
         {
             bytes.Add((byte)i);
         }
         var (request, _) = await PromiseAll(
-            server.WaitForRequest("/empty.html"),
-            context.APIRequest.PostAsync(server.EmptyPage, new()
+            Server.WaitForRequest("/empty.html"),
+            context.APIRequest.PostAsync(Server.EmptyPage, new()
             {
                 DataByte = bytes.ToArray(),
             }));
@@ -856,12 +899,14 @@ public class BrowsercontextFetchTests
     }
 
     [UpstreamTest("FE-132 should add default headers to redirects")]
-    public async Task ShouldAddDefaultHeadersToRedirects(IBrowserContext context, Server server, IPage page)
+    public async Task ShouldAddDefaultHeadersToRedirects()
     {
-        server.SetRedirect("/redirect", "/empty.html");
+        var context = await ContextFixture();
+        var page = await PageFixture();
+        Server.SetRedirect("/redirect", "/empty.html");
         var (request, _) = await PromiseAll(
-            server.WaitForRequest("/empty.html"),
-            context.APIRequest.GetAsync($"{server.Prefix}/redirect"));
+            Server.WaitForRequest("/empty.html"),
+            context.APIRequest.GetAsync($"{Server.Prefix}/redirect"));
         Assert.That(request.Headers["accept"], Is.EqualTo("*/*"));
         var userAgent = await page.EvaluateAsync<string>("() => navigator.userAgent");
         Assert.That(request.Headers["user-agent"], Is.EqualTo(userAgent));
@@ -869,11 +914,13 @@ public class BrowsercontextFetchTests
     }
 
     [UpstreamTest("FE-133 should allow to override default headers")]
-    public async Task ShouldAllowToOverrideDefaultHeaders(IBrowserContext context, Server server, IPage page)
+    public async Task ShouldAllowToOverrideDefaultHeaders()
     {
+        var context = await ContextFixture();
+        var page = await PageFixture();
         var (request, _) = await PromiseAll(
-            server.WaitForRequest("/empty.html"),
-            context.APIRequest.GetAsync(server.EmptyPage, new()
+            Server.WaitForRequest("/empty.html"),
+            context.APIRequest.GetAsync(Server.EmptyPage, new()
             {
                 Headers = new Dictionary<string, string>
                 {
@@ -888,40 +935,43 @@ public class BrowsercontextFetchTests
     }
 
     [UpstreamTest("FE-134 should propagate custom headers with redirects")]
-    public async Task ShouldPropagateCustomHeadersWithRedirects(IBrowserContext context, Server server)
+    public async Task ShouldPropagateCustomHeadersWithRedirects()
     {
-        server.SetRedirect("/a/redirect1", "/b/c/redirect2");
-        server.SetRedirect("/b/c/redirect2", "/simple.json");
+        var context = await ContextFixture();
+        Server.SetRedirect("/a/redirect1", "/b/c/redirect2");
+        Server.SetRedirect("/b/c/redirect2", "/simple.json");
         var (req1, req2, req3, _) = await PromiseAll(
-            server.WaitForRequest("/a/redirect1"),
-            server.WaitForRequest("/b/c/redirect2"),
-            server.WaitForRequest("/simple.json"),
-            context.APIRequest.GetAsync($"{server.Prefix}/a/redirect1", new() { Headers = new Dictionary<string, string> { ["foo"] = "bar" } }));
+            Server.WaitForRequest("/a/redirect1"),
+            Server.WaitForRequest("/b/c/redirect2"),
+            Server.WaitForRequest("/simple.json"),
+            context.APIRequest.GetAsync($"{Server.Prefix}/a/redirect1", new() { Headers = new Dictionary<string, string> { ["foo"] = "bar" } }));
         Assert.That(req1.Headers["foo"], Is.EqualTo("bar"));
         Assert.That(req2.Headers["foo"], Is.EqualTo("bar"));
         Assert.That(req3.Headers["foo"], Is.EqualTo("bar"));
     }
 
     [UpstreamTest("FE-135 should propagate extra http headers with redirects")]
-    public async Task ShouldPropagateExtraHttpHeadersWithRedirects(IBrowserContext context, Server server)
+    public async Task ShouldPropagateExtraHttpHeadersWithRedirects()
     {
-        server.SetRedirect("/a/redirect1", "/b/c/redirect2");
-        server.SetRedirect("/b/c/redirect2", "/simple.json");
+        var context = await ContextFixture();
+        Server.SetRedirect("/a/redirect1", "/b/c/redirect2");
+        Server.SetRedirect("/b/c/redirect2", "/simple.json");
         await context.SetExtraHTTPHeadersAsync(new Dictionary<string, string> { ["My-Secret"] = "Value" });
         var (req1, req2, req3, _) = await PromiseAll(
-            server.WaitForRequest("/a/redirect1"),
-            server.WaitForRequest("/b/c/redirect2"),
-            server.WaitForRequest("/simple.json"),
-            context.APIRequest.GetAsync($"{server.Prefix}/a/redirect1"));
+            Server.WaitForRequest("/a/redirect1"),
+            Server.WaitForRequest("/b/c/redirect2"),
+            Server.WaitForRequest("/simple.json"),
+            context.APIRequest.GetAsync($"{Server.Prefix}/a/redirect1"));
         Assert.That(req1.Headers["my-secret"], Is.EqualTo("Value"));
         Assert.That(req2.Headers["my-secret"], Is.EqualTo("Value"));
         Assert.That(req3.Headers["my-secret"], Is.EqualTo("Value"));
     }
 
     [UpstreamTest("FE-136 should throw on invalid header value")]
-    public async Task ShouldThrowOnInvalidHeaderValue(IBrowserContext context, Server server)
+    public async Task ShouldThrowOnInvalidHeaderValue()
     {
-        var error = await Catch(() => context.APIRequest.GetAsync($"{server.Prefix}/a/redirect1", new()
+        var context = await ContextFixture();
+        var error = await Catch(() => context.APIRequest.GetAsync($"{Server.Prefix}/a/redirect1", new()
         {
             Headers = new Dictionary<string, string>
             {
@@ -932,8 +982,9 @@ public class BrowsercontextFetchTests
     }
 
     [UpstreamTest("FE-137 should throw on non-http(s) protocol")]
-    public async Task ShouldThrowOnNonHttpSProtocol(IBrowserContext context)
+    public async Task ShouldThrowOnNonHttpSProtocol()
     {
+        var context = await ContextFixture();
         var error1 = await Catch(() => context.APIRequest.GetAsync("data:text/plain,test"));
         Assert.That(error1.Message, Does.Contain("Protocol \"data:\" not supported"));
         var error2 = await Catch(() => context.APIRequest.GetAsync("file:///tmp/foo"));
@@ -941,28 +992,29 @@ public class BrowsercontextFetchTests
     }
 
     [UpstreamTest("FE-139 should inherit ignoreHTTPSErrors from context")]
-    public async Task ShouldInheritIgnoreHTTPSErrorsFromContext(ContextFactory contextFactory, BrowserNewContextOptions contextOptions, Server httpsServer)
+    public async Task ShouldInheritIgnoreHTTPSErrorsFromContext()
     {
-        var context = await contextFactory(new(contextOptions) { IgnoreHTTPSErrors = true });
-        var response = await context.APIRequest.GetAsync(httpsServer.EmptyPage);
+        var context = await ContextFactory(new(ContextOptions()) { IgnoreHTTPSErrors = true });
+        var response = await context.APIRequest.GetAsync(HttpsServer.EmptyPage);
         Assert.That(response.Status, Is.EqualTo(200));
     }
 
     [UpstreamTest("FE-140 should resolve url relative to baseURL")]
-    public async Task ShouldResolveUrlRelativeToBaseURL(Server server, ContextFactory contextFactory, BrowserNewContextOptions contextOptions)
+    public async Task ShouldResolveUrlRelativeToBaseURL()
     {
-        var context = await contextFactory(new(contextOptions)
+        var context = await ContextFactory(new(ContextOptions())
         {
-            BaseURL = server.Prefix,
+            BaseURL = Server.Prefix,
         });
         var response = await context.APIRequest.GetAsync("/empty.html");
-        Assert.That(response.Url, Is.EqualTo(server.EmptyPage));
+        Assert.That(response.Url, Is.EqualTo(Server.EmptyPage));
     }
 
     [UpstreamTest("FE-141 should support gzip compression")]
-    public async Task ShouldSupportGzipCompression(IBrowserContext context, Server server)
+    public async Task ShouldSupportGzipCompression()
     {
-        server.SetRoute("/compressed", (req, res) =>
+        var context = await ContextFixture();
+        Server.SetRoute("/compressed", (req, res) =>
         {
             res.WriteHead(200, new()
             {
@@ -980,14 +1032,15 @@ public class BrowsercontextFetchTests
             res.End();
         });
 
-        var response = await context.APIRequest.GetAsync(server.Prefix + "/compressed");
+        var response = await context.APIRequest.GetAsync(Server.Prefix + "/compressed");
         Assert.That(await response.TextAsync(), Is.EqualTo("Hello, world!"));
     }
 
     [UpstreamTest("FE-142 should support case-insensitive content-encoding")]
-    public async Task ShouldSupportCaseInsensitiveContentEncoding(IBrowserContext context, Server server)
+    public async Task ShouldSupportCaseInsensitiveContentEncoding()
     {
-        server.SetRoute("/compressed-uppercase", (req, res) =>
+        var context = await ContextFixture();
+        Server.SetRoute("/compressed-uppercase", (req, res) =>
         {
             res.WriteHead(200, new()
             {
@@ -1005,14 +1058,15 @@ public class BrowsercontextFetchTests
             res.End();
         });
 
-        var response = await context.APIRequest.GetAsync(server.Prefix + "/compressed-uppercase");
+        var response = await context.APIRequest.GetAsync(Server.Prefix + "/compressed-uppercase");
         Assert.That(await response.TextAsync(), Is.EqualTo("Hello, world!"));
     }
 
     [UpstreamTest("FE-143 should throw informative error on corrupted gzip body")]
-    public async Task ShouldThrowInformativeErrorOnCorruptedGzipBody(IBrowserContext context, Server server)
+    public async Task ShouldThrowInformativeErrorOnCorruptedGzipBody()
     {
-        server.SetRoute("/corrupted", (req, res) =>
+        var context = await ContextFixture();
+        Server.SetRoute("/corrupted", (req, res) =>
         {
             res.WriteHead(200, new()
             {
@@ -1023,14 +1077,15 @@ public class BrowsercontextFetchTests
             res.End();
         });
 
-        var error = await Catch(() => context.APIRequest.GetAsync(server.Prefix + "/corrupted"));
+        var error = await Catch(() => context.APIRequest.GetAsync(Server.Prefix + "/corrupted"));
         Assert.That(error.Message, Does.Contain("failed to decompress 'gzip' encoding"));
     }
 
     [UpstreamTest("FE-144 should support brotli compression")]
-    public async Task ShouldSupportBrotliCompression(IBrowserContext context, Server server)
+    public async Task ShouldSupportBrotliCompression()
     {
-        server.SetRoute("/compressed", (req, res) =>
+        var context = await ContextFixture();
+        Server.SetRoute("/compressed", (req, res) =>
         {
             res.WriteHead(200, new()
             {
@@ -1048,14 +1103,15 @@ public class BrowsercontextFetchTests
             res.End();
         });
 
-        var response = await context.APIRequest.GetAsync(server.Prefix + "/compressed");
+        var response = await context.APIRequest.GetAsync(Server.Prefix + "/compressed");
         Assert.That(await response.TextAsync(), Is.EqualTo("Hello, world!"));
     }
 
     [UpstreamTest("FE-145 should throw informative error on corrupted brotli body")]
-    public async Task ShouldThrowInformativeErrorOnCorruptedBrotliBody(IBrowserContext context, Server server)
+    public async Task ShouldThrowInformativeErrorOnCorruptedBrotliBody()
     {
-        server.SetRoute("/corrupted", (req, res) =>
+        var context = await ContextFixture();
+        Server.SetRoute("/corrupted", (req, res) =>
         {
             res.WriteHead(200, new()
             {
@@ -1066,14 +1122,15 @@ public class BrowsercontextFetchTests
             res.End();
         });
 
-        var error = await Catch(() => context.APIRequest.GetAsync(server.Prefix + "/corrupted"));
+        var error = await Catch(() => context.APIRequest.GetAsync(Server.Prefix + "/corrupted"));
         Assert.That(error.Message, Does.Contain("failed to decompress 'br' encoding"));
     }
 
     [UpstreamTest("FE-146 should support deflate compression")]
-    public async Task ShouldSupportDeflateCompression(IBrowserContext context, Server server)
+    public async Task ShouldSupportDeflateCompression()
     {
-        server.SetRoute("/compressed", (req, res) =>
+        var context = await ContextFixture();
+        Server.SetRoute("/compressed", (req, res) =>
         {
             res.WriteHead(200, new()
             {
@@ -1091,14 +1148,15 @@ public class BrowsercontextFetchTests
             res.End();
         });
 
-        var response = await context.APIRequest.GetAsync(server.Prefix + "/compressed");
+        var response = await context.APIRequest.GetAsync(Server.Prefix + "/compressed");
         Assert.That(await response.TextAsync(), Is.EqualTo("Hello, world!"));
     }
 
     [UpstreamTest("FE-147 should throw informative error on corrupted deflate body")]
-    public async Task ShouldThrowInformativeErrorOnCorruptedDeflateBody(IBrowserContext context, Server server)
+    public async Task ShouldThrowInformativeErrorOnCorruptedDeflateBody()
     {
-        server.SetRoute("/corrupted", (req, res) =>
+        var context = await ContextFixture();
+        Server.SetRoute("/corrupted", (req, res) =>
         {
             res.WriteHead(200, new()
             {
@@ -1109,15 +1167,16 @@ public class BrowsercontextFetchTests
             res.End();
         });
 
-        var error = await Catch(() => context.APIRequest.GetAsync(server.Prefix + "/corrupted"));
+        var error = await Catch(() => context.APIRequest.GetAsync(Server.Prefix + "/corrupted"));
         Assert.That(error.Message, Does.Contain("failed to decompress 'deflate' encoding"));
     }
 
     [UpstreamTest("FE-148 should support timeout option")]
     [LocalFixme("dotnet: the message is 'Timeout 10ms exceeded.', without the 'apiRequestContext.get: ' prefix of the call")]
-    public async Task ShouldSupportTimeoutOption(IBrowserContext context, Server server)
+    public async Task ShouldSupportTimeoutOption()
     {
-        server.SetRoute("/slow", (req, res) =>
+        var context = await ContextFixture();
+        Server.SetRoute("/slow", (req, res) =>
         {
             res.WriteHead(200, new()
             {
@@ -1126,14 +1185,15 @@ public class BrowsercontextFetchTests
             });
         });
 
-        var error = await Catch(() => context.APIRequest.GetAsync(server.Prefix + "/slow", new() { Timeout = 10 }));
+        var error = await Catch(() => context.APIRequest.GetAsync(Server.Prefix + "/slow", new() { Timeout = 10 }));
         Assert.That(error.Message, Does.Contain("apiRequestContext.get: Timeout 10ms exceeded"));
     }
 
     [UpstreamTest("FE-149 should support a timeout of 0")]
-    public async Task ShouldSupportATimeoutOf0(IBrowserContext context, Server server)
+    public async Task ShouldSupportATimeoutOf0()
     {
-        server.SetRoute("/slow", (req, res) =>
+        var context = await ContextFixture();
+        Server.SetRoute("/slow", (req, res) =>
         {
             res.WriteHead(200, new()
             {
@@ -1148,7 +1208,7 @@ public class BrowsercontextFetchTests
                 50);
         });
 
-        var response = await context.APIRequest.GetAsync(server.Prefix + "/slow", new()
+        var response = await context.APIRequest.GetAsync(Server.Prefix + "/slow", new()
         {
             Timeout = 0,
         });
@@ -1157,10 +1217,11 @@ public class BrowsercontextFetchTests
 
     [UpstreamTest("FE-150 should respect timeout after redirects")]
     [LocalFixme("dotnet: the message is 'Timeout 100ms exceeded.', without the 'apiRequestContext.get: ' prefix of the call")]
-    public async Task ShouldRespectTimeoutAfterRedirects(IBrowserContext context, Server server)
+    public async Task ShouldRespectTimeoutAfterRedirects()
     {
-        server.SetRedirect("/redirect", "/slow");
-        server.SetRoute("/slow", (req, res) =>
+        var context = await ContextFixture();
+        Server.SetRedirect("/redirect", "/slow");
+        Server.SetRoute("/slow", (req, res) =>
         {
             res.WriteHead(200, new()
             {
@@ -1170,14 +1231,15 @@ public class BrowsercontextFetchTests
         });
 
         context.SetDefaultTimeout(100);
-        var error = await Catch(() => context.APIRequest.GetAsync(server.Prefix + "/redirect"));
+        var error = await Catch(() => context.APIRequest.GetAsync(Server.Prefix + "/redirect"));
         Assert.That(error.Message, Does.Contain("apiRequestContext.get: Timeout 100ms exceeded"));
     }
 
     [UpstreamTest("FE-151 should not hang on a brotli encoded Range request")]
-    public async Task ShouldNotHangOnABrotliEncodedRangeRequest(IBrowserContext context, Server server, (int Major, int Minor, int Patch) nodeVersion)
+    public async Task ShouldNotHangOnABrotliEncodedRangeRequest()
     {
-        Info.Skip(nodeVersion.Major < 18);
+        var context = await ContextFixture();
+        Info.Skip(NodeVersion.Major < 18);
 
         // .NET: zlib.brotliCompressSync(Buffer.from('A')) is a BrotliStream.
         byte[] encodedRequestPayload;
@@ -1189,7 +1251,7 @@ public class BrowsercontextFetchTests
             }
             encodedRequestPayload = stream.ToArray();
         }
-        server.SetRoute("/brotli", (req, res) =>
+        Server.SetRoute("/brotli", (req, res) =>
         {
             res.WriteHead(206, new()
             {
@@ -1202,7 +1264,7 @@ public class BrowsercontextFetchTests
             res.Write(encodedRequestPayload[..2]);
         });
 
-        var error = await ThrowsAsync<PlaywrightException>(() => context.APIRequest.GetAsync(server.Prefix + "/brotli", new()
+        var error = await ThrowsAsync<PlaywrightException>(() => context.APIRequest.GetAsync(Server.Prefix + "/brotli", new()
         {
             Headers = new Dictionary<string, string>
             {
@@ -1213,9 +1275,10 @@ public class BrowsercontextFetchTests
     }
 
     [UpstreamTest("FE-152 should dispose")]
-    public async Task ShouldDispose(IBrowserContext context, Server server)
+    public async Task ShouldDispose()
     {
-        var response = await context.APIRequest.GetAsync(server.Prefix + "/simple.json");
+        var context = await ContextFixture();
+        var response = await context.APIRequest.GetAsync(Server.Prefix + "/simple.json");
         ExpectToEqual(await response.JsonAsync(), new { foo = "bar" });
         await response.DisposeAsync();
         var error = await Catch(() => response.BodyAsync());
@@ -1223,9 +1286,10 @@ public class BrowsercontextFetchTests
     }
 
     [UpstreamTest("FE-153 should dispose when context closes")]
-    public async Task ShouldDisposeWhenContextCloses(IBrowserContext context, Server server)
+    public async Task ShouldDisposeWhenContextCloses()
     {
-        var response = await context.APIRequest.GetAsync(server.Prefix + "/simple.json");
+        var context = await ContextFixture();
+        var response = await context.APIRequest.GetAsync(Server.Prefix + "/simple.json");
         ExpectToEqual(await response.JsonAsync(), new { foo = "bar" });
         await context.CloseAsync();
         var error = await Catch(() => response.BodyAsync());
@@ -1233,13 +1297,15 @@ public class BrowsercontextFetchTests
     }
 
     [UpstreamTest("FE-154 should override request parameters")]
-    public async Task ShouldOverrideRequestParameters(IBrowserContext context, IPage page, Server server)
+    public async Task ShouldOverrideRequestParameters()
     {
+        var context = await ContextFixture();
+        var page = await PageFixture();
         var (pageReq, _) = await PromiseAll(
             page.WaitForRequestAsync("**/*"),
-            page.GotoAsync(server.EmptyPage));
+            page.GotoAsync(Server.EmptyPage));
         var (req, _) = await PromiseAll(
-            server.WaitForRequest("/empty.html"),
+            Server.WaitForRequest("/empty.html"),
             context.APIRequest.FetchAsync(pageReq, new()
             {
                 Method = "POST",
@@ -1255,16 +1321,18 @@ public class BrowsercontextFetchTests
     }
 
     [UpstreamTest("FE-155 should support application/x-www-form-urlencoded")]
-    public async Task ShouldSupportApplicationXWwwFormUrlencoded(IBrowserContext context, IPage page, Server server)
+    public async Task ShouldSupportApplicationXWwwFormUrlencoded()
     {
+        var context = await ContextFixture();
+        var page = await PageFixture();
         // .NET: the object of the form option is a FormData.
         var form = context.APIRequest.CreateFormData();
         form.Set("firstName", "John");
         form.Set("lastName", "Doe");
         form.Set("file", "f.js");
         var (req, _) = await PromiseAll(
-            server.WaitForRequest("/empty.html"),
-            context.APIRequest.PostAsync(server.EmptyPage, new()
+            Server.WaitForRequest("/empty.html"),
+            context.APIRequest.PostAsync(Server.EmptyPage, new()
             {
                 Form = form,
             }));
@@ -1279,14 +1347,16 @@ public class BrowsercontextFetchTests
     }
 
     [UpstreamTest("FE-156 should support application/x-www-form-urlencoded with param lists")]
-    public async Task ShouldSupportApplicationXWwwFormUrlencodedWithParamLists(IBrowserContext context, IPage page, Server server)
+    public async Task ShouldSupportApplicationXWwwFormUrlencodedWithParamLists()
     {
+        var context = await ContextFixture();
+        var page = await PageFixture();
         var form = context.APIRequest.CreateFormData();
         form.Append("foo", "1");
         form.Append("foo", "2");
         var (req, _) = await PromiseAll(
-            server.WaitForRequest("/empty.html"),
-            context.APIRequest.PostAsync(server.EmptyPage, new() { Form = form }));
+            Server.WaitForRequest("/empty.html"),
+            context.APIRequest.PostAsync(Server.EmptyPage, new() { Form = form }));
         Assert.That(req.Method, Is.EqualTo("POST"));
         Assert.That(req.Headers["content-type"], Is.EqualTo("application/x-www-form-urlencoded"));
         var body = Encoding.UTF8.GetString(await req.PostBody);
@@ -1296,8 +1366,10 @@ public class BrowsercontextFetchTests
     }
 
     [UpstreamTest("FE-157 should encode to application/json by default")]
-    public async Task ShouldEncodeToApplicationJsonByDefault(IBrowserContext context, IPage page, Server server)
+    public async Task ShouldEncodeToApplicationJsonByDefault()
     {
+        var context = await ContextFixture();
+        var page = await PageFixture();
         var data = new
         {
             firstName = "John",
@@ -1308,8 +1380,8 @@ public class BrowsercontextFetchTests
             },
         };
         var (req, _) = await PromiseAll(
-            server.WaitForRequest("/empty.html"),
-            context.APIRequest.PostAsync(server.EmptyPage, new() { DataObject = data }));
+            Server.WaitForRequest("/empty.html"),
+            context.APIRequest.PostAsync(Server.EmptyPage, new() { DataObject = data }));
         Assert.That(req.Method, Is.EqualTo("POST"));
         Assert.That(req.Headers["content-type"], Is.EqualTo("application/json"));
         var body = Encoding.UTF8.GetString(await req.PostBody);
@@ -1318,15 +1390,16 @@ public class BrowsercontextFetchTests
     }
 
     [UpstreamTest("FE-158 should support multipart/form-data")]
-    public async Task ShouldSupportMultipartFormData(IBrowserContext context, Server server)
+    public async Task ShouldSupportMultipartFormData()
     {
+        var context = await ContextFixture();
         var formReceived = new TaskCompletionSource<(Exception Error, FormidableMap<string> Fields, FormidableMap<FormidableFile> Files, ServerRequest ServerRequest)>(TaskCreationOptions.RunContinuationsAsynchronously);
         // .NET: serverRequest2, error2, fields2 and files2 are serverRequest, error, fields and files, which the test declares again below.
-        server.SetRoute("/empty.html", async (serverRequest2, res) =>
+        Server.SetRoute("/empty.html", async (serverRequest2, res) =>
         {
             var form = new IncomingForm();
             var (error2, fields2, files2) = await form.Parse(serverRequest2);
-            server.ServeFile(serverRequest2, res);
+            Server.ServeFile(serverRequest2, res);
             formReceived.TrySetResult((error2, fields2, files2, serverRequest2));
         });
 
@@ -1344,7 +1417,7 @@ public class BrowsercontextFetchTests
         multipart.Set("file", file);
         var ((error, fields, files, serverRequest), response) = await PromiseAll(
             formReceived.Task,
-            context.APIRequest.PostAsync(server.EmptyPage, new()
+            context.APIRequest.PostAsync(Server.EmptyPage, new()
             {
                 Multipart = multipart,
             }));
@@ -1361,14 +1434,15 @@ public class BrowsercontextFetchTests
     }
 
     [UpstreamTest("FE-159 should escape quotes and newlines in multipart field and file names")]
-    public async Task ShouldEscapeQuotesAndNewlinesInMultipartFieldAndFileNames(IBrowserContext context, Server server)
+    public async Task ShouldEscapeQuotesAndNewlinesInMultipartFieldAndFileNames()
     {
+        var context = await ContextFixture();
         var bodyReceived = new TaskCompletionSource<(string ContentType, byte[] Body)>(TaskCreationOptions.RunContinuationsAsynchronously);
-        server.SetRoute("/empty.html", async (serverRequest, res) =>
+        Server.SetRoute("/empty.html", async (serverRequest, res) =>
         {
             // .NET: for await (const chunk of serverRequest) chunks.push(chunk) is PostBody.
             var chunks = await serverRequest.PostBody;
-            server.ServeFile(serverRequest, res);
+            Server.ServeFile(serverRequest, res);
             bodyReceived.TrySetResult((serverRequest.Headers["content-type"], chunks));
         });
         // .NET: the object of the multipart option is a FormData.
@@ -1377,7 +1451,7 @@ public class BrowsercontextFetchTests
         multipart.Set("file", new FilePayload { Name = "report \"final\"\r\n.txt", MimeType = "text/plain", Buffer = Encoding.UTF8.GetBytes("hello") });
         var ((contentType, body), _) = await PromiseAll(
             bodyReceived.Task,
-            context.APIRequest.PostAsync(server.EmptyPage, new()
+            context.APIRequest.PostAsync(Server.EmptyPage, new()
             {
                 Multipart = multipart,
             }));
@@ -1395,8 +1469,10 @@ public class BrowsercontextFetchTests
     }
 
     [UpstreamTest("FE-161 should support multipart/form-data and keep the order")]
-    public async Task ShouldSupportMultipartFormDataAndKeepTheOrder(IBrowserContext context, IPage page, Func<string, string> asset, Server server)
+    public async Task ShouldSupportMultipartFormDataAndKeepTheOrder()
     {
+        var context = await ContextFixture();
+        var page = await PageFixture();
         // .NET: the object of the multipart option is a FormData, and Object.keys(given) is the list of the names that the test sets.
         var given = context.APIRequest.CreateFormData();
         given.Set("firstName", "John");
@@ -1406,16 +1482,16 @@ public class BrowsercontextFetchTests
         var givenKeys = new[] { "firstName", "lastName", "age", "foo" };
         var formReceived = new TaskCompletionSource<(Exception Error, FormidableMap<string> Fields)>(TaskCreationOptions.RunContinuationsAsynchronously);
         // .NET: error2 and fields2 are error and fields, which the test declares again below.
-        server.SetRoute("/empty.html", async (serverRequest, res) =>
+        Server.SetRoute("/empty.html", async (serverRequest, res) =>
         {
             var form = new IncomingForm();
             var (error2, fields2, files) = await form.Parse(serverRequest);
-            server.ServeFile(serverRequest, res);
+            Server.ServeFile(serverRequest, res);
             formReceived.TrySetResult((error2, fields2));
         });
         var ((error, fields), response) = await PromiseAll(
             formReceived.Task,
-            context.APIRequest.PostAsync(server.EmptyPage, new()
+            context.APIRequest.PostAsync(Server.EmptyPage, new()
             {
                 Multipart = given,
             }));
@@ -1426,11 +1502,12 @@ public class BrowsercontextFetchTests
     }
 
     [UpstreamTest("FE-162 should support repeating names in multipart/form-data")]
-    public async Task ShouldSupportRepeatingNamesInMultipartFormData(IBrowserContext context, Server server, (int Major, int Minor, int Patch) nodeVersion)
+    public async Task ShouldSupportRepeatingNamesInMultipartFormData()
     {
-        Info.Skip(nodeVersion.Major < 20, "File is not available in Node.js < 20. FormData is not available in Node.js < 18");
+        var context = await ContextFixture();
+        Info.Skip(NodeVersion.Major < 20, "File is not available in Node.js < 20. FormData is not available in Node.js < 18");
         var postBodyPromise = new TaskCompletionSource<string>(TaskCreationOptions.RunContinuationsAsynchronously);
-        server.SetRoute("/empty.html", async (req, res) =>
+        Server.SetRoute("/empty.html", async (req, res) =>
         {
             postBodyPromise.TrySetResult(Encoding.UTF8.GetString(await req.PostBody));
             res.WriteHead(200, new()
@@ -1450,7 +1527,7 @@ public class BrowsercontextFetchTests
         formData.Append("file", new FilePayload { Name = "blob", MimeType = "text/plain", Buffer = Encoding.UTF8.GetBytes("boo") });
         var (postBody, response) = await PromiseAll(
             postBodyPromise.Task,
-            context.APIRequest.PostAsync(server.EmptyPage, new()
+            context.APIRequest.PostAsync(Server.EmptyPage, new()
             {
                 Multipart = formData,
             }));
@@ -1463,16 +1540,17 @@ public class BrowsercontextFetchTests
     }
 
     [UpstreamTest("FE-163 should serialize data to json regardless of content-type")]
-    public async Task ShouldSerializeDataToJsonRegardlessOfContentType(IBrowserContext context, Server server)
+    public async Task ShouldSerializeDataToJsonRegardlessOfContentType()
     {
+        var context = await ContextFixture();
         var data = new
         {
             firstName = "John",
             lastName = "Doe",
         };
         var (req, _) = await PromiseAll(
-            server.WaitForRequest("/empty.html"),
-            context.APIRequest.PostAsync(server.EmptyPage, new()
+            Server.WaitForRequest("/empty.html"),
+            context.APIRequest.PostAsync(Server.EmptyPage, new()
             {
                 Headers = new Dictionary<string, string>
                 {
@@ -1487,14 +1565,16 @@ public class BrowsercontextFetchTests
     }
 
     [UpstreamTest("FE-165 context request should export same storage state as context")]
-    public async Task ContextRequestShouldExportSameStorageStateAsContext(IBrowserContext context, IPage page, Server server)
+    public async Task ContextRequestShouldExportSameStorageStateAsContext()
     {
-        server.SetRoute("/setcookie.html", (req, res) =>
+        var context = await ContextFixture();
+        var page = await PageFixture();
+        Server.SetRoute("/setcookie.html", (req, res) =>
         {
             res.SetHeader("Set-Cookie", new[] { "a=b", "c=d" });
             res.End();
         });
-        await context.APIRequest.GetAsync(server.Prefix + "/setcookie.html");
+        await context.APIRequest.GetAsync(Server.Prefix + "/setcookie.html");
         // .NET: StorageStateAsync gives the JSON text of the storage state.
         var contextState = JsonSerializer.Deserialize<JsonElement>(await context.StorageStateAsync());
         Assert.That(contextState.GetProperty("cookies").GetArrayLength(), Is.EqualTo(2));
@@ -1505,27 +1585,29 @@ public class BrowsercontextFetchTests
     }
 
     [UpstreamTest("FE-166 should send secure cookie over http for localhost")]
-    public async Task ShouldSendSecureCookieOverHttpForLocalhost(IPage page, Server server, string channel)
+    public async Task ShouldSendSecureCookieOverHttpForLocalhost()
     {
-        Info.Skip(channel == "webkit-wsl");
-        server.SetRoute("/setcookie.html", (req, res) =>
+        var page = await PageFixture();
+        Info.Skip(Channel == "webkit-wsl");
+        Server.SetRoute("/setcookie.html", (req, res) =>
         {
             res.SetHeader("Set-Cookie", new[] { "a=v; secure" });
             res.End();
         });
-        await page.APIRequest.GetAsync($"{server.Prefix}/setcookie.html");
+        await page.APIRequest.GetAsync($"{Server.Prefix}/setcookie.html");
         var (serverRequest, _) = await PromiseAll(
-            server.WaitForRequest("/empty.html"),
-            page.APIRequest.GetAsync(server.EmptyPage));
+            Server.WaitForRequest("/empty.html"),
+            page.APIRequest.GetAsync(Server.EmptyPage));
         Assert.That(serverRequest.Headers["cookie"], Is.EqualTo("a=v"));
     }
 
     [UpstreamTest("FE-167 should accept bool and numeric params and filter out undefined")]
     [LocalFixme("dotnet: a null value in Params throws NullReferenceException: APIRequestContext.FetchAsync calls ToString() on each value, which also makes 'True' and 'False' of the bools; upstream leaves the param out and sends bool=true&bool2=false")]
-    public async Task ShouldAcceptBoolAndNumericParamsAndFilterOutUndefined(IPage page, Server server)
+    public async Task ShouldAcceptBoolAndNumericParamsAndFilterOutUndefined()
     {
+        var page = await PageFixture();
         ServerRequest request = null;
-        var url = new Uri(server.EmptyPage);
+        var url = new Uri(Server.EmptyPage);
         // .NET: url.searchParams.set(name, value) adds to a list of pairs.
         var searchParams = new List<KeyValuePair<string, object>>();
         searchParams.Add(new("str", "s"));
@@ -1533,12 +1615,12 @@ public class BrowsercontextFetchTests
         searchParams.Add(new("bool", "true"));
         searchParams.Add(new("bool2", "false"));
         // .NET: url.pathname + url.search.
-        server.SetRoute(url.AbsolutePath + "?" + SearchParamsToString(searchParams), (req, res) =>
+        Server.SetRoute(url.AbsolutePath + "?" + SearchParamsToString(searchParams), (req, res) =>
         {
             request = req;
-            server.ServeFile(req, res);
+            Server.ServeFile(req, res);
         });
-        await page.APIRequest.GetAsync(server.EmptyPage, new()
+        await page.APIRequest.GetAsync(Server.EmptyPage, new()
         {
             Params = new Dictionary<string, object>
             {
@@ -1558,22 +1640,22 @@ public class BrowsercontextFetchTests
     }
 
     [UpstreamTest("FE-168 should abort requests when browser context closes")]
-    public async Task ShouldAbortRequestsWhenBrowserContextCloses(ContextFactory contextFactory, Server server)
+    public async Task ShouldAbortRequestsWhenBrowserContextCloses()
     {
         var connectionClosed = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
-        server.SetRoute("/empty.html", (req, res) =>
+        Server.SetRoute("/empty.html", (req, res) =>
         {
             req.Socket.OnClose(() => connectionClosed.TrySetResult());
         });
-        var context = await contextFactory();
+        var context = await ContextFactory();
         async Task Then()
         {
-            await server.WaitForRequest("/empty.html");
+            await Server.WaitForRequest("/empty.html");
             await context.CloseAsync();
         }
         var (error, _) = await PromiseAll(
-            Catch(() => context.APIRequest.GetAsync(server.EmptyPage)),
-            Catch(() => context.APIRequest.PostAsync(server.EmptyPage)),
+            Catch(() => context.APIRequest.GetAsync(Server.EmptyPage)),
+            Catch(() => context.APIRequest.PostAsync(Server.EmptyPage)),
             Then());
         Assert.That(error, Is.InstanceOf<Exception>());
         Assert.That(error.Message, Does.Match("Request context disposed|Target page, context or browser has been closed"));
@@ -1581,20 +1663,20 @@ public class BrowsercontextFetchTests
     }
 
     [UpstreamTest("FE-169 should work with connectOverCDP")]
-    public async Task ShouldWorkWithConnectOverCDP(string browserName, IBrowserType browserType, Server server, TestInfo testInfo, BrowserTypeLaunchOptions launchOptions)
+    public async Task ShouldWorkWithConnectOverCDP()
     {
-        Info.Skip(browserName != "chromium");
-        var port = 9339 + testInfo.WorkerIndex;
-        var browserServer = await browserType.LaunchAsync(new(launchOptions)
+        Info.Skip(BrowserName != "chromium");
+        var port = 9339 + Info.WorkerIndex;
+        var browserServer = await BrowserType.LaunchAsync(new(LaunchOptions())
         {
             Args = ["--remote-debugging-port=" + port],
         });
         try
         {
-            var cdpBrowser = await browserType.ConnectOverCDPAsync($"http://127.0.0.1:{port}/");
+            var cdpBrowser = await BrowserType.ConnectOverCDPAsync($"http://127.0.0.1:{port}/");
             var context = cdpBrowser.Contexts[0];
-            var response = await context.APIRequest.GetAsync(server.Prefix + "/simple.json");
-            Assert.That(response.Url, Is.EqualTo(server.Prefix + "/simple.json"));
+            var response = await context.APIRequest.GetAsync(Server.Prefix + "/simple.json");
+            Assert.That(response.Url, Is.EqualTo(Server.Prefix + "/simple.json"));
             Assert.That(response.Status, Is.EqualTo(200));
             Assert.That(await response.TextAsync(), Is.EqualTo("{\"foo\": \"bar\"}\n"));
         }
@@ -1605,26 +1687,26 @@ public class BrowsercontextFetchTests
     }
 
     [UpstreamTest("FE-170 should support SameSite cookie attribute over https")]
-    public async Task ShouldSupportSameSiteCookieAttributeOverHttps(ContextFactory contextFactory, Server httpsServer, string browserName, bool isWindows, string channel)
+    public async Task ShouldSupportSameSiteCookieAttributeOverHttps()
     {
         // Cookies with SameSite=None must also specify the Secure attribute. WebKit navigation
         // to HTTP url will fail if the response contains a cookie with Secure attribute, so
         // we do HTTPS navigation.
-        var context = await contextFactory(new() { IgnoreHTTPSErrors = true });
+        var context = await ContextFactory(new() { IgnoreHTTPSErrors = true });
         var page = await context.NewPageAsync();
         // .NET: sameSite of a cookie is an enum; the names of its values are the texts 'None', 'Lax' and 'Strict'.
         foreach (var value in new[] { SameSiteAttribute.None, SameSiteAttribute.Lax, SameSiteAttribute.Strict })
         {
             await Info.Step($"SameSite={value}", async () =>
             {
-                httpsServer.SetRoute("/empty.html", (req, res) =>
+                HttpsServer.SetRoute("/empty.html", (req, res) =>
                 {
                     res.SetHeader("Set-Cookie", $"SID=2022; Path=/; Secure; SameSite={value}");
                     res.End();
                 });
-                await page.APIRequest.GetAsync(httpsServer.EmptyPage);
+                await page.APIRequest.GetAsync(HttpsServer.EmptyPage);
                 var cookie = (await page.Context.CookiesAsync()).FirstOrDefault();
-                if (browserName == "webkit" && isWindows && channel != "webkit-wsl")
+                if (BrowserName == "webkit" && IsWindows && Channel != "webkit-wsl")
                 {
                     Assert.That(cookie.SameSite, Is.EqualTo(SameSiteAttribute.None));
                 }
@@ -1637,14 +1719,15 @@ public class BrowsercontextFetchTests
     }
 
     [UpstreamTest("FE-171 should set domain=localhost cookie")]
-    public async Task ShouldSetDomainLocalhostCookie(IBrowserContext context, Server server, string browserName, bool isWindows)
+    public async Task ShouldSetDomainLocalhostCookie()
     {
-        server.SetRoute("/empty.html", (req, res) =>
+        var context = await ContextFixture();
+        Server.SetRoute("/empty.html", (req, res) =>
         {
-            res.SetHeader("Set-Cookie", $"name=val; Domain={server.Hostname}; Path=/;");
+            res.SetHeader("Set-Cookie", $"name=val; Domain={Server.Hostname}; Path=/;");
             res.End();
         });
-        await context.APIRequest.GetAsync(server.EmptyPage);
+        await context.APIRequest.GetAsync(Server.EmptyPage);
         var cookie = (await context.CookiesAsync()).FirstOrDefault();
         Assert.That(cookie, Is.Not.Null);
         Assert.That(cookie.Name, Is.EqualTo("name"));
@@ -1652,42 +1735,44 @@ public class BrowsercontextFetchTests
     }
 
     [UpstreamTest("FE-172 fetch should not throw on long set-cookie value")]
-    public async Task FetchShouldNotThrowOnLongSetCookieValue(IBrowserContext context, Server server)
+    public async Task FetchShouldNotThrowOnLongSetCookieValue()
     {
-        server.SetRoute("/empty.html", (req, res) =>
+        var context = await ContextFixture();
+        Server.SetRoute("/empty.html", (req, res) =>
         {
             res.SetHeader("Set-Cookie", new[] { $"foo={new string('a', 4100)}; path=/;", "bar=val" });
             res.End();
         });
-        await context.APIRequest.GetAsync(server.EmptyPage, new() { Timeout = 5000 });
+        await context.APIRequest.GetAsync(Server.EmptyPage, new() { Timeout = 5000 });
         var cookies = await context.CookiesAsync();
         Assert.That(cookies.Select(c => c.Name), Does.Contain("bar"));
     }
 
     [UpstreamTest("FE-173 should support set-cookie with SameSite and without Secure attribute over HTTP")]
-    public async Task ShouldSupportSetCookieWithSameSiteAndWithoutSecureAttributeOverHTTP(IPage page, Server server, string browserName, bool isWindows, bool isLinux, string channel, bool isBidi)
+    public async Task ShouldSupportSetCookieWithSameSiteAndWithoutSecureAttributeOverHTTP()
     {
+        var page = await PageFixture();
         // .NET: sameSite of a cookie is an enum; the names of its values are the texts 'None', 'Lax' and 'Strict'.
         foreach (var value in new[] { SameSiteAttribute.None, SameSiteAttribute.Lax, SameSiteAttribute.Strict })
         {
             await Info.Step($"SameSite={value}", async () =>
             {
-                server.SetRoute("/empty.html", (req, res) =>
+                Server.SetRoute("/empty.html", (req, res) =>
                 {
                     res.SetHeader("Set-Cookie", $"SID=2022; Path=/; SameSite={value}");
                     res.End();
                 });
-                await page.APIRequest.GetAsync(server.EmptyPage);
+                await page.APIRequest.GetAsync(Server.EmptyPage);
                 var cookie = (await page.Context.CookiesAsync()).FirstOrDefault();
-                if ((browserName == "chromium" || isBidi) && value == SameSiteAttribute.None)
+                if ((BrowserName == "chromium" || IsBidi) && value == SameSiteAttribute.None)
                 {
                     Assert.That(cookie, Is.Null);
                 }
-                else if (browserName == "webkit" && (isLinux || channel == "webkit-wsl") && value == SameSiteAttribute.None)
+                else if (BrowserName == "webkit" && (IsLinux || Channel == "webkit-wsl") && value == SameSiteAttribute.None)
                 {
                     Assert.That(cookie, Is.Null);
                 }
-                else if (browserName == "webkit" && isWindows && channel != "webkit-wsl")
+                else if (BrowserName == "webkit" && IsWindows && Channel != "webkit-wsl")
                 {
                     Assert.That(cookie.SameSite, Is.EqualTo(SameSiteAttribute.None));
                 }
@@ -1700,21 +1785,22 @@ public class BrowsercontextFetchTests
     }
 
     [UpstreamTest("FE-174 should update host header on redirect")]
-    public async Task ShouldUpdateHostHeaderOnRedirect(IBrowserContext context, Server server)
+    public async Task ShouldUpdateHostHeaderOnRedirect()
     {
+        var context = await ContextFixture();
         var redirectCount = 0;
-        server.SetRoute("/redirect", (req, res) =>
+        Server.SetRoute("/redirect", (req, res) =>
         {
             redirectCount++;
-            var path = (req.Headers["host"] == new Uri(server.Prefix).Authority) ? "/redirect" : "/test";
+            var path = (req.Headers["host"] == new Uri(Server.Prefix).Authority) ? "/redirect" : "/test";
             res.WriteHead(302, new()
             {
-                ["host"] = new Uri(server.CrossProcessPrefix).Authority,
-                ["location"] = server.CrossProcessPrefix + path,
+                ["host"] = new Uri(Server.CrossProcessPrefix).Authority,
+                ["location"] = Server.CrossProcessPrefix + path,
             });
             res.End();
         });
-        server.SetRoute("/test", (req, res) =>
+        Server.SetRoute("/test", (req, res) =>
         {
             res.WriteHead(200, new()
             {
@@ -1722,37 +1808,40 @@ public class BrowsercontextFetchTests
             });
             res.End("Hello!");
         });
-        var reqPromise = server.WaitForRequest("/test");
-        var response = await context.APIRequest.GetAsync(server.Prefix + "/redirect", new()
+        var reqPromise = Server.WaitForRequest("/test");
+        var response = await context.APIRequest.GetAsync(Server.Prefix + "/redirect", new()
         {
-            Headers = new Dictionary<string, string> { ["HosT"] = new Uri(server.Prefix).Authority },
+            Headers = new Dictionary<string, string> { ["HosT"] = new Uri(Server.Prefix).Authority },
         });
         Assert.That(redirectCount, Is.EqualTo(2));
         await Expect(response).ToBeOKAsync();
         Assert.That(await response.TextAsync(), Is.EqualTo("Hello!"));
 
-        Assert.That((await reqPromise).Headers["host"], Is.EqualTo(new Uri(server.CrossProcessPrefix).Authority));
+        Assert.That((await reqPromise).Headers["host"], Is.EqualTo(new Uri(Server.CrossProcessPrefix).Authority));
     }
 
     [UpstreamTest("FE-175 should not work after dispose")]
-    public async Task ShouldNotWorkAfterDispose(IBrowserContext context, Server server)
+    public async Task ShouldNotWorkAfterDispose()
     {
+        var context = await ContextFixture();
         await context.APIRequest.DisposeAsync();
-        Assert.That((await Catch(() => context.APIRequest.GetAsync(server.EmptyPage))).Message, Does.Contain(TargetClosedErrorMessage));
+        Assert.That((await Catch(() => context.APIRequest.GetAsync(Server.EmptyPage))).Message, Does.Contain(TargetClosedErrorMessage));
     }
 
     [UpstreamTest("FE-176 should not work after context dispose")]
-    public async Task ShouldNotWorkAfterContextDispose(IBrowserContext context, Server server)
+    public async Task ShouldNotWorkAfterContextDispose()
     {
+        var context = await ContextFixture();
         await context.CloseAsync(new() { Reason = "Test ended." });
-        Assert.That((await Catch(() => context.APIRequest.GetAsync(server.EmptyPage))).Message, Does.Contain("Test ended."));
+        Assert.That((await Catch(() => context.APIRequest.GetAsync(Server.EmptyPage))).Message, Does.Contain("Test ended."));
     }
 
     [UpstreamTest("FE-177 should retry on ECONNRESET")]
-    public async Task ShouldRetryOnECONNRESET(IBrowserContext context, Server server)
+    public async Task ShouldRetryOnECONNRESET()
     {
+        var context = await ContextFixture();
         var requestCount = 0;
-        server.SetRoute("/test", (req, res) =>
+        Server.SetRoute("/test", (req, res) =>
         {
             if (requestCount++ < 3)
             {
@@ -1762,17 +1851,18 @@ public class BrowsercontextFetchTests
             res.WriteHead(200, new() { ["content-type"] = "text/plain" });
             res.End("Hello!");
         });
-        var response = await context.APIRequest.GetAsync(server.Prefix + "/test", new() { MaxRetries = 3 });
+        var response = await context.APIRequest.GetAsync(Server.Prefix + "/test", new() { MaxRetries = 3 });
         Assert.That(response.Status, Is.EqualTo(200));
         Assert.That(await response.TextAsync(), Is.EqualTo("Hello!"));
         Assert.That(requestCount, Is.EqualTo(4));
     }
 
     [UpstreamTest("FE-178 should retry ECONNRESET on compressed response")]
-    public async Task ShouldRetryECONNRESETOnCompressedResponse(IBrowserContext context, Server server)
+    public async Task ShouldRetryECONNRESETOnCompressedResponse()
     {
+        var context = await ContextFixture();
         var requestCount = 0;
-        server.SetRoute("/test-gzip", (req, res) =>
+        Server.SetRoute("/test-gzip", (req, res) =>
         {
             if (requestCount++ < 2)
             {
@@ -1793,17 +1883,18 @@ public class BrowsercontextFetchTests
             res.Write(compressed.ToArray());
             res.End();
         });
-        var response = await context.APIRequest.GetAsync(server.Prefix + "/test-gzip", new() { MaxRetries = 3 });
+        var response = await context.APIRequest.GetAsync(Server.Prefix + "/test-gzip", new() { MaxRetries = 3 });
         Assert.That(response.Status, Is.EqualTo(200));
         Assert.That(await response.TextAsync(), Is.EqualTo("compressed-retry-ok"));
         Assert.That(requestCount, Is.EqualTo(3));
     }
 
     [UpstreamTest("FE-179 should retry ECONNRESET mid-stream during gzip decompression")]
-    public async Task ShouldRetryECONNRESETMidStreamDuringGzipDecompression(IBrowserContext context, Server server)
+    public async Task ShouldRetryECONNRESETMidStreamDuringGzipDecompression()
     {
+        var context = await ContextFixture();
         var requestCount = 0;
-        server.SetRoute("/test-gzip-midstream", (req, res) =>
+        Server.SetRoute("/test-gzip-midstream", (req, res) =>
         {
             requestCount++;
             if (requestCount <= 2)
@@ -1834,7 +1925,7 @@ public class BrowsercontextFetchTests
             res.Write(compressed.ToArray());
             res.End();
         });
-        var response = await context.APIRequest.GetAsync(server.Prefix + "/test-gzip-midstream", new() { MaxRetries = 3 });
+        var response = await context.APIRequest.GetAsync(Server.Prefix + "/test-gzip-midstream", new() { MaxRetries = 3 });
         Assert.That(response.Status, Is.EqualTo(200));
         Assert.That(await response.TextAsync(), Is.EqualTo("midstream-retry-ok"));
         Assert.That(requestCount, Is.EqualTo(3));

@@ -23,17 +23,17 @@ using static Microsoft.Playwright.Tests.Fixtures.Utils;
 namespace Microsoft.Playwright.Tests.Page;
 
 /// <summary>Port of tests/page/page-set-input-files.spec.ts.</summary>
-public class PageSetInputFilesTests
+public class PageSetInputFilesTests : UpstreamPageTest
 {
     [UpstreamTest("IF-001 should upload the file")]
-    public async Task ShouldUploadTheFile(IPage page, Server server, Func<string, string> asset)
+    public async Task ShouldUploadTheFile()
     {
-        await page.GotoAsync(server.Prefix + "/input/fileupload.html");
-        var filePath = Path.GetRelativePath(Directory.GetCurrentDirectory(), asset("file-to-upload.txt"));
-        var input = await page.QuerySelectorAsync("input");
+        await Page.GotoAsync(Server.Prefix + "/input/fileupload.html");
+        var filePath = Path.GetRelativePath(Directory.GetCurrentDirectory(), Asset("file-to-upload.txt"));
+        var input = await Page.QuerySelectorAsync("input");
         await input.SetInputFilesAsync(filePath);
-        Assert.That(await page.EvaluateAsync<string>("e => e.files[0].name", input), Is.EqualTo("file-to-upload.txt"));
-        Assert.That(await page.EvaluateAsync<string>(@"e => {
+        Assert.That(await Page.EvaluateAsync<string>("e => e.files[0].name", input), Is.EqualTo("file-to-upload.txt"));
+        Assert.That(await Page.EvaluateAsync<string>(@"e => {
     const reader = new FileReader();
     const promise = new Promise(fulfill => reader.onload = fulfill);
     reader.readAsText(e.files[0]);
@@ -42,13 +42,13 @@ public class PageSetInputFilesTests
     }
 
     [UpstreamTest("IF-002 should upload a folder")]
-    public async Task ShouldUploadAFolder(IPage page, Server server, bool isFrozenWebkit, bool isAndroid)
+    public async Task ShouldUploadAFolder()
     {
-        Info.Skip(isAndroid);
-        Info.Skip(isFrozenWebkit);
+        Info.Skip(IsAndroid);
+        Info.Skip(IsFrozenWebkit);
 
-        await page.GotoAsync(server.Prefix + "/input/folderupload.html");
-        var input = await page.QuerySelectorAsync("input");
+        await Page.GotoAsync(Server.Prefix + "/input/folderupload.html");
+        var input = await Page.QuerySelectorAsync("input");
         var dir = Path.Combine(Info.OutputDir, "file-upload-test");
         {
             Directory.CreateDirectory(dir);
@@ -59,14 +59,14 @@ public class PageSetInputFilesTests
         }
         await input.SetInputFilesAsync(dir);
         // .NET: toEqual() of two Sets is Is.EquivalentTo.
-        Assert.That(new HashSet<string>(await page.EvaluateAsync<string[]>("e => [...e.files].map(f => f.webkitRelativePath)", input)), Is.EquivalentTo(new HashSet<string>
+        Assert.That(new HashSet<string>(await Page.EvaluateAsync<string[]>("e => [...e.files].map(f => f.webkitRelativePath)", input)), Is.EquivalentTo(new HashSet<string>
         {
             // Note: this did not work before Chrome 127, see https://issues.chromium.org/issues/345393164.
             "file-upload-test/sub-dir/really.txt",
             "file-upload-test/file1.txt",
             "file-upload-test/file2",
         }));
-        var webkitRelativePaths = await page.EvaluateAsync<string[]>("e => [...e.files].map(f => f.webkitRelativePath)", input);
+        var webkitRelativePaths = await Page.EvaluateAsync<string[]>("e => [...e.files].map(f => f.webkitRelativePath)", input);
         for (var i = 0; i < webkitRelativePaths.Length; i++)
         {
             var content = await input.EvaluateAsync<string>(@"(e, i) => {
@@ -80,27 +80,27 @@ public class PageSetInputFilesTests
     }
 
     [UpstreamTest("IF-003 should upload a folder via label")]
-    public async Task ShouldUploadAFolderViaLabel(IPage page, bool isFrozenWebkit, bool isAndroid)
+    public async Task ShouldUploadAFolderViaLabel()
     {
-        Info.Skip(isAndroid);
-        Info.Skip(isFrozenWebkit);
+        Info.Skip(IsAndroid);
+        Info.Skip(IsFrozenWebkit);
 
-        await page.SetContentAsync("<label for=\"folder\">Folder</label><input id=\"folder\" type=\"file\" webkitdirectory>");
+        await Page.SetContentAsync("<label for=\"folder\">Folder</label><input id=\"folder\" type=\"file\" webkitdirectory>");
         var dir = Path.Combine(Info.OutputDir, "file-upload-test");
         Directory.CreateDirectory(dir);
         await File.WriteAllTextAsync(Path.Combine(dir, "file1.txt"), "file1 content");
-        await page.GetByText("Folder").SetInputFilesAsync(dir);
-        Assert.That(await page.Locator("input").EvaluateAsync<string[]>("e => [...e.files].map(f => f.webkitRelativePath)"), Is.EqualTo(new[] { "file-upload-test/file1.txt" }));
+        await Page.GetByText("Folder").SetInputFilesAsync(dir);
+        Assert.That(await Page.Locator("input").EvaluateAsync<string[]>("e => [...e.files].map(f => f.webkitRelativePath)"), Is.EqualTo(new[] { "file-upload-test/file1.txt" }));
     }
 
     [UpstreamTest("IF-004 should upload a folder and throw for multiple directories")]
-    public async Task ShouldUploadAFolderAndThrowForMultipleDirectories(IPage page, Server server, bool isAndroid, bool isFrozenWebkit)
+    public async Task ShouldUploadAFolderAndThrowForMultipleDirectories()
     {
-        Info.Skip(isAndroid);
-        Info.Skip(isFrozenWebkit);
+        Info.Skip(IsAndroid);
+        Info.Skip(IsFrozenWebkit);
 
-        await page.GotoAsync(server.Prefix + "/input/folderupload.html");
-        var input = await page.QuerySelectorAsync("input");
+        await Page.GotoAsync(Server.Prefix + "/input/folderupload.html");
+        var input = await Page.QuerySelectorAsync("input");
         var dir = Path.Combine(Info.OutputDir, "file-upload-test");
         {
             Directory.CreateDirectory(Path.Combine(dir, "folder1"));
@@ -117,13 +117,13 @@ public class PageSetInputFilesTests
     }
 
     [UpstreamTest("IF-005 should throw if a directory and files are passed")]
-    public async Task ShouldThrowIfADirectoryAndFilesArePassed(IPage page, Server server, bool isAndroid, bool isFrozenWebkit)
+    public async Task ShouldThrowIfADirectoryAndFilesArePassed()
     {
-        Info.Skip(isAndroid);
-        Info.Skip(isFrozenWebkit);
+        Info.Skip(IsAndroid);
+        Info.Skip(IsFrozenWebkit);
 
-        await page.GotoAsync(server.Prefix + "/input/folderupload.html");
-        var input = await page.QuerySelectorAsync("input");
+        await Page.GotoAsync(Server.Prefix + "/input/folderupload.html");
+        var input = await Page.QuerySelectorAsync("input");
         var dir = Path.Combine(Info.OutputDir, "file-upload-test");
         {
             Directory.CreateDirectory(Path.Combine(dir, "folder1"));
@@ -138,13 +138,13 @@ public class PageSetInputFilesTests
     }
 
     [UpstreamTest("IF-006 should throw when uploading a folder in a normal file upload input")]
-    public async Task ShouldThrowWhenUploadingAFolderInANormalFileUploadInput(IPage page, Server server, bool isAndroid, bool isFrozenWebkit)
+    public async Task ShouldThrowWhenUploadingAFolderInANormalFileUploadInput()
     {
-        Info.Skip(isAndroid);
-        Info.Skip(isFrozenWebkit);
+        Info.Skip(IsAndroid);
+        Info.Skip(IsFrozenWebkit);
 
-        await page.GotoAsync(server.Prefix + "/input/fileupload.html");
-        var input = await page.QuerySelectorAsync("input");
+        await Page.GotoAsync(Server.Prefix + "/input/fileupload.html");
+        var input = await Page.QuerySelectorAsync("input");
         var dir = Path.Combine(Info.OutputDir, "file-upload-test");
         {
             Directory.CreateDirectory(Path.Combine(dir));
@@ -155,41 +155,41 @@ public class PageSetInputFilesTests
     }
 
     [UpstreamTest("IF-007 should throw when uploading a file in a directory upload input")]
-    public async Task ShouldThrowWhenUploadingAFileInADirectoryUploadInput(IPage page, Server server, bool isAndroid, Func<string, string> asset, bool isFrozenWebkit)
+    public async Task ShouldThrowWhenUploadingAFileInADirectoryUploadInput()
     {
-        Info.Skip(isAndroid);
-        Info.Skip(isFrozenWebkit);
+        Info.Skip(IsAndroid);
+        Info.Skip(IsFrozenWebkit);
 
-        await page.GotoAsync(server.Prefix + "/input/folderupload.html");
-        var input = await page.QuerySelectorAsync("input");
-        var error = await ThrowsAsync<PlaywrightException>(() => input.SetInputFilesAsync(asset("file to upload.txt")));
+        await Page.GotoAsync(Server.Prefix + "/input/folderupload.html");
+        var input = await Page.QuerySelectorAsync("input");
+        var error = await ThrowsAsync<PlaywrightException>(() => input.SetInputFilesAsync(Asset("file to upload.txt")));
         Assert.That(error.Message, Does.Contain("[webkitdirectory] input requires passing a path to a directory"));
     }
 
     [UpstreamTest("IF-008 should upload a file after popup")]
-    public async Task ShouldUploadAFileAfterPopup(IPage page, Server server, Func<string, string> asset)
+    public async Task ShouldUploadAFileAfterPopup()
     {
-        await page.GotoAsync(server.Prefix + "/input/fileupload.html");
+        await Page.GotoAsync(Server.Prefix + "/input/fileupload.html");
         {
             var (popup, _) = await PromiseAll(
-                page.WaitForPopupAsync(),
-                page.EvaluateAsync("() => window['__popup'] = window.open('about:blank')"));
+                Page.WaitForPopupAsync(),
+                Page.EvaluateAsync("() => window['__popup'] = window.open('about:blank')"));
             await popup.CloseAsync();
         }
-        var filePath = Path.GetRelativePath(Directory.GetCurrentDirectory(), asset("file-to-upload.txt"));
-        var input = await page.QuerySelectorAsync("input");
+        var filePath = Path.GetRelativePath(Directory.GetCurrentDirectory(), Asset("file-to-upload.txt"));
+        var input = await Page.QuerySelectorAsync("input");
         await input.SetInputFilesAsync(filePath);
-        Assert.That(await page.EvaluateAsync<string>("e => e.files[0].name", input), Is.EqualTo("file-to-upload.txt"));
+        Assert.That(await Page.EvaluateAsync<string>("e => e.files[0].name", input), Is.EqualTo("file-to-upload.txt"));
     }
 
     [UpstreamTest("IF-009 should upload large file")]
-    public async Task ShouldUploadLargeFile(IPage page, Server server, bool isAndroid, string mode, TestInfo testInfo)
+    public async Task ShouldUploadLargeFile()
     {
-        Info.Skip(isAndroid);
+        Info.Skip(IsAndroid);
         Info.Slow();
 
-        await page.GotoAsync(server.Prefix + "/input/fileupload.html");
-        var uploadFile = testInfo.OutputPath("200MB.zip");
+        await Page.GotoAsync(Server.Prefix + "/input/fileupload.html");
+        var uploadFile = Info.OutputPath("200MB.zip");
         var str = new string('A', 4 * 1024);
         // .NET: fs.createWriteStream(file) is a StreamWriter, and stream.end() is DisposeAsync().
         var stream = new StreamWriter(uploadFile);
@@ -198,7 +198,7 @@ public class PageSetInputFilesTests
             await stream.WriteAsync(str);
         }
         await stream.DisposeAsync();
-        var input = page.Locator("input[type=\"file\"]");
+        var input = Page.Locator("input[type=\"file\"]");
         var events = await input.EvaluateHandleAsync(@"e => {
     const events = [];
     e.addEventListener('input', () => events.push('input'));
@@ -209,9 +209,9 @@ public class PageSetInputFilesTests
         Assert.That(await input.EvaluateAsync<string>("e => e.files[0].name"), Is.EqualTo("200MB.zip"));
         Assert.That(await events.EvaluateAsync<string[]>("e => e"), Is.EqualTo(new[] { "input", "change" }));
         var serverFilePromise = new TaskCompletionSource<FormidableFile>(TaskCreationOptions.RunContinuationsAsynchronously);
-        server.SetRoute("/upload", async (req, res) =>
+        Server.SetRoute("/upload", async (req, res) =>
         {
-            var form = new IncomingForm(new() { UploadDir = testInfo.OutputPath() });
+            var form = new IncomingForm(new() { UploadDir = Info.OutputPath() });
             var (err, fields, f) = await form.Parse(req);
             res.End();
             var files = f;
@@ -219,7 +219,7 @@ public class PageSetInputFilesTests
         });
         var file1 = await PromiseAll(
             serverFilePromise.Task,
-            page.ClickAsync("input[type=submit]"));
+            Page.ClickAsync("input[type=submit]"));
         Assert.That(file1.OriginalFilename, Is.EqualTo("200MB.zip"));
         Assert.That(file1.Size, Is.EqualTo(200 * 1024 * 1024));
         await PromiseAll(new[] { uploadFile, file1.Filepath }.Select(file => Task.Run(() => File.Delete(file))));
@@ -228,23 +228,23 @@ public class PageSetInputFilesTests
     [UpstreamTest("IF-010 should throw an error if the file does not exist")]
 
     [LocalFixme("dotnet: the message is \"Could not find file '<path>/i actually do not exist.txt'.\", the FileNotFoundException of .NET, upstream expects 'ENOENT: no such file or directory'")]
-    public async Task ShouldThrowAnErrorIfTheFileDoesNotExist(IPage page, Server server, Func<string, string> asset)
+    public async Task ShouldThrowAnErrorIfTheFileDoesNotExist()
     {
-        await page.GotoAsync(server.Prefix + "/input/fileupload.html");
-        var input = await page.QuerySelectorAsync("input");
+        await Page.GotoAsync(Server.Prefix + "/input/fileupload.html");
+        var input = await Page.QuerySelectorAsync("input");
         var error = await Catch(() => input.SetInputFilesAsync("i actually do not exist.txt"));
         Assert.That(error.Message, Does.Contain("ENOENT: no such file or directory"));
         Assert.That(error.Message, Does.Contain("i actually do not exist.txt"));
     }
 
     [UpstreamTest("IF-011 should upload large file with relative path")]
-    public async Task ShouldUploadLargeFileWithRelativePath(IPage page, Server server, bool isAndroid, string mode, TestInfo testInfo)
+    public async Task ShouldUploadLargeFileWithRelativePath()
     {
-        Info.Skip(isAndroid);
+        Info.Skip(IsAndroid);
         Info.Slow();
 
-        await page.GotoAsync(server.Prefix + "/input/fileupload.html");
-        var uploadFile = testInfo.OutputPath("200MB.zip");
+        await Page.GotoAsync(Server.Prefix + "/input/fileupload.html");
+        var uploadFile = Info.OutputPath("200MB.zip");
         var str = new string('A', 4 * 1024);
         // .NET: fs.createWriteStream(file) is a StreamWriter, and stream.end() is DisposeAsync().
         var stream = new StreamWriter(uploadFile);
@@ -253,7 +253,7 @@ public class PageSetInputFilesTests
             await stream.WriteAsync(str);
         }
         await stream.DisposeAsync();
-        var input = page.Locator("input[type=\"file\"]");
+        var input = Page.Locator("input[type=\"file\"]");
         var events = await input.EvaluateHandleAsync(@"e => {
     const events = [];
     e.addEventListener('input', () => events.push('input'));
@@ -266,9 +266,9 @@ public class PageSetInputFilesTests
         Assert.That(await input.EvaluateAsync<string>("e => e.files[0].name"), Is.EqualTo("200MB.zip"));
         Assert.That(await events.EvaluateAsync<string[]>("e => e"), Is.EqualTo(new[] { "input", "change" }));
         var serverFilePromise = new TaskCompletionSource<FormidableFile>(TaskCreationOptions.RunContinuationsAsynchronously);
-        server.SetRoute("/upload", async (req, res) =>
+        Server.SetRoute("/upload", async (req, res) =>
         {
-            var form = new IncomingForm(new() { UploadDir = testInfo.OutputPath() });
+            var form = new IncomingForm(new() { UploadDir = Info.OutputPath() });
             var (err, fields, f) = await form.Parse(req);
             res.End();
             var files = f;
@@ -276,21 +276,21 @@ public class PageSetInputFilesTests
         });
         var file1 = await PromiseAll(
             serverFilePromise.Task,
-            page.ClickAsync("input[type=submit]"));
+            Page.ClickAsync("input[type=submit]"));
         Assert.That(file1.OriginalFilename, Is.EqualTo("200MB.zip"));
         Assert.That(file1.Size, Is.EqualTo(200 * 1024 * 1024));
         await PromiseAll(new[] { uploadFile, file1.Filepath }.Select(file => Task.Run(() => File.Delete(file))));
     }
 
     [UpstreamTest("IF-012 should upload the file with spaces in name")]
-    public async Task ShouldUploadTheFileWithSpacesInName(IPage page, Server server, Func<string, string> asset)
+    public async Task ShouldUploadTheFileWithSpacesInName()
     {
-        await page.GotoAsync(server.Prefix + "/input/fileupload.html");
-        var filePath = Path.GetRelativePath(Directory.GetCurrentDirectory(), asset("file to upload.txt"));
-        var input = await page.QuerySelectorAsync("input");
+        await Page.GotoAsync(Server.Prefix + "/input/fileupload.html");
+        var filePath = Path.GetRelativePath(Directory.GetCurrentDirectory(), Asset("file to upload.txt"));
+        var input = await Page.QuerySelectorAsync("input");
         await input.SetInputFilesAsync(filePath);
-        Assert.That(await page.EvaluateAsync<string>("e => e.files[0].name", input), Is.EqualTo("file to upload.txt"));
-        Assert.That(await page.EvaluateAsync<string>(@"e => {
+        Assert.That(await Page.EvaluateAsync<string>("e => e.files[0].name", input), Is.EqualTo("file to upload.txt"));
+        Assert.That(await Page.EvaluateAsync<string>(@"e => {
     const reader = new FileReader();
     const promise = new Promise(fulfill => reader.onload = fulfill);
     reader.readAsText(e.files[0]);
@@ -299,128 +299,128 @@ public class PageSetInputFilesTests
     }
 
     [UpstreamTest("IF-013 should work @smoke")]
-    public async Task ShouldWork(IPage page, Func<string, string> asset)
+    public async Task ShouldWork()
     {
-        await page.SetContentAsync("<input type=file>");
-        await page.SetInputFilesAsync("input", asset("file-to-upload.txt"));
-        Assert.That(await page.EvalOnSelectorAsync<int>("input", "input => input.files.length"), Is.EqualTo(1));
-        Assert.That(await page.EvalOnSelectorAsync<string>("input", "input => input.files[0].name"), Is.EqualTo("file-to-upload.txt"));
+        await Page.SetContentAsync("<input type=file>");
+        await Page.SetInputFilesAsync("input", Asset("file-to-upload.txt"));
+        Assert.That(await Page.EvalOnSelectorAsync<int>("input", "input => input.files.length"), Is.EqualTo(1));
+        Assert.That(await Page.EvalOnSelectorAsync<string>("input", "input => input.files[0].name"), Is.EqualTo("file-to-upload.txt"));
     }
 
     [UpstreamTest("IF-014 should set from memory")]
-    public async Task ShouldSetFromMemory(IPage page)
+    public async Task ShouldSetFromMemory()
     {
-        await page.SetContentAsync("<input type=file>");
-        await page.SetInputFilesAsync("input", new FilePayload
+        await Page.SetContentAsync("<input type=file>");
+        await Page.SetInputFilesAsync("input", new FilePayload
         {
             Name = "test.txt",
             MimeType = "text/plain",
             Buffer = Encoding.UTF8.GetBytes("this is a test"),
         });
-        Assert.That(await page.EvalOnSelectorAsync<int>("input", "input => input.files.length"), Is.EqualTo(1));
-        Assert.That(await page.EvalOnSelectorAsync<string>("input", "input => input.files[0].name"), Is.EqualTo("test.txt"));
+        Assert.That(await Page.EvalOnSelectorAsync<int>("input", "input => input.files.length"), Is.EqualTo(1));
+        Assert.That(await Page.EvalOnSelectorAsync<string>("input", "input => input.files[0].name"), Is.EqualTo("test.txt"));
     }
 
     [UpstreamTest("IF-015 should work with CSP")]
-    public async Task ShouldWorkWithCSP(IPage page, Server server, Func<string, string> asset)
+    public async Task ShouldWorkWithCSP()
     {
-        server.SetCSP("/empty.html", "default-src \"none\"");
-        await page.GotoAsync(server.EmptyPage);
-        await page.SetContentAsync("<input type=file>");
-        await page.SetInputFilesAsync("input", asset("file-to-upload.txt"));
-        Assert.That(await page.EvalOnSelectorAsync<int>("input", "input => input.files.length"), Is.EqualTo(1));
-        Assert.That(await page.EvalOnSelectorAsync<string>("input", "input => input.files[0].name"), Is.EqualTo("file-to-upload.txt"));
+        Server.SetCSP("/empty.html", "default-src \"none\"");
+        await Page.GotoAsync(Server.EmptyPage);
+        await Page.SetContentAsync("<input type=file>");
+        await Page.SetInputFilesAsync("input", Asset("file-to-upload.txt"));
+        Assert.That(await Page.EvalOnSelectorAsync<int>("input", "input => input.files.length"), Is.EqualTo(1));
+        Assert.That(await Page.EvalOnSelectorAsync<string>("input", "input => input.files[0].name"), Is.EqualTo("file-to-upload.txt"));
     }
 
     [UpstreamTest("IF-016 should detect mime type")]
-    public async Task ShouldDetectMimeType(IPage page, Server server, Func<string, string> asset)
+    public async Task ShouldDetectMimeType()
     {
 
         FormidableMap<FormidableFile> files = null;
-        server.SetRoute("/upload", async (req, res) =>
+        Server.SetRoute("/upload", async (req, res) =>
         {
             var form = new IncomingForm();
             var (err, fields, f) = await form.Parse(req);
             files = f;
             res.End();
         });
-        await page.GotoAsync(server.EmptyPage);
-        await page.SetContentAsync(@"
+        await Page.GotoAsync(Server.EmptyPage);
+        await Page.SetContentAsync(@"
     <form action=""/upload"" method=""post"" enctype=""multipart/form-data"" >
       <input type=""file"" name=""file1"">
       <input type=""file"" name=""file2"">
       <input type=""submit"" value=""Submit"">
     </form>");
-        await (await page.QuerySelectorAsync("input[name=file1]")).SetInputFilesAsync(asset("file-to-upload.txt"));
-        await (await page.QuerySelectorAsync("input[name=file2]")).SetInputFilesAsync(asset("pptr.png"));
+        await (await Page.QuerySelectorAsync("input[name=file1]")).SetInputFilesAsync(Asset("file-to-upload.txt"));
+        await (await Page.QuerySelectorAsync("input[name=file2]")).SetInputFilesAsync(Asset("pptr.png"));
         await PromiseAll(
-            page.ClickAsync("input[type=submit]"),
-            server.WaitForRequest("/upload"));
+            Page.ClickAsync("input[type=submit]"),
+            Server.WaitForRequest("/upload"));
         var (file1, file2) = (files["file1"], files["file2"]);
         Assert.That(file1.OriginalFilename, Is.EqualTo("file-to-upload.txt"));
         Assert.That(file1.Mimetype, Is.EqualTo("text/plain"));
         Assert.That(Encoding.UTF8.GetString(File.ReadAllBytes(file1.Filepath)), Is.EqualTo(
-            Encoding.UTF8.GetString(File.ReadAllBytes(asset("file-to-upload.txt")))));
+            Encoding.UTF8.GetString(File.ReadAllBytes(Asset("file-to-upload.txt")))));
         Assert.That(file2.OriginalFilename, Is.EqualTo("pptr.png"));
         Assert.That(file2.Mimetype, Is.EqualTo("image/png"));
         Assert.That(Encoding.UTF8.GetString(File.ReadAllBytes(file2.Filepath)), Is.EqualTo(
-            Encoding.UTF8.GetString(File.ReadAllBytes(asset("pptr.png")))));
+            Encoding.UTF8.GetString(File.ReadAllBytes(Asset("pptr.png")))));
     }
 
     // @see https://github.com/microsoft/playwright/issues/4704
     [UpstreamTest("IF-017 should not trim big uploaded files")]
-    public async Task ShouldNotTrimBigUploadedFiles(IPage page, Server server)
+    public async Task ShouldNotTrimBigUploadedFiles()
     {
 
         FormidableMap<FormidableFile> files = null;
-        server.SetRoute("/upload", async (req, res) =>
+        Server.SetRoute("/upload", async (req, res) =>
         {
             var form = new IncomingForm();
             var (err, fields, f) = await form.Parse(req);
             files = f;
             res.End();
         });
-        await page.GotoAsync(server.EmptyPage);
+        await Page.GotoAsync(Server.EmptyPage);
 
         var DATA_SIZE = Math.Pow(2, 20);
         await PromiseAll(
-            page.EvaluateAsync(@"async size => {
+            Page.EvaluateAsync(@"async size => {
       const body = new FormData();
       body.set('file', new Blob([new Uint8Array(size)]));
       await fetch('/upload', { method: 'POST', body });
     }", DATA_SIZE),
-            server.WaitForRequest("/upload"));
+            Server.WaitForRequest("/upload"));
         Assert.That(files["file"].Size, Is.EqualTo(DATA_SIZE));
     }
 
     [UpstreamTest("IF-018 should emit input and change events")]
-    public async Task ShouldEmitInputAndChangeEvents(IPage page, Func<string, string> asset)
+    public async Task ShouldEmitInputAndChangeEvents()
     {
         var events = new List<JsonElement>();
-        await page.ExposeFunctionAsync("eventHandled", (JsonElement e) => events.Add(e));
-        await page.SetContentAsync(@"
+        await Page.ExposeFunctionAsync("eventHandled", (JsonElement e) => events.Add(e));
+        await Page.SetContentAsync(@"
   <input id=input type=file></input>
   <script>
     input.addEventListener('input', e => eventHandled({ type: e.type }));
     input.addEventListener('change', e => eventHandled({ type: e.type }));
   </script>");
-        await (await page.QuerySelectorAsync("input")).SetInputFilesAsync(asset("file-to-upload.txt"));
+        await (await Page.QuerySelectorAsync("input")).SetInputFilesAsync(Asset("file-to-upload.txt"));
         Assert.That(events.Count, Is.EqualTo(2));
         Assert.That(events[0].GetProperty("type").GetString(), Is.EqualTo("input"));
         Assert.That(events[1].GetProperty("type").GetString(), Is.EqualTo("change"));
     }
 
     [UpstreamTest("IF-019 input event.composed should be true and cross shadow dom boundary")]
-    public async Task InputEventComposedShouldBeTrueAndCrossShadowDomBoundary(IPage page, Server server, Func<string, string> asset)
+    public async Task InputEventComposedShouldBeTrueAndCrossShadowDomBoundary()
     {
-        await page.GotoAsync(server.EmptyPage);
-        await page.SetContentAsync(@"<body><script>
+        await Page.GotoAsync(Server.EmptyPage);
+        await Page.SetContentAsync(@"<body><script>
   const div = document.createElement('div');
   const shadowRoot = div.attachShadow({mode: 'open'});
   shadowRoot.innerHTML = '<input type=file></input>';
   document.body.appendChild(div);
 </script></body>");
-        await page.Locator("body").EvaluateAsync(@"select => {
+        await Page.Locator("body").EvaluateAsync(@"select => {
     window.firedBodyEvents = [];
     for (const event of ['input', 'change']) {
       select.addEventListener(event, e => {
@@ -429,7 +429,7 @@ public class PageSetInputFilesTests
     }
   }");
 
-        await page.Locator("input").EvaluateAsync(@"select => {
+        await Page.Locator("input").EvaluateAsync(@"select => {
     window.firedEvents = [];
     for (const event of ['input', 'change']) {
       select.addEventListener(event, e => {
@@ -437,22 +437,22 @@ public class PageSetInputFilesTests
       }, false);
     }
   }");
-        await page.Locator("input").SetInputFilesAsync(new FilePayload
+        await Page.Locator("input").SetInputFilesAsync(new FilePayload
         {
             Name = "test.txt",
             MimeType = "text/plain",
             Buffer = Encoding.UTF8.GetBytes("this is a test"),
         });
-        Assert.That(await page.EvaluateAsync<string[]>("() => window['firedEvents']"), Is.EqualTo(new[] { "input:true", "change:false" }));
-        Assert.That(await page.EvaluateAsync<string[]>("() => window['firedBodyEvents']"), Is.EqualTo(new[] { "input:true" }));
+        Assert.That(await Page.EvaluateAsync<string[]>("() => window['firedEvents']"), Is.EqualTo(new[] { "input:true", "change:false" }));
+        Assert.That(await Page.EvaluateAsync<string[]>("() => window['firedBodyEvents']"), Is.EqualTo(new[] { "input:true" }));
     }
 
     [UpstreamTest("IF-020 input should trigger events when files changed second time")]
-    public async Task InputShouldTriggerEventsWhenFilesChangedSecondTime(IPage page, Func<string, string> asset)
+    public async Task InputShouldTriggerEventsWhenFilesChangedSecondTime()
     {
-        await page.SetContentAsync("<input type=file multiple=true/>");
+        await Page.SetContentAsync("<input type=file multiple=true/>");
 
-        var input = page.Locator("input");
+        var input = Page.Locator("input");
         var events = await input.EvaluateHandleAsync(@"e => {
     const events = [];
     e.addEventListener('input', () => events.push('input'));
@@ -460,28 +460,28 @@ public class PageSetInputFilesTests
     return events;
   }");
 
-        await input.SetInputFilesAsync(asset("file-to-upload.txt"));
+        await input.SetInputFilesAsync(Asset("file-to-upload.txt"));
         Assert.That(await input.EvaluateAsync<string>("e => e.files[0].name"), Is.EqualTo("file-to-upload.txt"));
         Assert.That(await events.EvaluateAsync<string[]>("e => e"), Is.EqualTo(new[] { "input", "change" }));
 
         await events.EvaluateAsync("e => e.length = 0");
 
-        await input.SetInputFilesAsync(asset("pptr.png"));
+        await input.SetInputFilesAsync(Asset("pptr.png"));
         Assert.That(await input.EvaluateAsync<string>("e => e.files[0].name"), Is.EqualTo("pptr.png"));
         Assert.That(await events.EvaluateAsync<string[]>("e => e"), Is.EqualTo(new[] { "input", "change" }));
     }
 
     [UpstreamTest("IF-021 should preserve lastModified timestamp")]
-    public async Task ShouldPreserveLastModifiedTimestamp(IPage page, Func<string, string> asset)
+    public async Task ShouldPreserveLastModifiedTimestamp()
     {
-        await page.SetContentAsync("<input type=file multiple=true/>");
-        var input = page.Locator("input");
+        await Page.SetContentAsync("<input type=file multiple=true/>");
+        var input = Page.Locator("input");
         var files = new[] { "file-to-upload.txt", "file-to-upload-2.txt" };
-        await input.SetInputFilesAsync(files.Select(f => asset(f)));
+        await input.SetInputFilesAsync(files.Select(f => Asset(f)));
         Assert.That(await input.EvaluateAsync<string[]>("e => [...e.files].map(f => f.name)"), Is.EqualTo(files));
         var timestamps = await input.EvaluateAsync<double[]>("e => [...e.files].map(f => f.lastModified)");
         // .NET: fs.statSync(file).mtimeMs is the last write time in milliseconds since the Unix epoch.
-        var expectedTimestamps = files.Select(file => Math.Round((File.GetLastWriteTimeUtc(asset(file)) - DateTime.UnixEpoch).TotalMilliseconds, MidpointRounding.AwayFromZero)).ToArray();
+        var expectedTimestamps = files.Select(file => Math.Round((File.GetLastWriteTimeUtc(Asset(file)) - DateTime.UnixEpoch).TotalMilliseconds, MidpointRounding.AwayFromZero)).ToArray();
         // On Linux browser sometimes reduces the timestamp by 1ms: 1696272058110.0715  -> 1696272058109 or even
         // rounds it to seconds in WebKit: 1696272058110 -> 1696272058000.
         for (var i = 0; i < timestamps.Length; i++)
@@ -491,13 +491,13 @@ public class PageSetInputFilesTests
     }
 
     [UpstreamTest("IF-022 should store an uploaded file in IndexedDB")]
-    public async Task ShouldStoreAnUploadedFileInIndexedDB(IPage page, Server server, Func<string, string> asset, string browserName)
+    public async Task ShouldStoreAnUploadedFileInIndexedDB()
     {
-        Info.Fixme(browserName == "webkit", "WebKit does not support storing files in IndexedDB in private browsing.");
+        Info.Fixme(BrowserName == "webkit", "WebKit does not support storing files in IndexedDB in private browsing.");
 
-        await page.GotoAsync(server.Prefix + "/input/fileupload.html");
-        var input = page.Locator("input[type=file]");
-        await input.SetInputFilesAsync(asset("file-to-upload.txt"));
+        await Page.GotoAsync(Server.Prefix + "/input/fileupload.html");
+        var input = Page.Locator("input[type=file]");
+        await input.SetInputFilesAsync(Asset("file-to-upload.txt"));
         var storedFile = await input.EvaluateAsync<object>(@"async input => {
     const db = await new Promise((resolve, reject) => {
       const request = indexedDB.open('file-upload');

@@ -19,14 +19,14 @@ using Microsoft.Playwright.Tests.Fixtures;
 namespace Microsoft.Playwright.Tests.Page;
 
 /// <summary>Port of tests/page/locator-list.spec.ts.</summary>
-public class LocatorListTests
+public class LocatorListTests : UpstreamPageTest
 {
     [UpstreamTest("LO-126 locator.all should work")]
-    public async Task LocatorAllShouldWork(IPage page)
+    public async Task LocatorAllShouldWork()
     {
-        await page.SetContentAsync("<div><p>A</p><p>B</p><p>C</p></div>");
+        await Page.SetContentAsync("<div><p>A</p><p>B</p><p>C</p></div>");
         var texts = new List<string>();
-        foreach (var p in await page.Locator("div >> p").AllAsync())
+        foreach (var p in await Page.Locator("div >> p").AllAsync())
         {
             texts.Add(await p.TextContentAsync());
         }

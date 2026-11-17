@@ -21,7 +21,7 @@ using static Microsoft.Playwright.Tests.Fixtures.Utils;
 namespace Microsoft.Playwright.Tests.Library;
 
 /// <summary>Port of tests/library/selectors-register.spec.ts.</summary>
-public class SelectorsRegisterTests
+public class SelectorsRegisterTests : UpstreamBrowserTest
 {
     private const string createTagSelector = @"() => ({
   query(root, selector) {
@@ -33,14 +33,14 @@ public class SelectorsRegisterTests
 })";
 
     [UpstreamTest("SE-160 should work")]
-    public async Task ShouldWork(IPlaywright playwright, IBrowser browser, BrowserNewContextOptions contextOptions)
+    public async Task ShouldWork()
     {
         // Register one engine before creating context.
-        await playwright.Selectors.RegisterAsync("tag", new() { Script = $"({createTagSelector})()" });
+        await Playwright.Selectors.RegisterAsync("tag", new() { Script = $"({createTagSelector})()" });
 
-        var context = await browser.NewContextAsync(contextOptions);
+        var context = await Browser.NewContextAsync(ContextOptions());
         // Register another engine after creating context.
-        await playwright.Selectors.RegisterAsync("tag2", new() { Script = $"({createTagSelector})()" });
+        await Playwright.Selectors.RegisterAsync("tag2", new() { Script = $"({createTagSelector})()" });
 
         var page = await context.NewPageAsync();
         await page.SetContentAsync("<div><span></span></div><div></div>");
@@ -61,17 +61,17 @@ public class SelectorsRegisterTests
     }
 
     [UpstreamTest("SE-162 should work with path")]
-    public async Task ShouldWorkWithPath(IPlaywright playwright, IBrowser browser, Func<string, string> asset, BrowserNewPageOptions newPageOptions)
+    public async Task ShouldWorkWithPath()
     {
-        await playwright.Selectors.RegisterAsync("foo", new() { Path = asset("sectionselectorengine.js") });
-        var page = await browser.NewPageAsync(newPageOptions);
+        await Playwright.Selectors.RegisterAsync("foo", new() { Path = Asset("sectionselectorengine.js") });
+        var page = await Browser.NewPageAsync(NewPageOptions());
         await page.SetContentAsync("<section></section>");
         Assert.That(await page.EvalOnSelectorAsync<string>("foo=whatever", "e => e.nodeName"), Is.EqualTo("SECTION"));
         await page.CloseAsync();
     }
 
     [UpstreamTest("SE-163 should work in main and isolated world")]
-    public async Task ShouldWorkInMainAndIsolatedWorld(IPlaywright playwright, IBrowser browser, BrowserNewPageOptions newPageOptions)
+    public async Task ShouldWorkInMainAndIsolatedWorld()
     {
         const string createDummySelector = @"() => ({
     query(root, selector) {
@@ -81,9 +81,9 @@ public class SelectorsRegisterTests
       return window['__answer'] ? [window['__answer'], document.body, document.documentElement] : [];
     }
   })";
-        await playwright.Selectors.RegisterAsync("main", new() { Script = "(" + createDummySelector + ")()" });
-        await playwright.Selectors.RegisterAsync("isolated", new() { Script = "(" + createDummySelector + ")()", ContentScript = true });
-        var page = await browser.NewPageAsync(newPageOptions);
+        await Playwright.Selectors.RegisterAsync("main", new() { Script = "(" + createDummySelector + ")()" });
+        await Playwright.Selectors.RegisterAsync("isolated", new() { Script = "(" + createDummySelector + ")()", ContentScript = true });
+        var page = await Browser.NewPageAsync(NewPageOptions());
         await page.SetContentAsync("<div><span><section></section></span></div>");
         await page.EvaluateAsync("() => window['__answer'] = document.querySelector('span')");
         // Works in main if asked.
@@ -107,9 +107,9 @@ public class SelectorsRegisterTests
 
     [UpstreamTest("SE-164 should handle errors")]
     [LocalFixme("dotnet: the message is 'Selector engine name may only contain [a-zA-Z0-9_] characters', without the 'selectors.register: ' prefix of the call")]
-    public async Task ShouldHandleErrors(IPlaywright playwright, IBrowser browser, BrowserNewPageOptions newPageOptions)
+    public async Task ShouldHandleErrors()
     {
-        var page = await browser.NewPageAsync(newPageOptions);
+        var page = await Browser.NewPageAsync(NewPageOptions());
         var error = await Catch(() => page.QuerySelectorAsync("neverregister=ignored"));
         Assert.That(error.Message, Does.Contain("Unknown engine \"neverregister\" while parsing selector neverregister=ignored"));
 
@@ -122,32 +122,32 @@ public class SelectorsRegisterTests
     }
   })";
 
-        error = await Catch(() => playwright.Selectors.RegisterAsync("$", new() { Script = "(" + createDummySelector + ")()" }));
+        error = await Catch(() => Playwright.Selectors.RegisterAsync("$", new() { Script = "(" + createDummySelector + ")()" }));
         Assert.That(error.Message, Is.EqualTo("selectors.register: Selector engine name may only contain [a-zA-Z0-9_] characters"));
 
         // Selector names are case-sensitive.
-        await playwright.Selectors.RegisterAsync("dummy", new() { Script = "(" + createDummySelector + ")()" });
-        await playwright.Selectors.RegisterAsync("duMMy", new() { Script = "(" + createDummySelector + ")()" });
+        await Playwright.Selectors.RegisterAsync("dummy", new() { Script = "(" + createDummySelector + ")()" });
+        await Playwright.Selectors.RegisterAsync("duMMy", new() { Script = "(" + createDummySelector + ")()" });
 
-        error = await Catch(() => playwright.Selectors.RegisterAsync("dummy", new() { Script = "(" + createDummySelector + ")()" }));
+        error = await Catch(() => Playwright.Selectors.RegisterAsync("dummy", new() { Script = "(" + createDummySelector + ")()" }));
         Assert.That(error.Message, Is.EqualTo("selectors.register: \"dummy\" selector engine has been already registered"));
 
-        error = await Catch(() => playwright.Selectors.RegisterAsync("css", new() { Script = "(" + createDummySelector + ")()" }));
+        error = await Catch(() => Playwright.Selectors.RegisterAsync("css", new() { Script = "(" + createDummySelector + ")()" }));
         Assert.That(error.Message, Is.EqualTo("selectors.register: \"css\" is a predefined selector engine"));
         await page.CloseAsync();
     }
 
     [UpstreamTest("SE-165 should throw \"already registered\" error when registering")]
     [LocalFixme("dotnet: the message is '\"alreadyRegistered\" selector engine has been already registered', without the 'selectors.register: ' prefix of the call")]
-    public async Task ShouldThrowAlreadyRegisteredErrorWhenRegistering(IPlaywright playwright)
+    public async Task ShouldThrowAlreadyRegisteredErrorWhenRegistering()
     {
-        await playwright.Selectors.RegisterAsync("alreadyRegistered", new() { Script = "(" + createTagSelector + ")()" });
-        var error = await ThrowsAsync<PlaywrightException>(() => playwright.Selectors.RegisterAsync("alreadyRegistered", new() { Script = "(" + createTagSelector + ")()" }));
+        await Playwright.Selectors.RegisterAsync("alreadyRegistered", new() { Script = "(" + createTagSelector + ")()" });
+        var error = await ThrowsAsync<PlaywrightException>(() => Playwright.Selectors.RegisterAsync("alreadyRegistered", new() { Script = "(" + createTagSelector + ")()" }));
         Assert.That(error.Message, Does.Contain("selectors.register: \"alreadyRegistered\" selector engine has been already registered"));
     }
 
     [UpstreamTest("SE-166 should not rely on engines working from the root")]
-    public async Task ShouldNotRelyOnEnginesWorkingFromTheRoot(IPlaywright playwright, IBrowser browser, BrowserNewPageOptions newPageOptions)
+    public async Task ShouldNotRelyOnEnginesWorkingFromTheRoot()
     {
         const string createValueEngine = @"() => ({
     query(root, selector) {
@@ -157,15 +157,15 @@ public class SelectorsRegisterTests
       return root && root.value.includes(selector) ? [root] : [];
     },
   })";
-        await playwright.Selectors.RegisterAsync("__value", new() { Script = "(" + createValueEngine + ")()" });
-        var page = await browser.NewPageAsync(newPageOptions);
+        await Playwright.Selectors.RegisterAsync("__value", new() { Script = "(" + createValueEngine + ")()" });
+        var page = await Browser.NewPageAsync(NewPageOptions());
         await page.SetContentAsync("<input id=input1 value=value1><input id=input2 value=value2>");
         Assert.That(await page.EvalOnSelectorAsync<string>("input >> __value=value2", "e => e.id"), Is.EqualTo("input2"));
         await page.CloseAsync();
     }
 
     [UpstreamTest("SE-167 should throw a nice error if the selector returns a bad value")]
-    public async Task ShouldThrowANiceErrorIfTheSelectorReturnsABadValue(IPlaywright playwright, IBrowser browser, BrowserNewPageOptions newPageOptions)
+    public async Task ShouldThrowANiceErrorIfTheSelectorReturnsABadValue()
     {
         const string createFakeEngine = @"() => ({
     query(root, selector) {
@@ -176,8 +176,8 @@ public class SelectorsRegisterTests
     },
   })";
 
-        await playwright.Selectors.RegisterAsync("__fake", new() { Script = "(" + createFakeEngine + ")()" });
-        var page = await browser.NewPageAsync(newPageOptions);
+        await Playwright.Selectors.RegisterAsync("__fake", new() { Script = "(" + createFakeEngine + ")()" });
+        var page = await Browser.NewPageAsync(NewPageOptions());
         var error = await Catch(() => page.QuerySelectorAsync("__fake=value2"));
         Assert.That(error.Message, Does.Contain("Expected a Node but got [object Array]"));
         await page.CloseAsync();

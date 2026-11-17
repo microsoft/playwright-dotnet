@@ -23,240 +23,240 @@ using static Microsoft.Playwright.Tests.Fixtures.Utils;
 namespace Microsoft.Playwright.Tests.Page;
 
 /// <summary>Port of tests/page/selectors-text.spec.ts.</summary>
-public class SelectorsTextTests
+public class SelectorsTextTests : UpstreamPageTest
 {
     [UpstreamTest("SE-028 should work @smoke")]
-    public async Task ShouldWork(IPage page)
+    public async Task ShouldWork()
     {
-        await page.SetContentAsync("<div>yo</div><div>ya</div><div>\nye  </div>");
-        Assert.That(await page.EvalOnSelectorAsync<string>("text=ya", "e => e.outerHTML"), Is.EqualTo("<div>ya</div>"));
-        Assert.That(await page.EvalOnSelectorAsync<string>("text=\"ya\"", "e => e.outerHTML"), Is.EqualTo("<div>ya</div>"));
-        Assert.That(await page.EvalOnSelectorAsync<string>("text=/^[ay]+$/", "e => e.outerHTML"), Is.EqualTo("<div>ya</div>"));
-        Assert.That(await page.EvalOnSelectorAsync<string>("text=/Ya/i", "e => e.outerHTML"), Is.EqualTo("<div>ya</div>"));
-        Assert.That(await page.EvalOnSelectorAsync<string>("text=ye", "e => e.outerHTML"), Is.EqualTo("<div>\nye  </div>"));
-        Assert.That(await page.GetByText("ye").EvaluateAsync<string>("e => e.outerHTML"), Does.Contain(">\nye  </div>"));
+        await Page.SetContentAsync("<div>yo</div><div>ya</div><div>\nye  </div>");
+        Assert.That(await Page.EvalOnSelectorAsync<string>("text=ya", "e => e.outerHTML"), Is.EqualTo("<div>ya</div>"));
+        Assert.That(await Page.EvalOnSelectorAsync<string>("text=\"ya\"", "e => e.outerHTML"), Is.EqualTo("<div>ya</div>"));
+        Assert.That(await Page.EvalOnSelectorAsync<string>("text=/^[ay]+$/", "e => e.outerHTML"), Is.EqualTo("<div>ya</div>"));
+        Assert.That(await Page.EvalOnSelectorAsync<string>("text=/Ya/i", "e => e.outerHTML"), Is.EqualTo("<div>ya</div>"));
+        Assert.That(await Page.EvalOnSelectorAsync<string>("text=ye", "e => e.outerHTML"), Is.EqualTo("<div>\nye  </div>"));
+        Assert.That(await Page.GetByText("ye").EvaluateAsync<string>("e => e.outerHTML"), Does.Contain(">\nye  </div>"));
 
-        await page.SetContentAsync("<div> ye </div><div>ye</div>");
-        Assert.That(await page.EvalOnSelectorAsync<string>("text=\"ye\"", "e => e.outerHTML"), Is.EqualTo("<div> ye </div>"));
-        Assert.That(await page.GetByText("ye", new() { Exact = true }).First.EvaluateAsync<string>("e => e.outerHTML"), Does.Contain("> ye </div>"));
+        await Page.SetContentAsync("<div> ye </div><div>ye</div>");
+        Assert.That(await Page.EvalOnSelectorAsync<string>("text=\"ye\"", "e => e.outerHTML"), Is.EqualTo("<div> ye </div>"));
+        Assert.That(await Page.GetByText("ye", new() { Exact = true }).First.EvaluateAsync<string>("e => e.outerHTML"), Does.Contain("> ye </div>"));
 
-        await page.SetContentAsync("<div>yo</div><div>\"ya</div><div> hello world! </div>");
-        Assert.That(await page.EvalOnSelectorAsync<string>("text=\"\\\"ya\"", "e => e.outerHTML"), Is.EqualTo("<div>\"ya</div>"));
-        Assert.That(await page.EvalOnSelectorAsync<string>("text=/hello/", "e => e.outerHTML"), Is.EqualTo("<div> hello world! </div>"));
-        Assert.That(await page.EvalOnSelectorAsync<string>("text=/^\\s*heLLo/i", "e => e.outerHTML"), Is.EqualTo("<div> hello world! </div>"));
+        await Page.SetContentAsync("<div>yo</div><div>\"ya</div><div> hello world! </div>");
+        Assert.That(await Page.EvalOnSelectorAsync<string>("text=\"\\\"ya\"", "e => e.outerHTML"), Is.EqualTo("<div>\"ya</div>"));
+        Assert.That(await Page.EvalOnSelectorAsync<string>("text=/hello/", "e => e.outerHTML"), Is.EqualTo("<div> hello world! </div>"));
+        Assert.That(await Page.EvalOnSelectorAsync<string>("text=/^\\s*heLLo/i", "e => e.outerHTML"), Is.EqualTo("<div> hello world! </div>"));
 
-        await page.SetContentAsync("<div>yo<div>ya</div>hey<div>hey</div></div>");
-        Assert.That(await page.EvalOnSelectorAsync<string>("text=hey", "e => e.outerHTML"), Is.EqualTo("<div>hey</div>"));
-        Assert.That(await page.EvalOnSelectorAsync<string>("text=yo>>text=\"ya\"", "e => e.outerHTML"), Is.EqualTo("<div>ya</div>"));
-        Assert.That(await page.EvalOnSelectorAsync<string>("text=yo>> text=\"ya\"", "e => e.outerHTML"), Is.EqualTo("<div>ya</div>"));
-        Assert.That(await page.EvalOnSelectorAsync<string>("text=yo >>text='ya'", "e => e.outerHTML"), Is.EqualTo("<div>ya</div>"));
-        Assert.That(await page.EvalOnSelectorAsync<string>("text=yo >> text='ya'", "e => e.outerHTML"), Is.EqualTo("<div>ya</div>"));
-        Assert.That(await page.EvalOnSelectorAsync<string>("'yo'>>\"ya\"", "e => e.outerHTML"), Is.EqualTo("<div>ya</div>"));
-        Assert.That(await page.EvalOnSelectorAsync<string>("\"yo\" >> 'ya'", "e => e.outerHTML"), Is.EqualTo("<div>ya</div>"));
+        await Page.SetContentAsync("<div>yo<div>ya</div>hey<div>hey</div></div>");
+        Assert.That(await Page.EvalOnSelectorAsync<string>("text=hey", "e => e.outerHTML"), Is.EqualTo("<div>hey</div>"));
+        Assert.That(await Page.EvalOnSelectorAsync<string>("text=yo>>text=\"ya\"", "e => e.outerHTML"), Is.EqualTo("<div>ya</div>"));
+        Assert.That(await Page.EvalOnSelectorAsync<string>("text=yo>> text=\"ya\"", "e => e.outerHTML"), Is.EqualTo("<div>ya</div>"));
+        Assert.That(await Page.EvalOnSelectorAsync<string>("text=yo >>text='ya'", "e => e.outerHTML"), Is.EqualTo("<div>ya</div>"));
+        Assert.That(await Page.EvalOnSelectorAsync<string>("text=yo >> text='ya'", "e => e.outerHTML"), Is.EqualTo("<div>ya</div>"));
+        Assert.That(await Page.EvalOnSelectorAsync<string>("'yo'>>\"ya\"", "e => e.outerHTML"), Is.EqualTo("<div>ya</div>"));
+        Assert.That(await Page.EvalOnSelectorAsync<string>("\"yo\" >> 'ya'", "e => e.outerHTML"), Is.EqualTo("<div>ya</div>"));
 
-        await page.SetContentAsync("<div>yo<span id=\"s1\"></span></div><div>yo<span id=\"s2\"></span><span id=\"s3\"></span></div>");
-        Assert.That(await page.EvalOnSelectorAllAsync<string>("text=yo", "es => es.map(e => e.outerHTML).join('\\n')"), Is.EqualTo("<div>yo<span id=\"s1\"></span></div>\n<div>yo<span id=\"s2\"></span><span id=\"s3\"></span></div>"));
+        await Page.SetContentAsync("<div>yo<span id=\"s1\"></span></div><div>yo<span id=\"s2\"></span><span id=\"s3\"></span></div>");
+        Assert.That(await Page.EvalOnSelectorAllAsync<string>("text=yo", "es => es.map(e => e.outerHTML).join('\\n')"), Is.EqualTo("<div>yo<span id=\"s1\"></span></div>\n<div>yo<span id=\"s2\"></span><span id=\"s3\"></span></div>"));
 
-        await page.SetContentAsync("<div>'</div><div>\"</div><div>\\</div><div>x</div>");
-        Assert.That(await page.EvalOnSelectorAsync<string>("text='\\''", "e => e.outerHTML"), Is.EqualTo("<div>'</div>"));
-        Assert.That(await page.EvalOnSelectorAsync<string>("text='\"'", "e => e.outerHTML"), Is.EqualTo("<div>\"</div>"));
-        Assert.That(await page.EvalOnSelectorAsync<string>("text=\"\\\"\"", "e => e.outerHTML"), Is.EqualTo("<div>\"</div>"));
-        Assert.That(await page.EvalOnSelectorAsync<string>("text=\"'\"", "e => e.outerHTML"), Is.EqualTo("<div>'</div>"));
-        Assert.That(await page.EvalOnSelectorAsync<string>("text=\"\\x\"", "e => e.outerHTML"), Is.EqualTo("<div>x</div>"));
-        Assert.That(await page.EvalOnSelectorAsync<string>("text='\\x'", "e => e.outerHTML"), Is.EqualTo("<div>x</div>"));
-        Assert.That(await page.EvalOnSelectorAsync<string>("text='\\\\'", "e => e.outerHTML"), Is.EqualTo("<div>\\</div>"));
-        Assert.That(await page.EvalOnSelectorAsync<string>("text=\"\\\\\"", "e => e.outerHTML"), Is.EqualTo("<div>\\</div>"));
-        Assert.That(await page.EvalOnSelectorAsync<string>("text=\"", "e => e.outerHTML"), Is.EqualTo("<div>\"</div>"));
-        Assert.That(await page.EvalOnSelectorAsync<string>("text='", "e => e.outerHTML"), Is.EqualTo("<div>'</div>"));
-        Assert.That(await page.EvalOnSelectorAsync<string>("\"x\"", "e => e.outerHTML"), Is.EqualTo("<div>x</div>"));
-        Assert.That(await page.EvalOnSelectorAsync<string>("'x'", "e => e.outerHTML"), Is.EqualTo("<div>x</div>"));
-        var error = await Catch(() => page.QuerySelectorAsync("\""));
+        await Page.SetContentAsync("<div>'</div><div>\"</div><div>\\</div><div>x</div>");
+        Assert.That(await Page.EvalOnSelectorAsync<string>("text='\\''", "e => e.outerHTML"), Is.EqualTo("<div>'</div>"));
+        Assert.That(await Page.EvalOnSelectorAsync<string>("text='\"'", "e => e.outerHTML"), Is.EqualTo("<div>\"</div>"));
+        Assert.That(await Page.EvalOnSelectorAsync<string>("text=\"\\\"\"", "e => e.outerHTML"), Is.EqualTo("<div>\"</div>"));
+        Assert.That(await Page.EvalOnSelectorAsync<string>("text=\"'\"", "e => e.outerHTML"), Is.EqualTo("<div>'</div>"));
+        Assert.That(await Page.EvalOnSelectorAsync<string>("text=\"\\x\"", "e => e.outerHTML"), Is.EqualTo("<div>x</div>"));
+        Assert.That(await Page.EvalOnSelectorAsync<string>("text='\\x'", "e => e.outerHTML"), Is.EqualTo("<div>x</div>"));
+        Assert.That(await Page.EvalOnSelectorAsync<string>("text='\\\\'", "e => e.outerHTML"), Is.EqualTo("<div>\\</div>"));
+        Assert.That(await Page.EvalOnSelectorAsync<string>("text=\"\\\\\"", "e => e.outerHTML"), Is.EqualTo("<div>\\</div>"));
+        Assert.That(await Page.EvalOnSelectorAsync<string>("text=\"", "e => e.outerHTML"), Is.EqualTo("<div>\"</div>"));
+        Assert.That(await Page.EvalOnSelectorAsync<string>("text='", "e => e.outerHTML"), Is.EqualTo("<div>'</div>"));
+        Assert.That(await Page.EvalOnSelectorAsync<string>("\"x\"", "e => e.outerHTML"), Is.EqualTo("<div>x</div>"));
+        Assert.That(await Page.EvalOnSelectorAsync<string>("'x'", "e => e.outerHTML"), Is.EqualTo("<div>x</div>"));
+        var error = await Catch(() => Page.QuerySelectorAsync("\""));
         Assert.That(error, Is.InstanceOf<Exception>());
-        error = await Catch(() => page.QuerySelectorAsync("'"));
+        error = await Catch(() => Page.QuerySelectorAsync("'"));
         Assert.That(error, Is.InstanceOf<Exception>());
 
-        await page.SetContentAsync("<div> ' </div><div> \" </div>");
-        Assert.That(await page.EvalOnSelectorAsync<string>("text=\"", "e => e.outerHTML"), Is.EqualTo("<div> \" </div>"));
-        Assert.That(await page.EvalOnSelectorAsync<string>("text='", "e => e.outerHTML"), Is.EqualTo("<div> ' </div>"));
+        await Page.SetContentAsync("<div> ' </div><div> \" </div>");
+        Assert.That(await Page.EvalOnSelectorAsync<string>("text=\"", "e => e.outerHTML"), Is.EqualTo("<div> \" </div>"));
+        Assert.That(await Page.EvalOnSelectorAsync<string>("text='", "e => e.outerHTML"), Is.EqualTo("<div> ' </div>"));
 
-        await page.SetContentAsync("<div>Hi''&gt;&gt;foo=bar</div>");
-        Assert.That(await page.EvalOnSelectorAsync<string>("text=\"Hi''>>foo=bar\"", "e => e.outerHTML"), Is.EqualTo("<div>Hi''&gt;&gt;foo=bar</div>"));
-        await page.SetContentAsync("<div>Hi'\"&gt;&gt;foo=bar</div>");
-        Assert.That(await page.EvalOnSelectorAsync<string>("text=\"Hi'\\\">>foo=bar\"", "e => e.outerHTML"), Is.EqualTo("<div>Hi'\"&gt;&gt;foo=bar</div>"));
+        await Page.SetContentAsync("<div>Hi''&gt;&gt;foo=bar</div>");
+        Assert.That(await Page.EvalOnSelectorAsync<string>("text=\"Hi''>>foo=bar\"", "e => e.outerHTML"), Is.EqualTo("<div>Hi''&gt;&gt;foo=bar</div>"));
+        await Page.SetContentAsync("<div>Hi'\"&gt;&gt;foo=bar</div>");
+        Assert.That(await Page.EvalOnSelectorAsync<string>("text=\"Hi'\\\">>foo=bar\"", "e => e.outerHTML"), Is.EqualTo("<div>Hi'\"&gt;&gt;foo=bar</div>"));
 
-        await page.SetContentAsync("<div>Hi&gt;&gt;<span></span></div>");
-        Assert.That(await page.EvalOnSelectorAsync<string>("text=\"Hi>>\">>span", "e => e.outerHTML"), Is.EqualTo("<span></span>"));
-        Assert.That(await page.EvalOnSelectorAsync<string>("text=/Hi\\>\\>/ >> span", "e => e.outerHTML"), Is.EqualTo("<span></span>"));
+        await Page.SetContentAsync("<div>Hi&gt;&gt;<span></span></div>");
+        Assert.That(await Page.EvalOnSelectorAsync<string>("text=\"Hi>>\">>span", "e => e.outerHTML"), Is.EqualTo("<span></span>"));
+        Assert.That(await Page.EvalOnSelectorAsync<string>("text=/Hi\\>\\>/ >> span", "e => e.outerHTML"), Is.EqualTo("<span></span>"));
 
-        await page.SetContentAsync("<div>a<br>b</div><div>a</div>");
-        Assert.That(await page.EvalOnSelectorAsync<string>("text=a", "e => e.outerHTML"), Is.EqualTo("<div>a<br>b</div>"));
-        Assert.That(await page.EvalOnSelectorAsync<string>("text=b", "e => e.outerHTML"), Is.EqualTo("<div>a<br>b</div>"));
-        Assert.That(await page.EvalOnSelectorAsync<string>("text=ab", "e => e.outerHTML"), Is.EqualTo("<div>a<br>b</div>"));
-        Assert.That(await page.QuerySelectorAsync("text=abc"), Is.Null);
-        Assert.That(await page.EvalOnSelectorAllAsync<int>("text=a", "els => els.length"), Is.EqualTo(2));
-        Assert.That(await page.EvalOnSelectorAllAsync<int>("text=b", "els => els.length"), Is.EqualTo(1));
-        Assert.That(await page.EvalOnSelectorAllAsync<int>("text=ab", "els => els.length"), Is.EqualTo(1));
-        Assert.That(await page.EvalOnSelectorAllAsync<int>("text=abc", "els => els.length"), Is.EqualTo(0));
+        await Page.SetContentAsync("<div>a<br>b</div><div>a</div>");
+        Assert.That(await Page.EvalOnSelectorAsync<string>("text=a", "e => e.outerHTML"), Is.EqualTo("<div>a<br>b</div>"));
+        Assert.That(await Page.EvalOnSelectorAsync<string>("text=b", "e => e.outerHTML"), Is.EqualTo("<div>a<br>b</div>"));
+        Assert.That(await Page.EvalOnSelectorAsync<string>("text=ab", "e => e.outerHTML"), Is.EqualTo("<div>a<br>b</div>"));
+        Assert.That(await Page.QuerySelectorAsync("text=abc"), Is.Null);
+        Assert.That(await Page.EvalOnSelectorAllAsync<int>("text=a", "els => els.length"), Is.EqualTo(2));
+        Assert.That(await Page.EvalOnSelectorAllAsync<int>("text=b", "els => els.length"), Is.EqualTo(1));
+        Assert.That(await Page.EvalOnSelectorAllAsync<int>("text=ab", "els => els.length"), Is.EqualTo(1));
+        Assert.That(await Page.EvalOnSelectorAllAsync<int>("text=abc", "els => els.length"), Is.EqualTo(0));
 
-        await page.SetContentAsync("<div></div><span></span>");
-        await page.EvalOnSelectorAsync("div", @"div => {
+        await Page.SetContentAsync("<div></div><span></span>");
+        await Page.EvalOnSelectorAsync("div", @"div => {
     div.appendChild(document.createTextNode('hello'));
     div.appendChild(document.createTextNode('world'));
   }");
-        await page.EvalOnSelectorAsync("span", @"span => {
+        await Page.EvalOnSelectorAsync("span", @"span => {
     span.appendChild(document.createTextNode('hello'));
     span.appendChild(document.createTextNode('world'));
   }");
-        Assert.That(await page.EvalOnSelectorAsync<string>("text=lowo", "e => e.outerHTML"), Is.EqualTo("<div>helloworld</div>"));
-        Assert.That(await page.EvalOnSelectorAllAsync<string>("text=lowo", "els => els.map(e => e.outerHTML).join('')"), Is.EqualTo("<div>helloworld</div><span>helloworld</span>"));
+        Assert.That(await Page.EvalOnSelectorAsync<string>("text=lowo", "e => e.outerHTML"), Is.EqualTo("<div>helloworld</div>"));
+        Assert.That(await Page.EvalOnSelectorAllAsync<string>("text=lowo", "els => els.map(e => e.outerHTML).join('')"), Is.EqualTo("<div>helloworld</div><span>helloworld</span>"));
 
-        await page.SetContentAsync("<span>Sign&nbsp;in</span><span>Hello\n \nworld</span>");
-        Assert.That(await page.EvalOnSelectorAsync<string>("text=Sign in", "e => e.outerHTML"), Is.EqualTo("<span>Sign&nbsp;in</span>"));
-        Assert.That((await page.QuerySelectorAllAsync("text=Sign \tin")).Count, Is.EqualTo(1));
-        Assert.That((await page.QuerySelectorAllAsync("text=\"Sign in\"")).Count, Is.EqualTo(1));
-        Assert.That(await page.EvalOnSelectorAsync<string>("text=lo wo", "e => e.outerHTML"), Is.EqualTo("<span>Hello\n \nworld</span>"));
-        Assert.That(await page.EvalOnSelectorAsync<string>("text=\"Hello world\"", "e => e.outerHTML"), Is.EqualTo("<span>Hello\n \nworld</span>"));
-        Assert.That(await page.QuerySelectorAsync("text=\"lo wo\""), Is.Null);
-        Assert.That((await page.QuerySelectorAllAsync("text=lo \nwo")).Count, Is.EqualTo(1));
-        Assert.That((await page.QuerySelectorAllAsync("text=\"lo \nwo\"")).Count, Is.EqualTo(0));
+        await Page.SetContentAsync("<span>Sign&nbsp;in</span><span>Hello\n \nworld</span>");
+        Assert.That(await Page.EvalOnSelectorAsync<string>("text=Sign in", "e => e.outerHTML"), Is.EqualTo("<span>Sign&nbsp;in</span>"));
+        Assert.That((await Page.QuerySelectorAllAsync("text=Sign \tin")).Count, Is.EqualTo(1));
+        Assert.That((await Page.QuerySelectorAllAsync("text=\"Sign in\"")).Count, Is.EqualTo(1));
+        Assert.That(await Page.EvalOnSelectorAsync<string>("text=lo wo", "e => e.outerHTML"), Is.EqualTo("<span>Hello\n \nworld</span>"));
+        Assert.That(await Page.EvalOnSelectorAsync<string>("text=\"Hello world\"", "e => e.outerHTML"), Is.EqualTo("<span>Hello\n \nworld</span>"));
+        Assert.That(await Page.QuerySelectorAsync("text=\"lo wo\""), Is.Null);
+        Assert.That((await Page.QuerySelectorAllAsync("text=lo \nwo")).Count, Is.EqualTo(1));
+        Assert.That((await Page.QuerySelectorAllAsync("text=\"lo \nwo\"")).Count, Is.EqualTo(0));
 
-        await page.SetContentAsync("<div>let's<span>hello</span></div>");
-        Assert.That(await page.EvalOnSelectorAsync<string>("text=/let's/i >> span", "e => e.outerHTML"), Is.EqualTo("<span>hello</span>"));
-        Assert.That(await page.EvalOnSelectorAsync<string>("text=/let\\'s/i >> span", "e => e.outerHTML"), Is.EqualTo("<span>hello</span>"));
+        await Page.SetContentAsync("<div>let's<span>hello</span></div>");
+        Assert.That(await Page.EvalOnSelectorAsync<string>("text=/let's/i >> span", "e => e.outerHTML"), Is.EqualTo("<span>hello</span>"));
+        Assert.That(await Page.EvalOnSelectorAsync<string>("text=/let\\'s/i >> span", "e => e.outerHTML"), Is.EqualTo("<span>hello</span>"));
     }
 
     [UpstreamTest("SE-029 should work with :text")]
-    public async Task ShouldWorkWithText(IPage page)
+    public async Task ShouldWorkWithText()
     {
-        await page.SetContentAsync("<div>yo</div><div>ya</div><div>\nHELLO   \n world  </div>");
-        Assert.That(await page.EvalOnSelectorAsync<string>(":text(\"ya\")", "e => e.outerHTML"), Is.EqualTo("<div>ya</div>"));
-        Assert.That(await page.EvalOnSelectorAsync<string>(":text-is(\"ya\")", "e => e.outerHTML"), Is.EqualTo("<div>ya</div>"));
-        Assert.That(await page.EvalOnSelectorAsync<string>(":text(\"y\")", "e => e.outerHTML"), Is.EqualTo("<div>yo</div>"));
-        Assert.That(await page.QuerySelectorAsync(":text-is(\"Y\")"), Is.Null);
-        Assert.That(await page.EvalOnSelectorAsync<string>(":text(\"hello world\")", "e => e.outerHTML"), Is.EqualTo("<div>\nHELLO   \n world  </div>"));
-        Assert.That(await page.EvalOnSelectorAsync<string>(":text-is(\"HELLO world\")", "e => e.outerHTML"), Is.EqualTo("<div>\nHELLO   \n world  </div>"));
-        Assert.That(await page.EvalOnSelectorAsync<string>(":text(\"lo wo\")", "e => e.outerHTML"), Is.EqualTo("<div>\nHELLO   \n world  </div>"));
-        Assert.That(await page.QuerySelectorAsync(":text-is(\"lo wo\")"), Is.Null);
-        Assert.That(await page.EvalOnSelectorAsync<string>(":text-matches(\"^[ay]+$\")", "e => e.outerHTML"), Is.EqualTo("<div>ya</div>"));
-        Assert.That(await page.EvalOnSelectorAsync<string>(":text-matches(\"y\", \"g\")", "e => e.outerHTML"), Is.EqualTo("<div>yo</div>"));
-        Assert.That(await page.EvalOnSelectorAsync<string>(":text-matches(\"Y\", \"i\")", "e => e.outerHTML"), Is.EqualTo("<div>yo</div>"));
-        Assert.That(await page.QuerySelectorAsync(":text-matches(\"^y$\")"), Is.Null);
+        await Page.SetContentAsync("<div>yo</div><div>ya</div><div>\nHELLO   \n world  </div>");
+        Assert.That(await Page.EvalOnSelectorAsync<string>(":text(\"ya\")", "e => e.outerHTML"), Is.EqualTo("<div>ya</div>"));
+        Assert.That(await Page.EvalOnSelectorAsync<string>(":text-is(\"ya\")", "e => e.outerHTML"), Is.EqualTo("<div>ya</div>"));
+        Assert.That(await Page.EvalOnSelectorAsync<string>(":text(\"y\")", "e => e.outerHTML"), Is.EqualTo("<div>yo</div>"));
+        Assert.That(await Page.QuerySelectorAsync(":text-is(\"Y\")"), Is.Null);
+        Assert.That(await Page.EvalOnSelectorAsync<string>(":text(\"hello world\")", "e => e.outerHTML"), Is.EqualTo("<div>\nHELLO   \n world  </div>"));
+        Assert.That(await Page.EvalOnSelectorAsync<string>(":text-is(\"HELLO world\")", "e => e.outerHTML"), Is.EqualTo("<div>\nHELLO   \n world  </div>"));
+        Assert.That(await Page.EvalOnSelectorAsync<string>(":text(\"lo wo\")", "e => e.outerHTML"), Is.EqualTo("<div>\nHELLO   \n world  </div>"));
+        Assert.That(await Page.QuerySelectorAsync(":text-is(\"lo wo\")"), Is.Null);
+        Assert.That(await Page.EvalOnSelectorAsync<string>(":text-matches(\"^[ay]+$\")", "e => e.outerHTML"), Is.EqualTo("<div>ya</div>"));
+        Assert.That(await Page.EvalOnSelectorAsync<string>(":text-matches(\"y\", \"g\")", "e => e.outerHTML"), Is.EqualTo("<div>yo</div>"));
+        Assert.That(await Page.EvalOnSelectorAsync<string>(":text-matches(\"Y\", \"i\")", "e => e.outerHTML"), Is.EqualTo("<div>yo</div>"));
+        Assert.That(await Page.QuerySelectorAsync(":text-matches(\"^y$\")"), Is.Null);
 
-        var error1 = await Catch(() => page.QuerySelectorAsync(":text(\"foo\", \"bar\")"));
+        var error1 = await Catch(() => Page.QuerySelectorAsync(":text(\"foo\", \"bar\")"));
         Assert.That(error1.Message, Does.Contain("\"text\" engine expects a single string"));
-        var error2 = await Catch(() => page.QuerySelectorAsync(":text(foo > bar)"));
+        var error2 = await Catch(() => Page.QuerySelectorAsync(":text(foo > bar)"));
         Assert.That(error2.Message, Does.Contain("\"text\" engine expects a single string"));
     }
 
     [UpstreamTest("SE-030 should support empty string")]
-    public async Task ShouldSupportEmptyString(IPage page)
+    public async Task ShouldSupportEmptyString()
     {
-        await page.SetContentAsync("<div></div><div>ya</div><div>\nHELLO   \n world  </div>");
-        Assert.That(await page.EvalOnSelectorAsync<string>("div:text-is(\"\")", "e => e.outerHTML"), Is.EqualTo("<div></div>"));
-        Assert.That(await page.EvalOnSelectorAllAsync<int>("div:text-is(\"\")", "els => els.length"), Is.EqualTo(1));
-        Assert.That(await page.EvalOnSelectorAsync<string>("div:text(\"\")", "e => e.outerHTML"), Is.EqualTo("<div></div>"));
-        Assert.That(await page.EvalOnSelectorAllAsync<int>("div:text(\"\")", "els => els.length"), Is.EqualTo(3));
-        Assert.That(await page.EvalOnSelectorAsync<string>("div >> text=\"\"", "e => e.outerHTML"), Is.EqualTo("<div></div>"));
-        Assert.That(await page.EvalOnSelectorAllAsync<int>("div >> text=\"\"", "els => els.length"), Is.EqualTo(1));
-        Assert.That(await page.EvalOnSelectorAsync<string>("div >> text=/^$/", "e => e.outerHTML"), Is.EqualTo("<div></div>"));
-        Assert.That(await page.EvalOnSelectorAllAsync<int>("div >> text=/^$/", "els => els.length"), Is.EqualTo(1));
-        Assert.That(await page.EvalOnSelectorAsync<string>("div:text-matches(\"\")", "e => e.outerHTML"), Is.EqualTo("<div></div>"));
-        Assert.That(await page.EvalOnSelectorAllAsync<int>("div:text-matches(\"\")", "els => els.length"), Is.EqualTo(3));
+        await Page.SetContentAsync("<div></div><div>ya</div><div>\nHELLO   \n world  </div>");
+        Assert.That(await Page.EvalOnSelectorAsync<string>("div:text-is(\"\")", "e => e.outerHTML"), Is.EqualTo("<div></div>"));
+        Assert.That(await Page.EvalOnSelectorAllAsync<int>("div:text-is(\"\")", "els => els.length"), Is.EqualTo(1));
+        Assert.That(await Page.EvalOnSelectorAsync<string>("div:text(\"\")", "e => e.outerHTML"), Is.EqualTo("<div></div>"));
+        Assert.That(await Page.EvalOnSelectorAllAsync<int>("div:text(\"\")", "els => els.length"), Is.EqualTo(3));
+        Assert.That(await Page.EvalOnSelectorAsync<string>("div >> text=\"\"", "e => e.outerHTML"), Is.EqualTo("<div></div>"));
+        Assert.That(await Page.EvalOnSelectorAllAsync<int>("div >> text=\"\"", "els => els.length"), Is.EqualTo(1));
+        Assert.That(await Page.EvalOnSelectorAsync<string>("div >> text=/^$/", "e => e.outerHTML"), Is.EqualTo("<div></div>"));
+        Assert.That(await Page.EvalOnSelectorAllAsync<int>("div >> text=/^$/", "els => els.length"), Is.EqualTo(1));
+        Assert.That(await Page.EvalOnSelectorAsync<string>("div:text-matches(\"\")", "e => e.outerHTML"), Is.EqualTo("<div></div>"));
+        Assert.That(await Page.EvalOnSelectorAllAsync<int>("div:text-matches(\"\")", "els => els.length"), Is.EqualTo(3));
     }
 
     [UpstreamTest("SE-031 should work across nodes")]
-    public async Task ShouldWorkAcrossNodes(IPage page)
+    public async Task ShouldWorkAcrossNodes()
     {
-        await page.SetContentAsync("<div id=target1>Hello<i>,</i> <span id=target2>world</span><b>!</b></div>");
+        await Page.SetContentAsync("<div id=target1>Hello<i>,</i> <span id=target2>world</span><b>!</b></div>");
 
-        Assert.That(await page.EvalOnSelectorAsync<string>(":text(\"Hello, world!\")", "e => e.id"), Is.EqualTo("target1"));
-        Assert.That(await page.EvalOnSelectorAsync<string>(":text(\"Hello\")", "e => e.id"), Is.EqualTo("target1"));
-        Assert.That(await page.EvalOnSelectorAsync<string>(":text(\"world\")", "e => e.id"), Is.EqualTo("target2"));
-        Assert.That(await page.EvalOnSelectorAllAsync<int>(":text(\"world\")", "els => els.length"), Is.EqualTo(1));
-        Assert.That(await page.QuerySelectorAsync(":text(\"hello world\")"), Is.Null);
-        Assert.That(await page.QuerySelectorAsync("div:text(\"world\")"), Is.Null);
-        Assert.That(await page.EvalOnSelectorAsync<string>("text=Hello, world!", "e => e.id"), Is.EqualTo("target1"));
-        Assert.That(await page.EvalOnSelectorAsync<string>("text=Hello", "e => e.id"), Is.EqualTo("target1"));
-        Assert.That(await page.EvalOnSelectorAsync<string>("text=world", "e => e.id"), Is.EqualTo("target2"));
-        Assert.That(await page.EvalOnSelectorAllAsync<int>("text=world", "els => els.length"), Is.EqualTo(1));
-        Assert.That(await page.QuerySelectorAsync("text=hello world"), Is.Null);
+        Assert.That(await Page.EvalOnSelectorAsync<string>(":text(\"Hello, world!\")", "e => e.id"), Is.EqualTo("target1"));
+        Assert.That(await Page.EvalOnSelectorAsync<string>(":text(\"Hello\")", "e => e.id"), Is.EqualTo("target1"));
+        Assert.That(await Page.EvalOnSelectorAsync<string>(":text(\"world\")", "e => e.id"), Is.EqualTo("target2"));
+        Assert.That(await Page.EvalOnSelectorAllAsync<int>(":text(\"world\")", "els => els.length"), Is.EqualTo(1));
+        Assert.That(await Page.QuerySelectorAsync(":text(\"hello world\")"), Is.Null);
+        Assert.That(await Page.QuerySelectorAsync("div:text(\"world\")"), Is.Null);
+        Assert.That(await Page.EvalOnSelectorAsync<string>("text=Hello, world!", "e => e.id"), Is.EqualTo("target1"));
+        Assert.That(await Page.EvalOnSelectorAsync<string>("text=Hello", "e => e.id"), Is.EqualTo("target1"));
+        Assert.That(await Page.EvalOnSelectorAsync<string>("text=world", "e => e.id"), Is.EqualTo("target2"));
+        Assert.That(await Page.EvalOnSelectorAllAsync<int>("text=world", "els => els.length"), Is.EqualTo(1));
+        Assert.That(await Page.QuerySelectorAsync("text=hello world"), Is.Null);
 
-        Assert.That(await page.QuerySelectorAsync(":text-is(\"Hello, world!\")"), Is.Null);
-        Assert.That(await page.EvalOnSelectorAsync<string>(":text-is(\"Hello\")", "e => e.id"), Is.EqualTo("target1"));
-        Assert.That(await page.EvalOnSelectorAsync<string>(":text-is(\"world\")", "e => e.id"), Is.EqualTo("target2"));
-        Assert.That(await page.EvalOnSelectorAllAsync<int>(":text-is(\"world\")", "els => els.length"), Is.EqualTo(1));
-        Assert.That(await page.QuerySelectorAsync("text=\"Hello, world!\""), Is.Null);
-        Assert.That(await page.EvalOnSelectorAsync<string>("text=\"Hello\"", "e => e.id"), Is.EqualTo("target1"));
-        Assert.That(await page.EvalOnSelectorAsync<string>("text=\"world\"", "e => e.id"), Is.EqualTo("target2"));
-        Assert.That(await page.EvalOnSelectorAllAsync<int>("text=\"world\"", "els => els.length"), Is.EqualTo(1));
+        Assert.That(await Page.QuerySelectorAsync(":text-is(\"Hello, world!\")"), Is.Null);
+        Assert.That(await Page.EvalOnSelectorAsync<string>(":text-is(\"Hello\")", "e => e.id"), Is.EqualTo("target1"));
+        Assert.That(await Page.EvalOnSelectorAsync<string>(":text-is(\"world\")", "e => e.id"), Is.EqualTo("target2"));
+        Assert.That(await Page.EvalOnSelectorAllAsync<int>(":text-is(\"world\")", "els => els.length"), Is.EqualTo(1));
+        Assert.That(await Page.QuerySelectorAsync("text=\"Hello, world!\""), Is.Null);
+        Assert.That(await Page.EvalOnSelectorAsync<string>("text=\"Hello\"", "e => e.id"), Is.EqualTo("target1"));
+        Assert.That(await Page.EvalOnSelectorAsync<string>("text=\"world\"", "e => e.id"), Is.EqualTo("target2"));
+        Assert.That(await Page.EvalOnSelectorAllAsync<int>("text=\"world\"", "els => els.length"), Is.EqualTo(1));
 
-        Assert.That(await page.EvalOnSelectorAsync<string>(":text-matches(\".*\")", "e => e.nodeName"), Is.EqualTo("I"));
-        Assert.That(await page.EvalOnSelectorAsync<string>(":text-matches(\"world?\")", "e => e.id"), Is.EqualTo("target2"));
-        Assert.That(await page.EvalOnSelectorAllAsync<int>(":text-matches(\"world\")", "els => els.length"), Is.EqualTo(1));
-        Assert.That(await page.QuerySelectorAsync("div:text(\".*\")"), Is.Null);
-        Assert.That(await page.EvalOnSelectorAsync<string>("text=/.*/", "e => e.nodeName"), Is.EqualTo("I"));
-        Assert.That(await page.EvalOnSelectorAsync<string>("text=/world?/", "e => e.id"), Is.EqualTo("target2"));
-        Assert.That(await page.EvalOnSelectorAllAsync<int>("text=/world/", "els => els.length"), Is.EqualTo(1));
+        Assert.That(await Page.EvalOnSelectorAsync<string>(":text-matches(\".*\")", "e => e.nodeName"), Is.EqualTo("I"));
+        Assert.That(await Page.EvalOnSelectorAsync<string>(":text-matches(\"world?\")", "e => e.id"), Is.EqualTo("target2"));
+        Assert.That(await Page.EvalOnSelectorAllAsync<int>(":text-matches(\"world\")", "els => els.length"), Is.EqualTo(1));
+        Assert.That(await Page.QuerySelectorAsync("div:text(\".*\")"), Is.Null);
+        Assert.That(await Page.EvalOnSelectorAsync<string>("text=/.*/", "e => e.nodeName"), Is.EqualTo("I"));
+        Assert.That(await Page.EvalOnSelectorAsync<string>("text=/world?/", "e => e.id"), Is.EqualTo("target2"));
+        Assert.That(await Page.EvalOnSelectorAllAsync<int>("text=/world/", "els => els.length"), Is.EqualTo(1));
     }
 
     [UpstreamTest("SE-032 text-is() should ignore comments")]
-    public async Task TextIsShouldIgnoreComments(IPage page)
+    public async Task TextIsShouldIgnoreComments()
     {
-        await page.SetContentAsync(@"<div id=me>hel<!-- comment -->lo
+        await Page.SetContentAsync(@"<div id=me>hel<!-- comment -->lo
   <!-- comment -->
   world</div>");
-        Assert.That(await page.EvalOnSelectorAsync<string>(":text-is(\"hello world\")", "e => e.id"), Is.EqualTo("me"));
-        Assert.That(await page.Locator("div", new() { HasText = "hello world" }).GetAttributeAsync("id"), Is.EqualTo("me"));
-        Assert.That(await page.GetByText("hello world", new() { Exact = true }).GetAttributeAsync("id"), Is.EqualTo("me"));
+        Assert.That(await Page.EvalOnSelectorAsync<string>(":text-is(\"hello world\")", "e => e.id"), Is.EqualTo("me"));
+        Assert.That(await Page.Locator("div", new() { HasText = "hello world" }).GetAttributeAsync("id"), Is.EqualTo("me"));
+        Assert.That(await Page.GetByText("hello world", new() { Exact = true }).GetAttributeAsync("id"), Is.EqualTo("me"));
     }
 
     [UpstreamTest("SE-033 should work with text nodes in quoted mode")]
-    public async Task ShouldWorkWithTextNodesInQuotedMode(IPage page)
+    public async Task ShouldWorkWithTextNodesInQuotedMode()
     {
-        await page.SetContentAsync("<div id=target1>Hello<span id=target2>wo  rld  </span>  Hi again  </div>");
-        Assert.That(await page.EvalOnSelectorAsync<string>("text=\"Hello\"", "e => e.id"), Is.EqualTo("target1"));
-        Assert.That(await page.EvalOnSelectorAsync<string>("text=\"Hi again\"", "e => e.id"), Is.EqualTo("target1"));
-        Assert.That(await page.EvalOnSelectorAsync<string>("text=\"wo rld\"", "e => e.id"), Is.EqualTo("target2"));
-        Assert.That(await page.QuerySelectorAsync("text=\"Hellowo rld Hi again\""), Is.Null);
-        Assert.That(await page.QuerySelectorAsync("text=\"Hellowo\""), Is.Null);
-        Assert.That(await page.QuerySelectorAsync("text=\"Hellowo rld\""), Is.Null);
-        Assert.That(await page.QuerySelectorAsync("text=\"wo rld Hi ag\""), Is.Null);
-        Assert.That(await page.QuerySelectorAsync("text=\"again\""), Is.Null);
-        Assert.That(await page.QuerySelectorAsync("text=\"hi again\""), Is.Null);
-        Assert.That(await page.EvalOnSelectorAsync<string>("text=hi again", "e => e.id"), Is.EqualTo("target1"));
+        await Page.SetContentAsync("<div id=target1>Hello<span id=target2>wo  rld  </span>  Hi again  </div>");
+        Assert.That(await Page.EvalOnSelectorAsync<string>("text=\"Hello\"", "e => e.id"), Is.EqualTo("target1"));
+        Assert.That(await Page.EvalOnSelectorAsync<string>("text=\"Hi again\"", "e => e.id"), Is.EqualTo("target1"));
+        Assert.That(await Page.EvalOnSelectorAsync<string>("text=\"wo rld\"", "e => e.id"), Is.EqualTo("target2"));
+        Assert.That(await Page.QuerySelectorAsync("text=\"Hellowo rld Hi again\""), Is.Null);
+        Assert.That(await Page.QuerySelectorAsync("text=\"Hellowo\""), Is.Null);
+        Assert.That(await Page.QuerySelectorAsync("text=\"Hellowo rld\""), Is.Null);
+        Assert.That(await Page.QuerySelectorAsync("text=\"wo rld Hi ag\""), Is.Null);
+        Assert.That(await Page.QuerySelectorAsync("text=\"again\""), Is.Null);
+        Assert.That(await Page.QuerySelectorAsync("text=\"hi again\""), Is.Null);
+        Assert.That(await Page.EvalOnSelectorAsync<string>("text=hi again", "e => e.id"), Is.EqualTo("target1"));
     }
 
     [UpstreamTest("SE-034 should clear caches")]
-    public async Task ShouldClearCaches(IPage page)
+    public async Task ShouldClearCaches()
     {
-        await page.SetContentAsync("<div id=target1>text</div><div id=target2>text</div>");
-        var div = await page.QuerySelectorAsync("#target1");
+        await Page.SetContentAsync("<div id=target1>text</div><div id=target2>text</div>");
+        var div = await Page.QuerySelectorAsync("#target1");
 
         await div.EvaluateAsync("div => div.textContent = 'text'");
-        Assert.That(await page.EvalOnSelectorAsync<string>("text=text", "e => e.id"), Is.EqualTo("target1"));
+        Assert.That(await Page.EvalOnSelectorAsync<string>("text=text", "e => e.id"), Is.EqualTo("target1"));
         await div.EvaluateAsync("div => div.textContent = 'foo'");
-        Assert.That(await page.EvalOnSelectorAsync<string>("text=text", "e => e.id"), Is.EqualTo("target2"));
+        Assert.That(await Page.EvalOnSelectorAsync<string>("text=text", "e => e.id"), Is.EqualTo("target2"));
 
         await div.EvaluateAsync("div => div.textContent = 'text'");
-        Assert.That(await page.EvalOnSelectorAsync<string>(":text(\"text\")", "e => e.id"), Is.EqualTo("target1"));
+        Assert.That(await Page.EvalOnSelectorAsync<string>(":text(\"text\")", "e => e.id"), Is.EqualTo("target1"));
         await div.EvaluateAsync("div => div.textContent = 'foo'");
-        Assert.That(await page.EvalOnSelectorAsync<string>(":text(\"text\")", "e => e.id"), Is.EqualTo("target2"));
+        Assert.That(await Page.EvalOnSelectorAsync<string>(":text(\"text\")", "e => e.id"), Is.EqualTo("target2"));
 
         await div.EvaluateAsync("div => div.textContent = 'text'");
-        Assert.That(await page.EvalOnSelectorAllAsync<int>("text=text", "els => els.length"), Is.EqualTo(2));
+        Assert.That(await Page.EvalOnSelectorAllAsync<int>("text=text", "els => els.length"), Is.EqualTo(2));
         await div.EvaluateAsync("div => div.textContent = 'foo'");
-        Assert.That(await page.EvalOnSelectorAllAsync<int>("text=text", "els => els.length"), Is.EqualTo(1));
+        Assert.That(await Page.EvalOnSelectorAllAsync<int>("text=text", "els => els.length"), Is.EqualTo(1));
 
         await div.EvaluateAsync("div => div.textContent = 'text'");
-        Assert.That(await page.EvalOnSelectorAllAsync<int>(":text(\"text\")", "els => els.length"), Is.EqualTo(2));
+        Assert.That(await Page.EvalOnSelectorAllAsync<int>(":text(\"text\")", "els => els.length"), Is.EqualTo(2));
         await div.EvaluateAsync("div => div.textContent = 'foo'");
-        Assert.That(await page.EvalOnSelectorAllAsync<int>(":text(\"text\")", "els => els.length"), Is.EqualTo(1));
+        Assert.That(await Page.EvalOnSelectorAllAsync<int>(":text(\"text\")", "els => els.length"), Is.EqualTo(1));
     }
 
     [UpstreamTest("SE-035 should work with :has-text")]
-    public async Task ShouldWorkWithHasText(IPage page)
+    public async Task ShouldWorkWithHasText()
     {
-        await page.SetContentAsync(@"
+        await Page.SetContentAsync(@"
     <input id=input2>
     <div id=div1>
       <span>  Find me  </span>
@@ -265,33 +265,33 @@ public class SelectorsTextTests
       <div><input id=input1></div>
     </div>
   ");
-        Assert.That(await page.EvalOnSelectorAsync<string>(":has-text(\"find me\")", "e => e.tagName"), Is.EqualTo("HTML"));
-        Assert.That(await page.EvalOnSelectorAsync<string>("span:has-text(\"find me\")", "e => e.outerHTML"), Is.EqualTo("<span>  Find me  </span>"));
-        Assert.That(await page.EvalOnSelectorAsync<string>("div:has-text(\"find me\")", "e => e.id"), Is.EqualTo("div1"));
-        Assert.That(await page.EvalOnSelectorAsync<string>("div:has-text(\"find me\") input", "e => e.id"), Is.EqualTo("input1"));
-        Assert.That(await page.EvalOnSelectorAsync<string>(":has-text(\"find me\") input", "e => e.id"), Is.EqualTo("input2"));
-        Assert.That(await page.EvalOnSelectorAsync<string>("div:has-text(\"find me or maybe me\")", "e => e.id"), Is.EqualTo("div1"));
-        Assert.That(await page.QuerySelectorAsync("div:has-text(\"find noone\")"), Is.Null);
-        Assert.That(await page.EvalOnSelectorAllAsync<string>(":is(div,span):has-text(\"maybe\")", "els => els.map(e => e.id).join(';')"), Is.EqualTo("div1;span2"));
-        Assert.That(await page.EvalOnSelectorAsync<string>("div:has-text(\"find me\") :has-text(\"maybe me\")", "e => e.tagName"), Is.EqualTo("WRAP"));
-        Assert.That(await page.EvalOnSelectorAsync<string>("div:has-text(\"find me\") span:has-text(\"maybe me\")", "e => e.id"), Is.EqualTo("span2"));
+        Assert.That(await Page.EvalOnSelectorAsync<string>(":has-text(\"find me\")", "e => e.tagName"), Is.EqualTo("HTML"));
+        Assert.That(await Page.EvalOnSelectorAsync<string>("span:has-text(\"find me\")", "e => e.outerHTML"), Is.EqualTo("<span>  Find me  </span>"));
+        Assert.That(await Page.EvalOnSelectorAsync<string>("div:has-text(\"find me\")", "e => e.id"), Is.EqualTo("div1"));
+        Assert.That(await Page.EvalOnSelectorAsync<string>("div:has-text(\"find me\") input", "e => e.id"), Is.EqualTo("input1"));
+        Assert.That(await Page.EvalOnSelectorAsync<string>(":has-text(\"find me\") input", "e => e.id"), Is.EqualTo("input2"));
+        Assert.That(await Page.EvalOnSelectorAsync<string>("div:has-text(\"find me or maybe me\")", "e => e.id"), Is.EqualTo("div1"));
+        Assert.That(await Page.QuerySelectorAsync("div:has-text(\"find noone\")"), Is.Null);
+        Assert.That(await Page.EvalOnSelectorAllAsync<string>(":is(div,span):has-text(\"maybe\")", "els => els.map(e => e.id).join(';')"), Is.EqualTo("div1;span2"));
+        Assert.That(await Page.EvalOnSelectorAsync<string>("div:has-text(\"find me\") :has-text(\"maybe me\")", "e => e.tagName"), Is.EqualTo("WRAP"));
+        Assert.That(await Page.EvalOnSelectorAsync<string>("div:has-text(\"find me\") span:has-text(\"maybe me\")", "e => e.id"), Is.EqualTo("span2"));
 
-        await page.SetContentAsync(@"<div id=me>hello
+        await Page.SetContentAsync(@"<div id=me>hello
   wo""r>>ld</div>");
-        Assert.That(await page.EvalOnSelectorAsync<string>("div:has-text(\"hello wo\\\"r>>ld\")", "e => e.id"), Is.EqualTo("me"));
-        Assert.That(await page.EvalOnSelectorAsync<string>("div:has-text(\"hello\\a wo\\\"r>>ld\")", "e => e.id"), Is.EqualTo("me"));
-        Assert.That(await page.Locator("div", new() { HasText = "hello\nwo\"r>>ld" }).GetAttributeAsync("id"), Is.EqualTo("me"));
+        Assert.That(await Page.EvalOnSelectorAsync<string>("div:has-text(\"hello wo\\\"r>>ld\")", "e => e.id"), Is.EqualTo("me"));
+        Assert.That(await Page.EvalOnSelectorAsync<string>("div:has-text(\"hello\\a wo\\\"r>>ld\")", "e => e.id"), Is.EqualTo("me"));
+        Assert.That(await Page.Locator("div", new() { HasText = "hello\nwo\"r>>ld" }).GetAttributeAsync("id"), Is.EqualTo("me"));
 
-        var error1 = await Catch(() => page.QuerySelectorAsync(":has-text(\"foo\", \"bar\")"));
+        var error1 = await Catch(() => Page.QuerySelectorAsync(":has-text(\"foo\", \"bar\")"));
         Assert.That(error1.Message, Does.Contain("\"has-text\" engine expects a single string"));
-        var error2 = await Catch(() => page.QuerySelectorAsync(":has-text(foo > bar)"));
+        var error2 = await Catch(() => Page.QuerySelectorAsync(":has-text(foo > bar)"));
         Assert.That(error2.Message, Does.Contain("\"has-text\" engine expects a single string"));
     }
 
     [UpstreamTest("SE-036 should work with large DOM")]
-    public async Task ShouldWorkWithLargeDOM(IPage page)
+    public async Task ShouldWorkWithLargeDOM()
     {
-        await page.EvaluateAsync(@"() => {
+        await Page.EvaluateAsync(@"() => {
     let id = 0;
     const next = (tag) => {
       const e = document.createElement(tag);
@@ -337,7 +337,7 @@ public class SelectorsTextTests
             var time1 = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
             for (var i = 0; i < (measure ? 10 : 1); i++)
             {
-                await page.EvalOnSelectorAllAsync(selector, "els => els.length");
+                await Page.EvalOnSelectorAllAsync(selector, "els => els.length");
             }
             if (measure)
             {
@@ -349,7 +349,7 @@ public class SelectorsTextTests
                 var time2 = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
                 for (var i = 0; i < (measure ? 10 : 1); i++)
                 {
-                    await page.EvaluateAsync("selector => document.querySelectorAll(selector).length", selector);
+                    await Page.EvaluateAsync("selector => document.querySelectorAll(selector).length", selector);
                 }
                 // console.log(`qs("${selector}"): ` + (Date.now() - time2));
             }
@@ -357,26 +357,26 @@ public class SelectorsTextTests
     }
 
     [UpstreamTest("SE-037 should be case sensitive if quotes are specified")]
-    public async Task ShouldBeCaseSensitiveIfQuotesAreSpecified(IPage page)
+    public async Task ShouldBeCaseSensitiveIfQuotesAreSpecified()
     {
-        await page.SetContentAsync("<div>yo</div><div>ya</div><div>\nye  </div>");
-        Assert.That(await page.EvalOnSelectorAsync<string>("text=yA", "e => e.outerHTML"), Is.EqualTo("<div>ya</div>"));
-        Assert.That(await page.QuerySelectorAsync("text=\"yA\""), Is.Null);
-        Assert.That(await page.QuerySelectorAsync("text= \"ya\""), Is.Null);
+        await Page.SetContentAsync("<div>yo</div><div>ya</div><div>\nye  </div>");
+        Assert.That(await Page.EvalOnSelectorAsync<string>("text=yA", "e => e.outerHTML"), Is.EqualTo("<div>ya</div>"));
+        Assert.That(await Page.QuerySelectorAsync("text=\"yA\""), Is.Null);
+        Assert.That(await Page.QuerySelectorAsync("text= \"ya\""), Is.Null);
     }
 
     [UpstreamTest("SE-038 should search for a substring without quotes")]
-    public async Task ShouldSearchForASubstringWithoutQuotes(IPage page)
+    public async Task ShouldSearchForASubstringWithoutQuotes()
     {
-        await page.SetContentAsync("<div>textwithsubstring</div>");
-        Assert.That(await page.EvalOnSelectorAsync<string>("text=with", "e => e.outerHTML"), Is.EqualTo("<div>textwithsubstring</div>"));
-        Assert.That(await page.QuerySelectorAsync("text=\"with\""), Is.Null);
+        await Page.SetContentAsync("<div>textwithsubstring</div>");
+        Assert.That(await Page.EvalOnSelectorAsync<string>("text=with", "e => e.outerHTML"), Is.EqualTo("<div>textwithsubstring</div>"));
+        Assert.That(await Page.QuerySelectorAsync("text=\"with\""), Is.Null);
     }
 
     [UpstreamTest("SE-039 should skip head, script and style")]
-    public async Task ShouldSkipHeadScriptAndStyle(IPage page)
+    public async Task ShouldSkipHeadScriptAndStyle()
     {
-        await page.SetContentAsync(@"
+        await Page.SetContentAsync(@"
     <head>
       <title>title</title>
       <script>var script</script>
@@ -387,14 +387,14 @@ public class SelectorsTextTests
       <style>.style {}</style>
       <div>title script style</div>
     </body>");
-        var head = await page.QuerySelectorAsync("head");
-        var title = await page.QuerySelectorAsync("title");
-        var script = await page.QuerySelectorAsync("body script");
-        var style = await page.QuerySelectorAsync("body style");
+        var head = await Page.QuerySelectorAsync("head");
+        var title = await Page.QuerySelectorAsync("title");
+        var script = await Page.QuerySelectorAsync("body script");
+        var style = await Page.QuerySelectorAsync("body style");
         foreach (var text in new[] { "title", "script", "style" })
         {
-            Assert.That(await page.EvalOnSelectorAsync<string>($"text={text}", "e => e.nodeName"), Is.EqualTo("DIV"));
-            Assert.That(await page.EvalOnSelectorAllAsync<string>($"text={text}", "els => els.map(e => e.nodeName).join('|')"), Is.EqualTo("DIV"));
+            Assert.That(await Page.EvalOnSelectorAsync<string>($"text={text}", "e => e.nodeName"), Is.EqualTo("DIV"));
+            Assert.That(await Page.EvalOnSelectorAllAsync<string>($"text={text}", "els => els.map(e => e.nodeName).join('|')"), Is.EqualTo("DIV"));
             foreach (var root in new[] { head, title, script, style })
             {
                 Assert.That(await root.QuerySelectorAsync($"text={text}"), Is.Null);
@@ -404,32 +404,32 @@ public class SelectorsTextTests
     }
 
     [UpstreamTest("SE-040 should match input[type=button|submit|reset]")]
-    public async Task ShouldMatchInputTypeButtonSubmitReset(IPage page)
+    public async Task ShouldMatchInputTypeButtonSubmitReset()
     {
-        await page.SetContentAsync("<input type=\"submit\" value=\"hello\"><input type=\"button\" value=\"world\"><input type=\"reset\" value=\"clear\">");
-        Assert.That(await page.EvalOnSelectorAsync<string>("text=hello", "e => e.outerHTML"), Is.EqualTo("<input type=\"submit\" value=\"hello\">"));
-        Assert.That(await page.EvalOnSelectorAsync<string>("text=world", "e => e.outerHTML"), Is.EqualTo("<input type=\"button\" value=\"world\">"));
-        Assert.That(await page.EvalOnSelectorAsync<string>("text=clear", "e => e.outerHTML"), Is.EqualTo("<input type=\"reset\" value=\"clear\">"));
+        await Page.SetContentAsync("<input type=\"submit\" value=\"hello\"><input type=\"button\" value=\"world\"><input type=\"reset\" value=\"clear\">");
+        Assert.That(await Page.EvalOnSelectorAsync<string>("text=hello", "e => e.outerHTML"), Is.EqualTo("<input type=\"submit\" value=\"hello\">"));
+        Assert.That(await Page.EvalOnSelectorAsync<string>("text=world", "e => e.outerHTML"), Is.EqualTo("<input type=\"button\" value=\"world\">"));
+        Assert.That(await Page.EvalOnSelectorAsync<string>("text=clear", "e => e.outerHTML"), Is.EqualTo("<input type=\"reset\" value=\"clear\">"));
     }
 
     [UpstreamTest("SE-041 should work for open shadow roots")]
-    public async Task ShouldWorkForOpenShadowRoots(IPage page, Server server)
+    public async Task ShouldWorkForOpenShadowRoots()
     {
-        await page.GotoAsync(server.Prefix + "/deep-shadow.html");
-        Assert.That(await page.EvalOnSelectorAsync<string>("text=root1", "e => e.textContent"), Is.EqualTo("Hello from root1"));
-        Assert.That(await page.EvalOnSelectorAsync<string>("text=root2", "e => e.textContent"), Is.EqualTo("Hello from root2"));
-        Assert.That(await page.EvalOnSelectorAsync<string>("text=root3", "e => e.textContent"), Is.EqualTo("Hello from root3"));
-        Assert.That(await page.EvalOnSelectorAsync<string>("#root1 >> text=from root3", "e => e.textContent"), Is.EqualTo("Hello from root3"));
-        Assert.That(await page.EvalOnSelectorAsync<string>("#target >> text=from root2", "e => e.textContent"), Is.EqualTo("Hello from root2"));
-        Assert.That(await page.QuerySelectorAsync("text:light=root1"), Is.Null);
-        Assert.That(await page.QuerySelectorAsync("text:light=root2"), Is.Null);
-        Assert.That(await page.QuerySelectorAsync("text:light=root3"), Is.Null);
+        await Page.GotoAsync(Server.Prefix + "/deep-shadow.html");
+        Assert.That(await Page.EvalOnSelectorAsync<string>("text=root1", "e => e.textContent"), Is.EqualTo("Hello from root1"));
+        Assert.That(await Page.EvalOnSelectorAsync<string>("text=root2", "e => e.textContent"), Is.EqualTo("Hello from root2"));
+        Assert.That(await Page.EvalOnSelectorAsync<string>("text=root3", "e => e.textContent"), Is.EqualTo("Hello from root3"));
+        Assert.That(await Page.EvalOnSelectorAsync<string>("#root1 >> text=from root3", "e => e.textContent"), Is.EqualTo("Hello from root3"));
+        Assert.That(await Page.EvalOnSelectorAsync<string>("#target >> text=from root2", "e => e.textContent"), Is.EqualTo("Hello from root2"));
+        Assert.That(await Page.QuerySelectorAsync("text:light=root1"), Is.Null);
+        Assert.That(await Page.QuerySelectorAsync("text:light=root2"), Is.Null);
+        Assert.That(await Page.QuerySelectorAsync("text:light=root3"), Is.Null);
     }
 
     [UpstreamTest("SE-042 should prioritize light dom over shadow dom in the same parent")]
-    public async Task ShouldPrioritizeLightDomOverShadowDomInTheSameParent(IPage page, Server server)
+    public async Task ShouldPrioritizeLightDomOverShadowDomInTheSameParent()
     {
-        await page.EvaluateAsync(@"() => {
+        await Page.EvaluateAsync(@"() => {
     const div = document.createElement('div');
     document.body.appendChild(div);
 
@@ -442,14 +442,14 @@ public class SelectorsTextTests
     lightSpan.textContent = 'Hello from light';
     div.appendChild(lightSpan);
   }");
-        Assert.That(await page.EvalOnSelectorAsync<string>("div >> text=Hello", "e => e.textContent"), Is.EqualTo("Hello from light"));
+        Assert.That(await Page.EvalOnSelectorAsync<string>("div >> text=Hello", "e => e.textContent"), Is.EqualTo("Hello from light"));
     }
 
     [UpstreamTest("SE-043 should waitForSelector with distributed elements")]
-    public async Task ShouldWaitForSelectorWithDistributedElements(IPage page, Server server)
+    public async Task ShouldWaitForSelectorWithDistributedElements()
     {
-        var promise = page.WaitForSelectorAsync("div >> text=Hello");
-        await page.EvaluateAsync(@"() => {
+        var promise = Page.WaitForSelectorAsync("div >> text=Hello");
+        await Page.EvaluateAsync(@"() => {
     const div = document.createElement('div');
     document.body.appendChild(div);
 
@@ -468,92 +468,92 @@ public class SelectorsTextTests
     }
 
     [UpstreamTest("SE-044 should match root after >>")]
-    public async Task ShouldMatchRootAfter(IPage page, Server server)
+    public async Task ShouldMatchRootAfter()
     {
-        await page.SetContentAsync("<section>test</section>");
-        var element = await page.QuerySelectorAsync("css=section >> text=test");
+        await Page.SetContentAsync("<section>test</section>");
+        var element = await Page.QuerySelectorAsync("css=section >> text=test");
         Assert.That(element, Is.Not.Null);
-        var element2 = await page.QuerySelectorAsync("text=test >> text=test");
+        var element2 = await Page.QuerySelectorAsync("text=test >> text=test");
         Assert.That(element2, Is.Not.Null);
     }
 
     [UpstreamTest("SE-045 should match root after >> with *")]
-    public async Task ShouldMatchRootAfterWith(IPage page)
+    public async Task ShouldMatchRootAfterWith()
     {
-        await page.SetContentAsync("<button> hello world </button> <button> hellow <span> world </span> </button>");
-        Assert.That(await page.EvalOnSelectorAllAsync<int>("*css=button >> text=hello >> text=world", "els => els.length"), Is.EqualTo(2));
+        await Page.SetContentAsync("<button> hello world </button> <button> hellow <span> world </span> </button>");
+        Assert.That(await Page.EvalOnSelectorAllAsync<int>("*css=button >> text=hello >> text=world", "els => els.length"), Is.EqualTo(2));
     }
 
     [UpstreamTest("SE-046 should work with leading and trailing spaces")]
-    public async Task ShouldWorkWithLeadingAndTrailingSpaces(IPage page)
+    public async Task ShouldWorkWithLeadingAndTrailingSpaces()
     {
-        await page.SetContentAsync("<button> Add widget </button>");
-        await Expect(page.Locator("text=Add widget")).ToBeVisibleAsync();
-        await Expect(page.Locator("text= Add widget ")).ToBeVisibleAsync();
+        await Page.SetContentAsync("<button> Add widget </button>");
+        await Expect(Page.Locator("text=Add widget")).ToBeVisibleAsync();
+        await Expect(Page.Locator("text= Add widget ")).ToBeVisibleAsync();
     }
 
     [UpstreamTest("SE-047 should work with unpaired quotes when not at the start")]
-    public async Task ShouldWorkWithUnpairedQuotesWhenNotAtTheStart(IPage page)
+    public async Task ShouldWorkWithUnpairedQuotesWhenNotAtTheStart()
     {
-        await page.SetContentAsync(@"
+        await Page.SetContentAsync(@"
     <div>hello""world<span>yay</span></div>
     <div>hello'world<span>nay</span></div>
     <div>hello`world<span>oh</span></div>
     <div>hello`world<span>oh2</span></div>
   ");
-        Assert.That(await page.EvalOnSelectorAsync<string>("text=lo\" >> span", "e => e.outerHTML"), Is.EqualTo("<span>yay</span>"));
-        Assert.That(await page.EvalOnSelectorAsync<string>("  text=lo\" >> span", "e => e.outerHTML"), Is.EqualTo("<span>yay</span>"));
-        Assert.That(await page.EvalOnSelectorAsync<string>("text  =lo\" >> span", "e => e.outerHTML"), Is.EqualTo("<span>yay</span>"));
-        Assert.That(await page.EvalOnSelectorAsync<string>("text=  lo\" >> span", "e => e.outerHTML"), Is.EqualTo("<span>yay</span>"));
-        Assert.That(await page.EvalOnSelectorAsync<string>(" text = lo\" >> span", "e => e.outerHTML"), Is.EqualTo("<span>yay</span>"));
-        Assert.That(await page.EvalOnSelectorAsync<string>("text=o\"wor >> span", "e => e.outerHTML"), Is.EqualTo("<span>yay</span>"));
+        Assert.That(await Page.EvalOnSelectorAsync<string>("text=lo\" >> span", "e => e.outerHTML"), Is.EqualTo("<span>yay</span>"));
+        Assert.That(await Page.EvalOnSelectorAsync<string>("  text=lo\" >> span", "e => e.outerHTML"), Is.EqualTo("<span>yay</span>"));
+        Assert.That(await Page.EvalOnSelectorAsync<string>("text  =lo\" >> span", "e => e.outerHTML"), Is.EqualTo("<span>yay</span>"));
+        Assert.That(await Page.EvalOnSelectorAsync<string>("text=  lo\" >> span", "e => e.outerHTML"), Is.EqualTo("<span>yay</span>"));
+        Assert.That(await Page.EvalOnSelectorAsync<string>(" text = lo\" >> span", "e => e.outerHTML"), Is.EqualTo("<span>yay</span>"));
+        Assert.That(await Page.EvalOnSelectorAsync<string>("text=o\"wor >> span", "e => e.outerHTML"), Is.EqualTo("<span>yay</span>"));
 
-        Assert.That(await page.EvalOnSelectorAsync<string>("text=lo'wor >> span", "e => e.outerHTML"), Is.EqualTo("<span>nay</span>"));
-        Assert.That(await page.EvalOnSelectorAsync<string>("text=o' >> span", "e => e.outerHTML"), Is.EqualTo("<span>nay</span>"));
+        Assert.That(await Page.EvalOnSelectorAsync<string>("text=lo'wor >> span", "e => e.outerHTML"), Is.EqualTo("<span>nay</span>"));
+        Assert.That(await Page.EvalOnSelectorAsync<string>("text=o' >> span", "e => e.outerHTML"), Is.EqualTo("<span>nay</span>"));
 
-        Assert.That(await page.EvalOnSelectorAsync<string>("text=ello`wor >> span", "e => e.outerHTML"), Is.EqualTo("<span>oh</span>"));
-        await Expect(page.Locator("text=ello`wor").Locator("span").First).ToHaveTextAsync("oh");
-        await Expect(page.Locator("text=ello`wor").Locator("span").Nth(1)).ToHaveTextAsync("oh2");
+        Assert.That(await Page.EvalOnSelectorAsync<string>("text=ello`wor >> span", "e => e.outerHTML"), Is.EqualTo("<span>oh</span>"));
+        await Expect(Page.Locator("text=ello`wor").Locator("span").First).ToHaveTextAsync("oh");
+        await Expect(Page.Locator("text=ello`wor").Locator("span").Nth(1)).ToHaveTextAsync("oh2");
 
-        Assert.That(await page.QuerySelectorAsync("text='wor >> span"), Is.Null);
-        Assert.That(await page.QuerySelectorAsync("text=\" >> span"), Is.Null);
-        Assert.That(await page.QuerySelectorAsync("text=` >> span"), Is.Null);
+        Assert.That(await Page.QuerySelectorAsync("text='wor >> span"), Is.Null);
+        Assert.That(await Page.QuerySelectorAsync("text=\" >> span"), Is.Null);
+        Assert.That(await Page.QuerySelectorAsync("text=` >> span"), Is.Null);
     }
 
     [UpstreamTest("SE-048 should work with paired quotes in the middle of selector")]
-    public async Task ShouldWorkWithPairedQuotesInTheMiddleOfSelector(IPage page)
+    public async Task ShouldWorkWithPairedQuotesInTheMiddleOfSelector()
     {
-        await page.SetContentAsync("<div>pattern \"^-?\\d+$\"</div>");
+        await Page.SetContentAsync("<div>pattern \"^-?\\d+$\"</div>");
         // .NET: upstream calls expect() without a matcher here: the call is made, nothing is checked.
-        await page.Locator("div >> text=pattern \"^-?\\d+$").IsVisibleAsync();
-        await page.Locator("div >> text=pattern \"^-?\\d+$\"").IsVisibleAsync();
+        await Page.Locator("div >> text=pattern \"^-?\\d+$").IsVisibleAsync();
+        await Page.Locator("div >> text=pattern \"^-?\\d+$\"").IsVisibleAsync();
         // Should double escape inside quoted text.
-        await page.Locator("div >> text='pattern \"^-?\\\\d+$\"'").IsVisibleAsync();
-        await Expect(page.Locator("div >> text=pattern \"^-?\\d+$")).ToBeVisibleAsync();
-        await Expect(page.Locator("div >> text=pattern \"^-?\\d+$\"")).ToBeVisibleAsync();
+        await Page.Locator("div >> text='pattern \"^-?\\\\d+$\"'").IsVisibleAsync();
+        await Expect(Page.Locator("div >> text=pattern \"^-?\\d+$")).ToBeVisibleAsync();
+        await Expect(Page.Locator("div >> text=pattern \"^-?\\d+$\"")).ToBeVisibleAsync();
         // Should double escape inside quoted text.
-        await Expect(page.Locator("div >> text='pattern \"^-?\\\\d+$\"'")).ToBeVisibleAsync();
+        await Expect(Page.Locator("div >> text='pattern \"^-?\\\\d+$\"'")).ToBeVisibleAsync();
     }
 
     [UpstreamTest("SE-049 hasText and internal:text should match full node text in strict mode")]
-    public async Task HasTextAndInternalTextShouldMatchFullNodeTextInStrictMode(IPage page)
+    public async Task HasTextAndInternalTextShouldMatchFullNodeTextInStrictMode()
     {
-        await page.SetContentAsync(@"
+        await Page.SetContentAsync(@"
     <div id=div1>hello<span>world</span></div>
     <div id=div2>hello</div>
   ");
-        await Expect(page.GetByText("helloworld", new() { Exact = true })).ToHaveIdAsync("div1");
-        await Expect(page.GetByText("hello", new() { Exact = true })).ToHaveIdAsync("div2");
-        await Expect(page.Locator("div", new() { HasTextRegex = new Regex("^helloworld$") })).ToHaveIdAsync("div1");
-        await Expect(page.Locator("div", new() { HasTextRegex = new Regex("^hello$") })).ToHaveIdAsync("div2");
+        await Expect(Page.GetByText("helloworld", new() { Exact = true })).ToHaveIdAsync("div1");
+        await Expect(Page.GetByText("hello", new() { Exact = true })).ToHaveIdAsync("div2");
+        await Expect(Page.Locator("div", new() { HasTextRegex = new Regex("^helloworld$") })).ToHaveIdAsync("div1");
+        await Expect(Page.Locator("div", new() { HasTextRegex = new Regex("^hello$") })).ToHaveIdAsync("div2");
 
-        await page.SetContentAsync(@"
+        await Page.SetContentAsync(@"
     <div id=div1><span id=span1>hello</span>world</div>
     <div id=div2><span id=span2>hello</span></div>
   ");
-        await Expect(page.GetByText("helloworld", new() { Exact = true })).ToHaveIdAsync("div1");
-        Assert.That(await page.GetByText("hello", new() { Exact = true }).EvaluateAllAsync<string[]>("els => els.map(e => e.id)"), Is.EqualTo(new[] { "span1", "span2" }));
-        await Expect(page.Locator("div", new() { HasTextRegex = new Regex("^helloworld$") })).ToHaveIdAsync("div1");
-        await Expect(page.Locator("div", new() { HasTextRegex = new Regex("^hello$") })).ToHaveIdAsync("div2");
+        await Expect(Page.GetByText("helloworld", new() { Exact = true })).ToHaveIdAsync("div1");
+        Assert.That(await Page.GetByText("hello", new() { Exact = true }).EvaluateAllAsync<string[]>("els => els.map(e => e.id)"), Is.EqualTo(new[] { "span1", "span2" }));
+        await Expect(Page.Locator("div", new() { HasTextRegex = new Regex("^helloworld$") })).ToHaveIdAsync("div1");
+        await Expect(Page.Locator("div", new() { HasTextRegex = new Regex("^hello$") })).ToHaveIdAsync("div2");
     }
 }

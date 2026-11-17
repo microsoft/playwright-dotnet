@@ -21,15 +21,15 @@ using static Microsoft.Playwright.Tests.Fixtures.Utils;
 namespace Microsoft.Playwright.Tests.Library;
 
 /// <summary>Port of tests/library/geolocation.spec.ts.</summary>
-public class GeolocationTests
+public class GeolocationTests : UpstreamBrowserTest
 {
     [UpstreamTest("GE-001 should work @smoke")]
-    public async Task ShouldWork(Server server, ContextFactory contextFactory)
+    public async Task ShouldWork()
     {
-        var context = await contextFactory();
+        var context = await ContextFactory();
         var page = await context.NewPageAsync();
         await context.GrantPermissionsAsync(new[] { "geolocation" });
-        await page.GotoAsync(server.EmptyPage);
+        await page.GotoAsync(Server.EmptyPage);
         await context.SetGeolocationAsync(new() { Longitude = 10, Latitude = 10 });
         var geolocation = await page.EvaluateAsync<object>(@"() => new Promise(resolve => navigator.geolocation.getCurrentPosition(position => {
     resolve({ latitude: position.coords.latitude, longitude: position.coords.longitude });
@@ -42,9 +42,9 @@ public class GeolocationTests
     }
 
     [UpstreamTest("GE-002 should throw when invalid longitude")]
-    public async Task ShouldThrowWhenInvalidLongitude(ContextFactory contextFactory)
+    public async Task ShouldThrowWhenInvalidLongitude()
     {
-        var context = await contextFactory();
+        var context = await ContextFactory();
         Exception error = null;
         try
         {
@@ -58,21 +58,21 @@ public class GeolocationTests
     }
 
     [UpstreamTest("GE-003 should isolate contexts")]
-    public async Task ShouldIsolateContexts(Server server, ContextFactory contextFactory, IBrowser browser, BrowserNewContextOptions contextOptions)
+    public async Task ShouldIsolateContexts()
     {
-        var context = await contextFactory();
+        var context = await ContextFactory();
         var page = await context.NewPageAsync();
         await context.GrantPermissionsAsync(new[] { "geolocation" });
         await context.SetGeolocationAsync(new() { Longitude = 10, Latitude = 10 });
-        await page.GotoAsync(server.EmptyPage);
+        await page.GotoAsync(Server.EmptyPage);
 
-        var context2 = await browser.NewContextAsync(new(contextOptions)
+        var context2 = await Browser.NewContextAsync(new(ContextOptions())
         {
             Permissions = new[] { "geolocation" },
             Geolocation = new() { Longitude = 20, Latitude = 20 },
         });
         var page2 = await context2.NewPageAsync();
-        await page2.GotoAsync(server.EmptyPage);
+        await page2.GotoAsync(Server.EmptyPage);
 
         var geolocation = await page.EvaluateAsync<object>(@"() => new Promise(resolve => navigator.geolocation.getCurrentPosition(position => {
     resolve({ latitude: position.coords.latitude, longitude: position.coords.longitude });
@@ -96,23 +96,23 @@ public class GeolocationTests
     }
 
     [UpstreamTest("GE-005 should not modify passed default options object")]
-    public async Task ShouldNotModifyPassedDefaultOptionsObject(IBrowser browser, BrowserNewContextOptions contextOptions)
+    public async Task ShouldNotModifyPassedDefaultOptionsObject()
     {
         var geolocation = new Geolocation { Longitude = 10, Latitude = 10 };
-        var options = new BrowserNewContextOptions(contextOptions) { Geolocation = geolocation };
-        var context = await browser.NewContextAsync(options);
+        var options = new BrowserNewContextOptions(ContextOptions()) { Geolocation = geolocation };
+        var context = await Browser.NewContextAsync(options);
         await context.SetGeolocationAsync(new() { Longitude = 20, Latitude = 20 });
         Assert.That(options.Geolocation, Is.SameAs(geolocation));
         await context.CloseAsync();
     }
 
     [UpstreamTest("GE-007 should use context options")]
-    public async Task ShouldUseContextOptions(IBrowser browser, Server server, BrowserNewContextOptions contextOptions)
+    public async Task ShouldUseContextOptions()
     {
-        var options = new BrowserNewContextOptions(contextOptions) { Geolocation = new() { Longitude = 10, Latitude = 10 }, Permissions = new[] { "geolocation" } };
-        var context = await browser.NewContextAsync(options);
+        var options = new BrowserNewContextOptions(ContextOptions()) { Geolocation = new() { Longitude = 10, Latitude = 10 }, Permissions = new[] { "geolocation" } };
+        var context = await Browser.NewContextAsync(options);
         var page = await context.NewPageAsync();
-        await page.GotoAsync(server.EmptyPage);
+        await page.GotoAsync(Server.EmptyPage);
 
         var geolocation = await page.EvaluateAsync<object>(@"() => new Promise(resolve => navigator.geolocation.getCurrentPosition(position => {
     resolve({ latitude: position.coords.latitude, longitude: position.coords.longitude });
@@ -126,12 +126,12 @@ public class GeolocationTests
     }
 
     [UpstreamTest("GE-008 watchPosition should be notified")]
-    public async Task WatchPositionShouldBeNotified(Server server, ContextFactory contextFactory)
+    public async Task WatchPositionShouldBeNotified()
     {
-        var context = await contextFactory();
+        var context = await ContextFactory();
         var page = await context.NewPageAsync();
         await context.GrantPermissionsAsync(new[] { "geolocation" });
-        await page.GotoAsync(server.EmptyPage);
+        await page.GotoAsync(Server.EmptyPage);
         var messages = new List<string>();
         page.Console += (_, message) => messages.Add(message.Text);
 
@@ -159,15 +159,15 @@ public class GeolocationTests
     }
 
     [UpstreamTest("GE-009 should use context options for popup")]
-    public async Task ShouldUseContextOptionsForPopup(ContextFactory contextFactory, Server server)
+    public async Task ShouldUseContextOptionsForPopup()
     {
-        var context = await contextFactory();
+        var context = await ContextFactory();
         var page = await context.NewPageAsync();
         await context.GrantPermissionsAsync(new[] { "geolocation" });
         await context.SetGeolocationAsync(new() { Longitude = 10, Latitude = 10 });
         var (popup, _) = await PromiseAll(
             page.WaitForPopupAsync(),
-            page.EvaluateAsync("url => window['_popup'] = window.open(url)", server.Prefix + "/geolocation.html"));
+            page.EvaluateAsync("url => window['_popup'] = window.open(url)", Server.Prefix + "/geolocation.html"));
         await popup.WaitForLoadStateAsync();
         var geolocation = await popup.EvaluateAsync<object>("() => window['geolocationPromise']");
         ExpectToEqual(geolocation, new { longitude = 10, latitude = 10 });

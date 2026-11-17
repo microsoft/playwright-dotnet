@@ -19,29 +19,40 @@ using static Microsoft.Playwright.Tests.Fixtures.Utils;
 
 namespace Microsoft.Playwright.Tests.Library;
 
-/// <summary>Port of tests/library/page-clock.spec.ts.</summary>
-public class PageClockTests
+public abstract class PageClockTestsBase : UpstreamBrowserTest
 {
-    [BeforeEach]
-    public static void Skip() => Info.Skip(!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("PW_CLOCK")));
+    [SetUp]
+    public void Skip() => Info.Skip(!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("PW_CLOCK")));
 
-    [Fixture]
-    public static async Task Calls(IPage page, Func<List<object>, Task> use)
+    private Task<List<object>> _calls;
+
+    protected Task<List<object>> Calls()
     {
-        var calls = new List<object>();
-        // .NET: a callback of ExposeFunctionAsync has a fixed number of parameters: (...params) is one parameter.
-        await page.ExposeFunctionAsync("stub", (object param) =>
+        return _calls ??= Make();
+
+        async Task<List<object>> Make()
         {
-            calls.Add(new { @params = new[] { param } });
-        });
-        await use(calls);
+            var page = await PageFixture();
+            var calls = new List<object>();
+            // .NET: a callback of ExposeFunctionAsync has a fixed number of parameters: (...params) is one parameter.
+            await page.ExposeFunctionAsync("stub", (object param) =>
+            {
+                calls.Add(new { @params = new[] { param } });
+            });
+            return calls;
+        }
     }
+}
 
-    public class RunFor
+/// <summary>Port of tests/library/page-clock.spec.ts.</summary>
+public class PageClockTests : PageClockTestsBase
+{
+    public class RunFor : PageClockTestsBase
     {
-        [BeforeEach]
-        public static async Task BeforeEach(IPage page)
+        [SetUp]
+        public async Task BeforeEach()
         {
+            var page = await PageFixture();
             // .NET: a time in milliseconds is a DateTime: the clock takes a DateTime or a string.
             await page.Clock.InstallAsync(new() { TimeDate = DateTime.UnixEpoch.AddMilliseconds(0) });
             await page.Clock.PauseAtAsync(DateTime.UnixEpoch.AddMilliseconds(1000));
@@ -49,8 +60,10 @@ public class PageClockTests
 
         [UpstreamTest("CK-001 triggers immediately without specified delay")]
         [LocalFixme("dotnet: a callback of ExposeFunctionAsync has a fixed number of parameters, not (...params): the page calls stub() without arguments, BindingCall.CallAsync throws ArgumentOutOfRangeException for the missing argument, and the callback does not run")]
-        public async Task TriggersImmediatelyWithoutSpecifiedDelay(IPage page, List<object> calls)
+        public async Task TriggersImmediatelyWithoutSpecifiedDelay()
         {
+            var page = await PageFixture();
+            var calls = await Calls();
             await page.EvaluateAsync(@"async () => {
       setTimeout(window.stub);
     }");
@@ -60,8 +73,10 @@ public class PageClockTests
         }
 
         [UpstreamTest("CK-002 does not trigger without sufficient delay")]
-        public async Task DoesNotTriggerWithoutSufficientDelay(IPage page, List<object> calls)
+        public async Task DoesNotTriggerWithoutSufficientDelay()
         {
+            var page = await PageFixture();
+            var calls = await Calls();
             await page.EvaluateAsync(@"async () => {
       setTimeout(window.stub, 100);
     }");
@@ -71,8 +86,10 @@ public class PageClockTests
 
         [UpstreamTest("CK-003 triggers after sufficient delay")]
         [LocalFixme("dotnet: a callback of ExposeFunctionAsync has a fixed number of parameters, not (...params): the page calls stub() without arguments, BindingCall.CallAsync throws ArgumentOutOfRangeException for the missing argument, and the callback does not run")]
-        public async Task TriggersAfterSufficientDelay(IPage page, List<object> calls)
+        public async Task TriggersAfterSufficientDelay()
         {
+            var page = await PageFixture();
+            var calls = await Calls();
             await page.EvaluateAsync(@"async () => {
       setTimeout(window.stub, 100);
     }");
@@ -82,8 +99,10 @@ public class PageClockTests
 
         [UpstreamTest("CK-004 triggers simultaneous timers")]
         [LocalFixme("dotnet: a callback of ExposeFunctionAsync has a fixed number of parameters, not (...params): the page calls stub() without arguments, BindingCall.CallAsync throws ArgumentOutOfRangeException for the missing argument, and the callback does not run")]
-        public async Task TriggersSimultaneousTimers(IPage page, List<object> calls)
+        public async Task TriggersSimultaneousTimers()
         {
+            var page = await PageFixture();
+            var calls = await Calls();
             await page.EvaluateAsync(@"async () => {
       setTimeout(window.stub, 100);
       setTimeout(window.stub, 100);
@@ -94,8 +113,10 @@ public class PageClockTests
 
         [UpstreamTest("CK-005 triggers multiple simultaneous timers")]
         [LocalFixme("dotnet: a callback of ExposeFunctionAsync has a fixed number of parameters, not (...params): the page calls stub() without arguments, BindingCall.CallAsync throws ArgumentOutOfRangeException for the missing argument, and the callback does not run")]
-        public async Task TriggersMultipleSimultaneousTimers(IPage page, List<object> calls)
+        public async Task TriggersMultipleSimultaneousTimers()
         {
+            var page = await PageFixture();
+            var calls = await Calls();
             await page.EvaluateAsync(@"async () => {
       setTimeout(window.stub, 100);
       setTimeout(window.stub, 100);
@@ -108,8 +129,10 @@ public class PageClockTests
 
         [UpstreamTest("CK-006 waits after setTimeout was called")]
         [LocalFixme("dotnet: a callback of ExposeFunctionAsync has a fixed number of parameters, not (...params): the page calls stub() without arguments, BindingCall.CallAsync throws ArgumentOutOfRangeException for the missing argument, and the callback does not run")]
-        public async Task WaitsAfterSetTimeoutWasCalled(IPage page, List<object> calls)
+        public async Task WaitsAfterSetTimeoutWasCalled()
         {
+            var page = await PageFixture();
+            var calls = await Calls();
             await page.EvaluateAsync(@"async () => {
       setTimeout(window.stub, 150);
     }");
@@ -121,8 +144,10 @@ public class PageClockTests
 
         [UpstreamTest("CK-007 triggers event when some throw")]
         [LocalFixme("dotnet: a callback of ExposeFunctionAsync has a fixed number of parameters, not (...params): the page calls stub() without arguments, BindingCall.CallAsync throws ArgumentOutOfRangeException for the missing argument, and the callback does not run")]
-        public async Task TriggersEventWhenSomeThrow(IPage page, List<object> calls)
+        public async Task TriggersEventWhenSomeThrow()
         {
+            var page = await PageFixture();
+            var calls = await Calls();
             await page.EvaluateAsync(@"async () => {
       setTimeout(() => { throw new Error(); }, 100);
       setTimeout(window.stub, 120);
@@ -132,8 +157,10 @@ public class PageClockTests
         }
 
         [UpstreamTest("CK-008 creates updated Date while ticking")]
-        public async Task CreatesUpdatedDateWhileTicking(IPage page, List<object> calls)
+        public async Task CreatesUpdatedDateWhileTicking()
         {
+            var page = await PageFixture();
+            var calls = await Calls();
             await page.Clock.SetSystemTimeAsync(DateTime.UnixEpoch.AddMilliseconds(0));
             await page.EvaluateAsync(@"async () => {
       setInterval(() => {
@@ -158,8 +185,10 @@ public class PageClockTests
 
         [UpstreamTest("CK-009 passes 8 seconds")]
         [LocalFixme("dotnet: a callback of ExposeFunctionAsync has a fixed number of parameters, not (...params): the page calls stub() without arguments, BindingCall.CallAsync throws ArgumentOutOfRangeException for the missing argument, and the callback does not run")]
-        public async Task Passes8Seconds(IPage page, List<object> calls)
+        public async Task Passes8Seconds()
         {
+            var page = await PageFixture();
+            var calls = await Calls();
             await page.EvaluateAsync(@"async () => {
       setInterval(window.stub, 4000);
     }");
@@ -170,8 +199,10 @@ public class PageClockTests
 
         [UpstreamTest("CK-010 passes 1 minute")]
         [LocalFixme("dotnet: a callback of ExposeFunctionAsync has a fixed number of parameters, not (...params): the page calls stub() without arguments, BindingCall.CallAsync throws ArgumentOutOfRangeException for the missing argument, and the callback does not run")]
-        public async Task Passes1Minute(IPage page, List<object> calls)
+        public async Task Passes1Minute()
         {
+            var page = await PageFixture();
+            var calls = await Calls();
             await page.EvaluateAsync(@"async () => {
       setInterval(window.stub, 6000);
     }");
@@ -182,8 +213,10 @@ public class PageClockTests
 
         [UpstreamTest("CK-011 passes 2 hours, 34 minutes and 10 seconds")]
         [LocalFixme("dotnet: a callback of ExposeFunctionAsync has a fixed number of parameters, not (...params): the page calls stub() without arguments, BindingCall.CallAsync throws ArgumentOutOfRangeException for the missing argument, and the callback does not run")]
-        public async Task Passes2Hours34MinutesAnd10Seconds(IPage page, List<object> calls)
+        public async Task Passes2Hours34MinutesAnd10Seconds()
         {
+            var page = await PageFixture();
+            var calls = await Calls();
             await page.EvaluateAsync(@"async () => {
       setInterval(window.stub, 10000);
     }");
@@ -193,8 +226,10 @@ public class PageClockTests
         }
 
         [UpstreamTest("CK-012 throws for invalid format")]
-        public async Task ThrowsForInvalidFormat(IPage page, List<object> calls, Server server)
+        public async Task ThrowsForInvalidFormat()
         {
+            var page = await PageFixture();
+            var calls = await Calls();
             await page.EvaluateAsync(@"async () => {
       setInterval(window.stub, 10000);
     }");
@@ -202,13 +237,14 @@ public class PageClockTests
             // .NET: await expect(page.clock.runFor(NaN)).rejects.toThrow('clock.runFor: Invalid ticks: NaN') is left out: RunForAsync takes a long, which has no NaN.
             // .NET: await expect(page.clock.fastForward(Infinity)).rejects.toThrow('clock.fastForward: Invalid ticks: Infinity') is left out: FastForwardAsync takes a long, which has no Infinity.
             ExpectToEqual(calls, Array.Empty<object>());
-            await page.GotoAsync(server.EmptyPage);
+            await page.GotoAsync(Server.EmptyPage);
             Assert.That(await page.EvaluateAsync<int>("() => Date.now()"), Is.EqualTo(1000));
         }
 
         [UpstreamTest("CK-013 returns the current now value")]
-        public async Task ReturnsTheCurrentNowValue(IPage page)
+        public async Task ReturnsTheCurrentNowValue()
         {
+            var page = await PageFixture();
             await page.Clock.SetSystemTimeAsync(DateTime.UnixEpoch.AddMilliseconds(0));
             const int value = 200;
             await page.Clock.RunForAsync(value);
@@ -216,18 +252,21 @@ public class PageClockTests
         }
     }
 
-    public class FastForward
+    public class FastForward : PageClockTestsBase
     {
-        [BeforeEach]
-        public static async Task BeforeEach(IPage page)
+        [SetUp]
+        public async Task BeforeEach()
         {
+            var page = await PageFixture();
             await page.Clock.InstallAsync(new() { TimeDate = DateTime.UnixEpoch.AddMilliseconds(0) });
             await page.Clock.PauseAtAsync(DateTime.UnixEpoch.AddMilliseconds(1000));
         }
 
         [UpstreamTest("CK-014 ignores timers which wouldn't be run")]
-        public async Task IgnoresTimersWhichWouldnTBeRun(IPage page, List<object> calls)
+        public async Task IgnoresTimersWhichWouldnTBeRun()
         {
+            var page = await PageFixture();
+            var calls = await Calls();
             await page.EvaluateAsync(@"async () => {
       setTimeout(() => {
         window.stub('should not be logged');
@@ -238,9 +277,11 @@ public class PageClockTests
         }
 
         [UpstreamTest("CK-015 pushes back execution time for skipped timers")]
-        public async Task PushesBackExecutionTimeForSkippedTimers(IPage page, List<object> calls, Server server)
+        public async Task PushesBackExecutionTimeForSkippedTimers()
         {
-            await page.GotoAsync(server.EmptyPage);
+            var page = await PageFixture();
+            var calls = await Calls();
+            await page.GotoAsync(Server.EmptyPage);
             await page.EvaluateAsync(@"async () => {
       setTimeout(() => {
         window.stub(Date.now());
@@ -256,8 +297,10 @@ public class PageClockTests
         }
 
         [UpstreamTest("CK-016 supports string time arguments")]
-        public async Task SupportsStringTimeArguments(IPage page, List<object> calls)
+        public async Task SupportsStringTimeArguments()
         {
+            var page = await PageFixture();
+            var calls = await Calls();
             await page.EvaluateAsync(@"async () => {
       setTimeout(() => {
         window.stub(Date.now());
@@ -268,26 +311,30 @@ public class PageClockTests
         }
     }
 
-    public class StubTimers
+    public class StubTimers : PageClockTestsBase
     {
-        [BeforeEach]
-        public static async Task BeforeEach(IPage page)
+        [SetUp]
+        public async Task BeforeEach()
         {
+            var page = await PageFixture();
             await page.Clock.InstallAsync(new() { TimeDate = DateTime.UnixEpoch.AddMilliseconds(0) });
             await page.Clock.PauseAtAsync(DateTime.UnixEpoch.AddMilliseconds(1000));
         }
 
         [UpstreamTest("CK-017 sets initial timestamp")]
-        public async Task SetsInitialTimestamp(IPage page, List<object> calls)
+        public async Task SetsInitialTimestamp()
         {
+            var page = await PageFixture();
+            var calls = await Calls();
             await page.Clock.SetSystemTimeAsync(DateTime.UnixEpoch.AddMilliseconds(1400));
             Assert.That(await page.EvaluateAsync<int>("() => Date.now()"), Is.EqualTo(1400));
         }
 
         [UpstreamTest("CK-018 should throw for invalid date")]
         [LocalFixme("dotnet: the message is 'Invalid date: invalid', without the 'clock.setSystemTime: ' prefix of the call")]
-        public async Task ShouldThrowForInvalidDate(IPage page)
+        public async Task ShouldThrowForInvalidDate()
         {
+            var page = await PageFixture();
             // .NET: await expect(page.clock.setSystemTime(new Date('invalid'))).rejects.toThrow('Invalid date: Invalid Date') is left out: a DateTime is never an invalid date.
             var error = await ThrowsAsync<PlaywrightException>(() => page.Clock.SetSystemTimeAsync("invalid"));
             Assert.That(error.Message, Does.Contain("clock.setSystemTime: Invalid date: invalid"));
@@ -295,8 +342,10 @@ public class PageClockTests
 
         [UpstreamTest("CK-019 replaces global setTimeout")]
         [LocalFixme("dotnet: a callback of ExposeFunctionAsync has a fixed number of parameters, not (...params): the page calls stub() without arguments, BindingCall.CallAsync throws ArgumentOutOfRangeException for the missing argument, and the callback does not run")]
-        public async Task ReplacesGlobalSetTimeout(IPage page, List<object> calls)
+        public async Task ReplacesGlobalSetTimeout()
         {
+            var page = await PageFixture();
+            var calls = await Calls();
             await page.EvaluateAsync(@"async () => {
       setTimeout(window.stub, 1000);
     }");
@@ -305,16 +354,20 @@ public class PageClockTests
         }
 
         [UpstreamTest("CK-020 global fake setTimeout should return id")]
-        public async Task GlobalFakeSetTimeoutShouldReturnId(IPage page, List<object> calls)
+        public async Task GlobalFakeSetTimeoutShouldReturnId()
         {
+            var page = await PageFixture();
+            var calls = await Calls();
             var to = await page.EvaluateAsync<object>("() => setTimeout(window.stub, 1000)");
             // .NET: typeof to is 'number': the client gives a number as a double.
             Assert.That(to, Is.InstanceOf<double>());
         }
 
         [UpstreamTest("CK-021 replaces global clearTimeout")]
-        public async Task ReplacesGlobalClearTimeout(IPage page, List<object> calls)
+        public async Task ReplacesGlobalClearTimeout()
         {
+            var page = await PageFixture();
+            var calls = await Calls();
             await page.EvaluateAsync(@"async () => {
       const to = setTimeout(window.stub, 1000);
       clearTimeout(to);
@@ -325,8 +378,10 @@ public class PageClockTests
 
         [UpstreamTest("CK-022 replaces global setInterval")]
         [LocalFixme("dotnet: a callback of ExposeFunctionAsync has a fixed number of parameters, not (...params): the page calls stub() without arguments, BindingCall.CallAsync throws ArgumentOutOfRangeException for the missing argument, and the callback does not run")]
-        public async Task ReplacesGlobalSetInterval(IPage page, List<object> calls)
+        public async Task ReplacesGlobalSetInterval()
         {
+            var page = await PageFixture();
+            var calls = await Calls();
             var interval = await page.EvaluateAsync<long>(@"() => {
       return setInterval(window.stub, 500);
     }");
@@ -346,8 +401,10 @@ public class PageClockTests
         }
 
         [UpstreamTest("CK-023 replaces global clearInterval")]
-        public async Task ReplacesGlobalClearInterval(IPage page, List<object> calls)
+        public async Task ReplacesGlobalClearInterval()
         {
+            var page = await PageFixture();
+            var calls = await Calls();
             await page.EvaluateAsync(@"async () => {
       const to = setInterval(window.stub, 500);
       clearInterval(to);
@@ -357,8 +414,9 @@ public class PageClockTests
         }
 
         [UpstreamTest("CK-024 replaces global performance.now")]
-        public async Task ReplacesGlobalPerformanceNow(IPage page)
+        public async Task ReplacesGlobalPerformanceNow()
         {
+            var page = await PageFixture();
             var promise = page.EvaluateAsync<object>(@"async () => {
       const prev = performance.now();
       await new Promise(f => setTimeout(f, 1000));
@@ -370,18 +428,20 @@ public class PageClockTests
         }
 
         [UpstreamTest("CK-025 fakes Date constructor")]
-        public async Task FakesDateConstructor(IPage page)
+        public async Task FakesDateConstructor()
         {
+            var page = await PageFixture();
             var now = await page.EvaluateAsync<int>("() => new Date().getTime()");
             Assert.That(now, Is.EqualTo(1000));
         }
     }
 
-    public class StubTimersDescribe
+    public class StubTimersDescribe : PageClockTestsBase
     {
         [UpstreamTest("CK-026 replaces global performance.timeOrigin")]
-        public async Task ReplacesGlobalPerformanceTimeOrigin(IPage page)
+        public async Task ReplacesGlobalPerformanceTimeOrigin()
         {
+            var page = await PageFixture();
             await page.Clock.InstallAsync(new() { TimeDate = DateTime.UnixEpoch.AddMilliseconds(1000) });
             await page.Clock.PauseAtAsync(DateTime.UnixEpoch.AddMilliseconds(2000));
             var promise = page.EvaluateAsync<object>(@"async () => {
@@ -396,11 +456,12 @@ public class PageClockTests
         }
     }
 
-    public class Popup
+    public class Popup : PageClockTestsBase
     {
         [UpstreamTest("CK-027 should tick after popup")]
-        public async Task ShouldTickAfterPopup(IPage page)
+        public async Task ShouldTickAfterPopup()
         {
+            var page = await PageFixture();
             await page.Clock.InstallAsync(new() { TimeDate = DateTime.UnixEpoch.AddMilliseconds(0) });
             var now = new DateTime(2015, 9, 25, 0, 0, 0, DateTimeKind.Utc);
             await page.Clock.PauseAtAsync(now);
@@ -415,8 +476,9 @@ public class PageClockTests
         }
 
         [UpstreamTest("CK-028 should tick before popup")]
-        public async Task ShouldTickBeforePopup(IPage page)
+        public async Task ShouldTickBeforePopup()
         {
+            var page = await PageFixture();
             await page.Clock.InstallAsync(new() { TimeDate = DateTime.UnixEpoch.AddMilliseconds(0) });
             var now = new DateTime(2015, 9, 25, 0, 0, 0, DateTimeKind.Utc);
             await page.Clock.PauseAtAsync(now);
@@ -430,50 +492,53 @@ public class PageClockTests
         }
 
         [UpstreamTest("CK-029 should run time before popup")]
-        public async Task ShouldRunTimeBeforePopup(IPage page, Server server)
+        public async Task ShouldRunTimeBeforePopup()
         {
-            server.SetRoute("/popup.html", (req, res) =>
+            var page = await PageFixture();
+            Server.SetRoute("/popup.html", (req, res) =>
             {
                 res.SetHeader("Content-Type", "text/html");
                 res.End("<script>window.time = Date.now()</script>");
             });
-            await page.GotoAsync(server.EmptyPage);
+            await page.GotoAsync(Server.EmptyPage);
             // Wait for 2 second in real life to check that it is past in popup.
             await page.WaitForTimeoutAsync(2000);
             var (popup, _) = await PromiseAll(
                 page.WaitForPopupAsync(),
-                page.EvaluateAsync("url => window.open(url)", server.Prefix + "/popup.html"));
+                page.EvaluateAsync("url => window.open(url)", Server.Prefix + "/popup.html"));
             var popupTime = await popup.EvaluateAsync<long>("time");
             Assert.That(popupTime, Is.GreaterThanOrEqualTo(2000));
         }
 
         [UpstreamTest("CK-030 should not run time before popup on pause")]
-        public async Task ShouldNotRunTimeBeforePopupOnPause(IPage page, Server server)
+        public async Task ShouldNotRunTimeBeforePopupOnPause()
         {
-            server.SetRoute("/popup.html", (req, res) =>
+            var page = await PageFixture();
+            Server.SetRoute("/popup.html", (req, res) =>
             {
                 res.SetHeader("Content-Type", "text/html");
                 res.End("<script>window.time = Date.now()</script>");
             });
             await page.Clock.InstallAsync(new() { TimeDate = DateTime.UnixEpoch.AddMilliseconds(0) });
             await page.Clock.PauseAtAsync(DateTime.UnixEpoch.AddMilliseconds(1000));
-            await page.GotoAsync(server.EmptyPage);
+            await page.GotoAsync(Server.EmptyPage);
             // Wait for 2 second in real life to check that it is past in popup.
             await page.WaitForTimeoutAsync(2000);
             var (popup, _) = await PromiseAll(
                 page.WaitForPopupAsync(),
-                page.EvaluateAsync("url => window.open(url)", server.Prefix + "/popup.html"));
+                page.EvaluateAsync("url => window.open(url)", Server.Prefix + "/popup.html"));
             await popup.WaitForLoadStateAsync();
             var popupTime = await popup.EvaluateAsync<long>("time");
             Assert.That(popupTime, Is.EqualTo(1000));
         }
     }
 
-    public class SetFixedTime
+    public class SetFixedTime : PageClockTestsBase
     {
         [UpstreamTest("CK-031 does not fake methods")]
-        public async Task DoesNotFakeMethods(IPage page)
+        public async Task DoesNotFakeMethods()
         {
+            var page = await PageFixture();
             await page.Clock.SetFixedTimeAsync(DateTime.UnixEpoch.AddMilliseconds(0));
 
             // Should not stall.
@@ -483,8 +548,9 @@ public class PageClockTests
         }
 
         [UpstreamTest("CK-032 allows setting time multiple times")]
-        public async Task AllowsSettingTimeMultipleTimes(IPage page)
+        public async Task AllowsSettingTimeMultipleTimes()
         {
+            var page = await PageFixture();
             await page.Clock.SetFixedTimeAsync(DateTime.UnixEpoch.AddMilliseconds(100));
             Assert.That(await page.EvaluateAsync<int>("() => Date.now()"), Is.EqualTo(100));
             await page.Clock.SetFixedTimeAsync(DateTime.UnixEpoch.AddMilliseconds(200));
@@ -492,8 +558,9 @@ public class PageClockTests
         }
 
         [UpstreamTest("CK-033 fixed time is not affected by clock manipulation")]
-        public async Task FixedTimeIsNotAffectedByClockManipulation(IPage page)
+        public async Task FixedTimeIsNotAffectedByClockManipulation()
         {
+            var page = await PageFixture();
             await page.Clock.SetFixedTimeAsync(DateTime.UnixEpoch.AddMilliseconds(100));
             Assert.That(await page.EvaluateAsync<int>("() => Date.now()"), Is.EqualTo(100));
             await page.Clock.FastForwardAsync(20);
@@ -501,8 +568,10 @@ public class PageClockTests
         }
 
         [UpstreamTest("CK-034 allows installing fake timers after settings time")]
-        public async Task AllowsInstallingFakeTimersAfterSettingsTime(IPage page, List<object> calls)
+        public async Task AllowsInstallingFakeTimersAfterSettingsTime()
         {
+            var page = await PageFixture();
+            var calls = await Calls();
             await page.Clock.SetFixedTimeAsync(DateTime.UnixEpoch.AddMilliseconds(100));
             Assert.That(await page.EvaluateAsync<int>("() => Date.now()"), Is.EqualTo(100));
             await page.Clock.SetFixedTimeAsync(DateTime.UnixEpoch.AddMilliseconds(200));
@@ -514,11 +583,12 @@ public class PageClockTests
         }
     }
 
-    public class WhileRunning
+    public class WhileRunning : PageClockTestsBase
     {
         [UpstreamTest("CK-035 should progress time")]
-        public async Task ShouldProgressTime(IPage page)
+        public async Task ShouldProgressTime()
         {
+            var page = await PageFixture();
             await page.Clock.InstallAsync(new() { TimeDate = DateTime.UnixEpoch.AddMilliseconds(0) });
             var startRealTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
             await page.GotoAsync("data:text/html,");
@@ -530,8 +600,9 @@ public class PageClockTests
         }
 
         [UpstreamTest("CK-036 should runFor")]
-        public async Task ShouldRunFor(IPage page)
+        public async Task ShouldRunFor()
         {
+            var page = await PageFixture();
             await page.Clock.InstallAsync(new() { TimeDate = DateTime.UnixEpoch.AddMilliseconds(0) });
             var startRealTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
             await page.GotoAsync("data:text/html,");
@@ -543,8 +614,9 @@ public class PageClockTests
         }
 
         [UpstreamTest("CK-037 should fastForward")]
-        public async Task ShouldFastForward(IPage page)
+        public async Task ShouldFastForward()
         {
+            var page = await PageFixture();
             await page.Clock.InstallAsync(new() { TimeDate = DateTime.UnixEpoch.AddMilliseconds(0) });
             var startRealTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
             await page.GotoAsync("data:text/html,");
@@ -556,8 +628,9 @@ public class PageClockTests
         }
 
         [UpstreamTest("CK-038 should pause")]
-        public async Task ShouldPause(IPage page)
+        public async Task ShouldPause()
         {
+            var page = await PageFixture();
             await page.Clock.InstallAsync(new() { TimeDate = DateTime.UnixEpoch.AddMilliseconds(0) });
             await page.GotoAsync("data:text/html,");
             await page.Clock.PauseAtAsync(DateTime.UnixEpoch.AddMilliseconds(60000));
@@ -568,8 +641,9 @@ public class PageClockTests
         }
 
         [UpstreamTest("CK-040 should pause and fastForward")]
-        public async Task ShouldPauseAndFastForward(IPage page)
+        public async Task ShouldPauseAndFastForward()
         {
+            var page = await PageFixture();
             await page.Clock.InstallAsync(new() { TimeDate = DateTime.UnixEpoch.AddMilliseconds(0) });
             await page.GotoAsync("data:text/html,");
             await page.Clock.PauseAtAsync(DateTime.UnixEpoch.AddMilliseconds(60000));
@@ -579,8 +653,9 @@ public class PageClockTests
         }
 
         [UpstreamTest("CK-041 should set system time on pause")]
-        public async Task ShouldSetSystemTimeOnPause(IPage page)
+        public async Task ShouldSetSystemTimeOnPause()
         {
+            var page = await PageFixture();
             await page.Clock.InstallAsync(new() { TimeDate = DateTime.UnixEpoch.AddMilliseconds(0) });
             await page.GotoAsync("data:text/html,");
             await page.Clock.PauseAtAsync(DateTime.UnixEpoch.AddMilliseconds(60000));
@@ -589,11 +664,13 @@ public class PageClockTests
         }
     }
 
-    public class WhileOnPause
+    public class WhileOnPause : PageClockTestsBase
     {
         [UpstreamTest("CK-042 fastForward should not run nested immediate")]
-        public async Task FastForwardShouldNotRunNestedImmediate(IPage page, List<object> calls)
+        public async Task FastForwardShouldNotRunNestedImmediate()
         {
+            var page = await PageFixture();
+            var calls = await Calls();
             await page.Clock.InstallAsync(new() { TimeDate = DateTime.UnixEpoch.AddMilliseconds(0) });
             await page.GotoAsync("data:text/html,");
             await page.Clock.PauseAtAsync(DateTime.UnixEpoch.AddMilliseconds(1000));
@@ -610,8 +687,10 @@ public class PageClockTests
         }
 
         [UpstreamTest("CK-043 runFor should not run nested immediate")]
-        public async Task RunForShouldNotRunNestedImmediate(IPage page, List<object> calls)
+        public async Task RunForShouldNotRunNestedImmediate()
         {
+            var page = await PageFixture();
+            var calls = await Calls();
             await page.Clock.InstallAsync(new() { TimeDate = DateTime.UnixEpoch.AddMilliseconds(0) });
             await page.GotoAsync("data:text/html,");
             await page.Clock.PauseAtAsync(DateTime.UnixEpoch.AddMilliseconds(1000));
@@ -628,8 +707,10 @@ public class PageClockTests
         }
 
         [UpstreamTest("CK-044 runFor should not run nested immediate from microtask")]
-        public async Task RunForShouldNotRunNestedImmediateFromMicrotask(IPage page, List<object> calls)
+        public async Task RunForShouldNotRunNestedImmediateFromMicrotask()
         {
+            var page = await PageFixture();
+            var calls = await Calls();
             await page.Clock.InstallAsync(new() { TimeDate = DateTime.UnixEpoch.AddMilliseconds(0) });
             await page.GotoAsync("data:text/html,");
             await page.Clock.PauseAtAsync(DateTime.UnixEpoch.AddMilliseconds(1000));
@@ -646,9 +727,10 @@ public class PageClockTests
         }
 
         [UpstreamTest("CK-045 should stay paused on the next page when an init script reads the time")]
-        public async Task ShouldStayPausedOnTheNextPageWhenAnInitScriptReadsTheTime(IPage page, Server server)
+        public async Task ShouldStayPausedOnTheNextPageWhenAnInitScriptReadsTheTime()
         {
-            server.SetRoute("/timer.html", (req, res) =>
+            var page = await PageFixture();
+            Server.SetRoute("/timer.html", (req, res) =>
             {
                 res.SetHeader("Content-Type", "text/html");
                 res.End("<script>setTimeout(() => document.documentElement.dataset.fired = 'true', 0);</script>");
@@ -656,9 +738,9 @@ public class PageClockTests
             await page.Clock.InstallAsync(new() { TimeDate = DateTime.UnixEpoch.AddMilliseconds(0) });
             await page.Clock.PauseAtAsync(DateTime.UnixEpoch.AddMilliseconds(1000));
             await page.AddInitScriptAsync("(() => Date.now())()");
-            await page.GotoAsync(server.EmptyPage);
+            await page.GotoAsync(Server.EmptyPage);
             await page.Clock.RunForAsync(1000);
-            await page.GotoAsync(server.Prefix + "/timer.html");
+            await page.GotoAsync(Server.Prefix + "/timer.html");
             Assert.That(await page.EvaluateAsync<int>("() => Date.now()"), Is.EqualTo(2000));
             await page.WaitForTimeoutAsync(500);
             Assert.That(await page.EvaluateAsync<int>("() => Date.now()"), Is.EqualTo(2000));
@@ -668,25 +750,27 @@ public class PageClockTests
         }
 
         [UpstreamTest("CK-046 should not advance performance.now() before the first clock call on a new page")]
-        public async Task ShouldNotAdvancePerformanceNowBeforeTheFirstClockCallOnANewPage(IPage page, Server server)
+        public async Task ShouldNotAdvancePerformanceNowBeforeTheFirstClockCallOnANewPage()
         {
+            var page = await PageFixture();
             await page.Clock.PauseAtAsync(DateTime.UnixEpoch.AddMilliseconds(1000));
-            await page.GotoAsync(server.EmptyPage);
+            await page.GotoAsync(Server.EmptyPage);
             await page.WaitForTimeoutAsync(500);
             ExpectToEqual(await page.EvaluateAsync<object>("() => [performance.now(), Date.now()]"), new[] { 0, 1000 });
         }
 
         [UpstreamTest("CK-220 should keep timers scheduled during load pending when paused")]
-        public async Task ShouldKeepTimersScheduledDuringLoadPendingWhenPaused(IPage page, Server server)
+        public async Task ShouldKeepTimersScheduledDuringLoadPendingWhenPaused()
         {
-            server.SetRoute("/timer.html", (req, res) =>
+            var page = await PageFixture();
+            Server.SetRoute("/timer.html", (req, res) =>
             {
                 res.SetHeader("Content-Type", "text/html");
                 res.End("<script>setTimeout(() => document.documentElement.dataset.fired = 'true', 0);</script>");
             });
             await page.Clock.InstallAsync(new() { TimeDate = DateTime.UnixEpoch.AddMilliseconds(0) });
             await page.Clock.PauseAtAsync(DateTime.UnixEpoch.AddMilliseconds(1000));
-            await page.GotoAsync(server.Prefix + "/timer.html");
+            await page.GotoAsync(Server.Prefix + "/timer.html");
             await page.WaitForTimeoutAsync(500);
             Assert.That(await page.EvaluateAsync<string>("() => document.documentElement.dataset.fired"), Is.Null);
             await page.Clock.RunForAsync(0);
@@ -694,11 +778,12 @@ public class PageClockTests
         }
     }
 
-    public class DateNow
+    public class DateNow : PageClockTestsBase
     {
         [UpstreamTest("CK-047 check Date.now is an integer")]
-        public async Task CheckDateNowIsAnInteger(IPage page)
+        public async Task CheckDateNowIsAnInteger()
         {
+            var page = await PageFixture();
             await page.Clock.InstallAsync();
             await page.GotoAsync("data:text/html,");
             await page.WaitForTimeoutAsync(1000);
@@ -710,17 +795,19 @@ public class PageClockTests
         }
     }
 
-    public class TemporalNow
+    public class TemporalNow : PageClockTestsBase
     {
-        [BeforeEach]
-        public static async Task BeforeEach(IPage page)
+        [SetUp]
+        public async Task BeforeEach()
         {
+            var page = await PageFixture();
             Info.Skip(!await page.EvaluateAsync<bool>("() => 'Temporal' in globalThis"), "Temporal is not supported");
         }
 
         [UpstreamTest("CK-049 should follow fixed time")]
-        public async Task ShouldFollowFixedTime(IPage page)
+        public async Task ShouldFollowFixedTime()
         {
+            var page = await PageFixture();
             await page.Clock.SetFixedTimeAsync(new DateTime(2020, 1, 1, 0, 0, 0, DateTimeKind.Utc));
             await page.GotoAsync("data:text/html,");
             ExpectToEqual(await page.EvaluateAsync<object>(@"() => {
@@ -743,8 +830,9 @@ public class PageClockTests
         }
 
         [UpstreamTest("CK-050 should advance with the clock")]
-        public async Task ShouldAdvanceWithTheClock(IPage page)
+        public async Task ShouldAdvanceWithTheClock()
         {
+            var page = await PageFixture();
             await page.Clock.InstallAsync(new() { TimeDate = DateTime.UnixEpoch.AddMilliseconds(0) });
             await page.GotoAsync("data:text/html,");
             await page.Clock.PauseAtAsync(DateTime.UnixEpoch.AddMilliseconds(1000));
@@ -753,9 +841,9 @@ public class PageClockTests
         }
 
         [UpstreamTest("CK-051 should use the system time zone by default")]
-        public async Task ShouldUseTheSystemTimeZoneByDefault(IBrowser browser, BrowserNewContextOptions contextOptions)
+        public async Task ShouldUseTheSystemTimeZoneByDefault()
         {
-            var context = await browser.NewContextAsync(new(contextOptions) { TimezoneId = "America/Los_Angeles" });
+            var context = await Browser.NewContextAsync(new(ContextOptions()) { TimezoneId = "America/Los_Angeles" });
             var page = await context.NewPageAsync();
             await page.Clock.SetFixedTimeAsync(new DateTime(2020, 1, 1, 0, 0, 0, DateTimeKind.Utc));
             await page.GotoAsync("data:text/html,");
@@ -776,8 +864,9 @@ public class PageClockTests
         }
 
         [UpstreamTest("CK-052 should keep the rest of Temporal intact")]
-        public async Task ShouldKeepTheRestOfTemporalIntact(IPage page)
+        public async Task ShouldKeepTheRestOfTemporalIntact()
         {
+            var page = await PageFixture();
             await page.Clock.InstallAsync(new() { TimeDate = DateTime.UnixEpoch.AddMilliseconds(0) });
             await page.GotoAsync("data:text/html,");
             ExpectToEqual(await page.EvaluateAsync<object>(@"() => {
@@ -799,8 +888,9 @@ public class PageClockTests
     }
 
     [UpstreamTest("CK-053 AbortSignal.timeout")]
-    public async Task AbortSignalTimeout(IPage page, string browserName)
+    public async Task AbortSignalTimeout()
     {
+        var page = await PageFixture();
         await page.Clock.InstallAsync(new() { TimeDate = DateTime.UnixEpoch.AddMilliseconds(0) });
         var controller = await page.EvaluateHandleAsync(@"() => {
     const signal = AbortSignal.any([
@@ -843,7 +933,7 @@ public class PageClockTests
             reason = new
             {
                 name = "TimeoutError",
-                message = browserName == "chromium" ? "signal timed out" : "The operation timed out.",
+                message = BrowserName == "chromium" ? "signal timed out" : "The operation timed out.",
                 code = 23,
             },
         });
@@ -851,10 +941,11 @@ public class PageClockTests
     }
 
     [UpstreamTest("CK-054 correctly increments Date.now()/performance.now() during blocking execution")]
-    public async Task CorrectlyIncrementsDateNowPerformanceNowDuringBlockingExecution(IPage page, Server server)
+    public async Task CorrectlyIncrementsDateNowPerformanceNowDuringBlockingExecution()
     {
+        var page = await PageFixture();
         await page.Clock.SetSystemTimeAsync(new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc));
-        server.SetRoute("/repro.html", (req, res) =>
+        Server.SetRoute("/repro.html", (req, res) =>
         {
             res.WriteHead(200, new() { ["Content-Type"] = "text/html" });
             res.End(@"
@@ -876,7 +967,7 @@ public class PageClockTests
     ");
         });
         var waitForDone = page.WaitForConsoleMessageAsync(new() { Predicate = msg => msg.Text == "done" });
-        await page.GotoAsync(server.Prefix + "/repro.html");
+        await page.GotoAsync(Server.Prefix + "/repro.html");
         await waitForDone;
     }
 }

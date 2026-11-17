@@ -22,7 +22,7 @@ using static Microsoft.Playwright.Tests.Fixtures.Utils;
 namespace Microsoft.Playwright.Tests.Page;
 
 /// <summary>Port of tests/page/locator-frame.spec.ts.</summary>
-public class LocatorFrameTests
+public class LocatorFrameTests : UpstreamPageTest
 {
     private static async Task RouteIframe(IPage page)
     {
@@ -85,11 +85,11 @@ public class LocatorFrameTests
     }
 
     [UpstreamTest("LO-089 should work for iframe @smoke")]
-    public async Task ShouldWorkForIframe(IPage page, Server server)
+    public async Task ShouldWorkForIframe()
     {
-        await RouteIframe(page);
-        await page.GotoAsync(server.EmptyPage);
-        var button = page.FrameLocator("iframe").Locator("button");
+        await RouteIframe(Page);
+        await Page.GotoAsync(Server.EmptyPage);
+        var button = Page.FrameLocator("iframe").Locator("button");
         await button.WaitForAsync();
         Assert.That(await button.InnerTextAsync(), Is.EqualTo("Hello iframe"));
         await Expect(button).ToHaveTextAsync("Hello iframe");
@@ -97,11 +97,11 @@ public class LocatorFrameTests
     }
 
     [UpstreamTest("LO-090 should work for nested iframe")]
-    public async Task ShouldWorkForNestedIframe(IPage page, Server server)
+    public async Task ShouldWorkForNestedIframe()
     {
-        await RouteIframe(page);
-        await page.GotoAsync(server.EmptyPage);
-        var button = page.FrameLocator("iframe").FrameLocator("iframe").Locator("button");
+        await RouteIframe(Page);
+        await Page.GotoAsync(Server.EmptyPage);
+        var button = Page.FrameLocator("iframe").FrameLocator("iframe").Locator("button");
         await button.WaitForAsync();
         Assert.That(await button.InnerTextAsync(), Is.EqualTo("Hello nested iframe"));
         await Expect(button).ToHaveTextAsync("Hello nested iframe");
@@ -109,69 +109,69 @@ public class LocatorFrameTests
     }
 
     [UpstreamTest("LO-091 should work for $ and $$")]
-    public async Task ShouldWorkForAnd(IPage page, Server server)
+    public async Task ShouldWorkForAnd()
     {
-        await RouteIframe(page);
-        await page.GotoAsync(server.EmptyPage);
-        var locator = page.FrameLocator("iframe").Locator("button");
+        await RouteIframe(Page);
+        await Page.GotoAsync(Server.EmptyPage);
+        var locator = Page.FrameLocator("iframe").Locator("button");
         await Expect(locator).ToHaveTextAsync("Hello iframe");
-        var spans = page.FrameLocator("iframe").Locator("span");
+        var spans = Page.FrameLocator("iframe").Locator("span");
         await Expect(spans).ToHaveCountAsync(2);
     }
 
     [UpstreamTest("LO-092 should wait for frame")]
     [LocalFixme("dotnet: the call log has Locator(\"body\").Locator(\"iframe\").ContentFrame, upstream expects locator('body').locator('iframe').contentFrame()")]
-    public async Task ShouldWaitForFrame(IPage page, Server server)
+    public async Task ShouldWaitForFrame()
     {
-        await page.GotoAsync(server.EmptyPage);
-        var error = await Catch(() => page.Locator("body").FrameLocator("iframe").Locator("span").ClickAsync(new() { Timeout = 1000 }));
+        await Page.GotoAsync(Server.EmptyPage);
+        var error = await Catch(() => Page.Locator("body").FrameLocator("iframe").Locator("span").ClickAsync(new() { Timeout = 1000 }));
         Assert.That(error.Message, Does.Contain("waiting for locator('body').locator('iframe').contentFrame()"));
     }
 
     [UpstreamTest("LO-093 should wait for frame 2")]
-    public async Task ShouldWaitForFrame2(IPage page, Server server)
+    public async Task ShouldWaitForFrame2()
     {
-        await RouteIframe(page);
-        SetTimeout(() => IgnoreErrors(page.GotoAsync(server.EmptyPage)), 300);
-        await page.FrameLocator("iframe").Locator("button").ClickAsync();
+        await RouteIframe(Page);
+        SetTimeout(() => IgnoreErrors(Page.GotoAsync(Server.EmptyPage)), 300);
+        await Page.FrameLocator("iframe").Locator("button").ClickAsync();
     }
 
     [UpstreamTest("LO-094 should wait for frame to go")]
-    public async Task ShouldWaitForFrameToGo(IPage page, Server server, bool isAndroid)
+    public async Task ShouldWaitForFrameToGo()
     {
-        Info.Fixme(isAndroid);
+        Info.Fixme(IsAndroid);
 
-        await RouteIframe(page);
-        await page.GotoAsync(server.EmptyPage);
-        SetTimeout(() => IgnoreErrors(page.EvalOnSelectorAsync("iframe", "e => e.remove()")), 300);
-        await Expect(page.FrameLocator("iframe").Locator("button")).ToBeHiddenAsync();
+        await RouteIframe(Page);
+        await Page.GotoAsync(Server.EmptyPage);
+        SetTimeout(() => IgnoreErrors(Page.EvalOnSelectorAsync("iframe", "e => e.remove()")), 300);
+        await Expect(Page.FrameLocator("iframe").Locator("button")).ToBeHiddenAsync();
     }
 
     [UpstreamTest("LO-095 should not wait for frame")]
-    public async Task ShouldNotWaitForFrame(IPage page, Server server)
+    public async Task ShouldNotWaitForFrame()
     {
-        await page.GotoAsync(server.EmptyPage);
-        await Expect(page.FrameLocator("iframe").Locator("span")).ToBeHiddenAsync();
+        await Page.GotoAsync(Server.EmptyPage);
+        await Expect(Page.FrameLocator("iframe").Locator("span")).ToBeHiddenAsync();
     }
 
     [UpstreamTest("LO-096 should not wait for frame 2")]
-    public async Task ShouldNotWaitForFrame2(IPage page, Server server)
+    public async Task ShouldNotWaitForFrame2()
     {
-        await page.GotoAsync(server.EmptyPage);
-        await Expect(page.FrameLocator("iframe").Locator("span")).Not.ToBeVisibleAsync();
+        await Page.GotoAsync(Server.EmptyPage);
+        await Expect(Page.FrameLocator("iframe").Locator("span")).Not.ToBeVisibleAsync();
     }
 
     [UpstreamTest("LO-097 should not wait for frame 3")]
-    public async Task ShouldNotWaitForFrame3(IPage page, Server server)
+    public async Task ShouldNotWaitForFrame3()
     {
-        await page.GotoAsync(server.EmptyPage);
-        await Expect(page.FrameLocator("iframe").Locator("span")).ToHaveCountAsync(0);
+        await Page.GotoAsync(Server.EmptyPage);
+        await Expect(Page.FrameLocator("iframe").Locator("span")).ToHaveCountAsync(0);
     }
 
     [UpstreamTest("LO-098 should click in lazy iframe")]
-    public async Task ShouldClickInLazyIframe(IPage page, Server server)
+    public async Task ShouldClickInLazyIframe()
     {
-        await page.RouteAsync("**/iframe.html", route =>
+        await Page.RouteAsync("**/iframe.html", route =>
         {
             IgnoreErrors(route.FulfillAsync(new()
             {
@@ -181,24 +181,24 @@ public class LocatorFrameTests
         });
 
         // empty pge
-        await page.GotoAsync(server.EmptyPage);
+        await Page.GotoAsync(Server.EmptyPage);
 
         // add blank iframe
         SetTimeout(() =>
         {
-            IgnoreErrors(page.EvaluateAsync(@"() => {
+            IgnoreErrors(Page.EvaluateAsync(@"() => {
       const iframe = document.createElement('iframe');
       document.body.appendChild(iframe);
     }"));
             // navigate iframe
             SetTimeout(() =>
             {
-                IgnoreErrors(page.EvaluateAsync("() => document.querySelector('iframe').src = 'iframe.html'"));
+                IgnoreErrors(Page.EvaluateAsync("() => document.querySelector('iframe').src = 'iframe.html'"));
             }, 500);
         }, 500);
 
         // Click in iframe
-        var button = page.FrameLocator("iframe").Locator("button");
+        var button = Page.FrameLocator("iframe").Locator("button");
         // .NET: const [, text] = await Promise.all([a, b, c]) is Promise.all([a, Promise.all([b, c])]): PromiseAll has no overload that gives the value of the second task of three.
         var text = await PromiseAll(
             button.ClickAsync(),
@@ -209,14 +209,14 @@ public class LocatorFrameTests
     }
 
     [UpstreamTest("LO-099 waitFor should survive frame reattach")]
-    public async Task WaitForShouldSurviveFrameReattach(IPage page, Server server)
+    public async Task WaitForShouldSurviveFrameReattach()
     {
-        await RouteIframe(page);
-        await page.GotoAsync(server.EmptyPage);
-        var button = page.FrameLocator("iframe").Locator("button:has-text(\"Hello nested iframe\")");
+        await RouteIframe(Page);
+        await Page.GotoAsync(Server.EmptyPage);
+        var button = Page.FrameLocator("iframe").Locator("button:has-text(\"Hello nested iframe\")");
         var promise = button.WaitForAsync();
-        await page.Locator("iframe").EvaluateAsync("e => e.remove()");
-        await page.EvaluateAsync(@"() => {
+        await Page.Locator("iframe").EvaluateAsync("e => e.remove()");
+        await Page.EvaluateAsync(@"() => {
     const iframe = document.createElement('iframe');
     iframe.src = 'iframe-2.html';
     document.body.appendChild(iframe);
@@ -225,14 +225,14 @@ public class LocatorFrameTests
     }
 
     [UpstreamTest("LO-100 click should survive frame reattach")]
-    public async Task ClickShouldSurviveFrameReattach(IPage page, Server server)
+    public async Task ClickShouldSurviveFrameReattach()
     {
-        await RouteIframe(page);
-        await page.GotoAsync(server.EmptyPage);
-        var button = page.FrameLocator("iframe").Locator("button:has-text(\"Hello nested iframe\")");
+        await RouteIframe(Page);
+        await Page.GotoAsync(Server.EmptyPage);
+        var button = Page.FrameLocator("iframe").Locator("button:has-text(\"Hello nested iframe\")");
         var promise = button.ClickAsync();
-        await page.Locator("iframe").EvaluateAsync("e => e.remove()");
-        await page.EvaluateAsync(@"() => {
+        await Page.Locator("iframe").EvaluateAsync("e => e.remove()");
+        await Page.EvaluateAsync(@"() => {
     const iframe = document.createElement('iframe');
     iframe.src = 'iframe-2.html';
     document.body.appendChild(iframe);
@@ -241,33 +241,33 @@ public class LocatorFrameTests
     }
 
     [UpstreamTest("LO-101 click should survive iframe navigation")]
-    public async Task ClickShouldSurviveIframeNavigation(IPage page, Server server)
+    public async Task ClickShouldSurviveIframeNavigation()
     {
-        await RouteIframe(page);
-        await page.GotoAsync(server.EmptyPage);
-        var button = page.FrameLocator("iframe").Locator("button:has-text(\"Hello nested iframe\")");
+        await RouteIframe(Page);
+        await Page.GotoAsync(Server.EmptyPage);
+        var button = Page.FrameLocator("iframe").Locator("button:has-text(\"Hello nested iframe\")");
         var promise = button.ClickAsync();
-        IgnoreErrors(page.Locator("iframe").EvaluateAsync("e => e.src = 'iframe-2.html'"));
+        IgnoreErrors(Page.Locator("iframe").EvaluateAsync("e => e.src = 'iframe-2.html'"));
         await promise;
     }
 
     [UpstreamTest("LO-102 should non work for non-frame")]
-    public async Task ShouldNonWorkForNonFrame(IPage page, Server server)
+    public async Task ShouldNonWorkForNonFrame()
     {
-        await RouteIframe(page);
-        await page.SetContentAsync("<div></div>");
-        var button = page.FrameLocator("div").Locator("button");
+        await RouteIframe(Page);
+        await Page.SetContentAsync("<div></div>");
+        var button = Page.FrameLocator("div").Locator("button");
         var error = await Catch(() => button.WaitForAsync());
         Assert.That(error.Message, Does.Contain("<div></div>"));
         Assert.That(error.Message, Does.Contain("<iframe> was expected"));
     }
 
     [UpstreamTest("LO-103 locator.frameLocator should work for iframe")]
-    public async Task LocatorFrameLocatorShouldWorkForIframe(IPage page, Server server)
+    public async Task LocatorFrameLocatorShouldWorkForIframe()
     {
-        await RouteIframe(page);
-        await page.GotoAsync(server.EmptyPage);
-        var button = page.Locator("body").FrameLocator("iframe").Locator("button");
+        await RouteIframe(Page);
+        await Page.GotoAsync(Server.EmptyPage);
+        var button = Page.Locator("body").FrameLocator("iframe").Locator("button");
         await button.WaitForAsync();
         Assert.That(await button.InnerTextAsync(), Is.EqualTo("Hello iframe"));
         await Expect(button).ToHaveTextAsync("Hello iframe");
@@ -276,54 +276,54 @@ public class LocatorFrameTests
 
     [UpstreamTest("LO-104 locator.frameLocator should throw on ambiguity")]
     [LocalFixme("dotnet: the error has Locator(\"body\").Locator(\"iframe\"), upstream expects locator('body').locator('iframe')")]
-    public async Task LocatorFrameLocatorShouldThrowOnAmbiguity(IPage page, Server server)
+    public async Task LocatorFrameLocatorShouldThrowOnAmbiguity()
     {
-        await RouteAmbiguous(page);
-        await page.GotoAsync(server.EmptyPage);
-        var button = page.Locator("body").FrameLocator("iframe").Locator("button");
+        await RouteAmbiguous(Page);
+        await Page.GotoAsync(Server.EmptyPage);
+        var button = Page.Locator("body").FrameLocator("iframe").Locator("button");
         var error = await Catch(() => button.WaitForAsync());
         Assert.That(error.Message, Does.Contain("Error: strict mode violation: locator('body').locator('iframe') resolved to 3 elements"));
     }
 
     [UpstreamTest("LO-105 locator.frameLocator should not throw on first/last/nth")]
-    public async Task LocatorFrameLocatorShouldNotThrowOnFirstLastNth(IPage page, Server server)
+    public async Task LocatorFrameLocatorShouldNotThrowOnFirstLastNth()
     {
-        await RouteAmbiguous(page);
-        await page.GotoAsync(server.EmptyPage);
-        var button1 = page.Locator("body").FrameLocator("iframe").First.Locator("button");
+        await RouteAmbiguous(Page);
+        await Page.GotoAsync(Server.EmptyPage);
+        var button1 = Page.Locator("body").FrameLocator("iframe").First.Locator("button");
         await Expect(button1).ToHaveTextAsync("Hello from iframe-1.html");
-        var button2 = page.Locator("body").FrameLocator("iframe").Nth(1).Locator("button");
+        var button2 = Page.Locator("body").FrameLocator("iframe").Nth(1).Locator("button");
         await Expect(button2).ToHaveTextAsync("Hello from iframe-2.html");
-        var button3 = page.Locator("body").FrameLocator("iframe").Last.Locator("button");
+        var button3 = Page.Locator("body").FrameLocator("iframe").Last.Locator("button");
         await Expect(button3).ToHaveTextAsync("Hello from iframe-3.html");
     }
 
     [UpstreamTest("LO-106 getBy coverage")]
-    public async Task GetByCoverage(IPage page, Server server)
+    public async Task GetByCoverage()
     {
-        await RouteIframe(page);
-        await page.GotoAsync(server.EmptyPage);
-        var button1 = page.FrameLocator("iframe").GetByRole(AriaRole.Button);
-        var button2 = page.FrameLocator("iframe").GetByText("Hello");
-        var button3 = page.FrameLocator("iframe").GetByTestId("buttonId");
+        await RouteIframe(Page);
+        await Page.GotoAsync(Server.EmptyPage);
+        var button1 = Page.FrameLocator("iframe").GetByRole(AriaRole.Button);
+        var button2 = Page.FrameLocator("iframe").GetByText("Hello");
+        var button3 = Page.FrameLocator("iframe").GetByTestId("buttonId");
         await Expect(button1).ToHaveTextAsync("Hello iframe");
         await Expect(button2).ToHaveTextAsync("Hello iframe");
         await Expect(button3).ToHaveTextAsync("Hello iframe");
-        var input1 = page.FrameLocator("iframe").GetByLabel("Name");
+        var input1 = Page.FrameLocator("iframe").GetByLabel("Name");
         await Expect(input1).ToHaveValueAsync("");
-        var input2 = page.FrameLocator("iframe").GetByPlaceholder("Placeholder");
+        var input2 = Page.FrameLocator("iframe").GetByPlaceholder("Placeholder");
         await Expect(input2).ToHaveValueAsync("");
-        var input3 = page.FrameLocator("iframe").GetByAltText("Alternative");
+        var input3 = Page.FrameLocator("iframe").GetByAltText("Alternative");
         await Expect(input3).ToHaveValueAsync("");
-        var input4 = page.FrameLocator("iframe").GetByTitle("Title");
+        var input4 = Page.FrameLocator("iframe").GetByTitle("Title");
         await Expect(input4).ToHaveValueAsync("");
     }
 
     [UpstreamTest("LO-107 wait for hidden should succeed when frame is not in dom")]
-    public async Task WaitForHiddenShouldSucceedWhenFrameIsNotInDom(IPage page)
+    public async Task WaitForHiddenShouldSucceedWhenFrameIsNotInDom()
     {
-        await page.GotoAsync("about:blank");
-        var button = page.FrameLocator("iframe1").Locator("button");
+        await Page.GotoAsync("about:blank");
+        var button = Page.FrameLocator("iframe1").Locator("button");
         Assert.That(await button.IsHiddenAsync(), Is.True);
         await button.WaitForAsync(new() { State = WaitForSelectorState.Hidden, Timeout = 1000 });
         await button.WaitForAsync(new() { State = WaitForSelectorState.Detached, Timeout = 1000 });
@@ -332,14 +332,14 @@ public class LocatorFrameTests
     }
 
     [UpstreamTest("LO-108 should work with COEP/COOP/CORP isolated iframe")]
-    public async Task ShouldWorkWithCOEPCOOPCORPIsolatedIframe(IPage page, Server server, string browserName)
+    public async Task ShouldWorkWithCOEPCOOPCORPIsolatedIframe()
     {
-        Info.Fixme(browserName == "firefox");
-        await page.RouteAsync("**/empty.html", route =>
+        Info.Fixme(BrowserName == "firefox");
+        await Page.RouteAsync("**/empty.html", route =>
         {
             return route.FulfillAsync(new()
             {
-                Body = $"<iframe src=\"https://{server.CrossProcessPrefix}/btn.html\" allow=\"cross-origin-isolated; fullscreen\" sandbox=\"allow-same-origin allow-scripts allow-popups\" ></iframe>",
+                Body = $"<iframe src=\"https://{Server.CrossProcessPrefix}/btn.html\" allow=\"cross-origin-isolated; fullscreen\" sandbox=\"allow-same-origin allow-scripts allow-popups\" ></iframe>",
                 ContentType = "text/html",
                 Headers = new Dictionary<string, string>
                 {
@@ -349,7 +349,7 @@ public class LocatorFrameTests
                 }
             });
         });
-        await page.RouteAsync("**/btn.html", route =>
+        await Page.RouteAsync("**/btn.html", route =>
         {
             return route.FulfillAsync(new()
             {
@@ -363,17 +363,17 @@ public class LocatorFrameTests
                 }
             });
         });
-        await page.GotoAsync(server.EmptyPage);
-        await page.FrameLocator("iframe").GetByRole(AriaRole.Button).ClickAsync();
-        Assert.That(await page.Frames[1].EvaluateAsync<bool>("() => window['__clicked']"), Is.EqualTo(true));
+        await Page.GotoAsync(Server.EmptyPage);
+        await Page.FrameLocator("iframe").GetByRole(AriaRole.Button).ClickAsync();
+        Assert.That(await Page.Frames[1].EvaluateAsync<bool>("() => window['__clicked']"), Is.EqualTo(true));
     }
 
     [UpstreamTest("LO-109 locator.contentFrame should work")]
-    public async Task LocatorContentFrameShouldWork(IPage page, Server server)
+    public async Task LocatorContentFrameShouldWork()
     {
-        await RouteIframe(page);
-        await page.GotoAsync(server.EmptyPage);
-        var locator = page.Locator("iframe");
+        await RouteIframe(Page);
+        await Page.GotoAsync(Server.EmptyPage);
+        var locator = Page.Locator("iframe");
         var frameLocator = locator.ContentFrame;
         var button = frameLocator.Locator("button");
         Assert.That(await button.InnerTextAsync(), Is.EqualTo("Hello iframe"));
@@ -382,20 +382,20 @@ public class LocatorFrameTests
     }
 
     [UpstreamTest("LO-110 frameLocator.owner should work")]
-    public async Task FrameLocatorOwnerShouldWork(IPage page, Server server)
+    public async Task FrameLocatorOwnerShouldWork()
     {
-        await RouteIframe(page);
-        await page.GotoAsync(server.EmptyPage);
-        var frameLocator = page.FrameLocator("iframe");
+        await RouteIframe(Page);
+        await Page.GotoAsync(Server.EmptyPage);
+        var frameLocator = Page.FrameLocator("iframe");
         var locator = frameLocator.Owner;
         await Expect(locator).ToBeVisibleAsync();
         Assert.That(await locator.GetAttributeAsync("name"), Is.EqualTo("frame1"));
     }
 
     [UpstreamTest("LO-111 should treat elements inside hidden iframe as hidden")]
-    public async Task ShouldTreatElementsInsideHiddenIframeAsHidden(IPage page)
+    public async Task ShouldTreatElementsInsideHiddenIframeAsHidden()
     {
-        await page.SetContentAsync(@"
+        await Page.SetContentAsync(@"
     <iframe name=""hidden"" style=""visibility: hidden"" srcdoc=""<button>Hidden</button>""></iframe>
     <div style=""visibility: hidden"">
       <iframe name=""hidden-parent"" srcdoc=""<button>Hidden parent</button>""></iframe>
@@ -406,9 +406,9 @@ public class LocatorFrameTests
 
         foreach (var button in new[]
         {
-            page.FrameLocator("[name=hidden]").Locator("button"),
-            page.FrameLocator("[name=hidden-parent]").Locator("button"),
-            page.FrameLocator("[name=outer]").FrameLocator("[name=inner]").Locator("button"),
+            Page.FrameLocator("[name=hidden]").Locator("button"),
+            Page.FrameLocator("[name=hidden-parent]").Locator("button"),
+            Page.FrameLocator("[name=outer]").FrameLocator("[name=inner]").Locator("button"),
         })
         {
             await Expect(button).ToBeAttachedAsync();
@@ -420,17 +420,17 @@ public class LocatorFrameTests
         }
 
         // .NET: C# does not allow a second variable named button after the one of the loop.
-        var button2 = page.FrameLocator("[name=visible-override]").Locator("button");
+        var button2 = Page.FrameLocator("[name=visible-override]").Locator("button");
         Assert.That(await button2.IsVisibleAsync(), Is.EqualTo(true));
         await Expect(button2).ToBeVisibleAsync();
         await button2.WaitForAsync(new() { State = WaitForSelectorState.Visible });
     }
 
     [UpstreamTest("LO-112 should wait for hidden iframe to become visible")]
-    public async Task ShouldWaitForHiddenIframeToBecomeVisible(IPage page)
+    public async Task ShouldWaitForHiddenIframeToBecomeVisible()
     {
-        await page.SetContentAsync("<iframe name=\"frame\" style=\"visibility: hidden\" srcdoc=\"<button onclick='window.__clicked = true'>Button</button>\"></iframe>");
-        var button = page.FrameLocator("[name=frame]").Locator("button");
+        await Page.SetContentAsync("<iframe name=\"frame\" style=\"visibility: hidden\" srcdoc=\"<button onclick='window.__clicked = true'>Button</button>\"></iframe>");
+        var button = Page.FrameLocator("[name=frame]").Locator("button");
         await Expect(button).ToBeHiddenAsync();
 
         var error = await Catch(() => button.ClickAsync(new() { Timeout = 1000 }));
@@ -439,26 +439,26 @@ public class LocatorFrameTests
 
         var clickPromise = button.ClickAsync();
         var visiblePromise = Expect(button).ToBeVisibleAsync();
-        await page.EvaluateAsync("() => document.querySelector('iframe').style.visibility = 'visible'");
+        await Page.EvaluateAsync("() => document.querySelector('iframe').style.visibility = 'visible'");
         await PromiseAll(clickPromise, visiblePromise);
         Assert.That(await button.EvaluateAsync<bool>("() => window.__clicked"), Is.EqualTo(true));
 
-        await page.EvaluateAsync("() => document.querySelector('iframe').style.visibility = 'hidden'");
+        await Page.EvaluateAsync("() => document.querySelector('iframe').style.visibility = 'hidden'");
         await Expect(button).ToBeHiddenAsync();
         Assert.That(await button.IsVisibleAsync(), Is.EqualTo(false));
     }
 
     [UpstreamTest("LO-113 should treat elements inside hidden cross-origin iframe as hidden")]
-    public async Task ShouldTreatElementsInsideHiddenCrossOriginIframeAsHidden(IPage page, Server server)
+    public async Task ShouldTreatElementsInsideHiddenCrossOriginIframeAsHidden()
     {
-        await page.GotoAsync(server.EmptyPage);
-        await page.SetContentAsync($"<iframe style=\"visibility: hidden\" src=\"{server.CrossProcessPrefix}/frames/frame.html\"></iframe>");
-        var div = page.FrameLocator("iframe").Locator("div");
+        await Page.GotoAsync(Server.EmptyPage);
+        await Page.SetContentAsync($"<iframe style=\"visibility: hidden\" src=\"{Server.CrossProcessPrefix}/frames/frame.html\"></iframe>");
+        var div = Page.FrameLocator("iframe").Locator("div");
         await Expect(div).ToHaveTextAsync("Hi, I'm frame");
         Assert.That(await div.IsVisibleAsync(), Is.EqualTo(false));
         await Expect(div).ToBeHiddenAsync();
 
-        await page.EvaluateAsync("() => document.querySelector('iframe').style.visibility = 'visible'");
+        await Page.EvaluateAsync("() => document.querySelector('iframe').style.visibility = 'visible'");
         await Expect(div).ToBeVisibleAsync();
         Assert.That(await div.IsVisibleAsync(), Is.EqualTo(true));
     }

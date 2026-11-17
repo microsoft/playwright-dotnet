@@ -22,16 +22,16 @@ using static Microsoft.Playwright.Tests.Fixtures.Utils;
 namespace Microsoft.Playwright.Tests.Library;
 
 /// <summary>Port of tests/library/browsercontext-csp.spec.ts.</summary>
-public class BrowsercontextCspTests
+public class BrowsercontextCspTests : UpstreamBrowserTest
 {
     [UpstreamTest("CS-001 should bypass CSP meta tag @smoke")]
-    public async Task ShouldBypassCSPMetaTag(IBrowser browser, Server server, BrowserNewContextOptions contextOptions)
+    public async Task ShouldBypassCSPMetaTag()
     {
         // Make sure CSP prohibits addScriptTag.
         {
-            var context = await browser.NewContextAsync(contextOptions);
+            var context = await Browser.NewContextAsync(ContextOptions());
             var page = await context.NewPageAsync();
-            await page.GotoAsync(server.Prefix + "/csp.html");
+            await page.GotoAsync(Server.Prefix + "/csp.html");
             Assert.That(await page.EvaluateAsync<object>("window[\"__inlineScriptValue\"]"), Is.Null);
             await Catch(() => page.AddScriptTagAsync(new() { Content = "window[\"__injected\"] = 42;" }));
             Assert.That(await page.EvaluateAsync<object>("window[\"__injected\"]"), Is.Null);
@@ -40,9 +40,9 @@ public class BrowsercontextCspTests
 
         // By-pass CSP and try one more time.
         {
-            var context = await browser.NewContextAsync(new(contextOptions) { BypassCSP = true });
+            var context = await Browser.NewContextAsync(new(ContextOptions()) { BypassCSP = true });
             var page = await context.NewPageAsync();
-            await page.GotoAsync(server.Prefix + "/csp.html");
+            await page.GotoAsync(Server.Prefix + "/csp.html");
             Assert.That(await page.EvaluateAsync<int>("window[\"__inlineScriptValue\"]"), Is.EqualTo(42));
             await page.AddScriptTagAsync(new() { Content = "window[\"__injected\"] = 42;" });
             Assert.That(await page.EvaluateAsync<int>("window[\"__injected\"]"), Is.EqualTo(42));
@@ -51,19 +51,19 @@ public class BrowsercontextCspTests
     }
 
     [UpstreamTest("CS-002 should bypass CSP header")]
-    public async Task ShouldBypassCSPHeader(IBrowser browser, Server server, BrowserNewContextOptions contextOptions)
+    public async Task ShouldBypassCSPHeader()
     {
         // Make sure CSP prohibits addScriptTag.
-        server.SetRoute("/empty.html", (req, res) =>
+        Server.SetRoute("/empty.html", (req, res) =>
         {
             res.SetHeader("Content-Security-Policy", "default-src \"self\"");
             res.SetHeader("Content-Type", "text/html");
             res.End("<script type='text/javascript'>window.__inlineScriptValue = 42;</script>");
         });
         {
-            var context = await browser.NewContextAsync(contextOptions);
+            var context = await Browser.NewContextAsync(ContextOptions());
             var page = await context.NewPageAsync();
-            await page.GotoAsync(server.EmptyPage);
+            await page.GotoAsync(Server.EmptyPage);
             Assert.That(await page.EvaluateAsync<object>("window[\"__inlineScriptValue\"]"), Is.Null);
             await Catch(() => page.AddScriptTagAsync(new() { Content = "window[\"__injected\"] = 42;" }));
             Assert.That(await page.EvaluateAsync<object>("window[\"__injected\"]"), Is.Null);
@@ -72,9 +72,9 @@ public class BrowsercontextCspTests
 
         // By-pass CSP and try one more time.
         {
-            var context = await browser.NewContextAsync(new(contextOptions) { BypassCSP = true });
+            var context = await Browser.NewContextAsync(new(ContextOptions()) { BypassCSP = true });
             var page = await context.NewPageAsync();
-            await page.GotoAsync(server.EmptyPage);
+            await page.GotoAsync(Server.EmptyPage);
             Assert.That(await page.EvaluateAsync<int>("window[\"__inlineScriptValue\"]"), Is.EqualTo(42));
             await page.AddScriptTagAsync(new() { Content = "window[\"__injected\"] = 42;" });
             Assert.That(await page.EvaluateAsync<int>("window[\"__injected\"]"), Is.EqualTo(42));
@@ -83,16 +83,16 @@ public class BrowsercontextCspTests
     }
 
     [UpstreamTest("CS-003 should bypass after cross-process navigation")]
-    public async Task ShouldBypassAfterCrossProcessNavigation(IBrowser browser, Server server, BrowserNewContextOptions contextOptions)
+    public async Task ShouldBypassAfterCrossProcessNavigation()
     {
-        var context = await browser.NewContextAsync(new(contextOptions) { BypassCSP = true });
+        var context = await Browser.NewContextAsync(new(ContextOptions()) { BypassCSP = true });
         var page = await context.NewPageAsync();
-        await page.GotoAsync(server.Prefix + "/csp.html");
+        await page.GotoAsync(Server.Prefix + "/csp.html");
         Assert.That(await page.EvaluateAsync<int>("window[\"__inlineScriptValue\"]"), Is.EqualTo(42));
         await page.AddScriptTagAsync(new() { Content = "window[\"__injected\"] = 42;" });
         Assert.That(await page.EvaluateAsync<int>("window[\"__injected\"]"), Is.EqualTo(42));
 
-        await page.GotoAsync(server.CrossProcessPrefix + "/csp.html");
+        await page.GotoAsync(Server.CrossProcessPrefix + "/csp.html");
         Assert.That(await page.EvaluateAsync<int>("window[\"__inlineScriptValue\"]"), Is.EqualTo(42));
         await page.AddScriptTagAsync(new() { Content = "window[\"__injected\"] = 42;" });
         Assert.That(await page.EvaluateAsync<int>("window[\"__injected\"]"), Is.EqualTo(42));
@@ -100,14 +100,14 @@ public class BrowsercontextCspTests
     }
 
     [UpstreamTest("CS-004 should bypass CSP in iframes as well")]
-    public async Task ShouldBypassCSPInIframesAsWell(IBrowser browser, Server server, BrowserNewContextOptions contextOptions)
+    public async Task ShouldBypassCSPInIframesAsWell()
     {
         // Make sure CSP prohibits addScriptTag in an iframe.
         {
-            var context = await browser.NewContextAsync(contextOptions);
+            var context = await Browser.NewContextAsync(ContextOptions());
             var page = await context.NewPageAsync();
-            await page.GotoAsync(server.EmptyPage);
-            var frame = await AttachFrame(page, "frame1", server.Prefix + "/csp.html");
+            await page.GotoAsync(Server.EmptyPage);
+            var frame = await AttachFrame(page, "frame1", Server.Prefix + "/csp.html");
             Assert.That(await frame.EvaluateAsync<object>("window[\"__inlineScriptValue\"]"), Is.Null);
             await Catch(() => frame.AddScriptTagAsync(new() { Content = "window[\"__injected\"] = 42;" }));
             Assert.That(await frame.EvaluateAsync<object>("window[\"__injected\"]"), Is.Null);
@@ -116,10 +116,10 @@ public class BrowsercontextCspTests
 
         // By-pass CSP and try one more time.
         {
-            var context = await browser.NewContextAsync(new(contextOptions) { BypassCSP = true });
+            var context = await Browser.NewContextAsync(new(ContextOptions()) { BypassCSP = true });
             var page = await context.NewPageAsync();
-            await page.GotoAsync(server.EmptyPage);
-            var frame = await AttachFrame(page, "frame1", server.Prefix + "/csp.html");
+            await page.GotoAsync(Server.EmptyPage);
+            var frame = await AttachFrame(page, "frame1", Server.Prefix + "/csp.html");
             Assert.That(await frame.EvaluateAsync<int>("window[\"__inlineScriptValue\"]"), Is.EqualTo(42));
             await Catch(() => frame.AddScriptTagAsync(new() { Content = "window[\"__injected\"] = 42;" }));
             Assert.That(await frame.EvaluateAsync<int>("window[\"__injected\"]"), Is.EqualTo(42));
@@ -128,13 +128,13 @@ public class BrowsercontextCspTests
     }
 
     [UpstreamTest("CS-005 should not crash on javascript: navigation")]
-    public async Task ShouldNotCrashOnJavascriptNavigation(IBrowser browser, Server server, BrowserNewContextOptions contextOptions)
+    public async Task ShouldNotCrashOnJavascriptNavigation()
     {
-        var context = await browser.NewContextAsync(new(contextOptions) { BypassCSP = true });
+        var context = await Browser.NewContextAsync(new(ContextOptions()) { BypassCSP = true });
         var page = await context.NewPageAsync();
         var crashed = false;
         page.Crash += (_, _) => crashed = true;
-        await page.GotoAsync(server.EmptyPage);
+        await page.GotoAsync(Server.EmptyPage);
         await page.SetContentAsync("<a id=\"a\" href=\"javascript:window.__clicked = true\">click</a>");
         await page.ClickAsync("#a");
         await Expect(async () => Assert.That(await page.EvaluateAsync<bool>("() => window['__clicked']"), Is.EqualTo(true))).ToPassAsync();

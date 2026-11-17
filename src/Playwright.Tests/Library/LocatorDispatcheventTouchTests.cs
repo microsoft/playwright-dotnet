@@ -19,21 +19,20 @@ using Microsoft.Playwright.Tests.Fixtures;
 namespace Microsoft.Playwright.Tests.Library;
 
 /// <summary>Port of tests/library/locator-dispatchevent-touch.spec.ts.</summary>
-public class LocatorDispatcheventTouchTests
+public class LocatorDispatcheventTouchTests : UpstreamPageTest
 {
     // it.use({ hasTouch: true });
-    [Fixture]
-    public static BrowserNewContextOptions ContextOptions(BrowserNewContextOptions contextOptions) => new(contextOptions) { HasTouch = true };
+    public override BrowserNewContextOptions ContextOptions() => new(base.ContextOptions()) { HasTouch = true };
 
     [UpstreamTest("TA-010 should support touch points in touch event arguments")]
-    public async Task ShouldSupportTouchPointsInTouchEventArguments(IPage page, Server server, string browserName)
+    public async Task ShouldSupportTouchPointsInTouchEventArguments()
     {
-        await page.GotoAsync(server.EmptyPage);
-        await page.SetContentAsync(@"
+        await Page.GotoAsync(Server.EmptyPage);
+        await Page.SetContentAsync(@"
       <div data-testid='outer' style=""position: absolute; width: 120px; height: 120px; background-color: red;"">
         <div data-testid='inner' style=""position: absolute; width: 100px; height: 100px; top: 10px; left: 10px; background-color: green; z-index: 3;"">inner</div>
       </div>");
-        var outer = page.GetByTestId("outer");
+        var outer = Page.GetByTestId("outer");
         await outer.EvaluateAsync(@"el => {
     const events = [];
     window.events = events;
@@ -43,7 +42,7 @@ public class LocatorDispatcheventTouchTests
   }");
 
         var touches = new[] { new { identifier = 0, clientX = 61, clientY = 60 }, new { identifier = 1, clientX = 59, clientY = 60 } };
-        var inner = page.GetByTestId("inner");
+        var inner = Page.GetByTestId("inner");
         await inner.DispatchEventAsync("touchstart", new
         {
             touches,
@@ -62,7 +61,7 @@ public class LocatorDispatcheventTouchTests
             changedTouches = touches,
             targetTouches = Array.Empty<object>(),
         });
-        Assert.That(await page.EvaluateAsync<string[]>("() => window.events"), Is.EqualTo(new[]
+        Assert.That(await Page.EvaluateAsync<string[]>("() => window.events"), Is.EqualTo(new[]
         {
             "touchstart: Touch(id: 0, clientX: 61, clientY: 60),Touch(id: 1, clientX: 59, clientY: 60)",
             "touchmove: Touch(id: 0, clientX: 61, clientY: 60),Touch(id: 1, clientX: 59, clientY: 60)",

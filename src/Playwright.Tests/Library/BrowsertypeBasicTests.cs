@@ -21,32 +21,32 @@ using static Microsoft.Playwright.Tests.Fixtures.Utils;
 namespace Microsoft.Playwright.Tests.Library;
 
 /// <summary>Port of tests/library/browsertype-basic.spec.ts.</summary>
-public class BrowsertypeBasicTests
+public class BrowsertypeBasicTests : UpstreamBrowserTest
 {
     [UpstreamTest("BT-001 browserType.executablePath should work")]
-    public async Task BrowserTypeExecutablePathShouldWork(IBrowserType browserType, string channel, string mode, BrowserTypeLaunchOptions launchOptions)
+    public async Task BrowserTypeExecutablePathShouldWork()
     {
-        Info.Skip(!string.IsNullOrEmpty(channel), "We skip browser download when testing a channel");
+        Info.Skip(!string.IsNullOrEmpty(Channel), "We skip browser download when testing a channel");
         // .NET: the launchOptions fixture is (browserType as any)._playwright._defaultLaunchOptions.
-        Info.Skip(!string.IsNullOrEmpty(launchOptions.ExecutablePath), "Skip with custom executable path");
+        Info.Skip(!string.IsNullOrEmpty(LaunchOptions().ExecutablePath), "Skip with custom executable path");
 
-        var executablePath = browserType.ExecutablePath;
+        var executablePath = BrowserType.ExecutablePath;
         Assert.That(File.Exists(executablePath), Is.EqualTo(true));
     }
 
     [UpstreamTest("BT-002 browserType.name should work")]
-    public async Task BrowserTypeNameShouldWork(IBrowserType browserType, string browserName)
+    public async Task BrowserTypeNameShouldWork()
     {
-        Assert.That(browserType.Name, Is.EqualTo(browserName));
+        Assert.That(BrowserType.Name, Is.EqualTo(BrowserName));
     }
 
     [UpstreamTest("BT-003 should throw when trying to connect with not-chromium")]
     [LocalFixme("dotnet: the message is 'Connecting over CDP is only supported in Chromium.', upstream expects 'Connecting over CDP is only supported in Chromium and WebKit.' (only in firefox)")]
-    public async Task ShouldThrowWhenTryingToConnectWithNotChromium(IBrowserType browserType, string browserName)
+    public async Task ShouldThrowWhenTryingToConnectWithNotChromium()
     {
-        Info.Skip(browserName == "chromium" || browserName == "webkit");
+        Info.Skip(BrowserName == "chromium" || BrowserName == "webkit");
 
-        var error = await Catch(() => browserType.ConnectOverCDPAsync("ws://foo"));
+        var error = await Catch(() => BrowserType.ConnectOverCDPAsync("ws://foo"));
         Assert.That(error.Message, Is.EqualTo("Connecting over CDP is only supported in Chromium and WebKit."));
     }
 }

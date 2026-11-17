@@ -27,9 +27,9 @@ using static Microsoft.Playwright.Tests.Fixtures.Utils;
 namespace Microsoft.Playwright.Tests.Library;
 
 /// <summary>Port of tests/library/har-websocket.spec.ts.</summary>
-public class HarWebsocketTests
+public class HarWebsocketTests : UpstreamBrowserTest
 {
-    private static async Task<PageWithHarResult> PageWithHar(ContextFactory contextFactory, TestInfo testInfo, PageWithHarOptions options = null)
+    private static async Task<PageWithHarResult> PageWithHar(Func<BrowserNewContextOptions, Task<IBrowserContext>> contextFactory, TestInfo testInfo, PageWithHarOptions options = null)
     {
         var harPath = testInfo.OutputPath(options?.OutputPath ?? "test.har");
         var context = await contextFactory(new() { RecordHarPath = harPath, RecordHarContent = options?.Content, RecordHarOmitContent = options?.OmitContent, IgnoreHTTPSErrors = true });
@@ -86,16 +86,16 @@ public class HarWebsocketTests
     }
 
     [UpstreamTest("HA-101 should only have one websocket entry")]
-    public async Task ShouldOnlyHaveOneWebsocketEntry(ContextFactory contextFactory, Server server, TestInfo testInfo)
+    public async Task ShouldOnlyHaveOneWebsocketEntry()
     {
-        server.OnceWebSocketConnection(ws =>
+        Server.OnceWebSocketConnection(ws =>
         {
             ws.OnMessage(_ => ws.Close());
         });
-        var pageWithHar = await PageWithHar(contextFactory, testInfo);
+        var pageWithHar = await PageWithHar(ContextFactory, Info);
         var page = pageWithHar.Page;
-        await page.GotoAsync(server.EmptyPage);
-        var wsUrl = $"ws://{server.Host}/ws";
+        await page.GotoAsync(Server.EmptyPage);
+        var wsUrl = $"ws://{Server.Host}/ws";
         var closed = page.EvaluateAsync(@"url => new Promise(resolve => {
     const ws = new WebSocket(url);
     ws.addEventListener('open', () => ws.send('ping'));
@@ -103,7 +103,7 @@ public class HarWebsocketTests
   })", wsUrl);
         await closed;
         var log = await pageWithHar.GetLog();
-        var wsEntries = log.GetProperty("entries").EnumerateArray().Where(e => e.GetProperty("request").GetProperty("url").GetString().EndsWith($"://{server.Host}/ws", StringComparison.Ordinal)).ToArray();
+        var wsEntries = log.GetProperty("entries").EnumerateArray().Where(e => e.GetProperty("request").GetProperty("url").GetString().EndsWith($"://{Server.Host}/ws", StringComparison.Ordinal)).ToArray();
         Assert.That(wsEntries.Length, Is.EqualTo(1));
 
         var wsEntry = wsEntries[0];
@@ -111,19 +111,19 @@ public class HarWebsocketTests
     }
 
     [UpstreamTest("HA-102 should include websocket handshake headers and status")]
-    public async Task ShouldIncludeWebsocketHandshakeHeadersAndStatus(ContextFactory contextFactory, Server server, string browserName, bool isMac, int macVersion, TestInfo testInfo)
+    public async Task ShouldIncludeWebsocketHandshakeHeadersAndStatus()
     {
-        server.OnceWebSocketConnection(ws =>
+        Server.OnceWebSocketConnection(ws =>
         {
             ws.OnMessage(_ => ws.Close());
         });
 
-        var pageWithHar = await PageWithHar(contextFactory, testInfo);
+        var pageWithHar = await PageWithHar(ContextFactory, Info);
         var page = pageWithHar.Page;
-        await page.GotoAsync(server.EmptyPage);
+        await page.GotoAsync(Server.EmptyPage);
 
         var beforeMs = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
-        var wsUrl = $"ws://{server.Host}/ws";
+        var wsUrl = $"ws://{Server.Host}/ws";
         var closed = page.EvaluateAsync(@"url => new Promise(resolve => {
     const ws = new WebSocket(url);
     ws.addEventListener('open', () => ws.send('ping'));
@@ -158,7 +158,7 @@ public class HarWebsocketTests
         Assert.That(responseHeaderNames, Does.Contain("sec-websocket-accept"));
     }
 
-    private static async Task TestWebSocketMessages(ContextFactory contextFactory, Server server, TestInfo testInfo, HarContentPolicy content, string channel = null)
+    private static async Task TestWebSocketMessages(Func<BrowserNewContextOptions, Task<IBrowserContext>> contextFactory, Server server, TestInfo testInfo, HarContentPolicy content, string channel = null)
     {
         var incomingText = new[] { new string('x', 125), new string('x', 126), new string('x', (int)Math.Pow(2, 16)) };
         var incomingBinary = new[] { Enumerable.Repeat(0x01, 125).ToArray(), Enumerable.Repeat(0x01, 126).ToArray(), Enumerable.Repeat(0x01, (int)Math.Pow(2, 16)).ToArray() };
@@ -263,36 +263,36 @@ public class HarWebsocketTests
     }
 
     [UpstreamTest("HA-103 should embed websocket messages")]
-    public async Task ShouldEmbedWebsocketMessages(ContextFactory contextFactory, Server server, string channel, TestInfo testInfo)
+    public async Task ShouldEmbedWebsocketMessages()
     {
-        await TestWebSocketMessages(contextFactory, server, testInfo, HarContentPolicy.Embed, channel);
+        await TestWebSocketMessages(ContextFactory, Server, Info, HarContentPolicy.Embed, Channel);
     }
 
     [UpstreamTest("HA-104 should attach websocket messages")]
-    public async Task ShouldAttachWebsocketMessages(ContextFactory contextFactory, Server server, string channel, TestInfo testInfo)
+    public async Task ShouldAttachWebsocketMessages()
     {
-        await TestWebSocketMessages(contextFactory, server, testInfo, HarContentPolicy.Attach, channel);
+        await TestWebSocketMessages(ContextFactory, Server, Info, HarContentPolicy.Attach, Channel);
     }
 
     [UpstreamTest("HA-106 should omit websocket messages")]
-    public async Task ShouldOmitWebsocketMessages(ContextFactory contextFactory, Server server, TestInfo testInfo)
+    public async Task ShouldOmitWebsocketMessages()
     {
-        await TestWebSocketMessages(contextFactory, server, testInfo, HarContentPolicy.Omit);
+        await TestWebSocketMessages(ContextFactory, Server, Info, HarContentPolicy.Omit);
     }
 
     [UpstreamTest("HA-107 should record websocket connection failure")]
-    public async Task ShouldRecordWebsocketConnectionFailure(ContextFactory contextFactory, Server server, string channel, TestInfo testInfo)
+    public async Task ShouldRecordWebsocketConnectionFailure()
     {
-        Info.Skip(channel == "webkit-wsl", "Connection to an unbound localhost port from WSL is not refused in mirrored networking mode");
+        Info.Skip(Channel == "webkit-wsl", "Connection to an unbound localhost port from WSL is not refused in mirrored networking mode");
         // Reserve a port and immediately release it so the WebSocket connect attempt is refused.
         var portReservation = new TcpListener(IPAddress.Parse("127.0.0.1"), 0);
         portReservation.Start();
         var port = ((IPEndPoint)portReservation.LocalEndpoint).Port;
         portReservation.Stop();
 
-        var pageWithHar = await PageWithHar(contextFactory, testInfo);
+        var pageWithHar = await PageWithHar(ContextFactory, Info);
         var page = pageWithHar.Page;
-        await page.GotoAsync(server.EmptyPage);
+        await page.GotoAsync(Server.EmptyPage);
 
         var wsUrl = $"ws://127.0.0.1:{port}/ws-connect-fail";
         var wsPromise = page.WaitForWebSocketAsync();
@@ -310,14 +310,14 @@ public class HarWebsocketTests
     }
 
     [UpstreamTest("HA-108 should record websocket handshake failure")]
-    public async Task ShouldRecordWebsocketHandshakeFailure(ContextFactory contextFactory, Server server, string browserName, TestInfo testInfo)
+    public async Task ShouldRecordWebsocketHandshakeFailure()
     {
-        var pageWithHar = await PageWithHar(contextFactory, testInfo);
+        var pageWithHar = await PageWithHar(ContextFactory, Info);
         var page = pageWithHar.Page;
-        await page.GotoAsync(server.EmptyPage);
+        await page.GotoAsync(Server.EmptyPage);
 
-        var wsUrl = $"ws://{server.Host}/ws-handshake-fail";
-        var upgradePromise = server.WaitForUpgrade();
+        var wsUrl = $"ws://{Server.Host}/ws-handshake-fail";
+        var upgradePromise = Server.WaitForUpgrade();
         var wsClose = page.EvaluateAsync(@"url => new Promise(resolve => {
     const ws = new WebSocket(url);
     ws.addEventListener('close', () => resolve());
@@ -331,7 +331,7 @@ public class HarWebsocketTests
 
         var wsEntry = log.GetProperty("entries").EnumerateArray().First(e => e.GetProperty("request").GetProperty("url").GetString() == wsUrl);
         Assert.That(wsEntry.GetProperty("_resourceType").GetString(), Is.EqualTo("websocket"));
-        if (browserName != "chromium")
+        if (BrowserName != "chromium")
         {
             // Chromium only reports an error instead of giving a status code and text.
             Assert.That(wsEntry.GetProperty("response").GetProperty("status").GetInt32(), Is.EqualTo(403));
@@ -341,14 +341,14 @@ public class HarWebsocketTests
     }
 
     [UpstreamTest("HA-109 should still capture websocket when route passes messages through")]
-    public async Task ShouldStillCaptureWebsocketWhenRoutePassesMessagesThrough(ContextFactory contextFactory, Server server, TestInfo testInfo)
+    public async Task ShouldStillCaptureWebsocketWhenRoutePassesMessagesThrough()
     {
-        server.OnceWebSocketConnection(ws =>
+        Server.OnceWebSocketConnection(ws =>
         {
             ws.OnMessage(_ => ws.Send("incoming"));
         });
 
-        var pageWithHar = await PageWithHar(contextFactory, testInfo);
+        var pageWithHar = await PageWithHar(ContextFactory, Info);
         var page = pageWithHar.Page;
         var routeHandlerCalled = 0;
         await page.RouteWebSocketAsync(new Regex("/ws$"), ws =>
@@ -380,9 +380,9 @@ public class HarWebsocketTests
                 }
             });
         });
-        await page.GotoAsync(server.EmptyPage);
+        await page.GotoAsync(Server.EmptyPage);
 
-        var wsUrl = $"ws://{server.Host}/ws";
+        var wsUrl = $"ws://{Server.Host}/ws";
         var messages = await page.EvaluateAsync<string[]>(@"url => new Promise(resolve => {
     const seen = [];
     const ws = new WebSocket(url);
@@ -409,9 +409,9 @@ public class HarWebsocketTests
     }
 
     [UpstreamTest("HA-110 should still allow routeWebSocket to fully mock the connection when capturing HAR")]
-    public async Task ShouldStillAllowRouteWebSocketToFullyMockTheConnectionWhenCapturingHAR(ContextFactory contextFactory, Server server, TestInfo testInfo)
+    public async Task ShouldStillAllowRouteWebSocketToFullyMockTheConnectionWhenCapturingHAR()
     {
-        var pageWithHar = await PageWithHar(contextFactory, testInfo);
+        var pageWithHar = await PageWithHar(ContextFactory, Info);
         var page = pageWithHar.Page;
         var routeHandlerCalled = 0;
         await page.RouteWebSocketAsync(new Regex("/ws$"), ws =>
@@ -425,9 +425,9 @@ public class HarWebsocketTests
                 }
             });
         });
-        await page.GotoAsync(server.EmptyPage);
+        await page.GotoAsync(Server.EmptyPage);
 
-        var wsUrl = $"ws://{server.Host}/ws";
+        var wsUrl = $"ws://{Server.Host}/ws";
         var messages = await page.EvaluateAsync<string[]>(@"url => new Promise(resolve => {
     const seen = [];
     const ws = new WebSocket(url);
@@ -448,14 +448,14 @@ public class HarWebsocketTests
     }
 
     [UpstreamTest("HA-111 should still allow routeWebSocket to modify messages when capturing HAR")]
-    public async Task ShouldStillAllowRouteWebSocketToModifyMessagesWhenCapturingHAR(ContextFactory contextFactory, Server server, TestInfo testInfo)
+    public async Task ShouldStillAllowRouteWebSocketToModifyMessagesWhenCapturingHAR()
     {
-        server.OnceWebSocketConnection(ws =>
+        Server.OnceWebSocketConnection(ws =>
         {
             ws.OnMessage(message => ws.Send($"server-saw-{message.Text}"));
         });
 
-        var pageWithHar = await PageWithHar(contextFactory, testInfo);
+        var pageWithHar = await PageWithHar(ContextFactory, Info);
         var page = pageWithHar.Page;
         var routeHandlerCalled = 0;
         await page.RouteWebSocketAsync(new Regex("/ws$"), ws =>
@@ -465,9 +465,9 @@ public class HarWebsocketTests
             ws.OnMessage(message => serverRoute.Send($"modified-{message.Text}"));
             serverRoute.OnMessage(message => ws.Send($"page-got-{message.Text}"));
         });
-        await page.GotoAsync(server.EmptyPage);
+        await page.GotoAsync(Server.EmptyPage);
 
-        var wsUrl = $"ws://{server.Host}/ws";
+        var wsUrl = $"ws://{Server.Host}/ws";
         var messages = await page.EvaluateAsync<string[]>(@"url => new Promise(resolve => {
     const seen = [];
     const ws = new WebSocket(url);

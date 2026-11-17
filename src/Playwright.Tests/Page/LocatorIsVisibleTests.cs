@@ -23,47 +23,47 @@ using static Microsoft.Playwright.Tests.Fixtures.Utils;
 namespace Microsoft.Playwright.Tests.Page;
 
 /// <summary>Port of tests/page/locator-is-visible.spec.ts.</summary>
-public class LocatorIsVisibleTests
+public class LocatorIsVisibleTests : UpstreamPageTest
 {
     [UpstreamTest("LO-115 isVisible and isHidden should work")]
-    public async Task IsVisibleAndIsHiddenShouldWork(IPage page)
+    public async Task IsVisibleAndIsHiddenShouldWork()
     {
-        await page.SetContentAsync("<div>Hi</div><span></span>");
+        await Page.SetContentAsync("<div>Hi</div><span></span>");
 
-        var div = page.Locator("div");
+        var div = Page.Locator("div");
         Assert.That(await div.IsVisibleAsync(), Is.EqualTo(true));
         Assert.That(await div.IsHiddenAsync(), Is.EqualTo(false));
-        Assert.That(await page.IsVisibleAsync("div"), Is.EqualTo(true));
-        Assert.That(await page.IsHiddenAsync("div"), Is.EqualTo(false));
+        Assert.That(await Page.IsVisibleAsync("div"), Is.EqualTo(true));
+        Assert.That(await Page.IsHiddenAsync("div"), Is.EqualTo(false));
 
-        var span = page.Locator("span");
+        var span = Page.Locator("span");
         Assert.That(await span.IsVisibleAsync(), Is.EqualTo(false));
         Assert.That(await span.IsHiddenAsync(), Is.EqualTo(true));
-        Assert.That(await page.IsVisibleAsync("span"), Is.EqualTo(false));
-        Assert.That(await page.IsHiddenAsync("span"), Is.EqualTo(true));
+        Assert.That(await Page.IsVisibleAsync("span"), Is.EqualTo(false));
+        Assert.That(await Page.IsHiddenAsync("span"), Is.EqualTo(true));
 
-        Assert.That(await page.IsVisibleAsync("no-such-element"), Is.EqualTo(false));
-        Assert.That(await page.IsHiddenAsync("no-such-element"), Is.EqualTo(true));
+        Assert.That(await Page.IsVisibleAsync("no-such-element"), Is.EqualTo(false));
+        Assert.That(await Page.IsHiddenAsync("no-such-element"), Is.EqualTo(true));
     }
 
     [UpstreamTest("LO-116 isVisible should be true for opacity:0")]
-    public async Task IsVisibleShouldBeTrueForOpacity0(IPage page)
+    public async Task IsVisibleShouldBeTrueForOpacity0()
     {
-        await page.SetContentAsync("<div style=\"opacity:0\">Hi</div>");
-        await Expect(page.Locator("div")).ToBeVisibleAsync();
+        await Page.SetContentAsync("<div style=\"opacity:0\">Hi</div>");
+        await Expect(Page.Locator("div")).ToBeVisibleAsync();
     }
 
     [UpstreamTest("LO-117 isVisible should be true for element outside view")]
-    public async Task IsVisibleShouldBeTrueForElementOutsideView(IPage page)
+    public async Task IsVisibleShouldBeTrueForElementOutsideView()
     {
-        await page.SetContentAsync("<div style=\"position: absolute; left: -1000px\">Hi</div>");
-        await Expect(page.Locator("div")).ToBeVisibleAsync();
+        await Page.SetContentAsync("<div style=\"position: absolute; left: -1000px\">Hi</div>");
+        await Expect(Page.Locator("div")).ToBeVisibleAsync();
     }
 
     [UpstreamTest("LO-118 isVisible and isHidden should work with details")]
-    public async Task IsVisibleAndIsHiddenShouldWorkWithDetails(IPage page)
+    public async Task IsVisibleAndIsHiddenShouldWorkWithDetails()
     {
-        await page.SetContentAsync(@"<details>
+        await Page.SetContentAsync(@"<details>
     <summary>click to open</summary>
       <ul>
         <li>hidden item 1</li>
@@ -72,13 +72,13 @@ public class LocatorIsVisibleTests
       </ul
   </details>");
 
-        await Expect(page.Locator("ul")).ToBeHiddenAsync();
+        await Expect(Page.Locator("ul")).ToBeHiddenAsync();
     }
 
     [UpstreamTest("LO-119 isVisible and isHidden should work with nested details")]
-    public async Task IsVisibleAndIsHiddenShouldWorkWithNestedDetails(IPage page)
+    public async Task IsVisibleAndIsHiddenShouldWorkWithNestedDetails()
     {
-        await page.SetContentAsync(@"<details>
+        await Page.SetContentAsync(@"<details>
     <summary>outer</summary>
     <details open>
       <summary>inner</summary>
@@ -86,16 +86,16 @@ public class LocatorIsVisibleTests
     </details>
   </details>");
 
-        await Expect(page.Locator("summary", new() { HasText = "outer" })).ToBeVisibleAsync();
-        await Expect(page.Locator("summary", new() { HasText = "inner" })).ToBeHiddenAsync();
-        await Expect(page.Locator("button")).ToBeHiddenAsync();
-        await Expect(page.GetByRole(AriaRole.Button)).ToHaveCountAsync(0);
+        await Expect(Page.Locator("summary", new() { HasText = "outer" })).ToBeVisibleAsync();
+        await Expect(Page.Locator("summary", new() { HasText = "inner" })).ToBeHiddenAsync();
+        await Expect(Page.Locator("button")).ToBeHiddenAsync();
+        await Expect(Page.GetByRole(AriaRole.Button)).ToHaveCountAsync(0);
     }
 
     [UpstreamTest("LO-120 isVisible and isHidden should work with unslotted content")]
-    public async Task IsVisibleAndIsHiddenShouldWorkWithUnslottedContent(IPage page)
+    public async Task IsVisibleAndIsHiddenShouldWorkWithUnslottedContent()
     {
-        await page.SetContentAsync(@"
+        await Page.SetContentAsync(@"
     <div id=unslotted><span>hidden 1</span><div><span>hidden 2</span></div></div>
     <div id=slotted><span>visible</span></div>
     <script>
@@ -104,16 +104,16 @@ public class LocatorIsVisibleTests
     </script>
   ");
 
-        await Expect(page.Locator("span", new() { HasText = "hidden 1" })).ToBeHiddenAsync();
-        await Expect(page.Locator("span", new() { HasText = "hidden 2" })).ToBeHiddenAsync();
-        await Expect(page.Locator("span", new() { HasText = "visible" })).ToBeVisibleAsync();
+        await Expect(Page.Locator("span", new() { HasText = "hidden 1" })).ToBeHiddenAsync();
+        await Expect(Page.Locator("span", new() { HasText = "hidden 2" })).ToBeHiddenAsync();
+        await Expect(Page.Locator("span", new() { HasText = "visible" })).ToBeVisibleAsync();
     }
 
     [UpstreamTest("LO-121 isVisible and isHidden should work with list box options")]
-    public async Task IsVisibleAndIsHiddenShouldWorkWithListBoxOptions(IPage page, bool isAndroid)
+    public async Task IsVisibleAndIsHiddenShouldWorkWithListBoxOptions()
     {
-        Info.Skip(isAndroid, "Android Chrome renders list boxes as popups, so options are not visible in the page");
-        await page.SetContentAsync(@"
+        Info.Skip(IsAndroid, "Android Chrome renders list boxes as popups, so options are not visible in the page");
+        await Page.SetContentAsync(@"
     <select multiple>
       <option>visible 1</option>
       <optgroup label=""group""><option>visible 2</option></optgroup>
@@ -126,64 +126,64 @@ public class LocatorIsVisibleTests
 
         foreach (var name in new[] { "visible 1", "visible 2", "visible 3" })
         {
-            await Expect(page.GetByRole(AriaRole.Option, new() { Name = name, Exact = true })).ToBeVisibleAsync();
+            await Expect(Page.GetByRole(AriaRole.Option, new() { Name = name, Exact = true })).ToBeVisibleAsync();
         }
         foreach (var text in new[] { "hidden 1", "hidden 2", "hidden 3" })
         {
-            await Expect(page.Locator("option", new() { HasText = text })).ToBeHiddenAsync();
+            await Expect(Page.Locator("option", new() { HasText = text })).ToBeHiddenAsync();
         }
     }
 
     [UpstreamTest("LO-122 isVisible inside a button")]
-    public async Task IsVisibleInsideAButton(IPage page)
+    public async Task IsVisibleInsideAButton()
     {
-        await page.SetContentAsync("<button><span></span>a button</button>");
-        var span = page.Locator("span");
+        await Page.SetContentAsync("<button><span></span>a button</button>");
+        var span = Page.Locator("span");
         Assert.That(await span.IsVisibleAsync(), Is.EqualTo(false));
         Assert.That(await span.IsHiddenAsync(), Is.EqualTo(true));
-        Assert.That(await page.IsVisibleAsync("span"), Is.EqualTo(false));
-        Assert.That(await page.IsHiddenAsync("span"), Is.EqualTo(true));
+        Assert.That(await Page.IsVisibleAsync("span"), Is.EqualTo(false));
+        Assert.That(await Page.IsHiddenAsync("span"), Is.EqualTo(true));
         await Expect(span).Not.ToBeVisibleAsync();
         await Expect(span).ToBeHiddenAsync();
         await span.WaitForAsync(new() { State = WaitForSelectorState.Hidden });
-        await page.Locator("button").WaitForAsync(new() { State = WaitForSelectorState.Visible });
+        await Page.Locator("button").WaitForAsync(new() { State = WaitForSelectorState.Visible });
     }
 
     [UpstreamTest("LO-123 isVisible inside a role=button")]
-    public async Task IsVisibleInsideARoleButton(IPage page)
+    public async Task IsVisibleInsideARoleButton()
     {
-        await page.SetContentAsync("<div role=button><span></span>a button</div>");
-        var span = page.Locator("span");
+        await Page.SetContentAsync("<div role=button><span></span>a button</div>");
+        var span = Page.Locator("span");
         Assert.That(await span.IsVisibleAsync(), Is.EqualTo(false));
         Assert.That(await span.IsHiddenAsync(), Is.EqualTo(true));
-        Assert.That(await page.IsVisibleAsync("span"), Is.EqualTo(false));
-        Assert.That(await page.IsHiddenAsync("span"), Is.EqualTo(true));
+        Assert.That(await Page.IsVisibleAsync("span"), Is.EqualTo(false));
+        Assert.That(await Page.IsHiddenAsync("span"), Is.EqualTo(true));
         await Expect(span).Not.ToBeVisibleAsync();
         await Expect(span).ToBeHiddenAsync();
         await span.WaitForAsync(new() { State = WaitForSelectorState.Hidden });
-        await page.Locator("[role=button]").WaitForAsync(new() { State = WaitForSelectorState.Visible });
+        await Page.Locator("[role=button]").WaitForAsync(new() { State = WaitForSelectorState.Visible });
     }
 
     [UpstreamTest("LO-124 isVisible during navigation should not throw")]
-    public async Task IsVisibleDuringNavigationShouldNotThrow(IPage page, Server server)
+    public async Task IsVisibleDuringNavigationShouldNotThrow()
     {
         for (var i = 0; i < 20; i++)
         {
-            await Catch(() => page.SetContentAsync($@"
+            await Catch(() => Page.SetContentAsync($@"
       <script>
         setTimeout(() => {{
-          window.location.href = {JsonSerializer.Serialize(server.EmptyPage)};
+          window.location.href = {JsonSerializer.Serialize(Server.EmptyPage)};
         }}, Math.random(50));
       </script>
     "));  // Avoid page.setContent throwing because of scheduled navigation.
-            Assert.That(await page.Locator("div").IsVisibleAsync(), Is.EqualTo(false));
+            Assert.That(await Page.Locator("div").IsVisibleAsync(), Is.EqualTo(false));
         }
     }
 
     [UpstreamTest("LO-125 isVisible with invalid selector should throw")]
-    public async Task IsVisibleWithInvalidSelectorShouldThrow(IPage page)
+    public async Task IsVisibleWithInvalidSelectorShouldThrow()
     {
-        var error = await Catch(() => page.Locator("hey=what").IsVisibleAsync());
+        var error = await Catch(() => Page.Locator("hey=what").IsVisibleAsync());
         Assert.That(error.Message, Does.Contain("Unknown engine \"hey\" while parsing selector hey=what"));
     }
 }

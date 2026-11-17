@@ -20,51 +20,51 @@ using static Microsoft.Playwright.Tests.Fixtures.Utils;
 namespace Microsoft.Playwright.Tests.Page;
 
 /// <summary>Port of tests/page/locator-wait-for-function.spec.ts.</summary>
-public class LocatorWaitForFunctionTests
+public class LocatorWaitForFunctionTests : UpstreamPageTest
 {
     [UpstreamTest("LO-183 should wait for an attribute to appear")]
-    public async Task ShouldWaitForAnAttributeToAppear(IPage page)
+    public async Task ShouldWaitForAnAttributeToAppear()
     {
-        await page.SetContentAsync("<button id=toggle>Menu</button>");
-        await page.EvaluateAsync("() => window.builtins.setTimeout(() => document.querySelector('#toggle').setAttribute('aria-expanded', 'true'), 1000)");
-        await page.Locator("#toggle").WaitForFunctionAsync("element => element.hasAttribute('aria-expanded')");
+        await Page.SetContentAsync("<button id=toggle>Menu</button>");
+        await Page.EvaluateAsync("() => window.builtins.setTimeout(() => document.querySelector('#toggle').setAttribute('aria-expanded', 'true'), 1000)");
+        await Page.Locator("#toggle").WaitForFunctionAsync("element => element.hasAttribute('aria-expanded')");
     }
 
     [UpstreamTest("LO-184 should return immediately when already truthy")]
-    public async Task ShouldReturnImmediatelyWhenAlreadyTruthy(IPage page)
+    public async Task ShouldReturnImmediatelyWhenAlreadyTruthy()
     {
-        await page.SetContentAsync("<div id=target>yes</div>");
+        await Page.SetContentAsync("<div id=target>yes</div>");
         // .NET: WaitForFunctionAsync returns a Task without a value: there is nothing to compare with undefined.
-        await page.Locator("#target").WaitForFunctionAsync("element => element.textContent === 'yes'");
+        await Page.Locator("#target").WaitForFunctionAsync("element => element.textContent === 'yes'");
     }
 
     [UpstreamTest("LO-185 should accept ElementHandle arguments")]
-    public async Task ShouldAcceptElementHandleArguments(IPage page)
+    public async Task ShouldAcceptElementHandleArguments()
     {
-        await page.SetContentAsync("<div id=a></div><div id=b>value</div>");
-        var handle = await page.QuerySelectorAsync("#b");
-        await page.Locator("#a").WaitForFunctionAsync("(element, other) => other.textContent === 'value'", handle);
+        await Page.SetContentAsync("<div id=a></div><div id=b>value</div>");
+        var handle = await Page.QuerySelectorAsync("#b");
+        await Page.Locator("#a").WaitForFunctionAsync("(element, other) => other.textContent === 'value'", handle);
     }
 
     [UpstreamTest("LO-186 should accept string expression")]
-    public async Task ShouldAcceptStringExpression(IPage page)
+    public async Task ShouldAcceptStringExpression()
     {
-        await page.SetContentAsync("<div id=target>yes</div>");
-        await page.Locator("#target").WaitForFunctionAsync("element => element.textContent === 'yes'");
+        await Page.SetContentAsync("<div id=target>yes</div>");
+        await Page.Locator("#target").WaitForFunctionAsync("element => element.textContent === 'yes'");
     }
 
     [UpstreamTest("LO-187 should resolve a promise returned by the predicate")]
-    public async Task ShouldResolveAPromiseReturnedByThePredicate(IPage page)
+    public async Task ShouldResolveAPromiseReturnedByThePredicate()
     {
-        await page.SetContentAsync("<div id=target>yes</div>");
-        await page.Locator("#target").WaitForFunctionAsync("async element => element.textContent === 'yes'");
+        await Page.SetContentAsync("<div id=target>yes</div>");
+        await Page.Locator("#target").WaitForFunctionAsync("async element => element.textContent === 'yes'");
     }
 
     [UpstreamTest("LO-188 should wait for element to appear and survive rerender")]
-    public async Task ShouldWaitForElementToAppearAndSurviveRerender(IPage page)
+    public async Task ShouldWaitForElementToAppearAndSurviveRerender()
     {
-        await page.SetContentAsync("<span>nothing here</span>");
-        await page.EvaluateAsync(@"() => {
+        await Page.SetContentAsync("<span>nothing here</span>");
+        await Page.EvaluateAsync(@"() => {
     let count = 0;
     let prev = null;
     const tick = () => {
@@ -81,24 +81,24 @@ public class LocatorWaitForFunctionTests
     };
     window.builtins.setTimeout(tick, 500);
   }");
-        await page.Locator("#target").WaitForFunctionAsync("element => element.textContent === '3'");
+        await Page.Locator("#target").WaitForFunctionAsync("element => element.textContent === '3'");
     }
 
     [UpstreamTest("LO-189 should throw when predicate throws")]
-    public async Task ShouldThrowWhenPredicateThrows(IPage page)
+    public async Task ShouldThrowWhenPredicateThrows()
     {
-        await page.SetContentAsync("<div id=target>no</div>");
-        var error = await Catch(() => page.Locator("#target").WaitForFunctionAsync(@"() => {
+        await Page.SetContentAsync("<div id=target>no</div>");
+        var error = await Catch(() => Page.Locator("#target").WaitForFunctionAsync(@"() => {
     throw new Error('oh my');
   }"));
         Assert.That(error.Message, Does.Contain("oh my"));
     }
 
     [UpstreamTest("LO-190 should throw on strict mode violation")]
-    public async Task ShouldThrowOnStrictModeViolation(IPage page)
+    public async Task ShouldThrowOnStrictModeViolation()
     {
-        await page.SetContentAsync("<div class=x>1</div><div class=x>2</div>");
-        var error = await Catch(() => page.Locator("div.x").WaitForFunctionAsync("() => true"));
+        await Page.SetContentAsync("<div class=x>1</div><div class=x>2</div>");
+        var error = await Catch(() => Page.Locator("div.x").WaitForFunctionAsync("() => true"));
         Assert.That(error.Message, Does.Contain("strict mode violation"));
     }
 }

@@ -20,33 +20,33 @@ using static Microsoft.Playwright.Tests.Fixtures.Utils;
 namespace Microsoft.Playwright.Tests.Library;
 
 /// <summary>Port of tests/library/browsercontext-dsf.spec.ts.</summary>
-public class BrowsercontextDsfTests
+public class BrowsercontextDsfTests : UpstreamBrowserTest
 {
     [UpstreamTest("DV-009 should fetch lodpi assets @smoke")]
-    public async Task ShouldFetchLodpiAssets(ContextFactory contextFactory, Server server)
+    public async Task ShouldFetchLodpiAssets()
     {
-        var context = await contextFactory(new()
+        var context = await ContextFactory(new()
         {
             DeviceScaleFactor = 1
         });
         var page = await context.NewPageAsync();
         var (request, _) = await PromiseAll(
             page.WaitForRequestAsync("**/image*"),
-            page.GotoAsync(server.Prefix + "/highdpi.html"));
+            page.GotoAsync(Server.Prefix + "/highdpi.html"));
         Assert.That(request.Url, Does.Contain("image1x"));
     }
 
     [UpstreamTest("DV-010 should fetch hidpi assets")]
-    public async Task ShouldFetchHidpiAssets(ContextFactory contextFactory, Server server)
+    public async Task ShouldFetchHidpiAssets()
     {
-        var context = await contextFactory(new()
+        var context = await ContextFactory(new()
         {
             DeviceScaleFactor = 2
         });
         var page = await context.NewPageAsync();
         var (request, _) = await PromiseAll(
             page.WaitForRequestAsync("**/image*"),
-            page.GotoAsync(server.Prefix + "/highdpi.html"));
+            page.GotoAsync(Server.Prefix + "/highdpi.html"));
         Assert.That(request.Url, Does.Contain("image2x"));
     }
 }

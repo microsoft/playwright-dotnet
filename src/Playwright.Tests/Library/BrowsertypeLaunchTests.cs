@@ -21,13 +21,13 @@ using static Microsoft.Playwright.Tests.Fixtures.Utils;
 namespace Microsoft.Playwright.Tests.Library;
 
 /// <summary>Port of tests/library/browsertype-launch.spec.ts.</summary>
-public class BrowsertypeLaunchTests
+public class BrowsertypeLaunchTests : UpstreamBrowserTest
 {
     [UpstreamTest("BT-004 should reject all promises when browser is closed")]
-    public async Task ShouldRejectAllPromisesWhenBrowserIsClosed(IBrowserType browserType, BrowserTypeLaunchOptions launchOptions, BrowserNewContextOptions contextOptions)
+    public async Task ShouldRejectAllPromisesWhenBrowserIsClosed()
     {
-        var browser = await browserType.LaunchAsync(launchOptions);
-        var page = await (await browser.NewContextAsync(contextOptions)).NewPageAsync();
+        var browser = await BrowserType.LaunchAsync(LaunchOptions());
+        var page = await (await browser.NewContextAsync(ContextOptions())).NewPageAsync();
         Exception error = null;
         var neverResolves = Catch(() => page.EvaluateAsync("() => new Promise(r => {})"));
         await page.EvaluateAsync("() => new Promise(f => window.builtins.setTimeout(f, 0))");
@@ -38,21 +38,21 @@ public class BrowsertypeLaunchTests
     }
 
     [UpstreamTest("BT-009 should throw if page argument is passed")]
-    public async Task ShouldThrowIfPageArgumentIsPassed(IBrowserType browserType, string browserName, bool isBidi, BrowserTypeLaunchOptions launchOptions)
+    public async Task ShouldThrowIfPageArgumentIsPassed()
     {
-        Info.Skip(browserName == "firefox" && !isBidi);
+        Info.Skip(BrowserName == "firefox" && !IsBidi);
 
         Exception waitError = null;
-        waitError = await Catch(() => browserType.LaunchAsync(new(launchOptions) { Args = ["http://example.com"] }));
+        waitError = await Catch(() => BrowserType.LaunchAsync(new(LaunchOptions()) { Args = ["http://example.com"] }));
         Assert.That(waitError.Message, Does.Contain("can not specify page"));
     }
 
     [UpstreamTest("BT-010 should reject if launched browser fails immediately")]
     [LocalFixme("dotnet: the message is 'Target page, context or browser has been closed\\nBrowser logs: ...', without the 'browserType.launch: ' prefix of the call (only in chromium and webkit); dotnet: the message is 'Failed to launch the browser process.\\nBrowser logs: ...', without the 'browserType.launch: ' prefix of the call (only in firefox)")]
-    public async Task ShouldRejectIfLaunchedBrowserFailsImmediately(string mode, IBrowserType browserType, Func<string, string> asset, string channel, BrowserTypeLaunchOptions launchOptions)
+    public async Task ShouldRejectIfLaunchedBrowserFailsImmediately()
     {
-        var error = await Catch(() => browserType.LaunchAsync(new(launchOptions) { ExecutablePath = asset("dummy_bad_browser_executable.js") }));
-        if (channel == "webkit-wsl")
+        var error = await Catch(() => BrowserType.LaunchAsync(new(LaunchOptions()) { ExecutablePath = Asset("dummy_bad_browser_executable.js") }));
+        if (Channel == "webkit-wsl")
         {
             Assert.That(error.Message, Does.Contain("Failed to launch"));
         }
@@ -63,18 +63,18 @@ public class BrowsertypeLaunchTests
     }
 
     [UpstreamTest("BT-011 should reject if executable path is invalid")]
-    public async Task ShouldRejectIfExecutablePathIsInvalid(IBrowserType browserType, string mode, BrowserTypeLaunchOptions launchOptions)
+    public async Task ShouldRejectIfExecutablePathIsInvalid()
     {
         Exception waitError = null;
-        waitError = await Catch(() => browserType.LaunchAsync(new(launchOptions) { ExecutablePath = "random-invalid-path" }));
+        waitError = await Catch(() => BrowserType.LaunchAsync(new(LaunchOptions()) { ExecutablePath = "random-invalid-path" }));
         Assert.That(waitError.Message, Does.Contain("Failed to launch"));
     }
 
     [UpstreamTest("BT-015 should fire close event for all contexts")]
-    public async Task ShouldFireCloseEventForAllContexts(IBrowserType browserType, BrowserTypeLaunchOptions launchOptions, BrowserNewContextOptions contextOptions)
+    public async Task ShouldFireCloseEventForAllContexts()
     {
-        var browser = await browserType.LaunchAsync(launchOptions);
-        var context = await browser.NewContextAsync(contextOptions);
+        var browser = await BrowserType.LaunchAsync(LaunchOptions());
+        var context = await browser.NewContextAsync(ContextOptions());
         var closed = false;
         context.Close += (_, _) => closed = true;
         await browser.CloseAsync();
@@ -82,9 +82,9 @@ public class BrowsertypeLaunchTests
     }
 
     [UpstreamTest("BT-016 should be callable twice")]
-    public async Task ShouldBeCallableTwice(IBrowserType browserType, BrowserTypeLaunchOptions launchOptions)
+    public async Task ShouldBeCallableTwice()
     {
-        var browser = await browserType.LaunchAsync(launchOptions);
+        var browser = await BrowserType.LaunchAsync(LaunchOptions());
         await PromiseAll(
             browser.CloseAsync(),
             browser.CloseAsync());
@@ -92,18 +92,18 @@ public class BrowsertypeLaunchTests
     }
 
     [UpstreamTest("BT-017 should allow await using")]
-    public async Task ShouldAllowAwaitUsing(IBrowserType browserType, (int Major, int Minor, int Patch) nodeVersion, BrowserTypeLaunchOptions launchOptions, BrowserNewContextOptions contextOptions)
+    public async Task ShouldAllowAwaitUsing()
     {
-        Info.Skip(nodeVersion.Major < 18);
+        Info.Skip(NodeVersion.Major < 18);
 
         IBrowser b;
         IBrowserContext c;
         IPage p;
         {
-            await using var browser = await browserType.LaunchAsync(launchOptions);
+            await using var browser = await BrowserType.LaunchAsync(LaunchOptions());
             b = browser;
             {
-                await using var context = await browser.NewContextAsync(contextOptions);
+                await using var context = await browser.NewContextAsync(ContextOptions());
                 c = context;
                 {
                     await using var page = await context.NewPageAsync();

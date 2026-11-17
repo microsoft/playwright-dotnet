@@ -21,20 +21,20 @@ using static Microsoft.Playwright.Tests.Fixtures.Utils;
 namespace Microsoft.Playwright.Tests.Page;
 
 /// <summary>Port of tests/page/page-click-timeout-4.spec.ts.</summary>
-public class PageClickTimeout4Tests
+public class PageClickTimeout4Tests : UpstreamPageTest
 {
     [UpstreamTest("CL-120 should timeout waiting for stable position")]
     [LocalFixme("dotnet: the message is 'Timeout 3000ms exceeded.', without the 'elementHandle.click: ' prefix of the call")]
-    public async Task ShouldTimeoutWaitingForStablePosition(IPage page, Server server)
+    public async Task ShouldTimeoutWaitingForStablePosition()
     {
-        await page.GotoAsync(server.Prefix + "/input/button.html");
-        var button = await page.QuerySelectorAsync("button");
+        await Page.GotoAsync(Server.Prefix + "/input/button.html");
+        var button = await Page.QuerySelectorAsync("button");
         await button.EvaluateAsync(@"button => {
     button.style.transition = 'margin 5s linear 0s';
     button.style.marginLeft = '200px';
   }");
         // rafraf for Firefox to kick in the animation.
-        await Rafraf(page);
+        await Rafraf(Page);
         var error = await Catch(() => button.ClickAsync(new() { Timeout = 3000 }));
         Assert.That(error.Message, Does.Contain("elementHandle.click: Timeout 3000ms exceeded."));
         Assert.That(error.Message, Does.Contain("waiting for element to be visible, enabled and stable"));
@@ -43,11 +43,11 @@ public class PageClickTimeout4Tests
     }
 
     [UpstreamTest("CL-122 should fail to click the button behind a large header after scrolling around")]
-    public async Task ShouldFailToClickTheButtonBehindALargeHeaderAfterScrollingAround(IPage page, bool isAndroid)
+    public async Task ShouldFailToClickTheButtonBehindALargeHeaderAfterScrollingAround()
     {
-        Info.Skip(isAndroid, "Different viewport size");
-        await page.SetViewportSizeAsync(500, 240);
-        await page.SetContentAsync(@"
+        Info.Skip(IsAndroid, "Different viewport size");
+        await Page.SetViewportSizeAsync(500, 240);
+        await Page.SetContentAsync(@"
     <style>
     * {
       padding: 0;
@@ -84,11 +84,11 @@ public class PageClickTimeout4Tests
       });
     </script>
   ");
-        await page.EvalOnSelectorAsync("#li14", "e => e.scrollIntoView()");
-        var error = await Catch(() => page.ClickAsync("#target", new() { Timeout = 3500 }));
+        await Page.EvalOnSelectorAsync("#li14", "e => e.scrollIntoView()");
+        var error = await Catch(() => Page.ClickAsync("#target", new() { Timeout = 3500 }));
         Assert.That(error.Message, Does.Contain("<div class=\"fixed\"></div> intercepts pointer events"));
-        Assert.That(await page.EvaluateAsync<object>("() => window['__clicked']"), Is.Null);
-        var scrollTops = await page.EvaluateAsync<double[]>("() => window['scrollTops']");
+        Assert.That(await Page.EvaluateAsync<object>("() => window['__clicked']"), Is.Null);
+        var scrollTops = await Page.EvaluateAsync<double[]>("() => window['scrollTops']");
         var distinct = new HashSet<double>(scrollTops);
         Assert.That(distinct.Count, Is.GreaterThan(2));  // At least three different scroll positions.
     }

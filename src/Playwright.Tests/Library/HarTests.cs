@@ -26,9 +26,9 @@ using static Microsoft.Playwright.Tests.Fixtures.Utils;
 namespace Microsoft.Playwright.Tests.Library;
 
 /// <summary>Port of tests/library/har.spec.ts.</summary>
-public class HarTests
+public class HarTests : UpstreamBrowserTest
 {
-    private static async Task<PageWithHarResult> PageWithHar(ContextFactory contextFactory, TestInfo testInfo, PageWithHarOptions options = null)
+    private static async Task<PageWithHarResult> PageWithHar(Func<BrowserNewContextOptions, Task<IBrowserContext>> contextFactory, TestInfo testInfo, PageWithHarOptions options = null)
     {
         var harPath = testInfo.OutputPath(options?.OutputPath ?? "test.har");
         var context = await contextFactory(new() { RecordHarPath = harPath, RecordHarContent = options?.Content, RecordHarOmitContent = options?.OmitContent, IgnoreHTTPSErrors = true });
@@ -38,11 +38,11 @@ public class HarTests
     }
 
     [UpstreamTest("HA-001 should have version and creator")]
-    public async Task ShouldHaveVersionAndCreator(ContextFactory contextFactory, Server server, TestInfo testInfo)
+    public async Task ShouldHaveVersionAndCreator()
     {
-        var pageWithHar = await PageWithHar(contextFactory, testInfo);
+        var pageWithHar = await PageWithHar(ContextFactory, Info);
         var page = pageWithHar.Page;
-        await page.GotoAsync(server.EmptyPage);
+        await page.GotoAsync(Server.EmptyPage);
         var log = await pageWithHar.GetLog();
         Assert.That(log.GetProperty("version").GetString(), Is.EqualTo("1.2"));
         Assert.That(log.GetProperty("creator").GetProperty("name").GetString(), Is.EqualTo("Playwright"));
@@ -51,21 +51,21 @@ public class HarTests
     }
 
     [UpstreamTest("HA-002 should have browser")]
-    public async Task ShouldHaveBrowser(string browserName, IBrowser browser, ContextFactory contextFactory, Server server, TestInfo testInfo)
+    public async Task ShouldHaveBrowser()
     {
-        var pageWithHar = await PageWithHar(contextFactory, testInfo);
+        var pageWithHar = await PageWithHar(ContextFactory, Info);
         var page = pageWithHar.Page;
-        await page.GotoAsync(server.EmptyPage);
+        await page.GotoAsync(Server.EmptyPage);
         var log = await pageWithHar.GetLog();
 
-        Assert.That(log.GetProperty("browser").GetProperty("name").GetString(), Is.EqualTo(browserName));
-        Assert.That(log.GetProperty("browser").GetProperty("version").GetString(), Is.EqualTo(browser.Version));
+        Assert.That(log.GetProperty("browser").GetProperty("name").GetString(), Is.EqualTo(BrowserName));
+        Assert.That(log.GetProperty("browser").GetProperty("version").GetString(), Is.EqualTo(Browser.Version));
     }
 
     [UpstreamTest("HA-003 should have pages")]
-    public async Task ShouldHavePages(ContextFactory contextFactory, Server server, TestInfo testInfo)
+    public async Task ShouldHavePages()
     {
-        var pageWithHar = await PageWithHar(contextFactory, testInfo);
+        var pageWithHar = await PageWithHar(ContextFactory, Info);
         var page = pageWithHar.Page;
         await page.GotoAsync("data:text/html,<title>Hello</title>");
         // For data: load comes before domcontentloaded...
@@ -81,10 +81,10 @@ public class HarTests
     }
 
     [UpstreamTest("HA-004 should have pages in persistent context")]
-    public async Task ShouldHavePagesInPersistentContext(LaunchPersistent launchPersistent, string browserName, TestInfo testInfo)
+    public async Task ShouldHavePagesInPersistentContext()
     {
-        var harPath = testInfo.OutputPath("test.har");
-        var (context, page) = await launchPersistent(new() { RecordHarPath = harPath });
+        var harPath = Info.OutputPath("test.har");
+        var (context, page) = await LaunchPersistent(new() { RecordHarPath = harPath });
         await page.GotoAsync("data:text/html,<title>Hello</title>");
         // For data: load comes before domcontentloaded...
         await page.WaitForLoadStateAsync(LoadState.DOMContentLoaded);
@@ -97,16 +97,16 @@ public class HarTests
     }
 
     [UpstreamTest("HA-005 should include request")]
-    public async Task ShouldIncludeRequest(ContextFactory contextFactory, Server server, TestInfo testInfo)
+    public async Task ShouldIncludeRequest()
     {
-        var pageWithHar = await PageWithHar(contextFactory, testInfo);
+        var pageWithHar = await PageWithHar(ContextFactory, Info);
         var page = pageWithHar.Page;
-        await page.GotoAsync(server.EmptyPage);
+        await page.GotoAsync(Server.EmptyPage);
         var log = await pageWithHar.GetLog();
         Assert.That(log.GetProperty("entries").GetArrayLength(), Is.EqualTo(1));
         var entry = log.GetProperty("entries")[0];
         Assert.That(entry.GetProperty("pageref").GetString(), Is.EqualTo(log.GetProperty("pages")[0].GetProperty("id").GetString()));
-        Assert.That(entry.GetProperty("request").GetProperty("url").GetString(), Is.EqualTo(server.EmptyPage));
+        Assert.That(entry.GetProperty("request").GetProperty("url").GetString(), Is.EqualTo(Server.EmptyPage));
         Assert.That(entry.GetProperty("request").GetProperty("method").GetString(), Is.EqualTo("GET"));
         Assert.That(entry.GetProperty("request").GetProperty("httpVersion").GetString(), Is.EqualTo("HTTP/1.1"));
         Assert.That(entry.GetProperty("request").GetProperty("headers").GetArrayLength(), Is.GreaterThan(1));
@@ -115,11 +115,11 @@ public class HarTests
     }
 
     [UpstreamTest("HA-007 should include response")]
-    public async Task ShouldIncludeResponse(ContextFactory contextFactory, Server server, TestInfo testInfo)
+    public async Task ShouldIncludeResponse()
     {
-        var pageWithHar = await PageWithHar(contextFactory, testInfo);
+        var pageWithHar = await PageWithHar(ContextFactory, Info);
         var page = pageWithHar.Page;
-        await page.GotoAsync(server.EmptyPage);
+        await page.GotoAsync(Server.EmptyPage);
         var log = await pageWithHar.GetLog();
         var entry = log.GetProperty("entries")[0];
         Assert.That(entry.GetProperty("response").GetProperty("status").GetInt32(), Is.EqualTo(200));
@@ -130,35 +130,35 @@ public class HarTests
     }
 
     [UpstreamTest("HA-008 should include redirectURL")]
-    public async Task ShouldIncludeRedirectURL(ContextFactory contextFactory, Server server, TestInfo testInfo)
+    public async Task ShouldIncludeRedirectURL()
     {
-        server.SetRedirect("/foo.html", "/empty.html");
-        var pageWithHar = await PageWithHar(contextFactory, testInfo);
+        Server.SetRedirect("/foo.html", "/empty.html");
+        var pageWithHar = await PageWithHar(ContextFactory, Info);
         var page = pageWithHar.Page;
-        await page.GotoAsync(server.Prefix + "/foo.html");
+        await page.GotoAsync(Server.Prefix + "/foo.html");
         var log = await pageWithHar.GetLog();
         Assert.That(log.GetProperty("entries").GetArrayLength(), Is.EqualTo(2));
         var entry = log.GetProperty("entries")[0];
         Assert.That(entry.GetProperty("response").GetProperty("status").GetInt32(), Is.EqualTo(302));
-        Assert.That(entry.GetProperty("response").GetProperty("redirectURL").GetString(), Is.EqualTo(server.EmptyPage));
+        Assert.That(entry.GetProperty("response").GetProperty("redirectURL").GetString(), Is.EqualTo(Server.EmptyPage));
     }
 
     [UpstreamTest("HA-009 should include query params")]
-    public async Task ShouldIncludeQueryParams(ContextFactory contextFactory, Server server, TestInfo testInfo)
+    public async Task ShouldIncludeQueryParams()
     {
-        var pageWithHar = await PageWithHar(contextFactory, testInfo);
+        var pageWithHar = await PageWithHar(ContextFactory, Info);
         var page = pageWithHar.Page;
-        await page.GotoAsync(server.Prefix + "/har.html?name=value");
+        await page.GotoAsync(Server.Prefix + "/har.html?name=value");
         var log = await pageWithHar.GetLog();
         ExpectToEqual(log.GetProperty("entries")[0].GetProperty("request").GetProperty("queryString"), new[] { new { name = "name", value = "value" } });
     }
 
     [UpstreamTest("HA-010 should include postData")]
-    public async Task ShouldIncludePostData(ContextFactory contextFactory, Server server, TestInfo testInfo)
+    public async Task ShouldIncludePostData()
     {
-        var pageWithHar = await PageWithHar(contextFactory, testInfo);
+        var pageWithHar = await PageWithHar(ContextFactory, Info);
         var page = pageWithHar.Page;
-        await page.GotoAsync(server.EmptyPage);
+        await page.GotoAsync(Server.EmptyPage);
         await page.EvaluateAsync("() => fetch('./post', { method: 'POST', body: 'Hello' })");
         var log = await pageWithHar.GetLog();
         ExpectToEqual(log.GetProperty("entries")[1].GetProperty("request").GetProperty("postData"), new
@@ -170,11 +170,11 @@ public class HarTests
     }
 
     [UpstreamTest("HA-011 should include binary postData")]
-    public async Task ShouldIncludeBinaryPostData(ContextFactory contextFactory, Server server, TestInfo testInfo)
+    public async Task ShouldIncludeBinaryPostData()
     {
-        var pageWithHar = await PageWithHar(contextFactory, testInfo);
+        var pageWithHar = await PageWithHar(ContextFactory, Info);
         var page = pageWithHar.Page;
-        await page.GotoAsync(server.EmptyPage);
+        await page.GotoAsync(Server.EmptyPage);
         await page.EvaluateAsync(@"async () => {
     await fetch('./post', { method: 'POST', body: new Uint8Array(Array.from(Array(16).keys())) });
   }");
@@ -188,11 +188,11 @@ public class HarTests
     }
 
     [UpstreamTest("HA-012 should include form params")]
-    public async Task ShouldIncludeFormParams(ContextFactory contextFactory, Server server, TestInfo testInfo)
+    public async Task ShouldIncludeFormParams()
     {
-        var pageWithHar = await PageWithHar(contextFactory, testInfo);
+        var pageWithHar = await PageWithHar(ContextFactory, Info);
         var page = pageWithHar.Page;
-        await page.GotoAsync(server.EmptyPage);
+        await page.GotoAsync(Server.EmptyPage);
         await page.SetContentAsync("<form method='POST' action='/post'><input type='text' name='foo' value='bar'><input type='number' name='baz' value='123'><input type='submit'></form>");
         await page.ClickAsync("input[type=submit]");
         var log = await pageWithHar.GetLog();
@@ -209,9 +209,9 @@ public class HarTests
     }
 
     [UpstreamTest("HA-013 should include cookies")]
-    public async Task ShouldIncludeCookies(ContextFactory contextFactory, Server server, TestInfo testInfo)
+    public async Task ShouldIncludeCookies()
     {
-        var pageWithHar = await PageWithHar(contextFactory, testInfo);
+        var pageWithHar = await PageWithHar(ContextFactory, Info);
         var page = pageWithHar.Page;
         var context = page.Context;
         await context.AddCookiesAsync(
@@ -221,7 +221,7 @@ public class HarTests
             new() { Name = "name3", Value = "val=ue3", Domain = "localhost", Path = "/" },
             new() { Name = "name4", Value = "val,ue4", Domain = "localhost", Path = "/" },
         ]);
-        await page.GotoAsync(server.EmptyPage);
+        await page.GotoAsync(Server.EmptyPage);
         var log = await pageWithHar.GetLog();
         ExpectToEqual(log.GetProperty("entries")[0].GetProperty("request").GetProperty("cookies"), new[]
         {
@@ -233,11 +233,11 @@ public class HarTests
     }
 
     [UpstreamTest("HA-014 should include set-cookies")]
-    public async Task ShouldIncludeSetCookies(ContextFactory contextFactory, Server server, TestInfo testInfo)
+    public async Task ShouldIncludeSetCookies()
     {
-        var pageWithHar = await PageWithHar(contextFactory, testInfo);
+        var pageWithHar = await PageWithHar(ContextFactory, Info);
         var page = pageWithHar.Page;
-        server.SetRoute("/empty.html", (req, res) =>
+        Server.SetRoute("/empty.html", (req, res) =>
         {
             res.SetHeader("Set-Cookie", new[]
             {
@@ -247,7 +247,7 @@ public class HarTests
             });
             res.End();
         });
-        await page.GotoAsync(server.EmptyPage);
+        await page.GotoAsync(Server.EmptyPage);
         var log = await pageWithHar.GetLog();
         var cookies = log.GetProperty("entries")[0].GetProperty("response").GetProperty("cookies");
         ExpectToEqual(cookies[0], new { name = "name1", value = "value1", httpOnly = true });
@@ -256,42 +256,42 @@ public class HarTests
     }
 
     [UpstreamTest("HA-015 should include set-cookies without equals sign as nameless")]
-    public async Task ShouldIncludeSetCookiesWithoutEqualsSignAsNameless(ContextFactory contextFactory, Server server, TestInfo testInfo)
+    public async Task ShouldIncludeSetCookiesWithoutEqualsSignAsNameless()
     {
-        var pageWithHar = await PageWithHar(contextFactory, testInfo);
+        var pageWithHar = await PageWithHar(ContextFactory, Info);
         var page = pageWithHar.Page;
-        server.SetRoute("/empty.html", (req, res) =>
+        Server.SetRoute("/empty.html", (req, res) =>
         {
             res.SetHeader("Set-Cookie", new[] { "token; HttpOnly" });
             res.End();
         });
-        await page.GotoAsync(server.EmptyPage);
+        await page.GotoAsync(Server.EmptyPage);
         var log = await pageWithHar.GetLog();
         ExpectToEqual(log.GetProperty("entries")[0].GetProperty("response").GetProperty("cookies"), new[] { new { name = string.Empty, value = "token", httpOnly = true } });
     }
 
     [UpstreamTest("HA-016 should include set-cookies with lowercase attributes")]
-    public async Task ShouldIncludeSetCookiesWithLowercaseAttributes(ContextFactory contextFactory, Server server, TestInfo testInfo)
+    public async Task ShouldIncludeSetCookiesWithLowercaseAttributes()
     {
-        var pageWithHar = await PageWithHar(contextFactory, testInfo);
+        var pageWithHar = await PageWithHar(ContextFactory, Info);
         var page = pageWithHar.Page;
-        server.SetRoute("/empty.html", (req, res) =>
+        Server.SetRoute("/empty.html", (req, res) =>
         {
             res.SetHeader("Set-Cookie", new[] { "name=value; path=/; httponly; secure; samesite=Lax" });
             res.End();
         });
-        await page.GotoAsync(server.EmptyPage);
+        await page.GotoAsync(Server.EmptyPage);
         var log = await pageWithHar.GetLog();
         var cookies = log.GetProperty("entries")[0].GetProperty("response").GetProperty("cookies");
         ExpectToEqual(cookies[0], new { name = "name", value = "value", path = "/", httpOnly = true, secure = true, sameSite = "Lax" });
     }
 
     [UpstreamTest("HA-017 should skip invalid Expires")]
-    public async Task ShouldSkipInvalidExpires(ContextFactory contextFactory, Server server, TestInfo testInfo)
+    public async Task ShouldSkipInvalidExpires()
     {
-        var pageWithHar = await PageWithHar(contextFactory, testInfo);
+        var pageWithHar = await PageWithHar(ContextFactory, Info);
         var page = pageWithHar.Page;
-        server.SetRoute("/empty.html", (req, res) =>
+        Server.SetRoute("/empty.html", (req, res) =>
         {
             res.SetHeader("Set-Cookie", new[]
             {
@@ -299,19 +299,19 @@ public class HarTests
             });
             res.End();
         });
-        await page.GotoAsync(server.EmptyPage);
+        await page.GotoAsync(Server.EmptyPage);
         var log = await pageWithHar.GetLog();
         var cookies = log.GetProperty("entries")[0].GetProperty("response").GetProperty("cookies");
         ExpectToEqual(cookies[0], new { name = "name", value = "value" });
     }
 
     [UpstreamTest("HA-018 should include set-cookies with comma")]
-    public async Task ShouldIncludeSetCookiesWithComma(ContextFactory contextFactory, Server server, string browserName, TestInfo testInfo)
+    public async Task ShouldIncludeSetCookiesWithComma()
     {
-        Info.Fixme(browserName == "webkit", "We get \"name1=val, ue1, name2=val, ue2\" as a header value");
-        var pageWithHar = await PageWithHar(contextFactory, testInfo);
+        Info.Fixme(BrowserName == "webkit", "We get \"name1=val, ue1, name2=val, ue2\" as a header value");
+        var pageWithHar = await PageWithHar(ContextFactory, Info);
         var page = pageWithHar.Page;
-        server.SetRoute("/empty.html", (req, res) =>
+        Server.SetRoute("/empty.html", (req, res) =>
         {
             res.SetHeader("Set-Cookie", new[]
             {
@@ -319,7 +319,7 @@ public class HarTests
             });
             res.End();
         });
-        await page.GotoAsync(server.EmptyPage);
+        await page.GotoAsync(Server.EmptyPage);
         var log = await pageWithHar.GetLog();
         var cookies = log.GetProperty("entries")[0].GetProperty("response").GetProperty("cookies");
         ExpectToEqual(cookies[0], new { name = "name1", value = "val, ue1" });
@@ -327,11 +327,11 @@ public class HarTests
     }
 
     [UpstreamTest("HA-019 should include secure set-cookies")]
-    public async Task ShouldIncludeSecureSetCookies(ContextFactory contextFactory, Server httpsServer, TestInfo testInfo)
+    public async Task ShouldIncludeSecureSetCookies()
     {
-        var pageWithHar = await PageWithHar(contextFactory, testInfo);
+        var pageWithHar = await PageWithHar(ContextFactory, Info);
         var page = pageWithHar.Page;
-        httpsServer.SetRoute("/empty.html", (req, res) =>
+        HttpsServer.SetRoute("/empty.html", (req, res) =>
         {
             res.SetHeader("Set-Cookie", new[]
             {
@@ -339,22 +339,22 @@ public class HarTests
             });
             res.End();
         });
-        await page.GotoAsync(httpsServer.EmptyPage);
+        await page.GotoAsync(HttpsServer.EmptyPage);
         var log = await pageWithHar.GetLog();
         var cookies = log.GetProperty("entries")[0].GetProperty("response").GetProperty("cookies");
         ExpectToEqual(cookies[0], new { name = "name1", value = "value1", secure = true });
     }
 
     [UpstreamTest("HA-020 should record request overrides")]
-    public async Task ShouldRecordRequestOverrides(ContextFactory contextFactory, Server server, TestInfo testInfo)
+    public async Task ShouldRecordRequestOverrides()
     {
-        var pageWithHar = await PageWithHar(contextFactory, testInfo);
+        var pageWithHar = await PageWithHar(ContextFactory, Info);
         var page = pageWithHar.Page;
         await page.RouteAsync("**/foo", route =>
         {
             IgnoreErrors(route.FallbackAsync(new()
             {
-                Url = server.EmptyPage,
+                Url = Server.EmptyPage,
                 Method = "POST",
                 Headers = new Dictionary<string, string>(route.Request.Headers)
                 {
@@ -366,10 +366,10 @@ public class HarTests
             }));
         });
 
-        await page.GotoAsync(server.Prefix + "/foo");
+        await page.GotoAsync(Server.Prefix + "/foo");
         var log = await pageWithHar.GetLog();
         var request = log.GetProperty("entries")[0].GetProperty("request");
-        Assert.That(request.GetProperty("url").GetString(), Is.EqualTo(server.EmptyPage));
+        Assert.That(request.GetProperty("url").GetString(), Is.EqualTo(Server.EmptyPage));
         Assert.That(request.GetProperty("method").GetString(), Is.EqualTo("POST"));
         // .NET: toContainEqual(item) is toEqual(expect.arrayContaining([item])).
         ExpectToEqual(request.GetProperty("headers"), ArrayContaining(new[] { new { name = "custom", value = "value" } }));
@@ -378,11 +378,11 @@ public class HarTests
     }
 
     [UpstreamTest("HA-021 should include content @smoke")]
-    public async Task ShouldIncludeContent(ContextFactory contextFactory, Server server, TestInfo testInfo)
+    public async Task ShouldIncludeContent()
     {
-        var pageWithHar = await PageWithHar(contextFactory, testInfo);
+        var pageWithHar = await PageWithHar(ContextFactory, Info);
         var page = pageWithHar.Page;
-        await page.GotoAsync(server.Prefix + "/har.html");
+        await page.GotoAsync(Server.Prefix + "/har.html");
         await page.EvaluateAsync("() => fetch('/pptr.png').then(r => r.arrayBuffer())");
         var log = await pageWithHar.GetLog();
 
@@ -406,18 +406,18 @@ public class HarTests
     }
 
     [UpstreamTest("HA-113 should store binary content with a textual mime type as base64")]
-    public async Task ShouldStoreBinaryContentWithATextualMimeTypeAsBase64(ContextFactory contextFactory, Server server, string browserName, TestInfo testInfo)
+    public async Task ShouldStoreBinaryContentWithATextualMimeTypeAsBase64()
     {
-        Info.Fixme(browserName == "webkit", "WebKit decodes the body of a textual resource before it gets to us");
+        Info.Fixme(BrowserName == "webkit", "WebKit decodes the body of a textual resource before it gets to us");
         var body = new byte[] { 0x80, 0xc3, 0x28, 0xff, 0x41 };
-        server.SetRoute("/binary.js", (req, res) =>
+        Server.SetRoute("/binary.js", (req, res) =>
         {
             res.SetHeader("Content-Type", "application/javascript");
             res.End(body);
         });
-        var pageWithHar = await PageWithHar(contextFactory, testInfo);
+        var pageWithHar = await PageWithHar(ContextFactory, Info);
         var page = pageWithHar.Page;
-        await page.GotoAsync(server.EmptyPage);
+        await page.GotoAsync(Server.EmptyPage);
         await page.EvaluateAsync("() => fetch('/binary.js').then(r => r.arrayBuffer())");
         var log = await pageWithHar.GetLog();
         var content = log.GetProperty("entries").EnumerateArray().First(entry => entry.GetProperty("request").GetProperty("url").GetString().EndsWith("/binary.js", StringComparison.Ordinal)).GetProperty("response").GetProperty("content");
@@ -426,11 +426,11 @@ public class HarTests
     }
 
     [UpstreamTest("HA-022 should use attach mode for zip extension")]
-    public async Task ShouldUseAttachModeForZipExtension(ContextFactory contextFactory, Server server, TestInfo testInfo)
+    public async Task ShouldUseAttachModeForZipExtension()
     {
-        var pageWithHar = await PageWithHar(contextFactory, testInfo, new() { OutputPath = "test.har.zip" });
+        var pageWithHar = await PageWithHar(ContextFactory, Info, new() { OutputPath = "test.har.zip" });
         var page = pageWithHar.Page;
-        await page.GotoAsync(server.Prefix + "/har.html");
+        await page.GotoAsync(Server.Prefix + "/har.html");
         await page.EvaluateAsync("() => fetch('/pptr.png').then(r => r.arrayBuffer())");
         var zip = await pageWithHar.GetZip();
         var log = JsonDocument.Parse(Encoding.UTF8.GetString(zip["har.har"])).RootElement.GetProperty("log");
@@ -439,11 +439,11 @@ public class HarTests
     }
 
     [UpstreamTest("HA-023 should omit content")]
-    public async Task ShouldOmitContent(ContextFactory contextFactory, Server server, TestInfo testInfo)
+    public async Task ShouldOmitContent()
     {
-        var pageWithHar = await PageWithHar(contextFactory, testInfo, new() { Content = HarContentPolicy.Omit, OutputPath = "test.har" });
+        var pageWithHar = await PageWithHar(ContextFactory, Info, new() { Content = HarContentPolicy.Omit, OutputPath = "test.har" });
         var page = pageWithHar.Page;
-        await page.GotoAsync(server.Prefix + "/har.html");
+        await page.GotoAsync(Server.Prefix + "/har.html");
         await page.EvaluateAsync("() => fetch('/pptr.png').then(r => r.arrayBuffer())");
         var log = await pageWithHar.GetLog();
         Assert.That(log.GetProperty("entries")[0].GetProperty("response").GetProperty("content").TryGetProperty("text", out _), Is.False);
@@ -451,11 +451,11 @@ public class HarTests
     }
 
     [UpstreamTest("HA-024 should omit content legacy")]
-    public async Task ShouldOmitContentLegacy(ContextFactory contextFactory, Server server, TestInfo testInfo)
+    public async Task ShouldOmitContentLegacy()
     {
-        var pageWithHar = await PageWithHar(contextFactory, testInfo, new() { OmitContent = true, OutputPath = "test.har" });
+        var pageWithHar = await PageWithHar(ContextFactory, Info, new() { OmitContent = true, OutputPath = "test.har" });
         var page = pageWithHar.Page;
-        await page.GotoAsync(server.Prefix + "/har.html");
+        await page.GotoAsync(Server.Prefix + "/har.html");
         await page.EvaluateAsync("() => fetch('/pptr.png').then(r => r.arrayBuffer())");
         var log = await pageWithHar.GetLog();
         Assert.That(log.GetProperty("entries")[0].GetProperty("response").GetProperty("content").TryGetProperty("text", out _), Is.False);
@@ -463,11 +463,11 @@ public class HarTests
     }
 
     [UpstreamTest("HA-025 should attach content")]
-    public async Task ShouldAttachContent(ContextFactory contextFactory, Server server, TestInfo testInfo)
+    public async Task ShouldAttachContent()
     {
-        var pageWithHar = await PageWithHar(contextFactory, testInfo, new() { Content = HarContentPolicy.Attach, OutputPath = "test.har.zip" });
+        var pageWithHar = await PageWithHar(ContextFactory, Info, new() { Content = HarContentPolicy.Attach, OutputPath = "test.har.zip" });
         var page = pageWithHar.Page;
-        await page.GotoAsync(server.Prefix + "/har.html");
+        await page.GotoAsync(Server.Prefix + "/har.html");
         await page.EvaluateAsync("() => fetch('/pptr.png').then(r => r.arrayBuffer())");
         var zip = await pageWithHar.GetZip();
         var log = JsonDocument.Parse(Encoding.UTF8.GetString(zip["har.har"])).RootElement.GetProperty("log");
@@ -496,10 +496,10 @@ public class HarTests
     }
 
     [UpstreamTest("HA-026 should filter by glob")]
-    public async Task ShouldFilterByGlob(ContextFactory contextFactory, Server server, TestInfo testInfo)
+    public async Task ShouldFilterByGlob()
     {
-        var harPath = testInfo.OutputPath("test.har");
-        var context = await contextFactory(new() { BaseURL = server.Prefix, RecordHarPath = harPath, RecordHarUrlFilter = "/*.css", IgnoreHTTPSErrors = true });
+        var harPath = Info.OutputPath("test.har");
+        var context = await ContextFactory(new() { BaseURL = Server.Prefix, RecordHarPath = harPath, RecordHarUrlFilter = "/*.css", IgnoreHTTPSErrors = true });
         var page = await context.NewPageAsync();
         await page.GotoAsync("/har.html");
         await context.CloseAsync();
@@ -509,12 +509,12 @@ public class HarTests
     }
 
     [UpstreamTest("HA-027 should filter by regexp")]
-    public async Task ShouldFilterByRegexp(ContextFactory contextFactory, Server server, TestInfo testInfo)
+    public async Task ShouldFilterByRegexp()
     {
-        var harPath = testInfo.OutputPath("test.har");
-        var context = await contextFactory(new() { RecordHarPath = harPath, RecordHarUrlFilterRegex = new Regex("HAR.X?HTML", RegexOptions.IgnoreCase), IgnoreHTTPSErrors = true });
+        var harPath = Info.OutputPath("test.har");
+        var context = await ContextFactory(new() { RecordHarPath = harPath, RecordHarUrlFilterRegex = new Regex("HAR.X?HTML", RegexOptions.IgnoreCase), IgnoreHTTPSErrors = true });
         var page = await context.NewPageAsync();
-        await page.GotoAsync(server.Prefix + "/har.html");
+        await page.GotoAsync(Server.Prefix + "/har.html");
         await context.CloseAsync();
         var log = JsonDocument.Parse(File.ReadAllText(harPath)).RootElement.GetProperty("log");
         Assert.That(log.GetProperty("entries").GetArrayLength(), Is.EqualTo(1));
@@ -522,32 +522,32 @@ public class HarTests
     }
 
     [UpstreamTest("HA-028 should include sizes")]
-    public async Task ShouldIncludeSizes(ContextFactory contextFactory, Server server, Func<string, string> asset, TestInfo testInfo)
+    public async Task ShouldIncludeSizes()
     {
-        var pageWithHar = await PageWithHar(contextFactory, testInfo);
+        var pageWithHar = await PageWithHar(ContextFactory, Info);
         var page = pageWithHar.Page;
-        await page.GotoAsync(server.Prefix + "/har.html");
+        await page.GotoAsync(Server.Prefix + "/har.html");
         var log = await pageWithHar.GetLog();
         Assert.That(log.GetProperty("entries").GetArrayLength(), Is.EqualTo(2));
         Assert.That(log.GetProperty("entries")[0].GetProperty("request").GetProperty("url").GetString().EndsWith("har.html", StringComparison.Ordinal), Is.EqualTo(true));
         Assert.That(log.GetProperty("entries")[0].GetProperty("request").GetProperty("headersSize").GetInt32(), Is.GreaterThanOrEqualTo(100));
-        Assert.That(log.GetProperty("entries")[0].GetProperty("response").GetProperty("bodySize").GetInt32(), Is.EqualTo(new FileInfo(asset("har.html")).Length));
+        Assert.That(log.GetProperty("entries")[0].GetProperty("response").GetProperty("bodySize").GetInt32(), Is.EqualTo(new FileInfo(Asset("har.html")).Length));
         Assert.That(log.GetProperty("entries")[0].GetProperty("response").GetProperty("headersSize").GetInt32(), Is.GreaterThanOrEqualTo(100));
         Assert.That(log.GetProperty("entries")[0].GetProperty("response").GetProperty("_transferSize").GetInt32(), Is.GreaterThanOrEqualTo(250));
 
         Assert.That(log.GetProperty("entries")[1].GetProperty("request").GetProperty("url").GetString().EndsWith("one-style.css", StringComparison.Ordinal), Is.EqualTo(true));
-        Assert.That(log.GetProperty("entries")[1].GetProperty("response").GetProperty("bodySize").GetInt32(), Is.EqualTo(new FileInfo(asset("one-style.css")).Length));
+        Assert.That(log.GetProperty("entries")[1].GetProperty("response").GetProperty("bodySize").GetInt32(), Is.EqualTo(new FileInfo(Asset("one-style.css")).Length));
         Assert.That(log.GetProperty("entries")[1].GetProperty("response").GetProperty("headersSize").GetInt32(), Is.GreaterThanOrEqualTo(100));
         Assert.That(log.GetProperty("entries")[1].GetProperty("response").GetProperty("_transferSize").GetInt32(), Is.GreaterThanOrEqualTo(150));
     }
 
     [UpstreamTest("HA-029 should work with gzip compression")]
-    public async Task ShouldWorkWithGzipCompression(ContextFactory contextFactory, Server server, string browserName, TestInfo testInfo)
+    public async Task ShouldWorkWithGzipCompression()
     {
-        var pageWithHar = await PageWithHar(contextFactory, testInfo);
+        var pageWithHar = await PageWithHar(ContextFactory, Info);
         var page = pageWithHar.Page;
-        server.EnableGzip("/simplezip.json");
-        var response = await page.GotoAsync(server.Prefix + "/simplezip.json");
+        Server.EnableGzip("/simplezip.json");
+        var response = await page.GotoAsync(Server.Prefix + "/simplezip.json");
         Assert.That(response.Headers["content-encoding"], Is.EqualTo("gzip"));
         var log = await pageWithHar.GetLog();
         Assert.That(log.GetProperty("entries").GetArrayLength(), Is.EqualTo(1));
@@ -555,66 +555,66 @@ public class HarTests
     }
 
     [UpstreamTest("HA-030 should calculate time")]
-    public async Task ShouldCalculateTime(ContextFactory contextFactory, Server server, TestInfo testInfo)
+    public async Task ShouldCalculateTime()
     {
-        var pageWithHar = await PageWithHar(contextFactory, testInfo);
+        var pageWithHar = await PageWithHar(ContextFactory, Info);
         var page = pageWithHar.Page;
-        await page.GotoAsync(server.Prefix + "/har.html");
+        await page.GotoAsync(Server.Prefix + "/har.html");
         var log = await pageWithHar.GetLog();
         Assert.That(log.GetProperty("entries")[0].GetProperty("time").GetDouble(), Is.GreaterThan(0));
     }
 
     [UpstreamTest("HA-031 should return receive time")]
-    public async Task ShouldReturnReceiveTime(ContextFactory contextFactory, Server server, TestInfo testInfo)
+    public async Task ShouldReturnReceiveTime()
     {
-        var pageWithHar = await PageWithHar(contextFactory, testInfo);
+        var pageWithHar = await PageWithHar(ContextFactory, Info);
         var page = pageWithHar.Page;
-        await page.GotoAsync(server.Prefix + "/har.html");
+        await page.GotoAsync(Server.Prefix + "/har.html");
         var log = await pageWithHar.GetLog();
         Assert.That(log.GetProperty("entries")[0].GetProperty("timings").GetProperty("receive").GetDouble(), Is.GreaterThan(0));
     }
 
     [UpstreamTest("HA-032 should report the correct _transferSize with PNG files")]
-    public async Task ShouldReportTheCorrectTransferSizeWithPNGFiles(ContextFactory contextFactory, Server server, Func<string, string> asset, TestInfo testInfo)
+    public async Task ShouldReportTheCorrectTransferSizeWithPNGFiles()
     {
-        var pageWithHar = await PageWithHar(contextFactory, testInfo);
+        var pageWithHar = await PageWithHar(ContextFactory, Info);
         var page = pageWithHar.Page;
-        await page.GotoAsync(server.EmptyPage);
+        await page.GotoAsync(Server.EmptyPage);
         await page.SetContentAsync($@"
-    <img src=""{server.Prefix}/pptr.png"" />
+    <img src=""{Server.Prefix}/pptr.png"" />
   ");
         var log = await pageWithHar.GetLog();
-        Assert.That(log.GetProperty("entries")[1].GetProperty("response").GetProperty("_transferSize").GetInt32(), Is.GreaterThan(new FileInfo(asset("pptr.png")).Length));
+        Assert.That(log.GetProperty("entries")[1].GetProperty("response").GetProperty("_transferSize").GetInt32(), Is.GreaterThan(new FileInfo(Asset("pptr.png")).Length));
     }
 
     [UpstreamTest("HA-033 should have -1 _transferSize when its a failed request")]
-    public async Task ShouldHave1TransferSizeWhenItsAFailedRequest(ContextFactory contextFactory, Server server, TestInfo testInfo)
+    public async Task ShouldHave1TransferSizeWhenItsAFailedRequest()
     {
-        var pageWithHar = await PageWithHar(contextFactory, testInfo);
+        var pageWithHar = await PageWithHar(ContextFactory, Info);
         var page = pageWithHar.Page;
-        server.SetRoute("/one-style.css", (req, res) =>
+        Server.SetRoute("/one-style.css", (req, res) =>
         {
             res.SetHeader("Content-Type", "text/css");
             res.Socket.Destroy();
         });
         var failedRequests = new List<IRequest>();
         page.RequestFailed += (_, request) => failedRequests.Add(request);
-        await page.GotoAsync(server.Prefix + "/har.html");
+        await page.GotoAsync(Server.Prefix + "/har.html");
         var log = await pageWithHar.GetLog();
         Assert.That(log.GetProperty("entries")[1].GetProperty("request").GetProperty("url").GetString().EndsWith("/one-style.css", StringComparison.Ordinal), Is.EqualTo(true));
         Assert.That(log.GetProperty("entries")[1].GetProperty("response").GetProperty("_transferSize").GetInt32(), Is.EqualTo(-1));
     }
 
     [UpstreamTest("HA-034 should record failed request headers")]
-    public async Task ShouldRecordFailedRequestHeaders(ContextFactory contextFactory, Server server, TestInfo testInfo)
+    public async Task ShouldRecordFailedRequestHeaders()
     {
-        var pageWithHar = await PageWithHar(contextFactory, testInfo);
+        var pageWithHar = await PageWithHar(ContextFactory, Info);
         var page = pageWithHar.Page;
-        server.SetRoute("/har.html", (req, res) =>
+        Server.SetRoute("/har.html", (req, res) =>
         {
             res.Socket.Destroy();
         });
-        await Catch(() => page.GotoAsync(server.Prefix + "/har.html"));
+        await Catch(() => page.GotoAsync(Server.Prefix + "/har.html"));
         var log = await pageWithHar.GetLog();
         Assert.That(log.GetProperty("entries")[0].GetProperty("response").GetProperty("_failureText").GetString(), Is.Not.Empty);
         var request = log.GetProperty("entries")[0].GetProperty("request");
@@ -625,11 +625,11 @@ public class HarTests
     }
 
     [UpstreamTest("HA-035 should record failed request overrides")]
-    public async Task ShouldRecordFailedRequestOverrides(ContextFactory contextFactory, Server server, TestInfo testInfo)
+    public async Task ShouldRecordFailedRequestOverrides()
     {
-        var pageWithHar = await PageWithHar(contextFactory, testInfo);
+        var pageWithHar = await PageWithHar(ContextFactory, Info);
         var page = pageWithHar.Page;
-        server.SetRoute("/empty.html", (req, res) =>
+        Server.SetRoute("/empty.html", (req, res) =>
         {
             res.Socket.Destroy();
         });
@@ -637,7 +637,7 @@ public class HarTests
         {
             IgnoreErrors(route.FallbackAsync(new()
             {
-                Url = server.EmptyPage,
+                Url = Server.EmptyPage,
                 Method = "POST",
                 Headers = new Dictionary<string, string>(route.Request.Headers)
                 {
@@ -648,11 +648,11 @@ public class HarTests
                 PostData = Encoding.UTF8.GetBytes("Hi!"),
             }));
         });
-        await Catch(() => page.GotoAsync(server.Prefix + "/foo"));
+        await Catch(() => page.GotoAsync(Server.Prefix + "/foo"));
         var log = await pageWithHar.GetLog();
         Assert.That(log.GetProperty("entries")[0].GetProperty("response").GetProperty("_failureText").GetString(), Is.Not.Empty);
         var request = log.GetProperty("entries")[0].GetProperty("request");
-        Assert.That(request.GetProperty("url").GetString(), Is.EqualTo(server.EmptyPage));
+        Assert.That(request.GetProperty("url").GetString(), Is.EqualTo(Server.EmptyPage));
         Assert.That(request.GetProperty("method").GetString(), Is.EqualTo("POST"));
         // .NET: toContainEqual(item) is toEqual(expect.arrayContaining([item])).
         ExpectToEqual(request.GetProperty("headers"), ArrayContaining(new[] { new { name = "custom", value = "value" } }));
@@ -661,14 +661,14 @@ public class HarTests
     }
 
     [UpstreamTest("HA-036 should report the correct request body size")]
-    public async Task ShouldReportTheCorrectRequestBodySize(ContextFactory contextFactory, Server server, TestInfo testInfo)
+    public async Task ShouldReportTheCorrectRequestBodySize()
     {
-        server.SetRoute("/api", (req, res) => res.End());
-        var pageWithHar = await PageWithHar(contextFactory, testInfo);
+        Server.SetRoute("/api", (req, res) => res.End());
+        var pageWithHar = await PageWithHar(ContextFactory, Info);
         var page = pageWithHar.Page;
-        await page.GotoAsync(server.EmptyPage);
+        await page.GotoAsync(Server.EmptyPage);
         await PromiseAll(
-            page.WaitForResponseAsync(server.Prefix + "/api1"),
+            page.WaitForResponseAsync(Server.Prefix + "/api1"),
             page.EvaluateAsync(@"() => {
       void fetch('/api1', {
         method: 'POST',
@@ -680,14 +680,14 @@ public class HarTests
     }
 
     [UpstreamTest("HA-037 should report the correct request body size when the bodySize is 0")]
-    public async Task ShouldReportTheCorrectRequestBodySizeWhenTheBodySizeIs0(ContextFactory contextFactory, Server server, TestInfo testInfo)
+    public async Task ShouldReportTheCorrectRequestBodySizeWhenTheBodySizeIs0()
     {
-        server.SetRoute("/api", (req, res) => res.End());
-        var pageWithHar = await PageWithHar(contextFactory, testInfo);
+        Server.SetRoute("/api", (req, res) => res.End());
+        var pageWithHar = await PageWithHar(ContextFactory, Info);
         var page = pageWithHar.Page;
-        await page.GotoAsync(server.EmptyPage);
+        await page.GotoAsync(Server.EmptyPage);
         await PromiseAll(
-            page.WaitForResponseAsync(server.Prefix + "/api2"),
+            page.WaitForResponseAsync(Server.Prefix + "/api2"),
             page.EvaluateAsync(@"() => {
       void fetch('/api2', {
         method: 'POST',
@@ -699,22 +699,22 @@ public class HarTests
     }
 
     [UpstreamTest("HA-038 should report the correct response body size when the bodySize is 0")]
-    public async Task ShouldReportTheCorrectResponseBodySizeWhenTheBodySizeIs0(ContextFactory contextFactory, Server server, TestInfo testInfo)
+    public async Task ShouldReportTheCorrectResponseBodySizeWhenTheBodySizeIs0()
     {
-        var pageWithHar = await PageWithHar(contextFactory, testInfo);
+        var pageWithHar = await PageWithHar(ContextFactory, Info);
         var page = pageWithHar.Page;
-        var response = await page.GotoAsync(server.EmptyPage);
+        var response = await page.GotoAsync(Server.EmptyPage);
         await response.FinishedAsync();
         var log = await pageWithHar.GetLog();
         Assert.That(log.GetProperty("entries")[0].GetProperty("response").GetProperty("bodySize").GetInt32(), Is.EqualTo(0));
     }
 
     [UpstreamTest("HA-039 should have popup requests")]
-    public async Task ShouldHavePopupRequests(ContextFactory contextFactory, Server server, TestInfo testInfo)
+    public async Task ShouldHavePopupRequests()
     {
-        var pageWithHar = await PageWithHar(contextFactory, testInfo);
+        var pageWithHar = await PageWithHar(ContextFactory, Info);
         var page = pageWithHar.Page;
-        await page.GotoAsync(server.EmptyPage);
+        await page.GotoAsync(Server.EmptyPage);
         await page.SetContentAsync("<a target=_blank rel=noopener href=\"/one-style.html\">yo</a>");
         var popup = await PromiseAll(
             page.WaitForPopupAsync(),
@@ -726,25 +726,25 @@ public class HarTests
 
         var entries = log.GetProperty("entries").EnumerateArray().Where(entry => entry.GetProperty("pageref").GetString() == log.GetProperty("pages")[1].GetProperty("id").GetString()).ToArray();
         Assert.That(entries.Length, Is.EqualTo(2));
-        Assert.That(entries[0].GetProperty("request").GetProperty("url").GetString(), Is.EqualTo(server.Prefix + "/one-style.html"));
+        Assert.That(entries[0].GetProperty("request").GetProperty("url").GetString(), Is.EqualTo(Server.Prefix + "/one-style.html"));
         Assert.That(entries[0].GetProperty("response").GetProperty("status").GetInt32(), Is.EqualTo(200));
-        Assert.That(entries[1].GetProperty("request").GetProperty("url").GetString(), Is.EqualTo(server.Prefix + "/one-style.css"));
+        Assert.That(entries[1].GetProperty("request").GetProperty("url").GetString(), Is.EqualTo(Server.Prefix + "/one-style.css"));
         Assert.That(entries[1].GetProperty("response").GetProperty("status").GetInt32(), Is.EqualTo(200));
     }
 
     [UpstreamTest("HA-040 should not contain internal pages")]
-    public async Task ShouldNotContainInternalPages(string browserName, ContextFactory contextFactory, Server server, TestInfo testInfo)
+    public async Task ShouldNotContainInternalPages()
     {
-        server.SetRoute("/empty.html", (req, res) =>
+        Server.SetRoute("/empty.html", (req, res) =>
         {
             res.SetHeader("Set-Cookie", "name=value");
             res.End();
         });
 
-        var pageWithHar = await PageWithHar(contextFactory, testInfo);
+        var pageWithHar = await PageWithHar(ContextFactory, Info);
         var page = pageWithHar.Page;
         var context = pageWithHar.Context;
-        await page.GotoAsync(server.EmptyPage);
+        await page.GotoAsync(Server.EmptyPage);
 
         var cookies = await context.CookiesAsync();
         Assert.That(cookies.Count, Is.EqualTo(1));
@@ -756,34 +756,34 @@ public class HarTests
     }
 
     [UpstreamTest("HA-041 should have connection details")]
-    public async Task ShouldHaveConnectionDetails(ContextFactory contextFactory, Server server, string browserName, string platform, string mode, TestInfo testInfo)
+    public async Task ShouldHaveConnectionDetails()
     {
-        var pageWithHar = await PageWithHar(contextFactory, testInfo);
+        var pageWithHar = await PageWithHar(ContextFactory, Info);
         var page = pageWithHar.Page;
-        await page.GotoAsync(server.EmptyPage);
+        await page.GotoAsync(Server.EmptyPage);
         var log = await pageWithHar.GetLog();
         var serverIPAddress = log.GetProperty("entries")[0].GetProperty("serverIPAddress").GetString();
         var port = log.GetProperty("entries")[0].GetProperty("_serverPort").GetInt32();
         var securityDetails = log.GetProperty("entries")[0].GetProperty("_securityDetails");
         Assert.That(serverIPAddress, Does.Match(@"^127\.0\.0\.1|\[::1\]"));
-        Assert.That(port, Is.EqualTo(server.Port));
+        Assert.That(port, Is.EqualTo(Server.Port));
         ExpectToEqual(securityDetails, new { });
     }
 
     [UpstreamTest("HA-042 should have security details")]
     [LocalFixme("harness: the HTTPS server of the harness negotiates TLS 1.2 on macOS, where the SslStream of .NET has no TLS 1.3 for a server: the protocol is 'TLS 1.2', upstream expects 'TLS 1.3' (only on darwin)")]
-    public async Task ShouldHaveSecurityDetails(ContextFactory contextFactory, Server httpsServer, string browserName, string platform, string mode, string channel, bool isFrozenWebkit, TestInfo testInfo)
+    public async Task ShouldHaveSecurityDetails()
     {
-        Info.Fixme(browserName == "webkit" && platform == "win32" && channel != "webkit-wsl");
-        Info.Skip(isFrozenWebkit);
+        Info.Fixme(BrowserName == "webkit" && Platform == "win32" && Channel != "webkit-wsl");
+        Info.Skip(IsFrozenWebkit);
 
-        var pageWithHar = await PageWithHar(contextFactory, testInfo);
+        var pageWithHar = await PageWithHar(ContextFactory, Info);
         var page = pageWithHar.Page;
         var context = pageWithHar.Context;
-        var apiHarPath = testInfo.OutputPath("api.har");
+        var apiHarPath = Info.OutputPath("api.har");
         await context.APIRequest.Tracing.StartHarAsync(apiHarPath);
-        await page.GotoAsync(httpsServer.EmptyPage);
-        await page.APIRequest.GetAsync(httpsServer.EmptyPage);
+        await page.GotoAsync(HttpsServer.EmptyPage);
+        await page.APIRequest.GetAsync(HttpsServer.EmptyPage);
         await context.APIRequest.Tracing.StopHarAsync();
         var log = await pageWithHar.GetLog();
         Assert.That(log.GetProperty("entries").GetArrayLength(), Is.EqualTo(1));
@@ -791,8 +791,8 @@ public class HarTests
         var port = log.GetProperty("entries")[0].GetProperty("_serverPort").GetInt32();
         var securityDetails = log.GetProperty("entries")[0].GetProperty("_securityDetails");
         Assert.That(serverIPAddress, Does.Match(@"^127\.0\.0\.1|\[::1\]"));
-        Assert.That(port, Is.EqualTo(httpsServer.Port));
-        if (browserName == "webkit")
+        Assert.That(port, Is.EqualTo(HttpsServer.Port));
+        if (BrowserName == "webkit")
         {
             ExpectToEqual(securityDetails, new { protocol = "TLS 1.3", subjectName = "playwright-test", validFrom = 1691708270, validTo = 2007068270 });
         }
@@ -807,18 +807,18 @@ public class HarTests
     }
 
     [UpstreamTest("HA-043 should have connection details for redirects")]
-    public async Task ShouldHaveConnectionDetailsForRedirects(ContextFactory contextFactory, Server server, string browserName, string mode, TestInfo testInfo)
+    public async Task ShouldHaveConnectionDetailsForRedirects()
     {
-        server.SetRedirect("/foo.html", "/empty.html");
-        var pageWithHar = await PageWithHar(contextFactory, testInfo);
+        Server.SetRedirect("/foo.html", "/empty.html");
+        var pageWithHar = await PageWithHar(ContextFactory, Info);
         var page = pageWithHar.Page;
-        await page.GotoAsync(server.Prefix + "/foo.html");
+        await page.GotoAsync(Server.Prefix + "/foo.html");
         var log = await pageWithHar.GetLog();
         Assert.That(log.GetProperty("entries").GetArrayLength(), Is.EqualTo(2));
 
         var detailsFoo = log.GetProperty("entries")[0];
 
-        if (browserName == "webkit")
+        if (BrowserName == "webkit")
         {
             Assert.That(detailsFoo.TryGetProperty("serverIPAddress", out _), Is.False);
             Assert.That(detailsFoo.TryGetProperty("_serverPort", out _), Is.False);
@@ -826,60 +826,61 @@ public class HarTests
         else
         {
             Assert.That(detailsFoo.GetProperty("serverIPAddress").GetString(), Does.Match(@"^127\.0\.0\.1|\[::1\]"));
-            Assert.That(detailsFoo.GetProperty("_serverPort").GetInt32(), Is.EqualTo(server.Port));
+            Assert.That(detailsFoo.GetProperty("_serverPort").GetInt32(), Is.EqualTo(Server.Port));
         }
 
         var detailsEmpty = log.GetProperty("entries")[1];
         Assert.That(detailsEmpty.GetProperty("serverIPAddress").GetString(), Does.Match(@"^127\.0\.0\.1|\[::1\]"));
-        Assert.That(detailsEmpty.GetProperty("_serverPort").GetInt32(), Is.EqualTo(server.Port));
+        Assert.That(detailsEmpty.GetProperty("_serverPort").GetInt32(), Is.EqualTo(Server.Port));
     }
 
     [UpstreamTest("HA-044 should have connection details for failed requests")]
-    public async Task ShouldHaveConnectionDetailsForFailedRequests(ContextFactory contextFactory, Server server, string browserName, string platform, string mode, TestInfo testInfo)
+    public async Task ShouldHaveConnectionDetailsForFailedRequests()
     {
-        server.SetRoute("/one-style.css", (_, res) =>
+        Server.SetRoute("/one-style.css", (_, res) =>
         {
             res.SetHeader("Content-Type", "text/css");
             res.Socket.Destroy();
         });
-        var pageWithHar = await PageWithHar(contextFactory, testInfo);
+        var pageWithHar = await PageWithHar(ContextFactory, Info);
         var page = pageWithHar.Page;
-        await page.GotoAsync(server.Prefix + "/one-style.html");
+        await page.GotoAsync(Server.Prefix + "/one-style.html");
         var log = await pageWithHar.GetLog();
         var serverIPAddress = log.GetProperty("entries")[0].GetProperty("serverIPAddress").GetString();
         var port = log.GetProperty("entries")[0].GetProperty("_serverPort").GetInt32();
         Assert.That(serverIPAddress, Does.Match(@"^127\.0\.0\.1|\[::1\]"));
-        Assert.That(port, Is.EqualTo(server.Port));
+        Assert.That(port, Is.EqualTo(Server.Port));
     }
 
     [UpstreamTest("HA-045 should return server address directly from response")]
-    public async Task ShouldReturnServerAddressDirectlyFromResponse(IPage page, Server server, string mode)
+    public async Task ShouldReturnServerAddressDirectlyFromResponse()
     {
-        var response = await page.GotoAsync(server.EmptyPage);
+        var page = await PageFixture();
+        var response = await page.GotoAsync(Server.EmptyPage);
         var serverAddr = await response.ServerAddrAsync();
         var ipAddress = serverAddr.IpAddress;
         var port = serverAddr.Port;
         Assert.That(ipAddress, Does.Match(@"^127\.0\.0\.1|\[::1\]"));
-        Assert.That(port, Is.EqualTo(server.Port));
+        Assert.That(port, Is.EqualTo(Server.Port));
     }
 
     [UpstreamTest("HA-046 should return security details directly from response")]
     [LocalFixme("harness: the HTTPS server of the harness negotiates TLS 1.2 on macOS, where the SslStream of .NET has no TLS 1.3 for a server: the protocol is 'TLS 1.2', upstream expects 'TLS 1.3' (only on darwin)")]
-    public async Task ShouldReturnSecurityDetailsDirectlyFromResponse(ContextFactory contextFactory, Server httpsServer, string browserName, string platform, bool isFrozenWebkit)
+    public async Task ShouldReturnSecurityDetailsDirectlyFromResponse()
     {
-        Info.Skip(isFrozenWebkit);
+        Info.Skip(IsFrozenWebkit);
 
-        var context = await contextFactory(new() { IgnoreHTTPSErrors = true });
+        var context = await ContextFactory(new() { IgnoreHTTPSErrors = true });
         var page = await context.NewPageAsync();
-        var response = await page.GotoAsync(httpsServer.EmptyPage);
+        var response = await page.GotoAsync(HttpsServer.EmptyPage);
         var securityDetails = await response.SecurityDetailsAsync();
-        if (browserName == "webkit" && platform == "win32")
+        if (BrowserName == "webkit" && Platform == "win32")
         {
             // WebKit on Windows does not surface the TLS protocol.
             // .NET: { ...securityDetails, protocol: undefined } is a copy without the protocol.
             ExpectToEqual(new ResponseSecurityDetailsResult { Issuer = securityDetails.Issuer, SubjectName = securityDetails.SubjectName, ValidFrom = securityDetails.ValidFrom, ValidTo = securityDetails.ValidTo }, new { subjectName = "playwright-test", validFrom = 1691708270, validTo = 2007068270 });
         }
-        else if (browserName == "webkit")
+        else if (BrowserName == "webkit")
         {
             ExpectToEqual(securityDetails, new { protocol = "TLS 1.3", subjectName = "playwright-test", validFrom = 1691708270, validTo = 2007068270 });
         }
@@ -890,7 +891,7 @@ public class HarTests
     }
 
     [UpstreamTest("HA-047 should contain http2 for http2 requests")]
-    public async Task ShouldContainHttp2ForHttp2Requests(ContextFactory contextFactory, TestInfo testInfo)
+    public async Task ShouldContainHttp2ForHttp2Requests()
     {
         // .NET: createHttp2Server(await TestServer.certOptions()) with a 'stream' listener is a Kestrel server that speaks HTTP/2.
         var builder = WebApplication.CreateSlimBuilder();
@@ -910,7 +911,7 @@ public class HarTests
         });
         await server.StartAsync();
 
-        var pageWithHar = await PageWithHar(contextFactory, testInfo);
+        var pageWithHar = await PageWithHar(ContextFactory, Info);
         var page = pageWithHar.Page;
         await page.GotoAsync($"https://localhost:{new Uri(server.Urls.First()).Port}");
         var log = await pageWithHar.GetLog();
@@ -921,25 +922,25 @@ public class HarTests
     }
 
     [UpstreamTest("HA-048 should filter favicon and favicon redirects")]
-    public async Task ShouldFilterFaviconAndFaviconRedirects(Server server, string browserName, bool headless, Func<string, string> asset, ContextFactory contextFactory, string channel, TestInfo testInfo)
+    public async Task ShouldFilterFaviconAndFaviconRedirects()
     {
-        Info.Skip(headless && browserName != "firefox", "headless browsers, except firefox, do not request favicons");
-        Info.Skip(!headless && browserName == "webkit", "headed webkit does not have a favicon feature");
+        Info.Skip(Headless && BrowserName != "firefox", "headless browsers, except firefox, do not request favicons");
+        Info.Skip(!Headless && BrowserName == "webkit", "headed webkit does not have a favicon feature");
 
-        var pageWithHar = await PageWithHar(contextFactory, testInfo);
+        var pageWithHar = await PageWithHar(ContextFactory, Info);
         var page = pageWithHar.Page;
 
         // Browsers aggressively cache favicons, so force bust with the
         // `d` parameter to make iterating on this test more predictable and isolated.
         var favicon = "/no-cache-2/favicon.ico";
         var hashedFaviconUrl = "/favicon-hashed.ico";
-        server.SetRedirect(favicon, hashedFaviconUrl);
-        server.SetRoute(hashedFaviconUrl, (req, res) =>
+        Server.SetRedirect(favicon, hashedFaviconUrl);
+        Server.SetRoute(hashedFaviconUrl, (req, res) =>
         {
-            server.ServeFile(req, res, asset("media-query-prefers-color-scheme.svg"));
+            Server.ServeFile(req, res, Asset("media-query-prefers-color-scheme.svg"));
         });
 
-        server.SetRoute("/page.html", (_, res) =>
+        Server.SetRoute("/page.html", (_, res) =>
         {
             res.End($@"
       <!DOCTYPE html>
@@ -957,9 +958,9 @@ public class HarTests
         });
 
         await PromiseAll(
-            server.WaitForRequest(favicon),
-            server.WaitForRequest(hashedFaviconUrl),
-            page.GotoAsync(server.Prefix + "/page.html"));
+            Server.WaitForRequest(favicon),
+            Server.WaitForRequest(hashedFaviconUrl),
+            page.GotoAsync(Server.Prefix + "/page.html"));
 
         await page.WaitForTimeoutAsync(500);
         // Text still being around ensures we haven't actually lost our browser to a crash.
@@ -969,17 +970,17 @@ public class HarTests
         var log = await pageWithHar.GetLog();
         Assert.That(log.GetProperty("entries").GetArrayLength(), Is.EqualTo(1));
         var entry = log.GetProperty("entries")[0];
-        Assert.That(entry.GetProperty("request").GetProperty("url").GetString(), Is.EqualTo(server.Prefix + "/page.html"));
+        Assert.That(entry.GetProperty("request").GetProperty("url").GetString(), Is.EqualTo(Server.Prefix + "/page.html"));
     }
 
     [UpstreamTest("HA-049 should have different hars for concurrent contexts")]
-    public async Task ShouldHaveDifferentHarsForConcurrentContexts(ContextFactory contextFactory, TestInfo testInfo)
+    public async Task ShouldHaveDifferentHarsForConcurrentContexts()
     {
-        var session0 = await PageWithHar(contextFactory, testInfo, new() { OutputPath = "test-0.har" });
+        var session0 = await PageWithHar(ContextFactory, Info, new() { OutputPath = "test-0.har" });
         await session0.Page.GotoAsync("data:text/html,<title>Zero</title>");
         await session0.Page.WaitForLoadStateAsync(LoadState.DOMContentLoaded);
 
-        var session1 = await PageWithHar(contextFactory, testInfo, new() { OutputPath = "test-1.har" });
+        var session1 = await PageWithHar(ContextFactory, Info, new() { OutputPath = "test-1.har" });
         await session1.Page.GotoAsync("data:text/html,<title>One</title>");
         await session1.Page.WaitForLoadStateAsync(LoadState.DOMContentLoaded);
 
@@ -1004,23 +1005,23 @@ public class HarTests
     }
 
     [UpstreamTest("HA-050 should exclude API request")]
-    public async Task ShouldExcludeAPIRequest(ContextFactory contextFactory, Server server, TestInfo testInfo)
+    public async Task ShouldExcludeAPIRequest()
     {
-        var pageWithHar = await PageWithHar(contextFactory, testInfo);
+        var pageWithHar = await PageWithHar(ContextFactory, Info);
         var page = pageWithHar.Page;
-        await page.GotoAsync(server.EmptyPage);
-        await page.APIRequest.GetAsync(server.Prefix + "/simple.json");
+        await page.GotoAsync(Server.EmptyPage);
+        await page.APIRequest.GetAsync(Server.Prefix + "/simple.json");
         var log = await pageWithHar.GetLog();
-        Assert.That(log.GetProperty("entries").EnumerateArray().Select(entry => entry.GetProperty("request").GetProperty("url").GetString()), Is.EqualTo(new[] { server.EmptyPage }));
+        Assert.That(log.GetProperty("entries").EnumerateArray().Select(entry => entry.GetProperty("request").GetProperty("url").GetString()), Is.EqualTo(new[] { Server.EmptyPage }));
     }
 
     [UpstreamTest("HA-051 should correctly record API request cookies with equals sign in value")]
-    public async Task ShouldCorrectlyRecordAPIRequestCookiesWithEqualsSignInValue(ContextFactory contextFactory, Server server, TestInfo testInfo)
+    public async Task ShouldCorrectlyRecordAPIRequestCookiesWithEqualsSignInValue()
     {
-        var context = await contextFactory();
-        var harPath = testInfo.OutputPath("request.har");
+        var context = await ContextFactory();
+        var harPath = Info.OutputPath("request.har");
         await context.APIRequest.Tracing.StartHarAsync(harPath);
-        var url = server.Prefix + "/simple.json";
+        var url = Server.Prefix + "/simple.json";
         await context.APIRequest.GetAsync(url, new()
         {
             Headers = new Dictionary<string, string> { ["cookie"] = "token=abc=xyz; other=val" },
@@ -1036,12 +1037,12 @@ public class HarTests
     }
 
     [UpstreamTest("HA-052 should record nameless API request cookies")]
-    public async Task ShouldRecordNamelessAPIRequestCookies(ContextFactory contextFactory, Server server, TestInfo testInfo)
+    public async Task ShouldRecordNamelessAPIRequestCookies()
     {
-        var context = await contextFactory();
-        var harPath = testInfo.OutputPath("request.har");
+        var context = await ContextFactory();
+        var harPath = Info.OutputPath("request.har");
         await context.APIRequest.Tracing.StartHarAsync(harPath);
-        await context.APIRequest.GetAsync(server.Prefix + "/simple.json", new()
+        await context.APIRequest.GetAsync(Server.Prefix + "/simple.json", new()
         {
             Headers = new Dictionary<string, string> { ["cookie"] = "nameless; other=val" },
         });
@@ -1056,12 +1057,12 @@ public class HarTests
     }
 
     [UpstreamTest("HA-053 should respect minimal mode for API Requests")]
-    public async Task ShouldRespectMinimalModeForAPIRequests(ContextFactory contextFactory, Server server, TestInfo testInfo)
+    public async Task ShouldRespectMinimalModeForAPIRequests()
     {
-        var context = await contextFactory();
-        var harPath = testInfo.OutputPath("request.har");
+        var context = await ContextFactory();
+        var harPath = Info.OutputPath("request.har");
         await context.APIRequest.Tracing.StartHarAsync(harPath, new() { Mode = HarMode.Minimal });
-        var url = server.Prefix + "/simple.json";
+        var url = Server.Prefix + "/simple.json";
         await context.APIRequest.PostAsync(url, new()
         {
             Headers = new Dictionary<string, string> { ["cookie"] = "a=b; c=d" },
@@ -1081,13 +1082,13 @@ public class HarTests
     }
 
     [UpstreamTest("HA-054 should include redirects from API request")]
-    public async Task ShouldIncludeRedirectsFromAPIRequest(ContextFactory contextFactory, Server server, TestInfo testInfo)
+    public async Task ShouldIncludeRedirectsFromAPIRequest()
     {
-        server.SetRedirect("/redirect-me", "/simple.json");
-        var context = await contextFactory();
-        var harPath = testInfo.OutputPath("request.har");
+        Server.SetRedirect("/redirect-me", "/simple.json");
+        var context = await ContextFactory();
+        var harPath = Info.OutputPath("request.har");
         await context.APIRequest.Tracing.StartHarAsync(harPath);
-        await context.APIRequest.PostAsync(server.Prefix + "/redirect-me", new()
+        await context.APIRequest.PostAsync(Server.Prefix + "/redirect-me", new()
         {
             Headers = new Dictionary<string, string> { ["cookie"] = "a=b; c=d" },
             DataObject = new { foo = "bar" },
@@ -1098,8 +1099,8 @@ public class HarTests
         Assert.That(log.GetProperty("entries").GetArrayLength(), Is.EqualTo(2));
         var redirect = log.GetProperty("entries")[0];
         var json = log.GetProperty("entries")[1];
-        Assert.That(redirect.GetProperty("request").GetProperty("url").GetString(), Is.EqualTo(server.Prefix + "/redirect-me"));
-        Assert.That(json.GetProperty("request").GetProperty("url").GetString(), Is.EqualTo(server.Prefix + "/simple.json"));
+        Assert.That(redirect.GetProperty("request").GetProperty("url").GetString(), Is.EqualTo(Server.Prefix + "/redirect-me"));
+        Assert.That(json.GetProperty("request").GetProperty("url").GetString(), Is.EqualTo(Server.Prefix + "/simple.json"));
         Assert.That(redirect.GetProperty("response").GetProperty("bodySize").GetInt32(), Is.EqualTo(-1));
         Assert.That(redirect.GetProperty("response").GetProperty("content").GetProperty("size").GetInt32(), Is.EqualTo(-1));
         Assert.That(redirect.TryGetProperty("timings", out _), Is.True);
@@ -1107,9 +1108,9 @@ public class HarTests
     }
 
     [UpstreamTest("HA-055 should not hang on resources served from cache")]
-    public async Task ShouldNotHangOnResourcesServedFromCache(ContextFactory contextFactory, Server server, string browserName, bool isBidi, TestInfo testInfo)
+    public async Task ShouldNotHangOnResourcesServedFromCache()
     {
-        server.SetRoute("/one-style.css", (req, res) =>
+        Server.SetRoute("/one-style.css", (req, res) =>
         {
             res.WriteHead(200, new()
             {
@@ -1118,14 +1119,14 @@ public class HarTests
             });
             res.End("body { background: red }");
         });
-        var pageWithHar = await PageWithHar(contextFactory, testInfo);
+        var pageWithHar = await PageWithHar(ContextFactory, Info);
         var page = pageWithHar.Page;
-        await page.GotoAsync(server.Prefix + "/har.html");
-        await page.GotoAsync(server.Prefix + "/har.html");
+        await page.GotoAsync(Server.Prefix + "/har.html");
+        await page.GotoAsync(Server.Prefix + "/har.html");
         var log = await pageWithHar.GetLog();
         var entries = log.GetProperty("entries").EnumerateArray().Where(e => e.GetProperty("request").GetProperty("url").GetString().EndsWith("one-style.css", StringComparison.Ordinal)).ToArray();
         // In firefox no request events are fired for cached resources.
-        if (browserName == "firefox" && !isBidi)
+        if (BrowserName == "firefox" && !IsBidi)
         {
             Assert.That(entries.Length, Is.EqualTo(1));
         }
@@ -1136,9 +1137,9 @@ public class HarTests
     }
 
     [UpstreamTest("HA-056 should not hang on slow chunked response")]
-    public async Task ShouldNotHangOnSlowChunkedResponse(string browserName, IBrowser browser, ContextFactory contextFactory, Server server, TestInfo testInfo)
+    public async Task ShouldNotHangOnSlowChunkedResponse()
     {
-        server.SetRoute("/empty.html", (req, res) =>
+        Server.SetRoute("/empty.html", (req, res) =>
         {
             res.WriteHead(200, new()
             {
@@ -1155,7 +1156,7 @@ public class HarTests
     });
     </script>");
         });
-        server.SetRoute("/slow.txt", (req, res) =>
+        Server.SetRoute("/slow.txt", (req, res) =>
         {
             res.WriteHead(200, new()
             {
@@ -1165,24 +1166,24 @@ public class HarTests
             });
             res.Write("begin");
         });
-        var pageWithHar = await PageWithHar(contextFactory, testInfo);
+        var pageWithHar = await PageWithHar(ContextFactory, Info);
         var page = pageWithHar.Page;
-        await page.GotoAsync(server.EmptyPage);
+        await page.GotoAsync(Server.EmptyPage);
         await page.EvaluateAsync("() => window.receivedFirstData");
         var log = await pageWithHar.GetLog();
 
-        Assert.That(log.GetProperty("browser").GetProperty("name").GetString(), Is.EqualTo(browserName));
-        Assert.That(log.GetProperty("browser").GetProperty("version").GetString(), Is.EqualTo(browser.Version));
+        Assert.That(log.GetProperty("browser").GetProperty("name").GetString(), Is.EqualTo(BrowserName));
+        Assert.That(log.GetProperty("browser").GetProperty("version").GetString(), Is.EqualTo(Browser.Version));
     }
 
     [UpstreamTest("HA-057 should close the context when saving the har fails")]
-    public async Task ShouldCloseTheContextWhenSavingTheHarFails(ContextFactory contextFactory, Server server, TestInfo testInfo)
+    public async Task ShouldCloseTheContextWhenSavingTheHarFails()
     {
-        var filePath = testInfo.OutputPath("not-a-directory");
+        var filePath = Info.OutputPath("not-a-directory");
         File.WriteAllText(filePath, "data");
-        var context = await contextFactory(new() { RecordHarPath = Path.Combine(filePath, "test.har") });
+        var context = await ContextFactory(new() { RecordHarPath = Path.Combine(filePath, "test.har") });
         var page = await context.NewPageAsync();
-        await page.GotoAsync(server.EmptyPage);
+        await page.GotoAsync(Server.EmptyPage);
         var closed = Once<IBrowserContext>(h => context.Close += h, h => context.Close -= h);
         var error = await ThrowsAsync<PlaywrightException>(() => context.CloseAsync());
         Assert.That(error.Message, Does.Match("ENOTDIR|ENOENT|EEXIST"));
@@ -1191,27 +1192,27 @@ public class HarTests
     }
 
     [UpstreamTest("HA-058 should support HAR larger than 512MB")]
-    public async Task ShouldSupportHARLargerThan512MB(ContextFactory contextFactory, Server server, string browserName, TestInfo testInfo)
+    public async Task ShouldSupportHARLargerThan512MB()
     {
-        Info.Skip(browserName != "chromium", "serializer is browser-agnostic; one browser is enough");
+        Info.Skip(BrowserName != "chromium", "serializer is browser-agnostic; one browser is enough");
         Info.Slow();
 
-        var harPath = testInfo.OutputPath("test.har");
-        var context = await contextFactory();
+        var harPath = Info.OutputPath("test.har");
+        var context = await ContextFactory();
         await context.APIRequest.Tracing.StartHarAsync(harPath);
 
         // 30 x 20MB textual responses push the HAR JSON past V8's ~512MB max
         // string length. Each body still fits in a single string; only the
         // aggregate would overflow the previous tokens.join('').
         var body = new string('a', 20 * 1024 * 1024);
-        server.SetRoute("/large", (req, res) =>
+        Server.SetRoute("/large", (req, res) =>
         {
             res.WriteHead(200, new() { ["Content-Type"] = "text/plain" });
             res.End(body);
         });
         for (var i = 0; i < 30; i++)
         {
-            await context.APIRequest.GetAsync($"{server.Prefix}/large");
+            await context.APIRequest.GetAsync($"{Server.Prefix}/large");
         }
         await context.APIRequest.Tracing.StopHarAsync();
         await context.CloseAsync();
@@ -1234,9 +1235,9 @@ public class HarTests
     }
 
     [UpstreamTest("HA-059 should record resource type")]
-    public async Task ShouldRecordResourceType(ContextFactory contextFactory, Server server, Func<string, string> asset, TestInfo testInfo)
+    public async Task ShouldRecordResourceType()
     {
-        server.SetRoute("/resource-types.html", (req, res) =>
+        Server.SetRoute("/resource-types.html", (req, res) =>
         {
             res.WriteHead(200, new() { ["Content-Type"] = "text/html" });
             res.End(@"
@@ -1245,7 +1246,7 @@ public class HarTests
       <img src=""/resource-type-image.png"">
     ");
         });
-        server.SetRoute("/resource-type-stylesheet.css", (req, res) =>
+        Server.SetRoute("/resource-type-stylesheet.css", (req, res) =>
         {
             res.WriteHead(200, new() { ["Content-Type"] = "text/css" });
             res.End(@"
@@ -1256,23 +1257,23 @@ public class HarTests
       body { font-family: 'iconfont'; }
     ");
         });
-        server.SetRoute("/resource-type-font.woff2", (req, res) =>
+        Server.SetRoute("/resource-type-font.woff2", (req, res) =>
         {
-            server.ServeFile(req, res, asset("webfont/iconfont.woff2"));
+            Server.ServeFile(req, res, Asset("webfont/iconfont.woff2"));
         });
-        server.SetRoute("/resource-type-script.js", (req, res) =>
+        Server.SetRoute("/resource-type-script.js", (req, res) =>
         {
             res.WriteHead(200, new() { ["Content-Type"] = "application/javascript" });
             res.End("window.__loaded = true;");
         });
-        server.SetRoute("/resource-type-image.png", (req, res) =>
+        Server.SetRoute("/resource-type-image.png", (req, res) =>
         {
-            server.ServeFile(req, res, asset("pptr.png"));
+            Server.ServeFile(req, res, Asset("pptr.png"));
         });
 
-        var pageWithHar = await PageWithHar(contextFactory, testInfo);
+        var pageWithHar = await PageWithHar(ContextFactory, Info);
         var page = pageWithHar.Page;
-        await page.GotoAsync(server.Prefix + "/resource-types.html");
+        await page.GotoAsync(Server.Prefix + "/resource-types.html");
         await page.EvaluateAsync("() => fetch('/resource-type-fetch').catch(() => {})");
         await page.EvaluateAsync(@"() => new Promise(resolve => {
     const xhr = new XMLHttpRequest();
@@ -1289,45 +1290,45 @@ public class HarTests
         });
         ExpectToEqual(typeForURL, ObjectContaining(new Dictionary<string, object>
         {
-            [server.Prefix + "/resource-types.html"] = "document",
-            [server.Prefix + "/resource-type-stylesheet.css"] = "stylesheet",
-            [server.Prefix + "/resource-type-script.js"] = "script",
-            [server.Prefix + "/resource-type-image.png"] = "image",
-            [server.Prefix + "/resource-type-font.woff2"] = "font",
-            [server.Prefix + "/resource-type-fetch"] = "fetch",
-            [server.Prefix + "/resource-type-xhr"] = "xhr",
+            [Server.Prefix + "/resource-types.html"] = "document",
+            [Server.Prefix + "/resource-type-stylesheet.css"] = "stylesheet",
+            [Server.Prefix + "/resource-type-script.js"] = "script",
+            [Server.Prefix + "/resource-type-image.png"] = "image",
+            [Server.Prefix + "/resource-type-font.woff2"] = "font",
+            [Server.Prefix + "/resource-type-fetch"] = "fetch",
+            [Server.Prefix + "/resource-type-xhr"] = "xhr",
         }));
     }
 
-    public class TracingStartHar
+    public class TracingStartHar : UpstreamBrowserTest
     {
         [UpstreamTest("HA-060 should record a HAR with options")]
-        public async Task ShouldRecordAHARWithOptions(ContextFactory contextFactory, Server server, TestInfo testInfo)
+        public async Task ShouldRecordAHARWithOptions()
         {
-            var context = await contextFactory();
-            var harPath = testInfo.OutputPath("tracing.har");
+            var context = await ContextFactory();
+            var harPath = Info.OutputPath("tracing.har");
             await context.Tracing.StartHarAsync(harPath, new() { Mode = HarMode.Minimal, UrlFilter = "**/one-style.css" });
             var page = await context.NewPageAsync();
-            await page.GotoAsync(server.Prefix + "/one-style.html");
+            await page.GotoAsync(Server.Prefix + "/one-style.html");
             await context.Tracing.StopHarAsync();
             await context.CloseAsync();
 
             var log = JsonDocument.Parse(File.ReadAllText(harPath)).RootElement.GetProperty("log");
             var urls = log.GetProperty("entries").EnumerateArray().Select(e => e.GetProperty("request").GetProperty("url").GetString());
-            Assert.That(urls, Is.EqualTo(new[] { server.Prefix + "/one-style.css" }));
+            Assert.That(urls, Is.EqualTo(new[] { Server.Prefix + "/one-style.css" }));
             // Minimal mode drops body sizes.
             Assert.That(log.GetProperty("entries")[0].GetProperty("request").GetProperty("bodySize").GetInt32(), Is.EqualTo(-1));
         }
 
         [UpstreamTest("HA-061 should record a HAR for a context APIRequestContext")]
-        public async Task ShouldRecordAHARForAContextAPIRequestContext(ContextFactory contextFactory, Server server, TestInfo testInfo)
+        public async Task ShouldRecordAHARForAContextAPIRequestContext()
         {
-            var context = await contextFactory();
-            var harPath = testInfo.OutputPath("request.har");
+            var context = await ContextFactory();
+            var harPath = Info.OutputPath("request.har");
             await context.APIRequest.Tracing.StartHarAsync(harPath);
             var page = await context.NewPageAsync();
-            await page.GotoAsync(server.EmptyPage);
-            var url = server.Prefix + "/simple.json";
+            await page.GotoAsync(Server.EmptyPage);
+            var url = Server.Prefix + "/simple.json";
             var response = await context.APIRequest.PostAsync(url, new()
             {
                 Headers = new Dictionary<string, string> { ["cookie"] = "a=b; c=d" },
@@ -1381,19 +1382,19 @@ public class HarTests
             }));
 
             Assert.That(entry.TryGetProperty("serverIPAddress", out _), Is.True);
-            Assert.That(entry.GetProperty("_serverPort").GetInt32(), Is.EqualTo(server.Port));
+            Assert.That(entry.GetProperty("_serverPort").GetInt32(), Is.EqualTo(Server.Port));
         }
 
         [UpstreamTest("HA-062 should include pages")]
-        public async Task ShouldIncludePages(ContextFactory contextFactory, Server server, TestInfo testInfo)
+        public async Task ShouldIncludePages()
         {
-            var context = await contextFactory();
-            var harPath = testInfo.OutputPath("tracing.har");
+            var context = await ContextFactory();
+            var harPath = Info.OutputPath("tracing.har");
             await context.Tracing.StartHarAsync(harPath);
             var page = await context.NewPageAsync();
-            await page.GotoAsync(server.Prefix + "/title.html");
+            await page.GotoAsync(Server.Prefix + "/title.html");
             var page2 = await context.NewPageAsync();
-            await page2.GotoAsync(server.Prefix + "/empty.html");
+            await page2.GotoAsync(Server.Prefix + "/empty.html");
             await page.CloseAsync(); // Close the page before stopping - it should still be in the har.
             await context.Tracing.StopHarAsync();
             await context.CloseAsync();
@@ -1405,32 +1406,32 @@ public class HarTests
         }
 
         [UpstreamTest("HA-063 should record a zipped HAR for APIRequestContext")]
-        public async Task ShouldRecordAZippedHARForAPIRequestContext(IPlaywright playwright, Server server, TestInfo testInfo)
+        public async Task ShouldRecordAZippedHARForAPIRequestContext()
         {
-            var request = await playwright.APIRequest.NewContextAsync();
-            var harPath = testInfo.OutputPath("tracing.har.zip");
+            var request = await Playwright.APIRequest.NewContextAsync();
+            var harPath = Info.OutputPath("tracing.har.zip");
             await request.Tracing.StartHarAsync(harPath, new() { Content = HarContentPolicy.Attach });
-            await request.GetAsync(server.Prefix + "/simple.json");
+            await request.GetAsync(Server.Prefix + "/simple.json");
             await request.Tracing.StopHarAsync();
             await request.DisposeAsync();
 
             var resources = ParseHar(harPath);
             var log = JsonDocument.Parse(Encoding.UTF8.GetString(resources["har.har"])).RootElement.GetProperty("log");
-            Assert.That(log.GetProperty("entries").EnumerateArray().Any(e => e.GetProperty("request").GetProperty("url").GetString() == server.Prefix + "/simple.json"), Is.EqualTo(true));
+            Assert.That(log.GetProperty("entries").EnumerateArray().Any(e => e.GetProperty("request").GetProperty("url").GetString() == Server.Prefix + "/simple.json"), Is.EqualTo(true));
         }
 
         [UpstreamTest("HA-064 should record correct cookie expires for APIRequestContext")]
-        public async Task ShouldRecordCorrectCookieExpiresForAPIRequestContext(IPlaywright playwright, Server server, TestInfo testInfo)
+        public async Task ShouldRecordCorrectCookieExpiresForAPIRequestContext()
         {
-            server.SetRoute("/set-cookie", (req, res) =>
+            Server.SetRoute("/set-cookie", (req, res) =>
             {
                 res.SetHeader("Set-Cookie", "name=value; Expires=Tue, 01 Jan 2030 00:00:00 GMT");
                 res.End("hello");
             });
-            var request = await playwright.APIRequest.NewContextAsync();
-            var harPath = testInfo.OutputPath("api.har.zip");
+            var request = await Playwright.APIRequest.NewContextAsync();
+            var harPath = Info.OutputPath("api.har.zip");
             await request.Tracing.StartHarAsync(harPath, new() { Content = HarContentPolicy.Attach });
-            await request.GetAsync(server.Prefix + "/set-cookie");
+            await request.GetAsync(Server.Prefix + "/set-cookie");
             await request.Tracing.StopHarAsync();
             await request.DisposeAsync();
 
@@ -1442,13 +1443,13 @@ public class HarTests
         }
 
         [UpstreamTest("HA-065 should record mixed-case request content-type for APIRequestContext")]
-        public async Task ShouldRecordMixedCaseRequestContentTypeForAPIRequestContext(IPlaywright playwright, Server server, TestInfo testInfo)
+        public async Task ShouldRecordMixedCaseRequestContentTypeForAPIRequestContext()
         {
-            server.SetRoute("/post", (req, res) => res.End("ok"));
-            var request = await playwright.APIRequest.NewContextAsync();
-            var harPath = testInfo.OutputPath("api-post.har.zip");
+            Server.SetRoute("/post", (req, res) => res.End("ok"));
+            var request = await Playwright.APIRequest.NewContextAsync();
+            var harPath = Info.OutputPath("api-post.har.zip");
             await request.Tracing.StartHarAsync(harPath, new() { Content = HarContentPolicy.Attach });
-            await request.PostAsync(server.Prefix + "/post", new() { Headers = new Dictionary<string, string> { ["Content-Type"] = "application/json" }, DataByte = Encoding.UTF8.GetBytes("{\"a\":1}") });
+            await request.PostAsync(Server.Prefix + "/post", new() { Headers = new Dictionary<string, string> { ["Content-Type"] = "application/json" }, DataByte = Encoding.UTF8.GetBytes("{\"a\":1}") });
             await request.Tracing.StopHarAsync();
             await request.DisposeAsync();
 

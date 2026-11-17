@@ -21,71 +21,71 @@ using static Microsoft.Playwright.Tests.Fixtures.Utils;
 namespace Microsoft.Playwright.Tests.Page;
 
 /// <summary>Port of tests/page/page-strict.spec.ts.</summary>
-public class PageStrictTests
+public class PageStrictTests : UpstreamPageTest
 {
     [UpstreamTest("SM-001 should fail page.textContent in strict mode")]
     [LocalFixme("dotnet: the message has the locators in C# form, 'aka GetByText(\"span1\")', upstream expects \"aka getByText('span1')\"")]
-    public async Task ShouldFailPageTextContentInStrictMode(IPage page)
+    public async Task ShouldFailPageTextContentInStrictMode()
     {
-        await page.SetContentAsync("<span>span1</span><div><span>target</span></div>");
-        var error = await Catch(() => page.TextContentAsync("span", new() { Strict = true }));
+        await Page.SetContentAsync("<span>span1</span><div><span>target</span></div>");
+        var error = await Catch(() => Page.TextContentAsync("span", new() { Strict = true }));
         Assert.That(error.Message, Does.Contain("strict mode violation"));
         Assert.That(error.Message, Does.Contain("1) <span>span1</span> aka getByText('span1')"));
         Assert.That(error.Message, Does.Contain("2) <span>target</span> aka getByText('target')"));
     }
 
     [UpstreamTest("SM-002 should fail page.getAttribute in strict mode")]
-    public async Task ShouldFailPageGetAttributeInStrictMode(IPage page)
+    public async Task ShouldFailPageGetAttributeInStrictMode()
     {
-        await page.SetContentAsync("<span>span1</span><div><span>target</span></div>");
-        var error = await Catch(() => page.GetAttributeAsync("span", "id", new() { Strict = true }));
+        await Page.SetContentAsync("<span>span1</span><div><span>target</span></div>");
+        var error = await Catch(() => Page.GetAttributeAsync("span", "id", new() { Strict = true }));
         Assert.That(error.Message, Does.Contain("strict mode violation"));
     }
 
     [UpstreamTest("SM-003 should fail page.fill in strict mode")]
 
     [LocalFixme("dotnet: the message has the locators in C# form, 'aka GetByRole(AriaRole.Textbox).First', upstream expects \"aka getByRole('textbox').first()\"")]
-    public async Task ShouldFailPageFillInStrictMode(IPage page)
+    public async Task ShouldFailPageFillInStrictMode()
     {
-        await page.SetContentAsync("<input></input><div><input></input></div>");
-        var error = await Catch(() => page.FillAsync("input", "text", new() { Strict = true }));
+        await Page.SetContentAsync("<input></input><div><input></input></div>");
+        var error = await Catch(() => Page.FillAsync("input", "text", new() { Strict = true }));
         Assert.That(error.Message, Does.Contain("strict mode violation"));
         Assert.That(error.Message, Does.Contain("1) <input/> aka getByRole('textbox').first()"));
         Assert.That(error.Message, Does.Contain("2) <input/> aka locator('div').getByRole('textbox')"));
     }
 
     [UpstreamTest("SM-004 should fail page.$ in strict mode")]
-    public async Task ShouldFailPageInStrictMode(IPage page)
+    public async Task ShouldFailPageInStrictMode()
     {
-        await page.SetContentAsync("<span>span1</span><div><span>target</span></div>");
-        var error = await Catch(() => page.QuerySelectorAsync("span", new() { Strict = true }));
+        await Page.SetContentAsync("<span>span1</span><div><span>target</span></div>");
+        var error = await Catch(() => Page.QuerySelectorAsync("span", new() { Strict = true }));
         Assert.That(error.Message, Does.Contain("strict mode violation"));
     }
 
     [UpstreamTest("SM-005 should fail page.waitForSelector in strict mode")]
-    public async Task ShouldFailPageWaitForSelectorInStrictMode(IPage page)
+    public async Task ShouldFailPageWaitForSelectorInStrictMode()
     {
-        await page.SetContentAsync("<span>span1</span><div><span>target</span></div>");
-        var error = await Catch(() => page.WaitForSelectorAsync("span", new() { Strict = true }));
+        await Page.SetContentAsync("<span>span1</span><div><span>target</span></div>");
+        var error = await Catch(() => Page.WaitForSelectorAsync("span", new() { Strict = true }));
         Assert.That(error.Message, Does.Contain("strict mode violation"));
     }
 
     [UpstreamTest("SM-006 should fail page.dispatchEvent in strict mode")]
 
     [LocalFixme("dotnet: the message has the locators in C# form, 'aka Locator(\"span\").First', upstream expects \"aka locator('span').first()\"")]
-    public async Task ShouldFailPageDispatchEventInStrictMode(IPage page)
+    public async Task ShouldFailPageDispatchEventInStrictMode()
     {
-        await page.SetContentAsync("<span></span><div><span></span></div>");
-        var error = await Catch(() => page.DispatchEventAsync("span", "click", new { }, new() { Strict = true }));
+        await Page.SetContentAsync("<span></span><div><span></span></div>");
+        var error = await Catch(() => Page.DispatchEventAsync("span", "click", new { }, new() { Strict = true }));
         Assert.That(error.Message, Does.Contain("strict mode violation"));
         Assert.That(error.Message, Does.Contain("1) <span></span> aka locator('span').first()"));
         Assert.That(error.Message, Does.Contain("2) <span></span> aka locator('div span')"));
     }
 
     [UpstreamTest("SM-007 should properly format :nth-child() in strict mode message")]
-    public async Task ShouldProperlyFormatNthChildInStrictModeMessage(IPage page)
+    public async Task ShouldProperlyFormatNthChildInStrictModeMessage()
     {
-        await page.SetContentAsync(@"
+        await Page.SetContentAsync(@"
   <div>
     <div>
     </div>
@@ -103,7 +103,7 @@ public class PageStrictTests
     </div>
   </div>
   ");
-        var error = await Catch(() => page.Locator(".foo").HoverAsync());
+        var error = await Catch(() => Page.Locator(".foo").HoverAsync());
         Assert.That(error.Message, Does.Contain("strict mode violation"));
         // Second div has body > div:nth-child(2) > div:nth-child(2) selector which would be ambiguous
         // if '>' were ' '.
@@ -111,9 +111,9 @@ public class PageStrictTests
     }
 
     [UpstreamTest("SM-008 should escape class names")]
-    public async Task ShouldEscapeClassNames(IPage page)
+    public async Task ShouldEscapeClassNames()
     {
-        await page.SetContentAsync(@"
+        await Page.SetContentAsync(@"
   <div>
     <div></div>
     <div>
@@ -128,7 +128,7 @@ public class PageStrictTests
     </div>
   </div>
   ");
-        var error = await Catch(() => page.Locator(".foo").HoverAsync());
+        var error = await Catch(() => Page.Locator(".foo").HoverAsync());
         Assert.That(error.Message, Does.Contain("strict mode violation"));
         Assert.That(error.Message, Does.Contain("<div class=\"foo bar:0"));
         Assert.That(error.Message, Does.Contain("<div class=\"foo bar:1"));
@@ -137,16 +137,16 @@ public class PageStrictTests
     [UpstreamTest("SM-009 should escape tag names")]
 
     [LocalFixme("dotnet: the message has the locators in C# form, 'GetByText(\"special test description\").First', upstream expects \"getByText('special test description').first()\"")]
-    public async Task ShouldEscapeTagNames(IPage page)
+    public async Task ShouldEscapeTagNames()
     {
-        await page.SetContentAsync(@"
+        await Page.SetContentAsync(@"
     <q:template> </q:template>
     <span>special test description</span>
     <q:template hidden="""" aria-hidden=""true"">
       <span>special test description</span>
     </q:template>
   ");
-        var error = await Catch(() => Expect(page.GetByText("special test description")).ToBeVisibleAsync());
+        var error = await Catch(() => Expect(Page.GetByText("special test description")).ToBeVisibleAsync());
         Assert.That(error.Message, Does.Contain("strict mode violation"));
         Assert.That(error.Message, Does.Contain("getByText('special test description').first()"));
         Assert.That(error.Message, Does.Contain("locator('q\\\\:template').filter({ hasText: 'special test description' })"));
@@ -155,10 +155,10 @@ public class PageStrictTests
     [UpstreamTest("SM-010 should keep the engine name for a \"text=..\" selector in strict mode")]
 
     [LocalFixme("dotnet: the message has the locator in C# form, 'Locator(\"text=..loading\")', upstream expects \"locator('text=..loading')\"")]
-    public async Task ShouldKeepTheEngineNameForATextSelectorInStrictMode(IPage page)
+    public async Task ShouldKeepTheEngineNameForATextSelectorInStrictMode()
     {
-        await page.SetContentAsync("<div>..loading</div><div>..loading</div>");
-        var error = await Catch(() => page.Locator("text=..loading").HoverAsync());
+        await Page.SetContentAsync("<div>..loading</div><div>..loading</div>");
+        var error = await Catch(() => Page.Locator("text=..loading").HoverAsync());
         Assert.That(error.Message, Does.Contain("strict mode violation"));
         Assert.That(error.Message, Does.Contain("locator('text=..loading')"));
     }

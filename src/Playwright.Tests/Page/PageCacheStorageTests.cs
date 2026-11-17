@@ -19,23 +19,23 @@ using Microsoft.Playwright.Tests.Fixtures;
 namespace Microsoft.Playwright.Tests.Page;
 
 /// <summary>Port of tests/page/page-cache-storage.spec.ts.</summary>
-public class PageCacheStorageTests
+public class PageCacheStorageTests : UpstreamPageTest
 {
     [UpstreamTest("ST-032 CacheStorage entry should survive page.reload()")]
-    public async Task CacheStorageEntryShouldSurvivePageReload(IPage page, Server server, string browserName, bool isAndroid)
+    public async Task CacheStorageEntryShouldSurvivePageReload()
     {
-        Info.Fixme(browserName == "webkit", "Ephemeral CacheStorage is not persisted across reload in WebKit, consistent with Safari");
-        Info.Skip(isAndroid, "not supported on Android");
+        Info.Fixme(BrowserName == "webkit", "Ephemeral CacheStorage is not persisted across reload in WebKit, consistent with Safari");
+        Info.Skip(IsAndroid, "not supported on Android");
 
-        await page.GotoAsync(server.EmptyPage);
-        await page.EvaluateAsync(@"async () => {
+        await Page.GotoAsync(Server.EmptyPage);
+        await Page.EvaluateAsync(@"async () => {
     const cache = await caches.open('repro-cache');
     await cache.put('/meta', new Response('payload'));
   }");
 
-        await page.ReloadAsync();
+        await Page.ReloadAsync();
 
-        var after = await page.EvaluateAsync<string>(@"async () => {
+        var after = await Page.EvaluateAsync<string>(@"async () => {
     const cache = await caches.open('repro-cache');
     const resp = await cache.match('/meta');
     return resp ? await resp.text() : null;

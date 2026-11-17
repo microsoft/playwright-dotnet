@@ -23,25 +23,25 @@ using static Microsoft.Playwright.Tests.Fixtures.Utils;
 namespace Microsoft.Playwright.Tests.Library;
 
 /// <summary>Port of tests/library/global-fetch.spec.ts.</summary>
-public class GlobalFetchTests
+public class GlobalFetchTests : UpstreamBrowserTest
 {
-    [Fixture]
-    public static IBrowserContext Context() => throw new Exception("global fetch tests should not use context");
+    // .NET: it.use({ context: async ({}, use) => { throw new Error('global fetch tests should not use context'); } })
+    // is left out: a test of this class has no context unless it asks for one.
 
-    [BeforeEach]
-    public static void Skip(string mode) => Info.Skip(mode != "default");
+    [SetUp]
+    public void Skip() => Info.Skip(Mode != "default");
 
     [UpstreamTest("FE-001 ${method} should work @smoke")]
-    [Case("fetch")]
-    [Case("delete")]
-    [Case("get")]
-    [Case("head")]
-    [Case("patch")]
-    [Case("post")]
-    [Case("put")]
-    public async Task ShouldWork(string method, IPlaywright playwright, Server server)
+    [TestCase("fetch")]
+    [TestCase("delete")]
+    [TestCase("get")]
+    [TestCase("head")]
+    [TestCase("patch")]
+    [TestCase("post")]
+    [TestCase("put")]
+    public async Task ShouldWork(string method)
     {
-        var request = await playwright.APIRequest.NewContextAsync();
+        var request = await Playwright.APIRequest.NewContextAsync();
         // .NET: request[method](url)
         Task<IAPIResponse> requestMethod(string url) => method switch
         {
@@ -54,8 +54,8 @@ public class GlobalFetchTests
             "put" => request.PutAsync(url),
             _ => throw new ArgumentException(method, nameof(method)),
         };
-        var response = await requestMethod(server.Prefix + "/simple.json");
-        Assert.That(response.Url, Is.EqualTo(server.Prefix + "/simple.json"));
+        var response = await requestMethod(Server.Prefix + "/simple.json");
+        Assert.That(response.Url, Is.EqualTo(Server.Prefix + "/simple.json"));
         Assert.That(response.Status, Is.EqualTo(200));
         Assert.That(response.StatusText, Is.EqualTo("OK"));
         Assert.That(response.Ok, Is.True);
@@ -66,10 +66,10 @@ public class GlobalFetchTests
     }
 
     [UpstreamTest("FE-002 should dispose global request")]
-    public async Task ShouldDisposeGlobalRequest(IPlaywright playwright, Server server)
+    public async Task ShouldDisposeGlobalRequest()
     {
-        var request = await playwright.APIRequest.NewContextAsync();
-        var response = await request.GetAsync(server.Prefix + "/simple.json");
+        var request = await Playwright.APIRequest.NewContextAsync();
+        var response = await request.GetAsync(Server.Prefix + "/simple.json");
         ExpectToEqual(await response.JsonAsync(), new { foo = "bar" });
         await request.DisposeAsync();
         var error = await Catch(() => response.BodyAsync());
@@ -78,40 +78,40 @@ public class GlobalFetchTests
     }
 
     [UpstreamTest("FE-003 should support global userAgent option")]
-    public async Task ShouldSupportGlobalUserAgentOption(IPlaywright playwright, Server server)
+    public async Task ShouldSupportGlobalUserAgentOption()
     {
-        var request = await playwright.APIRequest.NewContextAsync(new() { UserAgent = "My Agent" });
+        var request = await Playwright.APIRequest.NewContextAsync(new() { UserAgent = "My Agent" });
         var (serverRequest, response) = await PromiseAll(
-            server.WaitForRequest("/empty.html"),
-            request.GetAsync(server.EmptyPage));
+            Server.WaitForRequest("/empty.html"),
+            request.GetAsync(Server.EmptyPage));
         Assert.That(response.Ok, Is.True);
-        Assert.That(response.Url, Is.EqualTo(server.EmptyPage));
+        Assert.That(response.Url, Is.EqualTo(Server.EmptyPage));
         Assert.That(serverRequest.Headers["user-agent"], Is.EqualTo("My Agent"));
         await request.DisposeAsync();
     }
 
     [UpstreamTest("FE-004 should support global timeout option")]
     [LocalFixme("dotnet: the message is 'Timeout 100ms exceeded.', without the 'apiRequestContext.get: ' prefix of the call")]
-    public async Task ShouldSupportGlobalTimeoutOption(IPlaywright playwright, Server server)
+    public async Task ShouldSupportGlobalTimeoutOption()
     {
-        var request = await playwright.APIRequest.NewContextAsync(new() { Timeout = 100 });
-        server.SetRoute("/empty.html", (req, res) => { });
-        var error = await Catch(() => request.GetAsync(server.EmptyPage));
+        var request = await Playwright.APIRequest.NewContextAsync(new() { Timeout = 100 });
+        Server.SetRoute("/empty.html", (req, res) => { });
+        var error = await Catch(() => request.GetAsync(Server.EmptyPage));
         Assert.That(error.Message, Does.Contain("apiRequestContext.get: Timeout 100ms exceeded"));
         await request.DisposeAsync();
     }
 
     [UpstreamTest("FE-005 should propagate extra http headers with redirects")]
-    public async Task ShouldPropagateExtraHttpHeadersWithRedirects(IPlaywright playwright, Server server)
+    public async Task ShouldPropagateExtraHttpHeadersWithRedirects()
     {
-        server.SetRedirect("/a/redirect1", "/b/c/redirect2");
-        server.SetRedirect("/b/c/redirect2", "/simple.json");
-        var request = await playwright.APIRequest.NewContextAsync(new() { ExtraHTTPHeaders = new Dictionary<string, string> { ["My-Secret"] = "Value" } });
+        Server.SetRedirect("/a/redirect1", "/b/c/redirect2");
+        Server.SetRedirect("/b/c/redirect2", "/simple.json");
+        var request = await Playwright.APIRequest.NewContextAsync(new() { ExtraHTTPHeaders = new Dictionary<string, string> { ["My-Secret"] = "Value" } });
         var (req1, req2, req3, _) = await PromiseAll(
-            server.WaitForRequest("/a/redirect1"),
-            server.WaitForRequest("/b/c/redirect2"),
-            server.WaitForRequest("/simple.json"),
-            request.GetAsync($"{server.Prefix}/a/redirect1"));
+            Server.WaitForRequest("/a/redirect1"),
+            Server.WaitForRequest("/b/c/redirect2"),
+            Server.WaitForRequest("/simple.json"),
+            request.GetAsync($"{Server.Prefix}/a/redirect1"));
         Assert.That(req1.Headers["my-secret"], Is.EqualTo("Value"));
         Assert.That(req2.Headers["my-secret"], Is.EqualTo("Value"));
         Assert.That(req3.Headers["my-secret"], Is.EqualTo("Value"));
@@ -119,111 +119,111 @@ public class GlobalFetchTests
     }
 
     [UpstreamTest("FE-006 should preserve authorization on same-origin redirect but strip on cross-origin")]
-    public async Task ShouldPreserveAuthorizationOnSameOriginRedirectButStripOnCrossOrigin(IPlaywright playwright, Server server)
+    public async Task ShouldPreserveAuthorizationOnSameOriginRedirectButStripOnCrossOrigin()
     {
-        server.SetRedirect("/same/redirect", "/same/dest");
-        server.SetRedirect("/cross/redirect", server.CrossProcessPrefix + "/cross/dest");
-        var request = await playwright.APIRequest.NewContextAsync(new()
+        Server.SetRedirect("/same/redirect", "/same/dest");
+        Server.SetRedirect("/cross/redirect", Server.CrossProcessPrefix + "/cross/dest");
+        var request = await Playwright.APIRequest.NewContextAsync(new()
         {
             ExtraHTTPHeaders = new Dictionary<string, string> { ["Authorization"] = "Bearer secret" },
         });
 
         var (sameDestReq, _) = await PromiseAll(
-            server.WaitForRequest("/same/dest"),
-            request.GetAsync($"{server.Prefix}/same/redirect"));
+            Server.WaitForRequest("/same/dest"),
+            request.GetAsync($"{Server.Prefix}/same/redirect"));
         Assert.That(sameDestReq.Headers["authorization"], Is.EqualTo("Bearer secret"));
 
         var (crossDestReq, _) = await PromiseAll(
-            server.WaitForRequest("/cross/dest"),
-            request.GetAsync($"{server.Prefix}/cross/redirect"));
+            Server.WaitForRequest("/cross/dest"),
+            request.GetAsync($"{Server.Prefix}/cross/redirect"));
         Assert.That(crossDestReq.Headers["authorization"], Is.Null);
 
         await request.DisposeAsync();
     }
 
     [UpstreamTest("FE-007 should support global httpCredentials option")]
-    public async Task ShouldSupportGlobalHttpCredentialsOption(IPlaywright playwright, Server server)
+    public async Task ShouldSupportGlobalHttpCredentialsOption()
     {
-        server.SetAuth("/empty.html", "user", "pass");
-        var request1 = await playwright.APIRequest.NewContextAsync();
-        var response1 = await request1.GetAsync(server.EmptyPage);
+        Server.SetAuth("/empty.html", "user", "pass");
+        var request1 = await Playwright.APIRequest.NewContextAsync();
+        var response1 = await request1.GetAsync(Server.EmptyPage);
         Assert.That(response1.Status, Is.EqualTo(401));
         await request1.DisposeAsync();
 
-        var request2 = await playwright.APIRequest.NewContextAsync(new() { HttpCredentials = new() { Username = "user", Password = "pass" } });
-        var response2 = await request2.GetAsync(server.EmptyPage);
+        var request2 = await Playwright.APIRequest.NewContextAsync(new() { HttpCredentials = new() { Username = "user", Password = "pass" } });
+        var response2 = await request2.GetAsync(Server.EmptyPage);
         Assert.That(response2.Status, Is.EqualTo(200));
         await request2.DisposeAsync();
     }
 
     [UpstreamTest("FE-008 should return error with wrong credentials")]
-    public async Task ShouldReturnErrorWithWrongCredentials(IPlaywright playwright, Server server)
+    public async Task ShouldReturnErrorWithWrongCredentials()
     {
-        server.SetAuth("/empty.html", "user", "pass");
-        var request = await playwright.APIRequest.NewContextAsync(new() { HttpCredentials = new() { Username = "user", Password = "wrong" } });
-        var response = await request.GetAsync(server.EmptyPage);
+        Server.SetAuth("/empty.html", "user", "pass");
+        var request = await Playwright.APIRequest.NewContextAsync(new() { HttpCredentials = new() { Username = "user", Password = "wrong" } });
+        var response = await request.GetAsync(Server.EmptyPage);
         Assert.That(response.Status, Is.EqualTo(401));
         await request.DisposeAsync();
     }
 
     [UpstreamTest("FE-009 should work with correct credentials and matching origin")]
-    public async Task ShouldWorkWithCorrectCredentialsAndMatchingOrigin(IPlaywright playwright, Server server)
+    public async Task ShouldWorkWithCorrectCredentialsAndMatchingOrigin()
     {
-        server.SetAuth("/empty.html", "user", "pass");
-        var request = await playwright.APIRequest.NewContextAsync(new() { HttpCredentials = new() { Username = "user", Password = "pass", Origin = server.Prefix } });
-        var response = await request.GetAsync(server.EmptyPage);
+        Server.SetAuth("/empty.html", "user", "pass");
+        var request = await Playwright.APIRequest.NewContextAsync(new() { HttpCredentials = new() { Username = "user", Password = "pass", Origin = Server.Prefix } });
+        var response = await request.GetAsync(Server.EmptyPage);
         Assert.That(response.Status, Is.EqualTo(200));
         await request.DisposeAsync();
     }
 
     [UpstreamTest("FE-010 should work with correct credentials and matching origin case insensitive")]
-    public async Task ShouldWorkWithCorrectCredentialsAndMatchingOriginCaseInsensitive(IPlaywright playwright, Server server)
+    public async Task ShouldWorkWithCorrectCredentialsAndMatchingOriginCaseInsensitive()
     {
-        server.SetAuth("/empty.html", "user", "pass");
-        var request = await playwright.APIRequest.NewContextAsync(new() { HttpCredentials = new() { Username = "user", Password = "pass", Origin = server.Prefix.ToUpperInvariant() } });
-        var response = await request.GetAsync(server.EmptyPage);
+        Server.SetAuth("/empty.html", "user", "pass");
+        var request = await Playwright.APIRequest.NewContextAsync(new() { HttpCredentials = new() { Username = "user", Password = "pass", Origin = Server.Prefix.ToUpperInvariant() } });
+        var response = await request.GetAsync(Server.EmptyPage);
         Assert.That(response.Status, Is.EqualTo(200));
         await request.DisposeAsync();
     }
 
     [UpstreamTest("FE-011 should return error with correct credentials and mismatching scheme")]
-    public async Task ShouldReturnErrorWithCorrectCredentialsAndMismatchingScheme(IPlaywright playwright, Server server)
+    public async Task ShouldReturnErrorWithCorrectCredentialsAndMismatchingScheme()
     {
-        server.SetAuth("/empty.html", "user", "pass");
-        var request = await playwright.APIRequest.NewContextAsync(new() { HttpCredentials = new() { Username = "user", Password = "pass", Origin = ReplaceFirst(server.Prefix, "http://", "https://") } });
-        var response = await request.GetAsync(server.EmptyPage);
+        Server.SetAuth("/empty.html", "user", "pass");
+        var request = await Playwright.APIRequest.NewContextAsync(new() { HttpCredentials = new() { Username = "user", Password = "pass", Origin = ReplaceFirst(Server.Prefix, "http://", "https://") } });
+        var response = await request.GetAsync(Server.EmptyPage);
         Assert.That(response.Status, Is.EqualTo(401));
         await request.DisposeAsync();
     }
 
     [UpstreamTest("FE-012 should return error with correct credentials and mismatching hostname")]
-    public async Task ShouldReturnErrorWithCorrectCredentialsAndMismatchingHostname(IPlaywright playwright, Server server)
+    public async Task ShouldReturnErrorWithCorrectCredentialsAndMismatchingHostname()
     {
-        server.SetAuth("/empty.html", "user", "pass");
-        var hostname = new Uri(server.Prefix).Host;
-        var origin = ReplaceFirst(server.Prefix, hostname, "mismatching-hostname");
-        var request = await playwright.APIRequest.NewContextAsync(new() { HttpCredentials = new() { Username = "user", Password = "pass", Origin = origin } });
-        var response = await request.GetAsync(server.EmptyPage);
+        Server.SetAuth("/empty.html", "user", "pass");
+        var hostname = new Uri(Server.Prefix).Host;
+        var origin = ReplaceFirst(Server.Prefix, hostname, "mismatching-hostname");
+        var request = await Playwright.APIRequest.NewContextAsync(new() { HttpCredentials = new() { Username = "user", Password = "pass", Origin = origin } });
+        var response = await request.GetAsync(Server.EmptyPage);
         Assert.That(response.Status, Is.EqualTo(401));
         await request.DisposeAsync();
     }
 
     [UpstreamTest("FE-013 should return error with correct credentials and mismatching port")]
-    public async Task ShouldReturnErrorWithCorrectCredentialsAndMismatchingPort(IPlaywright playwright, Server server)
+    public async Task ShouldReturnErrorWithCorrectCredentialsAndMismatchingPort()
     {
-        server.SetAuth("/empty.html", "user", "pass");
-        var origin = ReplaceFirst(server.Prefix, server.Port.ToString(CultureInfo.InvariantCulture), (server.Port + 1).ToString(CultureInfo.InvariantCulture));
-        var request = await playwright.APIRequest.NewContextAsync(new() { HttpCredentials = new() { Username = "user", Password = "pass", Origin = origin } });
-        var response = await request.GetAsync(server.EmptyPage);
+        Server.SetAuth("/empty.html", "user", "pass");
+        var origin = ReplaceFirst(Server.Prefix, Server.Port.ToString(CultureInfo.InvariantCulture), (Server.Port + 1).ToString(CultureInfo.InvariantCulture));
+        var request = await Playwright.APIRequest.NewContextAsync(new() { HttpCredentials = new() { Username = "user", Password = "pass", Origin = origin } });
+        var response = await request.GetAsync(Server.EmptyPage);
         Assert.That(response.Status, Is.EqualTo(401));
         await request.DisposeAsync();
     }
 
     [UpstreamTest("FE-014 should support WWW-Authenticate: Basic")]
-    public async Task ShouldSupportWWWAuthenticateBasic(IPlaywright playwright, Server server)
+    public async Task ShouldSupportWWWAuthenticateBasic()
     {
         string credentials = null;
-        server.SetRoute("/empty.html", (req, res) =>
+        Server.SetRoute("/empty.html", (req, res) =>
         {
             if (string.IsNullOrEmpty(req.Headers["authorization"]))
             {
@@ -235,31 +235,31 @@ public class GlobalFetchTests
             res.WriteHead(200, new() { ["content-type"] = "text/plain" });
             res.End();
         });
-        var request = await playwright.APIRequest.NewContextAsync(new() { HttpCredentials = new() { Username = "user", Password = "pass" } });
-        var response = await request.GetAsync(server.EmptyPage);
+        var request = await Playwright.APIRequest.NewContextAsync(new() { HttpCredentials = new() { Username = "user", Password = "pass" } });
+        var response = await request.GetAsync(Server.EmptyPage);
         Assert.That(response.Status, Is.EqualTo(200));
         Assert.That(credentials, Is.EqualTo("user:pass"));
         await request.DisposeAsync();
     }
 
     [UpstreamTest("FE-015 should support HTTPCredentials.send")]
-    public async Task ShouldSupportHTTPCredentialsSend(IPlaywright playwright, Server server)
+    public async Task ShouldSupportHTTPCredentialsSend()
     {
-        var request = await playwright.APIRequest.NewContextAsync(new()
+        var request = await Playwright.APIRequest.NewContextAsync(new()
         {
-            HttpCredentials = new() { Username = "user", Password = "pass", Origin = server.Prefix.ToUpperInvariant(), Send = HttpCredentialsSend.Always },
+            HttpCredentials = new() { Username = "user", Password = "pass", Origin = Server.Prefix.ToUpperInvariant(), Send = HttpCredentialsSend.Always },
         });
         {
             var (serverRequest, response) = await PromiseAll(
-                server.WaitForRequest("/empty.html"),
-                request.GetAsync(server.EmptyPage));
+                Server.WaitForRequest("/empty.html"),
+                request.GetAsync(Server.EmptyPage));
             Assert.That(serverRequest.Headers["authorization"], Is.EqualTo("Basic " + Convert.ToBase64String(Encoding.UTF8.GetBytes("user:pass"))));
             Assert.That(response.Status, Is.EqualTo(200));
         }
         {
             var (serverRequest, response) = await PromiseAll(
-                server.WaitForRequest("/empty.html"),
-                request.GetAsync(server.CrossProcessPrefix + "/empty.html"));
+                Server.WaitForRequest("/empty.html"),
+                request.GetAsync(Server.CrossProcessPrefix + "/empty.html"));
             // Not sent to another origin.
             Assert.That(serverRequest.Headers["authorization"], Is.Null);
             Assert.That(response.Status, Is.EqualTo(200));
@@ -268,47 +268,47 @@ public class GlobalFetchTests
     }
 
     [UpstreamTest("FE-016 should support multiple httpCredentials")]
-    public async Task ShouldSupportMultipleHttpCredentials(IPlaywright playwright, Server server)
+    public async Task ShouldSupportMultipleHttpCredentials()
     {
-        server.SetAuth("/empty.html", "user1", "pass1");
-        var request = await playwright.APIRequest.NewContextAsync(new()
+        Server.SetAuth("/empty.html", "user1", "pass1");
+        var request = await Playwright.APIRequest.NewContextAsync(new()
         {
             HttpCredentialsList = new HttpCredentials[]
             {
-                new() { Username = "user1", Password = "pass1", Origin = server.Prefix },
-                new() { Username = "user2", Password = "pass2", Origin = server.CrossProcessPrefix },
+                new() { Username = "user1", Password = "pass1", Origin = Server.Prefix },
+                new() { Username = "user2", Password = "pass2", Origin = Server.CrossProcessPrefix },
             },
         });
-        var response1 = await request.GetAsync(server.EmptyPage);
+        var response1 = await request.GetAsync(Server.EmptyPage);
         Assert.That(response1.Status, Is.EqualTo(200));
         // Wrong credentials are picked for the other origin.
-        var response2 = await request.GetAsync(server.CrossProcessPrefix + "/empty.html");
+        var response2 = await request.GetAsync(Server.CrossProcessPrefix + "/empty.html");
         Assert.That(response2.Status, Is.EqualTo(401));
         await request.DisposeAsync();
     }
 
     [UpstreamTest("FE-017 should support HTTPCredentials.send with multiple httpCredentials")]
-    public async Task ShouldSupportHTTPCredentialsSendWithMultipleHttpCredentials(IPlaywright playwright, Server server)
+    public async Task ShouldSupportHTTPCredentialsSendWithMultipleHttpCredentials()
     {
-        var request = await playwright.APIRequest.NewContextAsync(new()
+        var request = await Playwright.APIRequest.NewContextAsync(new()
         {
             HttpCredentialsList = new HttpCredentials[]
             {
-                new() { Username = "user1", Password = "pass1", Origin = server.Prefix, Send = HttpCredentialsSend.Always },
-                new() { Username = "user2", Password = "pass2", Origin = server.CrossProcessPrefix, Send = HttpCredentialsSend.Unauthorized },
+                new() { Username = "user1", Password = "pass1", Origin = Server.Prefix, Send = HttpCredentialsSend.Always },
+                new() { Username = "user2", Password = "pass2", Origin = Server.CrossProcessPrefix, Send = HttpCredentialsSend.Unauthorized },
             },
         });
         {
             var (serverRequest, response) = await PromiseAll(
-                server.WaitForRequest("/empty.html"),
-                request.GetAsync(server.EmptyPage));
+                Server.WaitForRequest("/empty.html"),
+                request.GetAsync(Server.EmptyPage));
             Assert.That(serverRequest.Headers["authorization"], Is.EqualTo("Basic " + Convert.ToBase64String(Encoding.UTF8.GetBytes("user1:pass1"))));
             Assert.That(response.Status, Is.EqualTo(200));
         }
         {
             var (serverRequest, response) = await PromiseAll(
-                server.WaitForRequest("/empty.html"),
-                request.GetAsync(server.CrossProcessPrefix + "/empty.html"));
+                Server.WaitForRequest("/empty.html"),
+                request.GetAsync(Server.CrossProcessPrefix + "/empty.html"));
             // This origin has send: 'unauthorized', so credentials are not sent proactively.
             Assert.That(serverRequest.Headers["authorization"], Is.Null);
             Assert.That(response.Status, Is.EqualTo(200));
@@ -317,37 +317,37 @@ public class GlobalFetchTests
     }
 
     [UpstreamTest("FE-018 should support global ignoreHTTPSErrors option")]
-    public async Task ShouldSupportGlobalIgnoreHTTPSErrorsOption(IPlaywright playwright, Server httpsServer)
+    public async Task ShouldSupportGlobalIgnoreHTTPSErrorsOption()
     {
-        var request = await playwright.APIRequest.NewContextAsync(new() { IgnoreHTTPSErrors = true });
-        var response = await request.GetAsync(httpsServer.EmptyPage);
+        var request = await Playwright.APIRequest.NewContextAsync(new() { IgnoreHTTPSErrors = true });
+        var response = await request.GetAsync(HttpsServer.EmptyPage);
         Assert.That(response.Status, Is.EqualTo(200));
         await request.DisposeAsync();
     }
 
     [UpstreamTest("FE-019 should propagate ignoreHTTPSErrors on redirects")]
-    public async Task ShouldPropagateIgnoreHTTPSErrorsOnRedirects(IPlaywright playwright, Server httpsServer)
+    public async Task ShouldPropagateIgnoreHTTPSErrorsOnRedirects()
     {
-        httpsServer.SetRedirect("/redir", "/empty.html");
-        var request = await playwright.APIRequest.NewContextAsync();
-        var response = await request.GetAsync(httpsServer.Prefix + "/redir", new() { IgnoreHTTPSErrors = true });
+        HttpsServer.SetRedirect("/redir", "/empty.html");
+        var request = await Playwright.APIRequest.NewContextAsync();
+        var response = await request.GetAsync(HttpsServer.Prefix + "/redir", new() { IgnoreHTTPSErrors = true });
         Assert.That(response.Status, Is.EqualTo(200));
         await request.DisposeAsync();
     }
 
     [UpstreamTest("FE-020 should return server address from response")]
-    public async Task ShouldReturnServerAddressFromResponse(IPlaywright playwright, Server server)
+    public async Task ShouldReturnServerAddressFromResponse()
     {
-        var request = await playwright.APIRequest.NewContextAsync();
+        var request = await Playwright.APIRequest.NewContextAsync();
         // The second request reuses the keep-alive socket and should report the address as well.
         for (var i = 0; i < 2; i++)
         {
-            var response = await request.GetAsync(server.EmptyPage);
+            var response = await request.GetAsync(Server.EmptyPage);
             var addr = await response.ServerAddrAsync();
             Assert.That(addr.IpAddress, Does.Match(@"^(127\.0\.0\.1|::1)$"));
-            Assert.That(addr.Port, Is.EqualTo(server.Port));
+            Assert.That(addr.Port, Is.EqualTo(Server.Port));
         }
-        server.SetRoute("/idle", (req, res) =>
+        Server.SetRoute("/idle", (req, res) =>
         {
             // Keep the server socket open beyond its advertised timeout.
             res.OnFinish(() => req.Socket.SetTimeout(30_000));
@@ -355,24 +355,24 @@ public class GlobalFetchTests
             res.End("ok");
         });
         var (serverRequest, _) = await PromiseAll(
-            server.WaitForRequest("/idle"),
-            request.GetAsync(server.Prefix + "/idle"));
+            Server.WaitForRequest("/idle"),
+            request.GetAsync(Server.Prefix + "/idle"));
         await Expect(() => Assert.That(serverRequest.Socket.Destroyed, Is.EqualTo(true))).ToPassAsync(new() { Timeout = 7000 });
         // .NET: 'response' is also a local of the loop above.
-        var response2 = await request.GetAsync(server.EmptyPage);
-        ExpectToEqual(await response2.ServerAddrAsync(), new { ipAddress = AnyString, port = server.Port });
+        var response2 = await request.GetAsync(Server.EmptyPage);
+        ExpectToEqual(await response2.ServerAddrAsync(), new { ipAddress = AnyString, port = Server.Port });
         await request.DisposeAsync();
     }
 
     [UpstreamTest("FE-021 should return security details from response")]
     [LocalFixme("harness: the HTTPS server of the tests speaks TLS 1.2 on macOS, where SslStream of .NET has no TLS 1.3 for a server: the protocol is 'TLSv1.2', upstream expects 'TLSv1.3' (only on darwin)")]
-    public async Task ShouldReturnSecurityDetailsFromResponse(IPlaywright playwright, Server httpsServer)
+    public async Task ShouldReturnSecurityDetailsFromResponse()
     {
-        var request = await playwright.APIRequest.NewContextAsync(new() { IgnoreHTTPSErrors = true });
+        var request = await Playwright.APIRequest.NewContextAsync(new() { IgnoreHTTPSErrors = true });
         // The second request reuses the keep-alive socket and should report the details as well.
         for (var i = 0; i < 2; i++)
         {
-            var response = await request.GetAsync(httpsServer.EmptyPage);
+            var response = await request.GetAsync(HttpsServer.EmptyPage);
             ExpectToEqual(await response.SecurityDetailsAsync(), new { issuer = "playwright-test", protocol = "TLSv1.3", subjectName = "playwright-test", validFrom = 1691708270, validTo = 2007068270 });
         }
         await request.DisposeAsync();
@@ -380,33 +380,33 @@ public class GlobalFetchTests
 
     [UpstreamTest("FE-022 should return security details for a resumed TLS session")]
     [LocalFixme("harness: the HTTPS server of the tests speaks TLS 1.2 on macOS, where SslStream of .NET has no TLS 1.3 for a server: the protocol is 'TLSv1.2', upstream expects 'TLSv1.3' (only on darwin)")]
-    public async Task ShouldReturnSecurityDetailsForAResumedTLSSession(IPlaywright playwright, Server httpsServer)
+    public async Task ShouldReturnSecurityDetailsForAResumedTLSSession()
     {
         var expected = new { issuer = "playwright-test", protocol = "TLSv1.3", subjectName = "playwright-test", validFrom = 1691708270, validTo = 2007068270 };
-        var request = await playwright.APIRequest.NewContextAsync(new() { IgnoreHTTPSErrors = true });
+        var request = await Playwright.APIRequest.NewContextAsync(new() { IgnoreHTTPSErrors = true });
         // 'Connection: close' drops the socket, so the next request opens a new one and resumes
         // the cached TLS session. A resumed session does not carry the server certificate.
-        var first = await request.GetAsync(httpsServer.EmptyPage, new() { Headers = new Dictionary<string, string> { ["connection"] = "close" } });
+        var first = await request.GetAsync(HttpsServer.EmptyPage, new() { Headers = new Dictionary<string, string> { ["connection"] = "close" } });
         ExpectToEqual(await first.SecurityDetailsAsync(), expected);
-        var second = await request.GetAsync(httpsServer.EmptyPage);
+        var second = await request.GetAsync(HttpsServer.EmptyPage);
         ExpectToEqual(await second.SecurityDetailsAsync(), expected);
         await request.DisposeAsync();
     }
 
     [UpstreamTest("FE-023 should return null security details for http response")]
-    public async Task ShouldReturnNullSecurityDetailsForHttpResponse(IPlaywright playwright, Server server)
+    public async Task ShouldReturnNullSecurityDetailsForHttpResponse()
     {
-        var request = await playwright.APIRequest.NewContextAsync();
-        var response = await request.GetAsync(server.EmptyPage);
+        var request = await Playwright.APIRequest.NewContextAsync();
+        var response = await request.GetAsync(Server.EmptyPage);
         Assert.That(await response.SecurityDetailsAsync(), Is.Null);
         await request.DisposeAsync();
     }
 
     [UpstreamTest("FE-024 should return security details for certificate with multiple CN attributes")]
-    public async Task ShouldReturnSecurityDetailsForCertificateWithMultipleCNAttributes(IPlaywright playwright, Func<string, string> asset)
+    public async Task ShouldReturnSecurityDetailsForCertificateWithMultipleCNAttributes()
     {
         // .NET: utils.createHttpsServer({ key, cert }, handler) that listens on the port 0 is a Server with a route.
-        var server = Server.CreateHttps(asset(""), 0, null, Server.Certificate(asset("multi-value-rdn/cert.pem"), asset("multi-value-rdn/key.pem")));
+        var server = Server.CreateHttps(Asset(""), 0, null, Server.Certificate(Asset("multi-value-rdn/cert.pem"), Asset("multi-value-rdn/key.pem")));
         server.SetRoute("/", (req, res) =>
         {
             res.WriteHead(200, new() { ["Content-Type"] = "application/json" });
@@ -414,7 +414,7 @@ public class GlobalFetchTests
         });
         try
         {
-            var request = await playwright.APIRequest.NewContextAsync(new() { IgnoreHTTPSErrors = true });
+            var request = await Playwright.APIRequest.NewContextAsync(new() { IgnoreHTTPSErrors = true });
             var response = await request.GetAsync($"https://localhost:{server.Port}/");
             Assert.That(response.Status, Is.EqualTo(200));
             var securityDetails = await response.SecurityDetailsAsync();
@@ -429,28 +429,28 @@ public class GlobalFetchTests
     }
 
     [UpstreamTest("FE-025 should resolve url relative to global baseURL option")]
-    public async Task ShouldResolveUrlRelativeToGlobalBaseURLOption(IPlaywright playwright, Server server)
+    public async Task ShouldResolveUrlRelativeToGlobalBaseURLOption()
     {
-        var request = await playwright.APIRequest.NewContextAsync(new() { BaseURL = server.Prefix });
+        var request = await Playwright.APIRequest.NewContextAsync(new() { BaseURL = Server.Prefix });
         var response = await request.GetAsync("/empty.html");
-        Assert.That(response.Url, Is.EqualTo(server.EmptyPage));
+        Assert.That(response.Url, Is.EqualTo(Server.EmptyPage));
         await request.DisposeAsync();
     }
 
     [UpstreamTest("FE-026 should fallback to given URL if baseURL is bogus")]
-    public async Task ShouldFallbackToGivenURLIfBaseURLIsBogus(IPlaywright playwright, Server server)
+    public async Task ShouldFallbackToGivenURLIfBaseURLIsBogus()
     {
-        var request = await playwright.APIRequest.NewContextAsync(new() { BaseURL = "bogus" });
-        var response = await request.GetAsync(server.Prefix + "/empty.html");
-        Assert.That(response.Url, Is.EqualTo(server.EmptyPage));
+        var request = await Playwright.APIRequest.NewContextAsync(new() { BaseURL = "bogus" });
+        var response = await request.GetAsync(Server.Prefix + "/empty.html");
+        Assert.That(response.Url, Is.EqualTo(Server.EmptyPage));
         await request.DisposeAsync();
     }
 
     [UpstreamTest("FE-029 should return empty body")]
-    public async Task ShouldReturnEmptyBody(IPlaywright playwright, Server server)
+    public async Task ShouldReturnEmptyBody()
     {
-        var request = await playwright.APIRequest.NewContextAsync();
-        var response = await request.GetAsync(server.EmptyPage);
+        var request = await Playwright.APIRequest.NewContextAsync();
+        var response = await request.GetAsync(Server.EmptyPage);
         var body = await response.BodyAsync();
         Assert.That(body.Length, Is.EqualTo(0));
         Assert.That(await response.TextAsync(), Is.EqualTo(""));
@@ -458,23 +458,23 @@ public class GlobalFetchTests
     }
 
     [UpstreamTest("FE-030 should abort requests when context is disposed")]
-    public async Task ShouldAbortRequestsWhenContextIsDisposed(IPlaywright playwright, Server server)
+    public async Task ShouldAbortRequestsWhenContextIsDisposed()
     {
         var connectionClosed = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
-        server.SetRoute("/empty.html", req => req.Socket.OnClose(() => connectionClosed.TrySetResult()));
-        var request = await playwright.APIRequest.NewContextAsync();
+        Server.SetRoute("/empty.html", req => req.Socket.OnClose(() => connectionClosed.TrySetResult()));
+        var request = await Playwright.APIRequest.NewContextAsync();
         // .NET: the last promise has no value; it gives null to fit the array of the results.
         async Task<Exception> Then()
         {
-            await server.WaitForRequest("/empty.html");
+            await Server.WaitForRequest("/empty.html");
             await request.DisposeAsync();
             return null;
         }
         var results = await PromiseAll(new[]
         {
-            Catch(() => request.GetAsync(server.EmptyPage)),
-            Catch(() => request.PostAsync(server.EmptyPage)),
-            Catch(() => request.DeleteAsync(server.EmptyPage)),
+            Catch(() => request.GetAsync(Server.EmptyPage)),
+            Catch(() => request.PostAsync(Server.EmptyPage)),
+            Catch(() => request.DeleteAsync(Server.EmptyPage)),
             Then(),
         });
         foreach (var result in results[..^1])
@@ -487,19 +487,19 @@ public class GlobalFetchTests
     }
 
     [UpstreamTest("FE-031 should abort redirected requests when context is disposed")]
-    public async Task ShouldAbortRedirectedRequestsWhenContextIsDisposed(IPlaywright playwright, Server server)
+    public async Task ShouldAbortRedirectedRequestsWhenContextIsDisposed()
     {
-        server.SetRedirect("/redirect", "/test");
+        Server.SetRedirect("/redirect", "/test");
         var connectionClosed = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
-        server.SetRoute("/test", req => req.Socket.OnClose(() => connectionClosed.TrySetResult()));
-        var request = await playwright.APIRequest.NewContextAsync();
+        Server.SetRoute("/test", req => req.Socket.OnClose(() => connectionClosed.TrySetResult()));
+        var request = await Playwright.APIRequest.NewContextAsync();
         async Task Then()
         {
-            await server.WaitForRequest("/test");
+            await Server.WaitForRequest("/test");
             await request.DisposeAsync();
         }
         var result = await PromiseAll(
-            Catch(() => request.GetAsync(server.Prefix + "/redirect")),
+            Catch(() => request.GetAsync(Server.Prefix + "/redirect")),
             Then());
         Assert.That(result is Exception, Is.True);
         Assert.That(result.Message, Does.Match("Request context disposed|Target page, context or browser has been closed"));
@@ -508,20 +508,20 @@ public class GlobalFetchTests
     }
 
     [UpstreamTest("FE-032 should remove content-length from redirected post requests")]
-    public async Task ShouldRemoveContentLengthFromRedirectedPostRequests(IPlaywright playwright, Server server)
+    public async Task ShouldRemoveContentLengthFromRedirectedPostRequests()
     {
-        server.SetRedirect("/redirect", "/empty.html");
-        var request = await playwright.APIRequest.NewContextAsync();
+        Server.SetRedirect("/redirect", "/empty.html");
+        var request = await Playwright.APIRequest.NewContextAsync();
         var (result, req1, req2) = await PromiseAll(
-            request.PostAsync(server.Prefix + "/redirect", new()
+            request.PostAsync(Server.Prefix + "/redirect", new()
             {
                 DataObject = new
                 {
                     foo = "bar",
                 },
             }),
-            server.WaitForRequest("/redirect"),
-            server.WaitForRequest("/empty.html"));
+            Server.WaitForRequest("/redirect"),
+            Server.WaitForRequest("/empty.html"));
         Assert.That(result.Status, Is.EqualTo(200));
         Assert.That(req1.Headers["content-length"], Is.EqualTo("13"));
         Assert.That(req2.Headers["content-length"], Is.Null);
@@ -544,17 +544,17 @@ public class GlobalFetchTests
 
     [UpstreamTest("FE-033 should json stringify ${type} body when content-type is application/json")]
     [LocalFixme("dotnet: FetchAsync ignores Data = \"\" (string.IsNullOrEmpty) and posts an empty body, upstream posts '\"\"' (only for \"string (falsey)\"); dotnet: DataObject = null is 'no data': the API can not post the JSON value null and posts an empty body, upstream posts 'null' (only for \"null\")")]
-    [CaseSource(nameof(Serialization))]
-    public async Task ShouldJsonStringifyBodyWhenContentTypeIsApplicationJson(string type, object value, IPlaywright playwright, Server server)
+    [TestCaseSource(nameof(Serialization))]
+    public async Task ShouldJsonStringifyBodyWhenContentTypeIsApplicationJson(string type, object value)
     {
         var stringifiedValue = JsonStringify(value);
-        var request = await playwright.APIRequest.NewContextAsync();
+        var request = await Playwright.APIRequest.NewContextAsync();
         foreach (var contentType in new[] { "application/json", "Application/JSON; charset=utf-8" })
         {
             // .NET: data: value is Data for a string and DataObject for any other value.
             var (req, _) = await PromiseAll(
-                server.WaitForRequest("/empty.html"),
-                request.PostAsync(server.EmptyPage, new()
+                Server.WaitForRequest("/empty.html"),
+                request.PostAsync(Server.EmptyPage, new()
                 {
                     Headers = new Dictionary<string, string>
                     {
@@ -570,14 +570,14 @@ public class GlobalFetchTests
     }
 
     [UpstreamTest("FE-034 should not double stringify ${type} body when content-type is application/json")]
-    [CaseSource(nameof(Serialization))]
-    public async Task ShouldNotDoubleStringifyBodyWhenContentTypeIsApplicationJson(string type, object value, IPlaywright playwright, Server server)
+    [TestCaseSource(nameof(Serialization))]
+    public async Task ShouldNotDoubleStringifyBodyWhenContentTypeIsApplicationJson(string type, object value)
     {
         var stringifiedValue = JsonStringify(value);
-        var request = await playwright.APIRequest.NewContextAsync();
+        var request = await Playwright.APIRequest.NewContextAsync();
         var (req, _) = await PromiseAll(
-            server.WaitForRequest("/empty.html"),
-            request.PostAsync(server.EmptyPage, new()
+            Server.WaitForRequest("/empty.html"),
+            request.PostAsync(Server.EmptyPage, new()
             {
                 Headers = new Dictionary<string, string>
                 {
@@ -591,13 +591,13 @@ public class GlobalFetchTests
     }
 
     [UpstreamTest("FE-035 should accept already serialized data as Buffer when content-type is application/json")]
-    public async Task ShouldAcceptAlreadySerializedDataAsBufferWhenContentTypeIsApplicationJson(IPlaywright playwright, Server server)
+    public async Task ShouldAcceptAlreadySerializedDataAsBufferWhenContentTypeIsApplicationJson()
     {
-        var request = await playwright.APIRequest.NewContextAsync();
+        var request = await Playwright.APIRequest.NewContextAsync();
         var value = JsonStringify(JsonStringify(new { foo = "bar" }));
         var (req, _) = await PromiseAll(
-            server.WaitForRequest("/empty.html"),
-            request.PostAsync(server.EmptyPage, new()
+            Server.WaitForRequest("/empty.html"),
+            request.PostAsync(Server.EmptyPage, new()
             {
                 Headers = new Dictionary<string, string>
                 {
@@ -611,10 +611,10 @@ public class GlobalFetchTests
     }
 
     [UpstreamTest("FE-036 should have nice toString")]
-    public async Task ShouldHaveNiceToString(IPlaywright playwright, Server server)
+    public async Task ShouldHaveNiceToString()
     {
-        var request = await playwright.APIRequest.NewContextAsync();
-        var response = await request.PostAsync(server.EmptyPage, new()
+        var request = await Playwright.APIRequest.NewContextAsync();
+        var response = await request.PostAsync(Server.EmptyPage, new()
         {
             Headers = new Dictionary<string, string>
             {
@@ -633,14 +633,14 @@ public class GlobalFetchTests
     }
 
     [UpstreamTest("FE-037 should not fail on empty body with encoding")]
-    public async Task ShouldNotFailOnEmptyBodyWithEncoding(IPlaywright playwright, Server server)
+    public async Task ShouldNotFailOnEmptyBodyWithEncoding()
     {
-        var request = await playwright.APIRequest.NewContextAsync();
+        var request = await Playwright.APIRequest.NewContextAsync();
         foreach (var method in new[] { "head", "put" })
         {
             foreach (var encoding in new[] { "br", "gzip", "deflate" })
             {
-                server.SetRoute("/empty.html", (req, res) =>
+                Server.SetRoute("/empty.html", (req, res) =>
                 {
                     res.WriteHead(200, new()
                     {
@@ -650,7 +650,7 @@ public class GlobalFetchTests
                     res.End();
                 });
                 // .NET: request[method](url)
-                var response = await (method == "head" ? request.HeadAsync(server.EmptyPage) : request.PutAsync(server.EmptyPage));
+                var response = await (method == "head" ? request.HeadAsync(Server.EmptyPage) : request.PutAsync(Server.EmptyPage));
                 Assert.That(response.Status, Is.EqualTo(200));
                 Assert.That((await response.BodyAsync()).Length, Is.EqualTo(0));
             }
@@ -659,17 +659,17 @@ public class GlobalFetchTests
     }
 
     [UpstreamTest("FE-038 should return body for failing requests")]
-    public async Task ShouldReturnBodyForFailingRequests(IPlaywright playwright, Server server)
+    public async Task ShouldReturnBodyForFailingRequests()
     {
-        var request = await playwright.APIRequest.NewContextAsync();
+        var request = await Playwright.APIRequest.NewContextAsync();
         foreach (var method in new[] { "head", "put", "trace" })
         {
-            server.SetRoute("/empty.html", (req, res) =>
+            Server.SetRoute("/empty.html", (req, res) =>
             {
                 res.WriteHead(404, new() { ["Content-Length"] = 10, ["Content-Type"] = "text/plain" });
                 res.End("Not found.");
             });
-            var response = await request.FetchAsync(server.EmptyPage, new() { Method = method });
+            var response = await request.FetchAsync(Server.EmptyPage, new() { Method = method });
             Assert.That(response.Status, Is.EqualTo(404));
             // HEAD response returns empty body in node http module.
             Assert.That(await response.TextAsync(), Is.EqualTo(method == "head" ? "" : "Not found."));
@@ -680,19 +680,19 @@ public class GlobalFetchTests
     private static readonly string[] HTTP_METHODS = ["GET", "PUT", "POST", "OPTIONS", "HEAD", "PATCH"];
 
     [UpstreamTest("FE-039 should throw an error when maxRedirects is exceeded")]
-    public async Task ShouldThrowAnErrorWhenMaxRedirectsIsExceeded(IPlaywright playwright, Server server)
+    public async Task ShouldThrowAnErrorWhenMaxRedirectsIsExceeded()
     {
-        server.SetRedirect("/a/redirect1", "/b/c/redirect2");
-        server.SetRedirect("/b/c/redirect2", "/b/c/redirect3");
-        server.SetRedirect("/b/c/redirect3", "/b/c/redirect4");
-        server.SetRedirect("/b/c/redirect4", "/simple.json");
+        Server.SetRedirect("/a/redirect1", "/b/c/redirect2");
+        Server.SetRedirect("/b/c/redirect2", "/b/c/redirect3");
+        Server.SetRedirect("/b/c/redirect3", "/b/c/redirect4");
+        Server.SetRedirect("/b/c/redirect4", "/simple.json");
 
-        var request = await playwright.APIRequest.NewContextAsync();
+        var request = await Playwright.APIRequest.NewContextAsync();
         foreach (var method in HTTP_METHODS)
         {
             foreach (var maxRedirects in new[] { 1, 2, 3 })
             {
-                var error = await ThrowsAsync<PlaywrightException>(() => request.FetchAsync($"{server.Prefix}/a/redirect1", new() { Method = method, MaxRedirects = maxRedirects }));
+                var error = await ThrowsAsync<PlaywrightException>(() => request.FetchAsync($"{Server.Prefix}/a/redirect1", new() { Method = method, MaxRedirects = maxRedirects }));
                 Assert.That(error.Message, Does.Contain("Max redirect count exceeded"));
             }
         }
@@ -700,15 +700,15 @@ public class GlobalFetchTests
     }
 
     [UpstreamTest("FE-040 should not follow redirects when maxRedirects is set to 0")]
-    public async Task ShouldNotFollowRedirectsWhenMaxRedirectsIsSetTo0(IPlaywright playwright, Server server)
+    public async Task ShouldNotFollowRedirectsWhenMaxRedirectsIsSetTo0()
     {
-        server.SetRedirect("/a/redirect1", "/b/c/redirect2");
-        server.SetRedirect("/b/c/redirect2", "/simple.json");
+        Server.SetRedirect("/a/redirect1", "/b/c/redirect2");
+        Server.SetRedirect("/b/c/redirect2", "/simple.json");
 
-        var request = await playwright.APIRequest.NewContextAsync();
+        var request = await Playwright.APIRequest.NewContextAsync();
         foreach (var method in HTTP_METHODS)
         {
-            var response = await request.FetchAsync($"{server.Prefix}/a/redirect1", new() { Method = method, MaxRedirects = 0 });
+            var response = await request.FetchAsync($"{Server.Prefix}/a/redirect1", new() { Method = method, MaxRedirects = 0 });
             Assert.That(response.Headers["location"], Is.EqualTo("/b/c/redirect2"));
             Assert.That(response.Status, Is.EqualTo(302));
         }
@@ -717,30 +717,30 @@ public class GlobalFetchTests
 
     [UpstreamTest("FE-041 should throw an error when maxRedirects is less than 0")]
     [LocalFixme("dotnet: the message is \"'MaxRedirects' must be greater than or equal to '0'\", upstream expects \"'maxRedirects' must be greater than or equal to '0'\"")]
-    public async Task ShouldThrowAnErrorWhenMaxRedirectsIsLessThan0(IPlaywright playwright, Server server)
+    public async Task ShouldThrowAnErrorWhenMaxRedirectsIsLessThan0()
     {
-        server.SetRedirect("/a/redirect1", "/b/c/redirect2");
-        server.SetRedirect("/b/c/redirect2", "/simple.json");
+        Server.SetRedirect("/a/redirect1", "/b/c/redirect2");
+        Server.SetRedirect("/b/c/redirect2", "/simple.json");
 
-        var request = await playwright.APIRequest.NewContextAsync();
+        var request = await Playwright.APIRequest.NewContextAsync();
         foreach (var method in HTTP_METHODS)
         {
-            var error = await ThrowsAsync<PlaywrightException>(() => request.FetchAsync($"{server.Prefix}/a/redirect1", new() { Method = method, MaxRedirects = -1 }));
+            var error = await ThrowsAsync<PlaywrightException>(() => request.FetchAsync($"{Server.Prefix}/a/redirect1", new() { Method = method, MaxRedirects = -1 }));
             Assert.That(error.Message, Does.Contain("'maxRedirects' must be greater than or equal to '0'"));
         }
         await request.DisposeAsync();
     }
 
     [UpstreamTest("FE-042 should not follow redirects when maxRedirects is set to 0 in newContext")]
-    public async Task ShouldNotFollowRedirectsWhenMaxRedirectsIsSetTo0InNewContext(IPlaywright playwright, Server server)
+    public async Task ShouldNotFollowRedirectsWhenMaxRedirectsIsSetTo0InNewContext()
     {
-        server.SetRedirect("/a/redirect1", "/b/c/redirect2");
-        server.SetRedirect("/b/c/redirect2", "/simple.json");
+        Server.SetRedirect("/a/redirect1", "/b/c/redirect2");
+        Server.SetRedirect("/b/c/redirect2", "/simple.json");
 
-        var request = await playwright.APIRequest.NewContextAsync(new() { MaxRedirects = 0 });
+        var request = await Playwright.APIRequest.NewContextAsync(new() { MaxRedirects = 0 });
         foreach (var method in HTTP_METHODS)
         {
-            var response = await request.FetchAsync($"{server.Prefix}/a/redirect1", new() { Method = method });
+            var response = await request.FetchAsync($"{Server.Prefix}/a/redirect1", new() { Method = method });
             Assert.That(response.Headers["location"], Is.EqualTo("/b/c/redirect2"));
             Assert.That(response.Status, Is.EqualTo(302));
         }
@@ -748,26 +748,26 @@ public class GlobalFetchTests
     }
 
     [UpstreamTest("FE-043 should follow redirects up to maxRedirects limit set in newContext")]
-    public async Task ShouldFollowRedirectsUpToMaxRedirectsLimitSetInNewContext(IPlaywright playwright, Server server)
+    public async Task ShouldFollowRedirectsUpToMaxRedirectsLimitSetInNewContext()
     {
-        server.SetRedirect("/a/redirect1", "/b/c/redirect2");
-        server.SetRedirect("/b/c/redirect2", "/b/c/redirect3");
-        server.SetRedirect("/b/c/redirect3", "/b/c/redirect4");
-        server.SetRedirect("/b/c/redirect4", "/simple.json");
+        Server.SetRedirect("/a/redirect1", "/b/c/redirect2");
+        Server.SetRedirect("/b/c/redirect2", "/b/c/redirect3");
+        Server.SetRedirect("/b/c/redirect3", "/b/c/redirect4");
+        Server.SetRedirect("/b/c/redirect4", "/simple.json");
 
         foreach (var maxRedirects in new[] { 1, 2, 3, 4 })
         {
-            var request = await playwright.APIRequest.NewContextAsync(new() { MaxRedirects = maxRedirects });
+            var request = await Playwright.APIRequest.NewContextAsync(new() { MaxRedirects = maxRedirects });
             foreach (var method in HTTP_METHODS)
             {
                 if (maxRedirects < 4)
                 {
-                    var error = await ThrowsAsync<PlaywrightException>(() => request.FetchAsync($"{server.Prefix}/a/redirect1", new() { Method = method }));
+                    var error = await ThrowsAsync<PlaywrightException>(() => request.FetchAsync($"{Server.Prefix}/a/redirect1", new() { Method = method }));
                     Assert.That(error.Message, Does.Contain("Max redirect count exceeded"));
                 }
                 else
                 {
-                    var response = await request.FetchAsync($"{server.Prefix}/a/redirect1", new() { Method = method });
+                    var response = await request.FetchAsync($"{Server.Prefix}/a/redirect1", new() { Method = method });
                     Assert.That(response.Status, Is.EqualTo(200));
                 }
             }
@@ -776,29 +776,29 @@ public class GlobalFetchTests
     }
 
     [UpstreamTest("FE-044 should use maxRedirects from fetch when provided, overriding newContext")]
-    public async Task ShouldUseMaxRedirectsFromFetchWhenProvidedOverridingNewContext(IPlaywright playwright, Server server)
+    public async Task ShouldUseMaxRedirectsFromFetchWhenProvidedOverridingNewContext()
     {
-        server.SetRedirect("/a/redirect1", "/b/c/redirect2");
-        server.SetRedirect("/b/c/redirect2", "/b/c/redirect3");
-        server.SetRedirect("/b/c/redirect3", "/b/c/redirect4");
-        server.SetRedirect("/b/c/redirect4", "/simple.json");
+        Server.SetRedirect("/a/redirect1", "/b/c/redirect2");
+        Server.SetRedirect("/b/c/redirect2", "/b/c/redirect3");
+        Server.SetRedirect("/b/c/redirect3", "/b/c/redirect4");
+        Server.SetRedirect("/b/c/redirect4", "/simple.json");
 
-        var request = await playwright.APIRequest.NewContextAsync(new() { MaxRedirects = 1 });
+        var request = await Playwright.APIRequest.NewContextAsync(new() { MaxRedirects = 1 });
         foreach (var method in HTTP_METHODS)
         {
-            var response = await request.FetchAsync($"{server.Prefix}/a/redirect1", new() { Method = method, MaxRedirects = 4 });
+            var response = await request.FetchAsync($"{Server.Prefix}/a/redirect1", new() { Method = method, MaxRedirects = 4 });
             Assert.That(response.Status, Is.EqualTo(200));
         }
         await request.DisposeAsync();
     }
 
     [UpstreamTest("FE-045 should keep headers capitalization")]
-    public async Task ShouldKeepHeadersCapitalization(IPlaywright playwright, Server server)
+    public async Task ShouldKeepHeadersCapitalization()
     {
-        var request = await playwright.APIRequest.NewContextAsync();
+        var request = await Playwright.APIRequest.NewContextAsync();
         var (serverRequest, response) = await PromiseAll(
-            server.WaitForRequest("/empty.html"),
-            request.GetAsync(server.EmptyPage, new()
+            Server.WaitForRequest("/empty.html"),
+            request.GetAsync(Server.EmptyPage, new()
             {
                 Headers = new Dictionary<string, string>
                 {
@@ -812,20 +812,20 @@ public class GlobalFetchTests
     }
 
     [UpstreamTest("FE-047 should throw after dispose")]
-    public async Task ShouldThrowAfterDispose(IPlaywright playwright, Server server)
+    public async Task ShouldThrowAfterDispose()
     {
-        var request = await playwright.APIRequest.NewContextAsync();
+        var request = await Playwright.APIRequest.NewContextAsync();
         await request.DisposeAsync();
-        var error = await ThrowsAsync<PlaywrightException>(() => request.GetAsync(server.EmptyPage));
+        var error = await ThrowsAsync<PlaywrightException>(() => request.GetAsync(Server.EmptyPage));
         Assert.That(error.Message, Does.Contain("Target page, context or browser has been closed"));
     }
 
     [UpstreamTest("FE-048 should retry ECONNRESET")]
-    public async Task ShouldRetryECONNRESET(IPlaywright playwright, Server server)
+    public async Task ShouldRetryECONNRESET()
     {
-        var request = await playwright.APIRequest.NewContextAsync();
+        var request = await Playwright.APIRequest.NewContextAsync();
         var requestCount = 0;
-        server.SetRoute("/test", (req, res) =>
+        Server.SetRoute("/test", (req, res) =>
         {
             if (requestCount++ < 3)
             {
@@ -835,7 +835,7 @@ public class GlobalFetchTests
             res.WriteHead(200, new() { ["content-type"] = "text/plain" });
             res.End("Hello!");
         });
-        var response = await request.FetchAsync(server.Prefix + "/test", new() { MaxRetries = 3 });
+        var response = await request.FetchAsync(Server.Prefix + "/test", new() { MaxRetries = 3 });
         Assert.That(response.Status, Is.EqualTo(200));
         Assert.That(await response.TextAsync(), Is.EqualTo("Hello!"));
         Assert.That(requestCount, Is.EqualTo(4));
@@ -843,53 +843,53 @@ public class GlobalFetchTests
     }
 
     [UpstreamTest("FE-049 should expose node error code on network errors")]
-    public async Task ShouldExposeNodeErrorCodeOnNetworkErrors(IPlaywright playwright, Server server)
+    public async Task ShouldExposeNodeErrorCodeOnNetworkErrors()
     {
         // Reset the connection so that node reports a system error instead of a plain 'socket hang up'.
-        server.SetRoute("/reset", req => req.Socket.ResetAndDestroy());
-        var request = await playwright.APIRequest.NewContextAsync();
-        var error = await Catch(() => request.GetAsync(server.Prefix + "/reset", new() { MaxRetries = 0 }));
+        Server.SetRoute("/reset", req => req.Socket.ResetAndDestroy());
+        var request = await Playwright.APIRequest.NewContextAsync();
+        var error = await Catch(() => request.GetAsync(Server.Prefix + "/reset", new() { MaxRetries = 0 }));
         Assert.That(error.Message, Does.Contain("ECONNRESET"));
         // .NET: expect(error.code).toBe('ECONNRESET'), expect(error.syscall).toBe(undefined) and expect(error.errno).toBe(undefined) are left out: PlaywrightException has no code, syscall and errno.
         await request.DisposeAsync();
     }
 
     [UpstreamTest("FE-050 should append node error code to the message")]
-    public async Task ShouldAppendNodeErrorCodeToTheMessage(IPlaywright playwright, Server server)
+    public async Task ShouldAppendNodeErrorCodeToTheMessage()
     {
         // Node reports this one as a plain 'socket hang up' that does not mention the code.
-        server.SetRoute("/hangup", req => req.Socket.Destroy());
-        var request = await playwright.APIRequest.NewContextAsync();
-        var error = await Catch(() => request.GetAsync(server.Prefix + "/hangup", new() { MaxRetries = 0 }));
+        Server.SetRoute("/hangup", req => req.Socket.Destroy());
+        var request = await Playwright.APIRequest.NewContextAsync();
+        var error = await Catch(() => request.GetAsync(Server.Prefix + "/hangup", new() { MaxRetries = 0 }));
         Assert.That(error.Message, Does.Contain("socket hang up (ECONNRESET)"));
         // .NET: expect(error.code).toBe('ECONNRESET') is left out: PlaywrightException has no code.
         await request.DisposeAsync();
     }
 
     [UpstreamTest("FE-052 should throw when failOnStatusCode is set to true inside APIRequest context options")]
-    public async Task ShouldThrowWhenFailOnStatusCodeIsSetToTrueInsideAPIRequestContextOptions(IPlaywright playwright, Server server)
+    public async Task ShouldThrowWhenFailOnStatusCodeIsSetToTrueInsideAPIRequestContextOptions()
     {
-        var request = await playwright.APIRequest.NewContextAsync(new() { FailOnStatusCode = true });
-        server.SetRoute("/empty.html", (req, res) =>
+        var request = await Playwright.APIRequest.NewContextAsync(new() { FailOnStatusCode = true });
+        Server.SetRoute("/empty.html", (req, res) =>
         {
             res.WriteHead(404, new() { ["Content-Length"] = 10, ["Content-Type"] = "text/plain" });
             res.End("Not found.");
         });
-        var error = await Catch(() => request.FetchAsync(server.EmptyPage));
+        var error = await Catch(() => request.FetchAsync(Server.EmptyPage));
         Assert.That(error.Message, Does.Contain("404 Not Found"));
         await request.DisposeAsync();
     }
 
     [UpstreamTest("FE-053 should not throw when failOnStatusCode is set to false inside APIRequest context options")]
-    public async Task ShouldNotThrowWhenFailOnStatusCodeIsSetToFalseInsideAPIRequestContextOptions(IPlaywright playwright, Server server)
+    public async Task ShouldNotThrowWhenFailOnStatusCodeIsSetToFalseInsideAPIRequestContextOptions()
     {
-        var request = await playwright.APIRequest.NewContextAsync(new() { FailOnStatusCode = false });
-        server.SetRoute("/empty.html", (req, res) =>
+        var request = await Playwright.APIRequest.NewContextAsync(new() { FailOnStatusCode = false });
+        Server.SetRoute("/empty.html", (req, res) =>
         {
             res.WriteHead(404, new() { ["Content-Length"] = 10, ["Content-Type"] = "text/plain" });
             res.End("Not found.");
         });
-        var response = await request.FetchAsync(server.EmptyPage);
+        var response = await request.FetchAsync(Server.EmptyPage);
         Assert.That(response.Status, Is.EqualTo(404));
         await request.DisposeAsync();
     }

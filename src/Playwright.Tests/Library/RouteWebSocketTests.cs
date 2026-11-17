@@ -23,7 +23,7 @@ using static Microsoft.Playwright.Tests.Fixtures.Utils;
 namespace Microsoft.Playwright.Tests.Library;
 
 /// <summary>Port of tests/library/route-web-socket.spec.ts.</summary>
-public class RouteWebSocketTests
+public class RouteWebSocketTests : UpstreamBrowserTest
 {
     // Polyfill for Promise.withResolvers, not available in older Node.
     private static TaskCompletionSource<T> WithResolvers<T>() => new(TaskCreationOptions.RunContinuationsAsynchronously);
@@ -65,7 +65,7 @@ public class RouteWebSocketTests
     [TestFixture("no-mock")]
     [TestFixture("no-match")]
     [TestFixture("pass-through")]
-    public class Describe
+    public class Describe : UpstreamBrowserTest
     {
         private readonly string mock;
 
@@ -74,9 +74,10 @@ public class RouteWebSocketTests
             this.mock = mock;
         }
 
-        [BeforeEach]
-        public async Task BeforeEach(IPage page)
+        [SetUp]
+        public async Task BeforeEach()
         {
+            var page = await PageFixture();
             if (mock == "no-match")
             {
                 await page.RouteWebSocketAsync(new Regex("zzz"), _ => { });
@@ -115,11 +116,12 @@ public class RouteWebSocketTests
         }
 
         [UpstreamTest("WS-015 should work with text message")]
-        public async Task ShouldWorkWithTextMessage(IPage page, Server server)
+        public async Task ShouldWorkWithTextMessage()
         {
-            var wsPromise = server.WaitForWebSocket();
-            var upgradePromise = server.WaitForUpgrade();
-            await SetupWS(page, server, "blob");
+            var page = await PageFixture();
+            var wsPromise = Server.WaitForWebSocket();
+            var upgradePromise = Server.WaitForUpgrade();
+            await SetupWS(page, Server, "blob");
             Assert.That(await page.EvaluateAsync<int>("() => window.ws.readyState"), Is.EqualTo(0));
             var (doUpgrade, _) = await upgradePromise;
             Assert.That(await page.EvaluateAsync<int>("() => window.ws.readyState"), Is.EqualTo(0));
@@ -132,7 +134,7 @@ public class RouteWebSocketTests
             await Expect(async () => Assert.That(await page.EvaluateAsync<string[]>("() => window.log"), Is.EqualTo(new[]
             {
                 "open",
-                $"message: data=hello origin=ws://{server.Host} lastEventId=",
+                $"message: data=hello origin=ws://{Server.Host} lastEventId=",
             }))).ToPassAsync();
             Assert.That(await page.EvaluateAsync<int>("() => window.ws.readyState"), Is.EqualTo(1));
             var messagePromise = new TaskCompletionSource<string>(TaskCreationOptions.RunContinuationsAsynchronously);
@@ -144,23 +146,24 @@ public class RouteWebSocketTests
             Assert.That(await page.EvaluateAsync<string[]>("() => window.log"), Is.EqualTo(new[]
             {
                 "open",
-                $"message: data=hello origin=ws://{server.Host} lastEventId=",
+                $"message: data=hello origin=ws://{Server.Host} lastEventId=",
                 "close code=1008 reason=oops wasClean=true",
             }));
         }
 
         [UpstreamTest("WS-016 should work with binaryType=blob")]
         [LocalFixme("dotnet: IWebSocketFrame.Text is not null for a binary frame (WebSocketFrame.Text decodes Binary), so a handler can not tell a binary message from a text one and the pass-through route forwards 'hi' as text: the page logs 'data=hi', not 'data=blob:hi' (only for pass-through)")]
-        public async Task ShouldWorkWithBinaryTypeBlob(IPage page, Server server)
+        public async Task ShouldWorkWithBinaryTypeBlob()
         {
-            var wsPromise = server.WaitForWebSocket();
-            await SetupWS(page, server, "blob");
+            var page = await PageFixture();
+            var wsPromise = Server.WaitForWebSocket();
+            await SetupWS(page, Server, "blob");
             var ws = await wsPromise;
             ws.Send(Encoding.UTF8.GetBytes("hi"));
             await Expect(async () => Assert.That(await page.EvaluateAsync<string[]>("() => window.log"), Is.EqualTo(new[]
             {
                 "open",
-                $"message: data=blob:hi origin=ws://{server.Host} lastEventId=",
+                $"message: data=blob:hi origin=ws://{Server.Host} lastEventId=",
             }))).ToPassAsync();
             var messagePromise = new TaskCompletionSource<string>(TaskCreationOptions.RunContinuationsAsynchronously);
             ws.OnceMessage(data => messagePromise.TrySetResult(data.ToString()));
@@ -170,16 +173,17 @@ public class RouteWebSocketTests
 
         [UpstreamTest("WS-017 should work with binaryType=arraybuffer")]
         [LocalFixme("dotnet: IWebSocketFrame.Text is not null for a binary frame (WebSocketFrame.Text decodes Binary), so a handler can not tell a binary message from a text one and the pass-through route forwards 'hi' as text: the page logs 'data=hi', not 'data=arraybuffer:hi' (only for pass-through)")]
-        public async Task ShouldWorkWithBinaryTypeArraybuffer(IPage page, Server server)
+        public async Task ShouldWorkWithBinaryTypeArraybuffer()
         {
-            var wsPromise = server.WaitForWebSocket();
-            await SetupWS(page, server, "arraybuffer");
+            var page = await PageFixture();
+            var wsPromise = Server.WaitForWebSocket();
+            await SetupWS(page, Server, "arraybuffer");
             var ws = await wsPromise;
             ws.Send(Encoding.UTF8.GetBytes("hi"));
             await Expect(async () => Assert.That(await page.EvaluateAsync<string[]>("() => window.log"), Is.EqualTo(new[]
             {
                 "open",
-                $"message: data=arraybuffer:hi origin=ws://{server.Host} lastEventId=",
+                $"message: data=arraybuffer:hi origin=ws://{Server.Host} lastEventId=",
             }))).ToPassAsync();
             var messagePromise = new TaskCompletionSource<string>(TaskCreationOptions.RunContinuationsAsynchronously);
             ws.OnceMessage(data => messagePromise.TrySetResult(data.ToString()));
@@ -188,12 +192,13 @@ public class RouteWebSocketTests
         }
 
         [UpstreamTest("WS-018 should work when connection errors out")]
-        public async Task ShouldWorkWhenConnectionErrorsOut(IPage page, Server server, string browserName)
+        public async Task ShouldWorkWhenConnectionErrorsOut()
         {
-            Info.Skip(browserName == "webkit", "WebKit ignores the connection error and fires no events!");
+            var page = await PageFixture();
+            Info.Skip(BrowserName == "webkit", "WebKit ignores the connection error and fires no events!");
 
-            var upgradePromise = server.WaitForUpgrade();
-            await SetupWS(page, server, "blob");
+            var upgradePromise = Server.WaitForUpgrade();
+            await SetupWS(page, Server, "blob");
             var (_, socket) = await upgradePromise;
             Assert.That(await page.EvaluateAsync<int>("() => window.ws.readyState"), Is.EqualTo(0));
             Assert.That(await page.EvaluateAsync<string[]>("() => window.log"), Is.EqualTo(Array.Empty<string>()));
@@ -207,14 +212,15 @@ public class RouteWebSocketTests
         }
 
         [UpstreamTest("WS-019 should work with error after successful open")]
-        public async Task ShouldWorkWithErrorAfterSuccessfulOpen(IPage page, Server server, string browserName, bool isLinux, bool isWindows)
+        public async Task ShouldWorkWithErrorAfterSuccessfulOpen()
         {
-            Info.Skip(browserName == "firefox", "Firefox does not close the websocket upon a bad frame");
-            Info.Skip(browserName == "webkit" && isLinux, "WebKit linux does not close the websocket upon a bad frame");
-            Info.Skip(browserName == "webkit" && isWindows, "WebKit Windows does not close the websocket upon a bad frame");
+            var page = await PageFixture();
+            Info.Skip(BrowserName == "firefox", "Firefox does not close the websocket upon a bad frame");
+            Info.Skip(BrowserName == "webkit" && IsLinux, "WebKit linux does not close the websocket upon a bad frame");
+            Info.Skip(BrowserName == "webkit" && IsWindows, "WebKit Windows does not close the websocket upon a bad frame");
 
-            var upgradePromise = server.WaitForUpgrade();
-            await SetupWS(page, server, "blob");
+            var upgradePromise = Server.WaitForUpgrade();
+            await SetupWS(page, Server, "blob");
             var (doUpgrade, socket) = await upgradePromise;
             doUpgrade();
             await Expect(async () => Assert.That(await page.EvaluateAsync<int>("() => window.ws.readyState"), Is.EqualTo(1))).ToPassAsync();
@@ -230,11 +236,12 @@ public class RouteWebSocketTests
         }
 
         [UpstreamTest("WS-020 should work with client-side close")]
-        public async Task ShouldWorkWithClientSideClose(IPage page, Server server)
+        public async Task ShouldWorkWithClientSideClose()
         {
-            var wsPromise = server.WaitForWebSocket();
-            var upgradePromise = server.WaitForUpgrade();
-            await SetupWS(page, server, "blob");
+            var page = await PageFixture();
+            var wsPromise = Server.WaitForWebSocket();
+            var upgradePromise = Server.WaitForUpgrade();
+            await SetupWS(page, Server, "blob");
             Assert.That(await page.EvaluateAsync<int>("() => window.ws.readyState"), Is.EqualTo(0));
             var (doUpgrade, _) = await upgradePromise;
             Assert.That(await page.EvaluateAsync<int>("() => window.ws.readyState"), Is.EqualTo(0));
@@ -262,9 +269,10 @@ public class RouteWebSocketTests
         }
 
         [UpstreamTest("WS-021 should pass through the required protocol")]
-        public async Task ShouldPassThroughTheRequiredProtocol(IPage page, Server server)
+        public async Task ShouldPassThroughTheRequiredProtocol()
         {
-            await SetupWS(page, server, "blob", "my-custom-protocol");
+            var page = await PageFixture();
+            await SetupWS(page, Server, "blob", "my-custom-protocol");
             await page.EvaluateAsync("() => window.wsOpened");
             var protocol = await page.EvaluateAsync<string>("() => window.ws.protocol");
             Assert.That(protocol, Is.EqualTo("my-custom-protocol"));
@@ -272,16 +280,17 @@ public class RouteWebSocketTests
 
         [UpstreamTest("WS-022 should work with relative WebSocket URL")]
         [LocalFixme("dotnet: IWebSocketFrame.Text is not null for a binary frame (WebSocketFrame.Text decodes Binary), so a handler can not tell a binary message from a text one and the pass-through route forwards 'hi' as text: the page logs 'data=hi', not 'data=blob:hi' (only for pass-through)")]
-        public async Task ShouldWorkWithRelativeWebSocketURL(IPage page, Server server)
+        public async Task ShouldWorkWithRelativeWebSocketURL()
         {
-            var wsPromise = server.WaitForWebSocket();
-            await SetupWS(page, server, "blob", null, true);
+            var page = await PageFixture();
+            var wsPromise = Server.WaitForWebSocket();
+            await SetupWS(page, Server, "blob", null, true);
             var ws = await wsPromise;
             ws.Send(Encoding.UTF8.GetBytes("hi"));
             await Expect(async () => Assert.That(await page.EvaluateAsync<string[]>("() => window.log"), Is.EqualTo(new[]
             {
                 "open",
-                $"message: data=blob:hi origin=ws://{server.Host} lastEventId=",
+                $"message: data=blob:hi origin=ws://{Server.Host} lastEventId=",
             }))).ToPassAsync();
             var messagePromise = new TaskCompletionSource<string>(TaskCreationOptions.RunContinuationsAsynchronously);
             ws.OnceMessage(data => messagePromise.TrySetResult(data.ToString()));
@@ -291,8 +300,9 @@ public class RouteWebSocketTests
     }
 
     [UpstreamTest("WS-023 should work with ws.close")]
-    public async Task ShouldWorkWithWsClose(IPage page, Server server)
+    public async Task ShouldWorkWithWsClose()
     {
+        var page = await PageFixture();
         var promise = WithResolvers<IWebSocketRoute>();
         // .NET: the parameter of the handler is `ws` upstream, which is a variable of the test here.
         await page.RouteWebSocketAsync(new Regex(".*"), ws1 =>
@@ -301,8 +311,8 @@ public class RouteWebSocketTests
             promise.TrySetResult(ws1);
         });
 
-        var wsPromise = server.WaitForWebSocket();
-        await SetupWS(page, server, "blob");
+        var wsPromise = Server.WaitForWebSocket();
+        await SetupWS(page, Server, "blob");
         var ws = await wsPromise;
 
         var route = await promise.Task;
@@ -310,7 +320,7 @@ public class RouteWebSocketTests
         await Expect(async () => Assert.That(await page.EvaluateAsync<string[]>("() => window.log"), Is.EqualTo(new[]
         {
             "open",
-            $"message: data=hello origin=ws://{server.Host} lastEventId=",
+            $"message: data=hello origin=ws://{Server.Host} lastEventId=",
         }))).ToPassAsync();
 
         var closedPromise = new TaskCompletionSource<object>(TaskCreationOptions.RunContinuationsAsynchronously);
@@ -319,15 +329,16 @@ public class RouteWebSocketTests
         await Expect(async () => Assert.That(await page.EvaluateAsync<string[]>("() => window.log"), Is.EqualTo(new[]
         {
             "open",
-            $"message: data=hello origin=ws://{server.Host} lastEventId=",
+            $"message: data=hello origin=ws://{Server.Host} lastEventId=",
             "close code=3009 reason=oops wasClean=true",
         }))).ToPassAsync();
         ExpectToEqual(await closedPromise.Task, new { code = 3009, reason = "oops" });
     }
 
     [UpstreamTest("WS-024 should observe upstream handshake failure when connectToServer is used")]
-    public async Task ShouldObserveUpstreamHandshakeFailureWhenConnectToServerIsUsed(IPage page, Server server)
+    public async Task ShouldObserveUpstreamHandshakeFailureWhenConnectToServerIsUsed()
     {
+        var page = await PageFixture();
         // Exercises the WebSocket-as-network-request path used by Firefox after the
         // har-WebSocket plumbing change, where a 4xx handshake response is synthesized
         // into a full lifecycle in FFPage._onWebSocketRequestFinished.
@@ -344,8 +355,8 @@ public class RouteWebSocketTests
             });
         });
 
-        var upgradePromise = server.WaitForUpgrade();
-        await SetupWS(page, server, "blob");
+        var upgradePromise = Server.WaitForUpgrade();
+        await SetupWS(page, Server, "blob");
         var (_, socket) = await upgradePromise;
         socket.Write("HTTP/1.1 403 Forbidden\r\nContent-Length: 0\r\n\r\n");
         socket.Destroy();
@@ -360,8 +371,9 @@ public class RouteWebSocketTests
     }
 
     [UpstreamTest("WS-025 should observe multiple concurrent routed WebSockets with connectToServer")]
-    public async Task ShouldObserveMultipleConcurrentRoutedWebSocketsWithConnectToServer(IPage page, Server server)
+    public async Task ShouldObserveMultipleConcurrentRoutedWebSocketsWithConnectToServer()
     {
+        var page = await PageFixture();
         // Exercises FFNetworkManager._webSocketRequestIds tracking by routing two
         // simultaneous WebSocket connections through `connectToServer()`. Each request
         // gets a distinct id in the new Firefox WebSocket-as-network-request flow.
@@ -400,11 +412,11 @@ public class RouteWebSocketTests
         void handleConnection(ServerWebSocket ws)
         {
             ws.OnMessage(data => ws.Send($"echo-{data.ToString()}"));
-            server.OnceWebSocketConnection(handleConnection);
+            Server.OnceWebSocketConnection(handleConnection);
         }
-        server.OnceWebSocketConnection(handleConnection);
+        Server.OnceWebSocketConnection(handleConnection);
 
-        await page.GotoAsync(server.EmptyPage);
+        await page.GotoAsync(Server.EmptyPage);
         var results = await page.EvaluateAsync<string[]>(@"async host => {
     const collect = (tag) => new Promise(resolve => {
       const ws = new WebSocket(`ws://${host}/ws`);
@@ -415,15 +427,16 @@ public class RouteWebSocketTests
       });
     });
     return Promise.all([collect('a'), collect('b')]);
-  }", server.Host);
+  }", Server.Host);
 
         Assert.That(results.Order(StringComparer.Ordinal), Is.EqualTo(new[] { "echo-hi-a", "echo-hi-b" }));
         Assert.That(routedConnections, Is.EqualTo(2));
     }
 
     [UpstreamTest("WS-026 should pattern match")]
-    public async Task ShouldPatternMatch(IPage page, Server server)
+    public async Task ShouldPatternMatch()
     {
+        var page = await PageFixture();
         // .NET: the parameter of the handler is `ws` upstream, which is a variable of the test here.
         await page.RouteWebSocketAsync(new Regex(@".*\/ws$"), ws1 =>
         {
@@ -439,9 +452,9 @@ public class RouteWebSocketTests
             });
         });
 
-        var wsPromise = server.WaitForWebSocket();
+        var wsPromise = Server.WaitForWebSocket();
 
-        await page.GotoAsync(server.EmptyPage);
+        await page.GotoAsync(Server.EmptyPage);
         await page.EvaluateAsync(@"async ({ host }) => {
     window.log = [];
     window.ws1 = new WebSocket('ws://' + host + '/ws');
@@ -452,7 +465,7 @@ public class RouteWebSocketTests
       new Promise(f => window.ws1.addEventListener('open', f)),
       new Promise(f => window.ws2.addEventListener('open', f)),
     ]);
-  }", new { host = server.Host });
+  }", new { host = Server.Host });
 
         var ws = await wsPromise;
         ws.OnMessage(_ => ws.Send("response"));
@@ -465,8 +478,9 @@ public class RouteWebSocketTests
     }
 
     [UpstreamTest("WS-027 should work with server")]
-    public async Task ShouldWorkWithServer(IPage page, Server server)
+    public async Task ShouldWorkWithServer()
     {
+        var page = await PageFixture();
         var promise = WithResolvers<IWebSocketRoute>();
         // .NET: the parameter of the handler is `ws` upstream, which is a variable of the test here.
         await page.RouteWebSocketAsync(new Regex(".*"), ws1 =>
@@ -520,16 +534,16 @@ public class RouteWebSocketTests
             promise.TrySetResult(ws1);
         });
 
-        var wsPromise = server.WaitForWebSocket();
+        var wsPromise = Server.WaitForWebSocket();
         var log = new List<string>();
         // .NET: the parameter of the handler is `ws` upstream, which is a variable of the test here.
-        server.OnceWebSocketConnection(ws1 =>
+        Server.OnceWebSocketConnection(ws1 =>
         {
             ws1.OnMessage(data => log.Add($"message: {data.ToString()}"));
             ws1.OnClose((code, reason) => log.Add($"close: code={code} reason={reason}"));
         });
 
-        await SetupWS(page, server, "blob");
+        await SetupWS(page, Server, "blob");
         var ws = await wsPromise;
         await Expect(() => Assert.That(log, Is.EqualTo(new[] { "message: fake" }))).ToPassAsync();
 
@@ -539,8 +553,8 @@ public class RouteWebSocketTests
         await Expect(async () => Assert.That(await page.EvaluateAsync<string[]>("() => window.log"), Is.EqualTo(new[]
         {
             "open",
-            $"message: data=modified origin=ws://{server.Host} lastEventId=",
-            $"message: data=pass-server origin=ws://{server.Host} lastEventId=",
+            $"message: data=modified origin=ws://{Server.Host} lastEventId=",
+            $"message: data=pass-server origin=ws://{Server.Host} lastEventId=",
         }))).ToPassAsync();
 
         await page.EvaluateAsync(@"() => {
@@ -553,9 +567,9 @@ public class RouteWebSocketTests
         await Expect(async () => Assert.That(await page.EvaluateAsync<string[]>("() => window.log"), Is.EqualTo(new[]
         {
             "open",
-            $"message: data=modified origin=ws://{server.Host} lastEventId=",
-            $"message: data=pass-server origin=ws://{server.Host} lastEventId=",
-            $"message: data=response origin=ws://{server.Host} lastEventId=",
+            $"message: data=modified origin=ws://{Server.Host} lastEventId=",
+            $"message: data=pass-server origin=ws://{Server.Host} lastEventId=",
+            $"message: data=response origin=ws://{Server.Host} lastEventId=",
         }))).ToPassAsync();
 
         var route = await promise.Task;
@@ -563,10 +577,10 @@ public class RouteWebSocketTests
         await Expect(async () => Assert.That(await page.EvaluateAsync<string[]>("() => window.log"), Is.EqualTo(new[]
         {
             "open",
-            $"message: data=modified origin=ws://{server.Host} lastEventId=",
-            $"message: data=pass-server origin=ws://{server.Host} lastEventId=",
-            $"message: data=response origin=ws://{server.Host} lastEventId=",
-            $"message: data=another origin=ws://{server.Host} lastEventId=",
+            $"message: data=modified origin=ws://{Server.Host} lastEventId=",
+            $"message: data=pass-server origin=ws://{Server.Host} lastEventId=",
+            $"message: data=response origin=ws://{Server.Host} lastEventId=",
+            $"message: data=another origin=ws://{Server.Host} lastEventId=",
         }))).ToPassAsync();
 
         await page.EvaluateAsync(@"() => {
@@ -581,8 +595,9 @@ public class RouteWebSocketTests
     }
 
     [UpstreamTest("WS-028 should work without server")]
-    public async Task ShouldWorkWithoutServer(IPage page, Server server)
+    public async Task ShouldWorkWithoutServer()
     {
+        var page = await PageFixture();
         var promise = WithResolvers<IWebSocketRoute>();
         await page.RouteWebSocketAsync(new Regex(".*"), ws =>
         {
@@ -598,7 +613,7 @@ public class RouteWebSocketTests
             promise.TrySetResult(ws);
         });
 
-        await SetupWS(page, server, "blob");
+        await SetupWS(page, Server, "blob");
 
         await page.EvaluateAsync(@"async () => {
     await window.wsOpened;
@@ -610,8 +625,8 @@ public class RouteWebSocketTests
         await Expect(async () => Assert.That(await page.EvaluateAsync<string[]>("() => window.log"), Is.EqualTo(new[]
         {
             "open",
-            $"message: data=response origin=ws://{server.Host} lastEventId=",
-            $"message: data=response origin=ws://{server.Host} lastEventId=",
+            $"message: data=response origin=ws://{Server.Host} lastEventId=",
+            $"message: data=response origin=ws://{Server.Host} lastEventId=",
         }))).ToPassAsync();
 
         var route = await promise.Task;
@@ -621,18 +636,19 @@ public class RouteWebSocketTests
         await Expect(async () => Assert.That(await page.EvaluateAsync<string[]>("() => window.log"), Is.EqualTo(new[]
         {
             "open",
-            $"message: data=response origin=ws://{server.Host} lastEventId=",
-            $"message: data=response origin=ws://{server.Host} lastEventId=",
-            $"message: data=another origin=ws://{server.Host} lastEventId=",
+            $"message: data=response origin=ws://{Server.Host} lastEventId=",
+            $"message: data=response origin=ws://{Server.Host} lastEventId=",
+            $"message: data=another origin=ws://{Server.Host} lastEventId=",
             "close code=3008 reason=oops wasClean=true",
         }))).ToPassAsync();
     }
 
     [UpstreamTest("WS-029 should route WebSockets in already loaded documents")]
-    public async Task ShouldRouteWebSocketsInAlreadyLoadedDocuments(IPage page, Server server)
+    public async Task ShouldRouteWebSocketsInAlreadyLoadedDocuments()
     {
-        await page.GotoAsync(server.EmptyPage);
-        var frame = await AttachFrame(page, "frame1", server.EmptyPage);
+        var page = await PageFixture();
+        await page.GotoAsync(Server.EmptyPage);
+        var frame = await AttachFrame(page, "frame1", Server.EmptyPage);
         await page.RouteWebSocketAsync(new Regex(".*"), ws =>
         {
             ws.OnMessage(message => ws.Send("mock-" + message.Text));
@@ -646,14 +662,15 @@ public class RouteWebSocketTests
       window.ws.addEventListener('message', event => window.log.push(event.data));
       window.ws.addEventListener('close', () => window.log.push('close'));
       window.ws.addEventListener('open', () => window.ws.send('hi'));
-    }", new { host = server.Host });
+    }", new { host = Server.Host });
             await Expect(async () => Assert.That(await target.EvaluateAsync<string[]>("() => window.log"), Is.EqualTo(new[] { "mock-hi" }))).ToPassAsync();
         }
     }
 
     [UpstreamTest("WS-030 should emit close upon frame navigation")]
-    public async Task ShouldEmitCloseUponFrameNavigation(IPage page, Server server)
+    public async Task ShouldEmitCloseUponFrameNavigation()
     {
+        var page = await PageFixture();
         var promise = WithResolvers<IWebSocketRoute>();
         await page.RouteWebSocketAsync(new Regex(".*"), ws =>
         {
@@ -661,7 +678,7 @@ public class RouteWebSocketTests
             promise.TrySetResult(ws);
         });
 
-        await SetupWS(page, server, "blob");
+        await SetupWS(page, Server, "blob");
 
         var route = await promise.Task;
         route.Send("hello");
@@ -669,18 +686,19 @@ public class RouteWebSocketTests
         await Expect(async () => Assert.That(await page.EvaluateAsync<string[]>("() => window.log"), Is.EqualTo(new[]
         {
             "open",
-            $"message: data=hello origin=ws://{server.Host} lastEventId=",
+            $"message: data=hello origin=ws://{Server.Host} lastEventId=",
         }))).ToPassAsync();
 
         var closedPromise = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
         route.OnClose((_, _) => closedPromise.TrySetResult());
-        await page.GotoAsync(server.EmptyPage);
+        await page.GotoAsync(Server.EmptyPage);
         await closedPromise.Task;
     }
 
     [UpstreamTest("WS-031 should emit close upon frame detach")]
-    public async Task ShouldEmitCloseUponFrameDetach(IPage page, Server server)
+    public async Task ShouldEmitCloseUponFrameDetach()
     {
+        var page = await PageFixture();
         var promise = WithResolvers<IWebSocketRoute>();
         await page.RouteWebSocketAsync(new Regex(".*"), ws =>
         {
@@ -688,8 +706,8 @@ public class RouteWebSocketTests
             promise.TrySetResult(ws);
         });
 
-        var frame = await AttachFrame(page, "frame1", server.EmptyPage);
-        await SetupWS(frame, server, "blob");
+        var frame = await AttachFrame(page, "frame1", Server.EmptyPage);
+        await SetupWS(frame, Server, "blob");
 
         var route = await promise.Task;
         route.Send("hello");
@@ -697,7 +715,7 @@ public class RouteWebSocketTests
         await Expect(async () => Assert.That(await frame.EvaluateAsync<string[]>("() => window.log"), Is.EqualTo(new[]
         {
             "open",
-            $"message: data=hello origin=ws://{server.Host} lastEventId=",
+            $"message: data=hello origin=ws://{Server.Host} lastEventId=",
         }))).ToPassAsync();
 
         var closedPromise = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
@@ -707,8 +725,9 @@ public class RouteWebSocketTests
     }
 
     [UpstreamTest("WS-032 should route on context")]
-    public async Task ShouldRouteOnContext(IPage page, Server server)
+    public async Task ShouldRouteOnContext()
     {
+        var page = await PageFixture();
         await page.RouteWebSocketAsync(new Regex("ws1"), ws =>
         {
             ws.OnMessage(message =>
@@ -737,14 +756,14 @@ public class RouteWebSocketTests
             });
         });
 
-        await page.GotoAsync(server.EmptyPage);
+        await page.GotoAsync(Server.EmptyPage);
         await page.EvaluateAsync(@"({ host }) => {
     window.log = [];
     window.ws1 = new WebSocket('ws://' + host + '/ws1');
     window.ws1.addEventListener('message', event => window.log.push(`ws1:${event.data}`));
     window.ws2 = new WebSocket('ws://' + host + '/ws2');
     window.ws2.addEventListener('message', event => window.log.push(`ws2:${event.data}`));
-  }", new { host = server.Host });
+  }", new { host = Server.Host });
 
         await page.EvaluateAsync("() => window.ws1.send('request')");
         await Expect(async () => Assert.That(await page.EvaluateAsync<string[]>("() => window.log"), Is.EqualTo(new[] { "ws1:page-mock-2" }))).ToPassAsync();
@@ -754,8 +773,9 @@ public class RouteWebSocketTests
     }
 
     [UpstreamTest("WS-033 should not throw after page closure")]
-    public async Task ShouldNotThrowAfterPageClosure(IPage page, Server server)
+    public async Task ShouldNotThrowAfterPageClosure()
     {
+        var page = await PageFixture();
         var promise = WithResolvers<IWebSocketRoute>();
         await page.RouteWebSocketAsync(new Regex(".*"), ws =>
         {
@@ -763,7 +783,7 @@ public class RouteWebSocketTests
             promise.TrySetResult(ws);
         });
 
-        await SetupWS(page, server, "blob");
+        await SetupWS(page, Server, "blob");
 
         var route = await promise.Task;
         // .NET: route.send() gives no task, so Promise.all([page.close(), route.send('hello')]) is the two calls and the await of the first.
@@ -773,10 +793,11 @@ public class RouteWebSocketTests
     }
 
     [UpstreamTest("WS-034 should not throw with empty handler")]
-    public async Task ShouldNotThrowWithEmptyHandler(IPage page, Server server)
+    public async Task ShouldNotThrowWithEmptyHandler()
     {
+        var page = await PageFixture();
         await page.RouteWebSocketAsync(new Regex(".*"), _ => { });
-        await SetupWS(page, server, "blob");
+        await SetupWS(page, Server, "blob");
         await Expect(async () => Assert.That(await page.EvaluateAsync<string[]>("() => window.log"), Is.EqualTo(new[] { "open" }))).ToPassAsync();
         await page.EvaluateAsync("() => window.ws.send('hi')");
         await page.EvaluateAsync("() => window.ws.send('hi2')");
@@ -784,8 +805,9 @@ public class RouteWebSocketTests
     }
 
     [UpstreamTest("WS-035 should throw when connecting twice")]
-    public async Task ShouldThrowWhenConnectingTwice(IPage page, Server server)
+    public async Task ShouldThrowWhenConnectingTwice()
     {
+        var page = await PageFixture();
         var promise = WithResolvers<Exception>();
 
         await page.RouteWebSocketAsync(new Regex(".*"), ws =>
@@ -800,17 +822,18 @@ public class RouteWebSocketTests
                 promise.TrySetResult(e);
             }
         });
-        await SetupWS(page, server, "blob");
+        await SetupWS(page, Server, "blob");
         var error = await promise.Task;
         Assert.That(error.Message, Does.Contain("Already connected to the server"));
     }
 
     [UpstreamTest("WS-036 should work with no trailing slash")]
-    public async Task ShouldWorkWithNoTrailingSlash(IPage page, Server server)
+    public async Task ShouldWorkWithNoTrailingSlash()
     {
+        var page = await PageFixture();
         var log = new List<string>();
         // No trailing slash!
-        await page.RouteWebSocketAsync("ws://" + server.Host, ws =>
+        await page.RouteWebSocketAsync("ws://" + Server.Host, ws =>
         {
             ws.OnMessage(message =>
             {
@@ -819,13 +842,13 @@ public class RouteWebSocketTests
             });
         });
 
-        await page.GotoAsync(server.EmptyPage);
+        await page.GotoAsync(Server.EmptyPage);
         await page.EvaluateAsync(@"({ host }) => {
     window.log = [];
     // No trailing slash!
     window.ws = new WebSocket('ws://' + host);
     window.ws.addEventListener('message', event => window.log.push(event.data));
-  }", new { host = server.Host });
+  }", new { host = Server.Host });
 
         await Expect(async () => Assert.That(await page.EvaluateAsync<int>("() => window.ws.readyState"), Is.EqualTo(1))).ToPassAsync();
         await page.EvaluateAsync("() => window.ws.send('query')");
@@ -834,9 +857,9 @@ public class RouteWebSocketTests
     }
 
     [UpstreamTest("WS-037 should work with baseURL")]
-    public async Task ShouldWorkWithBaseURL(ContextFactory contextFactory, Server server)
+    public async Task ShouldWorkWithBaseURL()
     {
-        var context = await contextFactory(new() { BaseURL = "http://" + server.Host });
+        var context = await ContextFactory(new() { BaseURL = "http://" + Server.Host });
         var page = await context.NewPageAsync();
 
         await page.RouteWebSocketAsync("/ws", ws =>
@@ -855,7 +878,7 @@ public class RouteWebSocketTests
             });
         });
 
-        await SetupWS(page, server, "blob");
+        await SetupWS(page, Server, "blob");
 
         await page.EvaluateAsync(@"async () => {
     await window.wsOpened;
@@ -865,16 +888,16 @@ public class RouteWebSocketTests
         await Expect(async () => Assert.That(await page.EvaluateAsync<string[]>("() => window.log"), Is.EqualTo(new[]
         {
             "open",
-            $"message: data=echo origin=ws://{server.Host} lastEventId=",
+            $"message: data=echo origin=ws://{Server.Host} lastEventId=",
         }))).ToPassAsync();
     }
 
     [UpstreamTest("WS-038 should work with baseURL regardless of scheme casing")]
     [LocalFixme("dotnet: URLMatch.ToWebSocketBaseURL makes 'ws://' only from a lower-case 'http://' of the baseURL, upstream ignores the case of the scheme, so the route '/ws' does not match with the baseURL 'HTTP://localhost:<port>'")]
-    public async Task ShouldWorkWithBaseURLRegardlessOfSchemeCasing(ContextFactory contextFactory, Server server)
+    public async Task ShouldWorkWithBaseURLRegardlessOfSchemeCasing()
     {
         // baseURL schemes are case-insensitive, same as everywhere else in URL matching.
-        var context = await contextFactory(new() { BaseURL = "HTTP://" + server.Host });
+        var context = await ContextFactory(new() { BaseURL = "HTTP://" + Server.Host });
         var page = await context.NewPageAsync();
 
         await page.RouteWebSocketAsync("/ws", ws =>
@@ -893,7 +916,7 @@ public class RouteWebSocketTests
             });
         });
 
-        await SetupWS(page, server, "blob");
+        await SetupWS(page, Server, "blob");
 
         await page.EvaluateAsync(@"async () => {
     await window.wsOpened;
@@ -903,25 +926,26 @@ public class RouteWebSocketTests
         await Expect(async () => Assert.That(await page.EvaluateAsync<string[]>("() => window.log"), Is.EqualTo(new[]
         {
             "open",
-            $"message: data=echo origin=ws://{server.Host} lastEventId=",
+            $"message: data=echo origin=ws://{Server.Host} lastEventId=",
         }))).ToPassAsync();
     }
 
     [UpstreamTest("WS-039 should expose protocols to the route handler")]
-    public async Task ShouldExposeProtocolsToTheRouteHandler(IPage page, Server server)
+    public async Task ShouldExposeProtocolsToTheRouteHandler()
     {
+        var page = await PageFixture();
         var routes = new List<IWebSocketRoute>();
         await page.RouteWebSocketAsync(new Regex(".*"), ws =>
         {
             routes.Add(ws);
         });
 
-        await page.GotoAsync(server.EmptyPage);
+        await page.GotoAsync(Server.EmptyPage);
         await page.EvaluateAsync(@"({ host }) => {
     window.wsNone = new WebSocket('ws://' + host + '/ws-none');
     window.wsString = new WebSocket('ws://' + host + '/ws-string', 'chat.v1');
     window.wsArray = new WebSocket('ws://' + host + '/ws-array', ['chat.v2', 'chat.v1']);
-  }", new { host = server.Host });
+  }", new { host = Server.Host });
 
         await Expect(() => Assert.That(routes.Count, Is.EqualTo(3))).ToPassAsync();
 
@@ -932,9 +956,10 @@ public class RouteWebSocketTests
     }
 
     [UpstreamTest("WS-040 should expose protocols on server-side route")]
-    public async Task ShouldExposeProtocolsOnServerSideRoute(IPage page, Server server)
+    public async Task ShouldExposeProtocolsOnServerSideRoute()
     {
-        var promise = WithResolvers<(IWebSocketRoute page, IWebSocketRoute server)>();
+        var page = await PageFixture();
+        var promise = WithResolvers<(IWebSocketRoute page, IWebSocketRoute Server)>();
         await page.RouteWebSocketAsync(new Regex(".*"), ws =>
         {
             // .NET: the variable is `serverRoute` upstream, which is a variable of the test here.
@@ -942,7 +967,7 @@ public class RouteWebSocketTests
             promise.TrySetResult((ws, serverRoute1));
         });
 
-        await SetupWS(page, server, "blob", new[] { "chat.v2", "chat.v1" });
+        await SetupWS(page, Server, "blob", new[] { "chat.v2", "chat.v1" });
         var (pageRoute, serverRoute) = await promise.Task;
         Assert.That(pageRoute.Protocols, Is.EqualTo(new[] { "chat.v2", "chat.v1" }));
         Assert.That(serverRoute.Protocols, Is.EqualTo(new[] { "chat.v2", "chat.v1" }));

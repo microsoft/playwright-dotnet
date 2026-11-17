@@ -21,127 +21,127 @@ using static Microsoft.Playwright.Tests.Fixtures.Utils;
 namespace Microsoft.Playwright.Tests.Page;
 
 /// <summary>Port of tests/page/page-add-init-script.spec.ts.</summary>
-public class PageAddInitScriptTests
+public class PageAddInitScriptTests : UpstreamPageTest
 {
     [UpstreamTest("IS-001 should evaluate before anything else on the page")]
-    public async Task ShouldEvaluateBeforeAnythingElseOnThePage(IPage page, Server server)
+    public async Task ShouldEvaluateBeforeAnythingElseOnThePage()
     {
         // .NET: AddInitScriptAsync takes the source of a script, not a function: the source calls the function, as the Node.js client does.
-        await page.AddInitScriptAsync(@"(function() {
+        await Page.AddInitScriptAsync(@"(function() {
     window['injected'] = 123;
   })()");
-        await page.GotoAsync(server.Prefix + "/tamperable.html");
-        Assert.That(await page.EvaluateAsync<int>("() => window['result']"), Is.EqualTo(123));
+        await Page.GotoAsync(Server.Prefix + "/tamperable.html");
+        Assert.That(await Page.EvaluateAsync<int>("() => window['result']"), Is.EqualTo(123));
     }
 
     [UpstreamTest("IS-002 should work with a path")]
-    public async Task ShouldWorkWithAPath(IPage page, Server server, Func<string, string> asset)
+    public async Task ShouldWorkWithAPath()
     {
-        await page.AddInitScriptAsync(scriptPath: asset("injectedfile.js"));
-        await page.GotoAsync(server.Prefix + "/tamperable.html");
-        Assert.That(await page.EvaluateAsync<int>("() => window['result']"), Is.EqualTo(123));
+        await Page.AddInitScriptAsync(scriptPath: Asset("injectedfile.js"));
+        await Page.GotoAsync(Server.Prefix + "/tamperable.html");
+        Assert.That(await Page.EvaluateAsync<int>("() => window['result']"), Is.EqualTo(123));
     }
 
     [UpstreamTest("IS-003 should work with content @smoke")]
-    public async Task ShouldWorkWithContent(IPage page, Server server)
+    public async Task ShouldWorkWithContent()
     {
-        await page.AddInitScriptAsync("window[\"injected\"] = 123");
-        await page.GotoAsync(server.Prefix + "/tamperable.html");
-        Assert.That(await page.EvaluateAsync<int>("() => window['result']"), Is.EqualTo(123));
+        await Page.AddInitScriptAsync("window[\"injected\"] = 123");
+        await Page.GotoAsync(Server.Prefix + "/tamperable.html");
+        Assert.That(await Page.EvaluateAsync<int>("() => window['result']"), Is.EqualTo(123));
     }
 
     [UpstreamTest("IS-005 should work with trailing comments")]
-    public async Task ShouldWorkWithTrailingComments(IPage page, Func<string, string> asset)
+    public async Task ShouldWorkWithTrailingComments()
     {
-        await page.AddInitScriptAsync("// comment");
-        await page.AddInitScriptAsync("window.secret = 42;");
-        await page.GotoAsync("data:text/html,<html></html>");
-        Assert.That(await page.EvaluateAsync<int>("secret"), Is.EqualTo(42));
+        await Page.AddInitScriptAsync("// comment");
+        await Page.AddInitScriptAsync("window.secret = 42;");
+        await Page.GotoAsync("data:text/html,<html></html>");
+        Assert.That(await Page.EvaluateAsync<int>("secret"), Is.EqualTo(42));
     }
 
     [UpstreamTest("IS-006 should support multiple scripts")]
-    public async Task ShouldSupportMultipleScripts(IPage page, Server server)
+    public async Task ShouldSupportMultipleScripts()
     {
         // .NET: AddInitScriptAsync takes the source of a script, not a function: the source calls the function, as the Node.js client does.
-        await page.AddInitScriptAsync(@"(function() {
+        await Page.AddInitScriptAsync(@"(function() {
     window['script1'] = 1;
   })()");
-        await page.AddInitScriptAsync(@"(function() {
+        await Page.AddInitScriptAsync(@"(function() {
     window['script2'] = 2;
   })()");
-        await page.GotoAsync(server.Prefix + "/tamperable.html");
-        Assert.That(await page.EvaluateAsync<int>("() => window['script1']"), Is.EqualTo(1));
-        Assert.That(await page.EvaluateAsync<int>("() => window['script2']"), Is.EqualTo(2));
+        await Page.GotoAsync(Server.Prefix + "/tamperable.html");
+        Assert.That(await Page.EvaluateAsync<int>("() => window['script1']"), Is.EqualTo(1));
+        Assert.That(await Page.EvaluateAsync<int>("() => window['script2']"), Is.EqualTo(2));
     }
 
     [UpstreamTest("IS-007 should work with CSP")]
-    public async Task ShouldWorkWithCSP(IPage page, Server server)
+    public async Task ShouldWorkWithCSP()
     {
-        server.SetCSP("/empty.html", "script-src " + server.Prefix);
+        Server.SetCSP("/empty.html", "script-src " + Server.Prefix);
         // .NET: AddInitScriptAsync takes the source of a script, not a function: the source calls the function, as the Node.js client does.
-        await page.AddInitScriptAsync(@"(function() {
+        await Page.AddInitScriptAsync(@"(function() {
     window['injected'] = 123;
   })()");
-        await page.GotoAsync(server.Prefix + "/empty.html");
-        Assert.That(await page.EvaluateAsync<int>("() => window['injected']"), Is.EqualTo(123));
+        await Page.GotoAsync(Server.Prefix + "/empty.html");
+        Assert.That(await Page.EvaluateAsync<int>("() => window['injected']"), Is.EqualTo(123));
 
         // Make sure CSP works.
-        await Catch(() => page.AddScriptTagAsync(new() { Content = "window.e = 10;" }));
-        Assert.That(await page.EvaluateAsync<object>("() => window['e']"), Is.Null);
+        await Catch(() => Page.AddScriptTagAsync(new() { Content = "window.e = 10;" }));
+        Assert.That(await Page.EvaluateAsync<object>("() => window['e']"), Is.Null);
     }
 
     [UpstreamTest("IS-008 should work after a cross origin navigation")]
-    public async Task ShouldWorkAfterACrossOriginNavigation(IPage page, Server server)
+    public async Task ShouldWorkAfterACrossOriginNavigation()
     {
-        await page.GotoAsync(server.CrossProcessPrefix);
+        await Page.GotoAsync(Server.CrossProcessPrefix);
         // .NET: AddInitScriptAsync takes the source of a script, not a function: the source calls the function, as the Node.js client does.
-        await page.AddInitScriptAsync(@"(function() {
+        await Page.AddInitScriptAsync(@"(function() {
     window['injected'] = 123;
   })()");
-        await page.GotoAsync(server.Prefix + "/tamperable.html");
-        Assert.That(await page.EvaluateAsync<int>("() => window['result']"), Is.EqualTo(123));
+        await Page.GotoAsync(Server.Prefix + "/tamperable.html");
+        Assert.That(await Page.EvaluateAsync<int>("() => window['result']"), Is.EqualTo(123));
     }
 
     [UpstreamTest("IS-009 should remove init script after dispose")]
-    public async Task ShouldRemoveInitScriptAfterDispose(IPage page, Server server)
+    public async Task ShouldRemoveInitScriptAfterDispose()
     {
         // .NET: AddInitScriptAsync takes the source of a script, not a function: the source calls the function, as the Node.js client does.
-        var disposable = await page.AddInitScriptAsync(@"(function() {
+        var disposable = await Page.AddInitScriptAsync(@"(function() {
     window['injected'] = 123;
   })()");
-        await page.GotoAsync(server.Prefix + "/tamperable.html");
-        Assert.That(await page.EvaluateAsync<int>("() => window['result']"), Is.EqualTo(123));
+        await Page.GotoAsync(Server.Prefix + "/tamperable.html");
+        Assert.That(await Page.EvaluateAsync<int>("() => window['result']"), Is.EqualTo(123));
 
         await disposable.DisposeAsync();
-        await page.GotoAsync(server.Prefix + "/tamperable.html");
-        Assert.That(await page.EvaluateAsync<object>("() => window['result']"), Is.Null);
+        await Page.GotoAsync(Server.Prefix + "/tamperable.html");
+        Assert.That(await Page.EvaluateAsync<object>("() => window['result']"), Is.Null);
     }
 
     [UpstreamTest("IS-010 should remove one of multiple init scripts after dispose")]
-    public async Task ShouldRemoveOneOfMultipleInitScriptsAfterDispose(IPage page, Server server)
+    public async Task ShouldRemoveOneOfMultipleInitScriptsAfterDispose()
     {
         // .NET: AddInitScriptAsync takes the source of a script, not a function: the source calls the function, as the Node.js client does.
-        var disposable1 = await page.AddInitScriptAsync(@"(function() {
+        var disposable1 = await Page.AddInitScriptAsync(@"(function() {
     window['script1'] = 1;
   })()");
-        await page.AddInitScriptAsync(@"(function() {
+        await Page.AddInitScriptAsync(@"(function() {
     window['script2'] = 2;
   })()");
-        await page.GotoAsync(server.Prefix + "/tamperable.html");
-        Assert.That(await page.EvaluateAsync<int>("() => window['script1']"), Is.EqualTo(1));
-        Assert.That(await page.EvaluateAsync<int>("() => window['script2']"), Is.EqualTo(2));
+        await Page.GotoAsync(Server.Prefix + "/tamperable.html");
+        Assert.That(await Page.EvaluateAsync<int>("() => window['script1']"), Is.EqualTo(1));
+        Assert.That(await Page.EvaluateAsync<int>("() => window['script2']"), Is.EqualTo(2));
 
         await disposable1.DisposeAsync();
-        await page.GotoAsync(server.Prefix + "/tamperable.html");
-        Assert.That(await page.EvaluateAsync<object>("() => window['script1']"), Is.Null);
-        Assert.That(await page.EvaluateAsync<int>("() => window['script2']"), Is.EqualTo(2));
+        await Page.GotoAsync(Server.Prefix + "/tamperable.html");
+        Assert.That(await Page.EvaluateAsync<object>("() => window['script1']"), Is.Null);
+        Assert.That(await Page.EvaluateAsync<int>("() => window['script2']"), Is.EqualTo(2));
     }
 
     [UpstreamTest("IS-011 init script should run only once in iframe")]
-    public async Task InitScriptShouldRunOnlyOnceInIframe(IPage page, Server server, string browserName, bool isBidi)
+    public async Task InitScriptShouldRunOnlyOnceInIframe()
     {
         var messages = new List<string>();
-        page.Console += (_, @event) =>
+        Page.Console += (_, @event) =>
         {
             if (@event.Text.StartsWith("init script:", StringComparison.Ordinal))
             {
@@ -149,12 +149,12 @@ public class PageAddInitScriptTests
             }
         };
         // .NET: AddInitScriptAsync takes the source of a script, not a function: the source calls the function, as the Node.js client does.
-        await page.AddInitScriptAsync("(() => console.log('init script:', location.pathname || 'no url yet'))()");
-        await page.GotoAsync(server.Prefix + "/frames/one-frame.html");
+        await Page.AddInitScriptAsync("(() => console.log('init script:', location.pathname || 'no url yet'))()");
+        await Page.GotoAsync(Server.Prefix + "/frames/one-frame.html");
         Assert.That(messages, Is.EqualTo(new[]
         {
             "init script: /frames/one-frame.html",
-            "init script: " + (browserName == "firefox" && !isBidi ? "no url yet" : "/frames/frame.html"),
+            "init script: " + (BrowserName == "firefox" && !IsBidi ? "no url yet" : "/frames/frame.html"),
         }));
     }
 }

@@ -65,7 +65,7 @@ public class UpstreamPlaywrightTest : WorkerAwareTest
 
     public IBrowserType BrowserType { get; private set; }
 
-    public string BrowserName => Env.BrowserName;
+    public static string BrowserName => Env.BrowserName;
 
     public Server Server { get; private set; }
 
@@ -79,53 +79,53 @@ public class UpstreamPlaywrightTest : WorkerAwareTest
     public TestInfo Info { get; private set; }
 
     /// <summary><c>PWTEST_SERVER_REGISTRY</c>: where the driver keeps the descriptors of the servers of <c>browser.bind()</c>.</summary>
-    public string ServerRegistry => Env.ServerRegistry;
+    public static string ServerRegistry => Env.ServerRegistry;
 
-    public string Channel => Env.Channel;
+    public static string Channel => Env.Channel;
 
-    public bool Headless => !Env.Headed;
+    public static bool Headless => !Env.Headed;
 
-    public string Mode => "default";
+    public static string Mode => "default";
 
-    public string Video => "off";
+    public static string Video => "off";
 
-    public string Trace => "off";
+    public static string Trace => "off";
 
-    public string Platform => Env.Platform;
+    public static string Platform => Env.Platform;
 
-    public bool IsWindows => Env.IsWindows;
+    public static bool IsWindows => Env.IsWindows;
 
-    public bool IsMac => Env.IsMac;
+    public static bool IsMac => Env.IsMac;
 
-    public bool IsLinux => Env.IsLinux;
+    public static bool IsLinux => Env.IsLinux;
 
-    public int MacVersion => Env.MacVersion;
+    public static int MacVersion => Env.MacVersion;
 
     /// <summary>
     /// The version of the Node.js that runs the tests upstream. A .NET test does not run in Node.js, so
     /// no test is skipped for an old version.
     /// </summary>
-    public (int Major, int Minor, int Patch) NodeVersion => (int.MaxValue, 0, 0);
+    public static (int Major, int Minor, int Patch) NodeVersion => (int.MaxValue, 0, 0);
 
     /// <summary>The <c>loopback</c> option of <c>serverFixtures.ts</c>: not set.</summary>
-    public string Loopback => null;
+    public static string Loopback => null;
 
-    public bool IsAndroid => false;
+    public static bool IsAndroid => false;
 
-    public bool IsElectron => false;
+    public static bool IsElectron => false;
 
-    public int ElectronMajorVersion => 0;
+    public static int ElectronMajorVersion => 0;
 
-    public bool IsBidi => Utils.IsBidiChannel(Channel);
+    public static bool IsBidi => Utils.IsBidiChannel(Channel);
 
-    public bool IsHeadlessShell => BrowserName == "chromium" && (Channel == "chromium-headless-shell" || (Channel == null && Headless));
+    public static bool IsHeadlessShell => BrowserName == "chromium" && (Channel == "chromium-headless-shell" || (Channel == null && Headless));
 
-    public bool IsFrozenWebkit =>
+    public static bool IsFrozenWebkit =>
         BrowserName == "webkit" && (Utils.HostPlatform.StartsWith("debian11", StringComparison.Ordinal) || Utils.HostPlatform.StartsWith("ubuntu20.04", StringComparison.Ordinal) || (IsMac && MacVersion < 15));
 
-    public bool AllowsThirdParty => BrowserName == "firefox";
+    public static bool AllowsThirdParty => BrowserName == "firefox";
 
-    public string DefaultSameSiteCookieValue
+    public static string DefaultSameSiteCookieValue
     {
         get
         {

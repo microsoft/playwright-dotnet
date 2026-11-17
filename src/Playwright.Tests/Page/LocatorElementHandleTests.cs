@@ -21,57 +21,57 @@ using static Microsoft.Playwright.Tests.Fixtures.Utils;
 namespace Microsoft.Playwright.Tests.Page;
 
 /// <summary>Port of tests/page/locator-element-handle.spec.ts.</summary>
-public class LocatorElementHandleTests
+public class LocatorElementHandleTests : UpstreamPageTest
 {
     [UpstreamTest("LO-079 should query existing element @smoke")]
-    public async Task ShouldQueryExistingElement(IPage page, Server server)
+    public async Task ShouldQueryExistingElement()
     {
-        await page.GotoAsync(server.Prefix + "/playground.html");
-        await page.SetContentAsync("<html><body><div class=\"second\"><div class=\"inner\">A</div></div></body></html>");
-        var html = page.Locator("html");
+        await Page.GotoAsync(Server.Prefix + "/playground.html");
+        await Page.SetContentAsync("<html><body><div class=\"second\"><div class=\"inner\">A</div></div></body></html>");
+        var html = Page.Locator("html");
         var second = html.Locator(".second");
         var inner = second.Locator(".inner");
-        var content = await page.EvaluateAsync<string>("e => e.textContent", await inner.ElementHandleAsync());
+        var content = await Page.EvaluateAsync<string>("e => e.textContent", await inner.ElementHandleAsync());
         Assert.That(content, Is.EqualTo("A"));
     }
 
     [UpstreamTest("LO-080 should query existing elements")]
-    public async Task ShouldQueryExistingElements(IPage page, Server server)
+    public async Task ShouldQueryExistingElements()
     {
-        await page.SetContentAsync("<html><body><div>A</div><br/><div>B</div></body></html>");
-        var html = page.Locator("html");
+        await Page.SetContentAsync("<html><body><div>A</div><br/><div>B</div></body></html>");
+        var html = Page.Locator("html");
         var elements = await html.Locator("div").ElementHandlesAsync();
         Assert.That(elements.Count, Is.EqualTo(2));
-        var promises = elements.Select(element => page.EvaluateAsync<string>("e => e.textContent", element));
+        var promises = elements.Select(element => Page.EvaluateAsync<string>("e => e.textContent", element));
         Assert.That(await PromiseAll(promises), Is.EqualTo(new[] { "A", "B" }));
     }
 
     [UpstreamTest("LO-081 should return empty array for non-existing elements")]
-    public async Task ShouldReturnEmptyArrayForNonExistingElements(IPage page, Server server)
+    public async Task ShouldReturnEmptyArrayForNonExistingElements()
     {
-        await page.SetContentAsync("<html><body><span>A</span><br/><span>B</span></body></html>");
-        var html = page.Locator("html");
+        await Page.SetContentAsync("<html><body><span>A</span><br/><span>B</span></body></html>");
+        var html = Page.Locator("html");
         var elements = await html.Locator("div").ElementHandlesAsync();
         Assert.That(elements.Count, Is.EqualTo(0));
     }
 
     [UpstreamTest("LO-082 xpath should query existing element")]
-    public async Task XpathShouldQueryExistingElement(IPage page, Server server)
+    public async Task XpathShouldQueryExistingElement()
     {
-        await page.GotoAsync(server.Prefix + "/playground.html");
-        await page.SetContentAsync("<html><body><div class=\"second\"><div class=\"inner\">A</div></div></body></html>");
-        var html = page.Locator("html");
+        await Page.GotoAsync(Server.Prefix + "/playground.html");
+        await Page.SetContentAsync("<html><body><div class=\"second\"><div class=\"inner\">A</div></div></body></html>");
+        var html = Page.Locator("html");
         var second = html.Locator("xpath=./body/div[contains(@class, 'second')]");
         var inner = second.Locator("xpath=./div[contains(@class, 'inner')]");
-        var content = await page.EvaluateAsync<string>("e => e.textContent", await inner.ElementHandleAsync());
+        var content = await Page.EvaluateAsync<string>("e => e.textContent", await inner.ElementHandleAsync());
         Assert.That(content, Is.EqualTo("A"));
     }
 
     [UpstreamTest("LO-083 xpath should return null for non-existing element")]
-    public async Task XpathShouldReturnNullForNonExistingElement(IPage page, Server server)
+    public async Task XpathShouldReturnNullForNonExistingElement()
     {
-        await page.SetContentAsync("<html><body><div class=\"second\"><div class=\"inner\">B</div></div></body></html>");
-        var html = page.Locator("html");
+        await Page.SetContentAsync("<html><body><div class=\"second\"><div class=\"inner\">B</div></div></body></html>");
+        var html = Page.Locator("html");
         var second = await html.Locator("xpath=/div[contains(@class, 'third')]").ElementHandlesAsync();
         Assert.That(second, Is.EqualTo(Array.Empty<IElementHandle>()));
     }

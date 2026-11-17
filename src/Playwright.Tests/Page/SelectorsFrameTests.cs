@@ -21,7 +21,7 @@ using static Microsoft.Playwright.Tests.Fixtures.Utils;
 namespace Microsoft.Playwright.Tests.Page;
 
 /// <summary>Port of tests/page/selectors-frame.spec.ts.</summary>
-public class SelectorsFrameTests
+public class SelectorsFrameTests : UpstreamPageTest
 {
     private static async Task RouteIframe(IPage page)
     {
@@ -60,11 +60,11 @@ public class SelectorsFrameTests
     }
 
     [UpstreamTest("SE-098 should work for iframe @smoke")]
-    public async Task ShouldWorkForIframe(IPage page, Server server)
+    public async Task ShouldWorkForIframe()
     {
-        await RouteIframe(page);
-        await page.GotoAsync(server.EmptyPage);
-        var button = page.Locator("iframe >> internal:control=enter-frame >> button");
+        await RouteIframe(Page);
+        await Page.GotoAsync(Server.EmptyPage);
+        var button = Page.Locator("iframe >> internal:control=enter-frame >> button");
         await button.WaitForAsync();
         Assert.That(await button.InnerTextAsync(), Is.EqualTo("Hello iframe"));
         await Expect(button).ToHaveTextAsync("Hello iframe");
@@ -72,11 +72,11 @@ public class SelectorsFrameTests
     }
 
     [UpstreamTest("SE-099 should work for iframe (handle)")]
-    public async Task ShouldWorkForIframeHandle(IPage page, Server server)
+    public async Task ShouldWorkForIframeHandle()
     {
-        await RouteIframe(page);
-        await page.GotoAsync(server.EmptyPage);
-        var body = await page.QuerySelectorAsync("body");
+        await RouteIframe(Page);
+        await Page.GotoAsync(Server.EmptyPage);
+        var body = await Page.QuerySelectorAsync("body");
         var button = await body.WaitForSelectorAsync("iframe >> internal:control=enter-frame >> button");
         Assert.That(await button.InnerTextAsync(), Is.EqualTo("Hello iframe"));
         Assert.That(await button.TextContentAsync(), Is.EqualTo("Hello iframe"));
@@ -84,11 +84,11 @@ public class SelectorsFrameTests
     }
 
     [UpstreamTest("SE-100 should work for nested iframe")]
-    public async Task ShouldWorkForNestedIframe(IPage page, Server server)
+    public async Task ShouldWorkForNestedIframe()
     {
-        await RouteIframe(page);
-        await page.GotoAsync(server.EmptyPage);
-        var button = page.Locator("iframe >> internal:control=enter-frame >> iframe >> internal:control=enter-frame >> button");
+        await RouteIframe(Page);
+        await Page.GotoAsync(Server.EmptyPage);
+        var button = Page.Locator("iframe >> internal:control=enter-frame >> iframe >> internal:control=enter-frame >> button");
         await button.WaitForAsync();
         Assert.That(await button.InnerTextAsync(), Is.EqualTo("Hello nested iframe"));
         await Expect(button).ToHaveTextAsync("Hello nested iframe");
@@ -96,11 +96,11 @@ public class SelectorsFrameTests
     }
 
     [UpstreamTest("SE-101 should work for nested iframe (handle)")]
-    public async Task ShouldWorkForNestedIframeHandle(IPage page, Server server)
+    public async Task ShouldWorkForNestedIframeHandle()
     {
-        await RouteIframe(page);
-        await page.GotoAsync(server.EmptyPage);
-        var body = await page.QuerySelectorAsync("body");
+        await RouteIframe(Page);
+        await Page.GotoAsync(Server.EmptyPage);
+        var body = await Page.QuerySelectorAsync("body");
         var button = await body.WaitForSelectorAsync("iframe >> internal:control=enter-frame >> iframe >> internal:control=enter-frame >> button");
         Assert.That(await button.InnerTextAsync(), Is.EqualTo("Hello nested iframe"));
         Assert.That(await button.TextContentAsync(), Is.EqualTo("Hello nested iframe"));
@@ -108,65 +108,65 @@ public class SelectorsFrameTests
     }
 
     [UpstreamTest("SE-102 should work for $ and $$")]
-    public async Task ShouldWorkForAnd(IPage page, Server server)
+    public async Task ShouldWorkForAnd()
     {
-        await RouteIframe(page);
-        await page.GotoAsync(server.EmptyPage);
-        var element = await page.QuerySelectorAsync("iframe >> internal:control=enter-frame >> button");
+        await RouteIframe(Page);
+        await Page.GotoAsync(Server.EmptyPage);
+        var element = await Page.QuerySelectorAsync("iframe >> internal:control=enter-frame >> button");
         Assert.That(await element.TextContentAsync(), Is.EqualTo("Hello iframe"));
-        var elements = await page.QuerySelectorAllAsync("iframe >> internal:control=enter-frame >> span");
+        var elements = await Page.QuerySelectorAllAsync("iframe >> internal:control=enter-frame >> span");
         Assert.That(elements, Has.Count.EqualTo(2));
     }
 
     [UpstreamTest("SE-103 $ should not wait for frame")]
-    public async Task ShouldNotWaitForFrame_SE103(IPage page, Server server)
+    public async Task ShouldNotWaitForFrame_SE103()
     {
-        await page.GotoAsync(server.EmptyPage);
-        Assert.That(await page.QuerySelectorAsync("iframe >> internal:control=enter-frame >> canvas"), Is.Null);
-        var body = await page.QuerySelectorAsync("body");
+        await Page.GotoAsync(Server.EmptyPage);
+        Assert.That(await Page.QuerySelectorAsync("iframe >> internal:control=enter-frame >> canvas"), Is.Null);
+        var body = await Page.QuerySelectorAsync("body");
         Assert.That(await body.QuerySelectorAsync("iframe >> internal:control=enter-frame >> canvas"), Is.Null);
     }
 
     [UpstreamTest("SE-104 $$ should not wait for frame")]
-    public async Task ShouldNotWaitForFrame_SE104(IPage page, Server server)
+    public async Task ShouldNotWaitForFrame_SE104()
     {
-        await page.GotoAsync(server.EmptyPage);
-        Assert.That(await page.QuerySelectorAllAsync("iframe >> internal:control=enter-frame >> canvas"), Has.Count.EqualTo(0));
-        var body = await page.QuerySelectorAsync("body");
+        await Page.GotoAsync(Server.EmptyPage);
+        Assert.That(await Page.QuerySelectorAllAsync("iframe >> internal:control=enter-frame >> canvas"), Has.Count.EqualTo(0));
+        var body = await Page.QuerySelectorAsync("body");
         Assert.That(await body.QuerySelectorAllAsync("iframe >> internal:control=enter-frame >> canvas"), Has.Count.EqualTo(0));
     }
 
     [UpstreamTest("SE-105 $eval should throw for missing frame")]
     [LocalFixme("dotnet: the message is 'Failed to find element matching selector \"iframe >> internal:control=enter-frame >> canvas\"', without the 'page.$eval: ' and 'elementHandle.$eval: ' prefixes of the calls")]
-    public async Task EvalShouldThrowForMissingFrame(IPage page, Server server)
+    public async Task EvalShouldThrowForMissingFrame()
     {
-        await page.GotoAsync(server.EmptyPage);
+        await Page.GotoAsync(Server.EmptyPage);
         {
-            var error = await Catch(() => page.EvalOnSelectorAsync("iframe >> internal:control=enter-frame >> canvas", "e => 1"));
+            var error = await Catch(() => Page.EvalOnSelectorAsync("iframe >> internal:control=enter-frame >> canvas", "e => 1"));
             Assert.That(error.Message, Does.Contain("page.$eval: Failed to find element matching selector"));
         }
         {
-            var body = await page.QuerySelectorAsync("body");
+            var body = await Page.QuerySelectorAsync("body");
             var error = await Catch(() => body.EvalOnSelectorAsync("iframe >> internal:control=enter-frame >> canvas", "e => 1"));
             Assert.That(error.Message, Does.Contain("elementHandle.$eval: Failed to find element matching selector"));
         }
     }
 
     [UpstreamTest("SE-106 $$eval should not throw for missing frame")]
-    public async Task EvalShouldNotThrowForMissingFrame(IPage page, Server server)
+    public async Task EvalShouldNotThrowForMissingFrame()
     {
-        await page.GotoAsync(server.EmptyPage);
-        Assert.That(await page.EvalOnSelectorAllAsync<int>("iframe >> internal:control=enter-frame >> canvas", "e => e.length"), Is.EqualTo(0));
-        var body = await page.QuerySelectorAsync("body");
+        await Page.GotoAsync(Server.EmptyPage);
+        Assert.That(await Page.EvalOnSelectorAllAsync<int>("iframe >> internal:control=enter-frame >> canvas", "e => e.length"), Is.EqualTo(0));
+        var body = await Page.QuerySelectorAsync("body");
         Assert.That(await body.EvalOnSelectorAllAsync<int>("iframe >> internal:control=enter-frame >> canvas", "e => e.length"), Is.EqualTo(0));
     }
 
     [UpstreamTest("SE-107 should work for $ and $$ (handle)")]
-    public async Task ShouldWorkForAndHandle(IPage page, Server server)
+    public async Task ShouldWorkForAndHandle()
     {
-        await RouteIframe(page);
-        await page.GotoAsync(server.EmptyPage);
-        var body = await page.QuerySelectorAsync("body");
+        await RouteIframe(Page);
+        await Page.GotoAsync(Server.EmptyPage);
+        var body = await Page.QuerySelectorAsync("body");
         var element = await body.QuerySelectorAsync("iframe >> internal:control=enter-frame >> button");
         Assert.That(await element.TextContentAsync(), Is.EqualTo("Hello iframe"));
         var elements = await body.QuerySelectorAllAsync("iframe >> internal:control=enter-frame >> span");
@@ -174,86 +174,86 @@ public class SelectorsFrameTests
     }
 
     [UpstreamTest("SE-108 should work for $eval")]
-    public async Task ShouldWorkForEval_SE108(IPage page, Server server)
+    public async Task ShouldWorkForEval_SE108()
     {
-        await RouteIframe(page);
-        await page.GotoAsync(server.EmptyPage);
-        var value = await page.EvalOnSelectorAsync<string>("iframe >> internal:control=enter-frame >> button", "b => b.nodeName");
+        await RouteIframe(Page);
+        await Page.GotoAsync(Server.EmptyPage);
+        var value = await Page.EvalOnSelectorAsync<string>("iframe >> internal:control=enter-frame >> button", "b => b.nodeName");
         Assert.That(value, Is.EqualTo("BUTTON"));
     }
 
     [UpstreamTest("SE-109 should work for $eval (handle)")]
-    public async Task ShouldWorkForEvalHandle_SE109(IPage page, Server server)
+    public async Task ShouldWorkForEvalHandle_SE109()
     {
-        await RouteIframe(page);
-        await page.GotoAsync(server.EmptyPage);
-        var body = await page.QuerySelectorAsync("body");
+        await RouteIframe(Page);
+        await Page.GotoAsync(Server.EmptyPage);
+        var body = await Page.QuerySelectorAsync("body");
         var value = await body.EvalOnSelectorAsync<string>("iframe >> internal:control=enter-frame >> button", "b => b.nodeName");
         Assert.That(value, Is.EqualTo("BUTTON"));
     }
 
     [UpstreamTest("SE-110 should work for $$eval")]
-    public async Task ShouldWorkForEval_SE110(IPage page, Server server)
+    public async Task ShouldWorkForEval_SE110()
     {
-        await RouteIframe(page);
-        await page.GotoAsync(server.EmptyPage);
-        var value = await page.EvalOnSelectorAllAsync<string[]>("iframe >> internal:control=enter-frame >> span", "ss => ss.map(s => s.textContent)");
+        await RouteIframe(Page);
+        await Page.GotoAsync(Server.EmptyPage);
+        var value = await Page.EvalOnSelectorAllAsync<string[]>("iframe >> internal:control=enter-frame >> span", "ss => ss.map(s => s.textContent)");
         Assert.That(value, Is.EqualTo(new[] { "1", "2" }));
     }
 
     [UpstreamTest("SE-111 should work for $$eval (handle)")]
-    public async Task ShouldWorkForEvalHandle_SE111(IPage page, Server server)
+    public async Task ShouldWorkForEvalHandle_SE111()
     {
-        await RouteIframe(page);
-        await page.GotoAsync(server.EmptyPage);
-        var body = await page.QuerySelectorAsync("body");
+        await RouteIframe(Page);
+        await Page.GotoAsync(Server.EmptyPage);
+        var body = await Page.QuerySelectorAsync("body");
         var value = await body.EvalOnSelectorAllAsync<string[]>("iframe >> internal:control=enter-frame >> span", "ss => ss.map(s => s.textContent)");
         Assert.That(value, Is.EqualTo(new[] { "1", "2" }));
     }
 
     [UpstreamTest("SE-112 should not allow dangling enter-frame")]
-    public async Task ShouldNotAllowDanglingEnterFrame(IPage page, Server server)
+    public async Task ShouldNotAllowDanglingEnterFrame()
     {
-        await RouteIframe(page);
-        await page.GotoAsync(server.EmptyPage);
-        var button = page.Locator("iframe >> internal:control=enter-frame");
+        await RouteIframe(Page);
+        await Page.GotoAsync(Server.EmptyPage);
+        var button = Page.Locator("iframe >> internal:control=enter-frame");
         var error = await Catch(() => button.ClickAsync());
         Assert.That(error.Message, Does.Contain("Selector cannot end with"));
         Assert.That(error.Message, Does.Contain("iframe >> internal:control=enter-frame"));
     }
 
     [UpstreamTest("SE-113 should not allow leading enter-frame")]
-    public async Task ShouldNotAllowLeadingEnterFrame(IPage page, Server server)
+    public async Task ShouldNotAllowLeadingEnterFrame()
     {
-        await RouteIframe(page);
-        await page.GotoAsync(server.EmptyPage);
-        var error = await Catch(() => page.WaitForSelectorAsync("internal:control=enter-frame >> button"));
+        await RouteIframe(Page);
+        await Page.GotoAsync(Server.EmptyPage);
+        var error = await Catch(() => Page.WaitForSelectorAsync("internal:control=enter-frame >> button"));
         Assert.That(error.Message, Does.Contain("Selector cannot start with"));
     }
 
     [UpstreamTest("SE-114 should not allow capturing before enter-frame")]
-    public async Task ShouldNotAllowCapturingBeforeEnterFrame(IPage page, Server server)
+    public async Task ShouldNotAllowCapturingBeforeEnterFrame()
     {
-        await RouteIframe(page);
-        await page.GotoAsync(server.EmptyPage);
-        var button = page.Locator("*css=iframe >> internal:control=enter-frame >> div");
+        await RouteIframe(Page);
+        await Page.GotoAsync(Server.EmptyPage);
+        var button = Page.Locator("*css=iframe >> internal:control=enter-frame >> div");
         var error = await Catch(() => button.ClickAsync());
         Assert.That(error.Message, Does.Contain("Can not capture the selector before diving into the frame"));
     }
 
     [UpstreamTest("SE-115 should capture after the enter-frame")]
-    public async Task ShouldCaptureAfterTheEnterFrame(IPage page, Server server)
+    public async Task ShouldCaptureAfterTheEnterFrame()
     {
-        await RouteIframe(page);
-        await page.GotoAsync(server.EmptyPage);
-        var div = page.Locator("iframe >> internal:control=enter-frame >> *css=div >> button");
+        await RouteIframe(Page);
+        await Page.GotoAsync(Server.EmptyPage);
+        var div = Page.Locator("iframe >> internal:control=enter-frame >> *css=div >> button");
         Assert.That(await div.InnerHTMLAsync(), Does.Contain("<button>"));
     }
 
     [UpstreamTest("SE-116 should click in lazy iframe")]
-    public async Task ShouldClickInLazyIframe(IPage page, Server server)
+    public async Task ShouldClickInLazyIframe()
     {
-        await page.RouteAsync("**/iframe.html", route =>
+        await Page.RouteAsync("**/iframe.html", route =>
         {
             IgnoreErrors(route.FulfillAsync(new()
             {
@@ -263,24 +263,24 @@ public class SelectorsFrameTests
         });
 
         // empty pge
-        await page.GotoAsync(server.EmptyPage);
+        await Page.GotoAsync(Server.EmptyPage);
 
         // add blank iframe
         SetTimeout(() =>
         {
-            IgnoreErrors(page.EvaluateAsync(@"() => {
+            IgnoreErrors(Page.EvaluateAsync(@"() => {
       const iframe = document.createElement('iframe');
       document.body.appendChild(iframe);
     }"));
             // navigate iframe
             SetTimeout(() =>
             {
-                IgnoreErrors(page.EvaluateAsync("() => document.querySelector('iframe').src = 'iframe.html'"));
+                IgnoreErrors(Page.EvaluateAsync("() => document.querySelector('iframe').src = 'iframe.html'"));
             }, 500);
         }, 500);
 
         // Click in iframe
-        var button = page.Locator("iframe >> internal:control=enter-frame >> button");
+        var button = Page.Locator("iframe >> internal:control=enter-frame >> button");
         // .NET: const [, text] = await Promise.all([...]);
         Task<string> textPromise;
         await PromiseAll(
@@ -292,14 +292,14 @@ public class SelectorsFrameTests
     }
 
     [UpstreamTest("SE-117 waitFor should survive frame reattach")]
-    public async Task WaitForShouldSurviveFrameReattach(IPage page, Server server)
+    public async Task WaitForShouldSurviveFrameReattach()
     {
-        await RouteIframe(page);
-        await page.GotoAsync(server.EmptyPage);
-        var button = page.Locator("iframe >> internal:control=enter-frame >> button:has-text(\"Hello nested iframe\")");
+        await RouteIframe(Page);
+        await Page.GotoAsync(Server.EmptyPage);
+        var button = Page.Locator("iframe >> internal:control=enter-frame >> button:has-text(\"Hello nested iframe\")");
         var promise = button.WaitForAsync();
-        await page.Locator("iframe").EvaluateAsync("e => e.remove()");
-        await page.EvaluateAsync(@"() => {
+        await Page.Locator("iframe").EvaluateAsync("e => e.remove()");
+        await Page.EvaluateAsync(@"() => {
     const iframe = document.createElement('iframe');
     iframe.src = 'iframe-2.html';
     document.body.appendChild(iframe);
@@ -308,14 +308,14 @@ public class SelectorsFrameTests
     }
 
     [UpstreamTest("SE-118 waitForSelector should survive frame reattach (handle)")]
-    public async Task WaitForSelectorShouldSurviveFrameReattachHandle(IPage page, Server server)
+    public async Task WaitForSelectorShouldSurviveFrameReattachHandle()
     {
-        await RouteIframe(page);
-        await page.GotoAsync(server.EmptyPage);
-        var body = await page.QuerySelectorAsync("body");
+        await RouteIframe(Page);
+        await Page.GotoAsync(Server.EmptyPage);
+        var body = await Page.QuerySelectorAsync("body");
         var promise = body.WaitForSelectorAsync("iframe >> internal:control=enter-frame >> button:has-text(\"Hello nested iframe\")");
-        await page.Locator("iframe").EvaluateAsync("e => e.remove()");
-        await page.EvaluateAsync(@"() => {
+        await Page.Locator("iframe").EvaluateAsync("e => e.remove()");
+        await Page.EvaluateAsync(@"() => {
     const iframe = document.createElement('iframe');
     iframe.src = 'iframe-2.html';
     document.body.appendChild(iframe);
@@ -324,25 +324,25 @@ public class SelectorsFrameTests
     }
 
     [UpstreamTest("SE-119 waitForSelector should survive iframe navigation (handle)")]
-    public async Task WaitForSelectorShouldSurviveIframeNavigationHandle(IPage page, Server server)
+    public async Task WaitForSelectorShouldSurviveIframeNavigationHandle()
     {
-        await RouteIframe(page);
-        await page.GotoAsync(server.EmptyPage);
-        var body = await page.QuerySelectorAsync("body");
+        await RouteIframe(Page);
+        await Page.GotoAsync(Server.EmptyPage);
+        var body = await Page.QuerySelectorAsync("body");
         var promise = body.WaitForSelectorAsync("iframe >> internal:control=enter-frame >> button:has-text(\"Hello nested iframe\")");
-        IgnoreErrors(page.Locator("iframe").EvaluateAsync("e => e.src = 'iframe-2.html'"));
+        IgnoreErrors(Page.Locator("iframe").EvaluateAsync("e => e.src = 'iframe-2.html'"));
         await promise;
     }
 
     [UpstreamTest("SE-120 click should survive frame reattach")]
-    public async Task ClickShouldSurviveFrameReattach(IPage page, Server server)
+    public async Task ClickShouldSurviveFrameReattach()
     {
-        await RouteIframe(page);
-        await page.GotoAsync(server.EmptyPage);
-        var button = page.Locator("iframe >> internal:control=enter-frame >> button:has-text(\"Hello nested iframe\")");
+        await RouteIframe(Page);
+        await Page.GotoAsync(Server.EmptyPage);
+        var button = Page.Locator("iframe >> internal:control=enter-frame >> button:has-text(\"Hello nested iframe\")");
         var promise = button.ClickAsync();
-        await page.Locator("iframe").EvaluateAsync("e => e.remove()");
-        await page.EvaluateAsync(@"() => {
+        await Page.Locator("iframe").EvaluateAsync("e => e.remove()");
+        await Page.EvaluateAsync(@"() => {
     const iframe = document.createElement('iframe');
     iframe.src = 'iframe-2.html';
     document.body.appendChild(iframe);
@@ -351,155 +351,155 @@ public class SelectorsFrameTests
     }
 
     [UpstreamTest("SE-121 click should survive iframe navigation")]
-    public async Task ClickShouldSurviveIframeNavigation(IPage page, Server server)
+    public async Task ClickShouldSurviveIframeNavigation()
     {
-        await RouteIframe(page);
-        await page.GotoAsync(server.EmptyPage);
-        var button = page.Locator("iframe >> internal:control=enter-frame >> button:has-text(\"Hello nested iframe\")");
+        await RouteIframe(Page);
+        await Page.GotoAsync(Server.EmptyPage);
+        var button = Page.Locator("iframe >> internal:control=enter-frame >> button:has-text(\"Hello nested iframe\")");
         var promise = button.ClickAsync();
-        IgnoreErrors(page.Locator("iframe").EvaluateAsync("e => e.src = 'iframe-2.html'"));
+        IgnoreErrors(Page.Locator("iframe").EvaluateAsync("e => e.src = 'iframe-2.html'"));
         await promise;
     }
 
     [UpstreamTest("SE-122 click should survive navigation")]
-    public async Task ClickShouldSurviveNavigation(IPage page, Server server)
+    public async Task ClickShouldSurviveNavigation()
     {
-        await RouteIframe(page);
-        await page.GotoAsync(server.Prefix + "/iframe.html");
-        var promise = page.ClickAsync("button:has-text(\"Hello nested iframe\")");
-        await page.WaitForTimeoutAsync(100);
-        await page.GotoAsync(server.Prefix + "/iframe-2.html");
+        await RouteIframe(Page);
+        await Page.GotoAsync(Server.Prefix + "/iframe.html");
+        var promise = Page.ClickAsync("button:has-text(\"Hello nested iframe\")");
+        await Page.WaitForTimeoutAsync(100);
+        await Page.GotoAsync(Server.Prefix + "/iframe-2.html");
         await promise;
     }
 
     [UpstreamTest("SE-123 should non work for non-frame")]
-    public async Task ShouldNonWorkForNonFrame(IPage page, Server server)
+    public async Task ShouldNonWorkForNonFrame()
     {
-        await RouteIframe(page);
-        await page.SetContentAsync("<div></div>");
-        var button = page.Locator("div >> internal:control=enter-frame >> button");
+        await RouteIframe(Page);
+        await Page.SetContentAsync("<div></div>");
+        var button = Page.Locator("div >> internal:control=enter-frame >> button");
         var error = await Catch(() => button.WaitForAsync());
         Assert.That(error.Message, Does.Contain("<div></div>"));
         Assert.That(error.Message, Does.Contain("<iframe> was expected"));
     }
 
     [UpstreamTest("SE-124 should match in a descendant frame")]
-    public async Task ShouldMatchInADescendantFrame(IPage page, Server server)
+    public async Task ShouldMatchInADescendantFrame()
     {
-        await RouteIframe(page);
-        await page.GotoAsync(server.EmptyPage);
+        await RouteIframe(Page);
+        await Page.GotoAsync(Server.EmptyPage);
         // The main frame has no <div>; only the iframe.html child frame does.
-        var div = page.Locator("internal:control=any-frame >> div");
+        var div = Page.Locator("internal:control=any-frame >> div");
         await div.WaitForAsync();
         await Expect(div).ToHaveCountAsync(1);
         Assert.That(await div.InnerHTMLAsync(), Does.Contain("<button>Hello iframe</button>"));
     }
 
     [UpstreamTest("SE-125 should match in a deeply nested frame")]
-    public async Task ShouldMatchInADeeplyNestedFrame(IPage page, Server server)
+    public async Task ShouldMatchInADeeplyNestedFrame()
     {
-        await RouteIframe(page);
-        await page.GotoAsync(server.EmptyPage);
+        await RouteIframe(Page);
+        await Page.GotoAsync(Server.EmptyPage);
         // The main frame has no <div>; only the iframe.html child frame does.
-        var button = page.Locator("internal:control=any-frame >> button[tag=\"iframe2\"]");
+        var button = Page.Locator("internal:control=any-frame >> button[tag=\"iframe2\"]");
         await button.WaitForAsync();
         await Expect(button).ToHaveCountAsync(1);
         Assert.That(await button.TextContentAsync(), Is.EqualTo("Hello nested iframe"));
     }
 
     [UpstreamTest("SE-126 should not match a chain across frames")]
-    public async Task ShouldNotMatchAChainAcrossFrames(IPage page, Server server)
+    public async Task ShouldNotMatchAChainAcrossFrames()
     {
-        await RouteIframe(page);
-        await page.GotoAsync(server.EmptyPage);
+        await RouteIframe(Page);
+        await Page.GotoAsync(Server.EmptyPage);
         // The <div> lives in the iframe.html frame, while the button lives in the frame nested below it.
-        await Expect(page.Locator("internal:control=any-frame >> div >> button[tag=\"iframe2\"]")).ToHaveCountAsync(0);
-        await Expect(page.Locator("internal:control=any-frame >> div >> button")).ToHaveTextAsync("Hello iframe");
+        await Expect(Page.Locator("internal:control=any-frame >> div >> button[tag=\"iframe2\"]")).ToHaveCountAsync(0);
+        await Expect(Page.Locator("internal:control=any-frame >> div >> button")).ToHaveTextAsync("Hello iframe");
     }
 
     [UpstreamTest("SE-127 should match multiple elements")]
-    public async Task ShouldMatchMultipleElements(IPage page, Server server)
+    public async Task ShouldMatchMultipleElements()
     {
-        await page.RouteAsync("**/empty.html", route =>
+        await Page.RouteAsync("**/empty.html", route =>
         {
             IgnoreErrors(route.FulfillAsync(new() { Body = "<iframe src=\"a.html\"></iframe><iframe src=\"b.html\"></iframe>", ContentType = "text/html" }));
         });
-        await page.RouteAsync("**/a.html", route =>
+        await Page.RouteAsync("**/a.html", route =>
         {
             IgnoreErrors(route.FulfillAsync(new() { Body = "<div>one</div>", ContentType = "text/html" }));
         });
-        await page.RouteAsync("**/b.html", route =>
+        await Page.RouteAsync("**/b.html", route =>
         {
             IgnoreErrors(route.FulfillAsync(new() { Body = "<span>two</span><span>three</span>", ContentType = "text/html" }));
         });
-        await page.GotoAsync(server.EmptyPage);
+        await Page.GotoAsync(Server.EmptyPage);
 
-        var texts = await page.EvalOnSelectorAllAsync<string[]>("internal:control=any-frame >> span", "els => els.map(e => e.textContent)");
+        var texts = await Page.EvalOnSelectorAllAsync<string[]>("internal:control=any-frame >> span", "els => els.map(e => e.textContent)");
         Assert.That(texts, Is.EqualTo(new[] { "two", "three" }));
     }
 
     [UpstreamTest("SE-128 should throw when matching elements in multiple frames")]
-    public async Task ShouldThrowWhenMatchingElementsInMultipleFrames(IPage page, Server server)
+    public async Task ShouldThrowWhenMatchingElementsInMultipleFrames()
     {
-        await page.RouteAsync("**/empty.html", route =>
+        await Page.RouteAsync("**/empty.html", route =>
         {
             IgnoreErrors(route.FulfillAsync(new() { Body = "<iframe src=\"a.html\"></iframe><iframe src=\"b.html\"></iframe>", ContentType = "text/html" }));
         });
-        await page.RouteAsync("**/a.html", route =>
+        await Page.RouteAsync("**/a.html", route =>
         {
             IgnoreErrors(route.FulfillAsync(new() { Body = "<div>one</div>", ContentType = "text/html" }));
         });
-        await page.RouteAsync("**/b.html", route =>
+        await Page.RouteAsync("**/b.html", route =>
         {
             IgnoreErrors(route.FulfillAsync(new() { Body = "<div>two</div>", ContentType = "text/html" }));
         });
-        await page.GotoAsync(server.EmptyPage);
+        await Page.GotoAsync(Server.EmptyPage);
 
         // Make sure both child frames have their <div> before matching, otherwise resolution
         // may transiently collapse to a single frame.
-        await Expect(() => Assert.That(page.Frames.Count, Is.EqualTo(3))).ToPassAsync();
-        foreach (var frame in page.Frames)
+        await Expect(() => Assert.That(Page.Frames.Count, Is.EqualTo(3))).ToPassAsync();
+        foreach (var frame in Page.Frames)
         {
-            if (frame != page.MainFrame)
+            if (frame != Page.MainFrame)
             {
                 await frame.WaitForSelectorAsync("div");
             }
         }
 
-        var error = await Catch(() => page.Locator("internal:control=any-frame >> div").InnerHTMLAsync());
+        var error = await Catch(() => Page.Locator("internal:control=any-frame >> div").InnerHTMLAsync());
         Assert.That(error.Message, Does.Contain("frameLocator() matched elements in multiple frames"));
     }
 
     [UpstreamTest("SE-129 should not allow any-frame in the middle of a selector")]
-    public async Task ShouldNotAllowAnyFrameInTheMiddleOfASelector(IPage page, Server server)
+    public async Task ShouldNotAllowAnyFrameInTheMiddleOfASelector()
     {
-        await RouteIframe(page);
-        await page.GotoAsync(server.EmptyPage);
-        var error = await Catch(() => page.Locator("iframe >> internal:control=any-frame >> div").WaitForAsync());
+        await RouteIframe(Page);
+        await Page.GotoAsync(Server.EmptyPage);
+        var error = await Catch(() => Page.Locator("iframe >> internal:control=any-frame >> div").WaitForAsync());
         Assert.That(error.Message, Does.Contain("\"any-frame\" is only allowed as the first selector token"));
     }
 
     [UpstreamTest("SE-130 should allow entering frames from any frame")]
-    public async Task ShouldAllowEnteringFramesFromAnyFrame(IPage page, Server server)
+    public async Task ShouldAllowEnteringFramesFromAnyFrame()
     {
-        await RouteIframe(page);
-        await page.GotoAsync(server.EmptyPage);
-        var button = page.Locator("internal:control=any-frame >> iframe[src=\"iframe-2.html\"] >> internal:control=enter-frame >> button");
+        await RouteIframe(Page);
+        await Page.GotoAsync(Server.EmptyPage);
+        var button = Page.Locator("internal:control=any-frame >> iframe[src=\"iframe-2.html\"] >> internal:control=enter-frame >> button");
         await button.WaitForAsync();
         Assert.That(await button.InnerTextAsync(), Is.EqualTo("Hello nested iframe"));
     }
 
     [UpstreamTest("SE-131 should not allow any-frame after entering a frame")]
-    public async Task ShouldNotAllowAnyFrameAfterEnteringAFrame(IPage page)
+    public async Task ShouldNotAllowAnyFrameAfterEnteringAFrame()
     {
-        var error = await Catch(() => page.Locator("iframe >> internal:control=enter-frame >> internal:control=any-frame >> button").CountAsync());
+        var error = await Catch(() => Page.Locator("iframe >> internal:control=enter-frame >> internal:control=any-frame >> button").CountAsync());
         Assert.That(error.Message, Does.Contain("\"any-frame\" is only allowed as the first selector token"));
     }
 
     [UpstreamTest("SE-132 should not allow dangling enter-frame after any-frame")]
-    public async Task ShouldNotAllowDanglingEnterFrameAfterAnyFrame(IPage page)
+    public async Task ShouldNotAllowDanglingEnterFrameAfterAnyFrame()
     {
-        var error = await Catch(() => page.Locator("internal:control=any-frame >> iframe >> internal:control=enter-frame").CountAsync());
+        var error = await Catch(() => Page.Locator("internal:control=any-frame >> iframe >> internal:control=enter-frame").CountAsync());
         Assert.That(error.Message, Does.Contain("Selector cannot end with entering frame"));
     }
 }

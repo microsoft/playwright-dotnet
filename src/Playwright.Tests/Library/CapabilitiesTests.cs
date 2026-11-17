@@ -22,14 +22,14 @@ using static Microsoft.Playwright.Tests.Fixtures.Utils;
 namespace Microsoft.Playwright.Tests.Library;
 
 /// <summary>Port of tests/library/capabilities.spec.ts.</summary>
-public class CapabilitiesTests
+public class CapabilitiesTests : UpstreamBrowserTest
 {
     [UpstreamTest("CA-001 SharedArrayBuffer should work @smoke")]
-    public async Task SharedArrayBufferShouldWork(ContextFactory contextFactory, Server httpsServer)
+    public async Task SharedArrayBufferShouldWork()
     {
-        var context = await contextFactory(new() { IgnoreHTTPSErrors = true });
+        var context = await ContextFactory(new() { IgnoreHTTPSErrors = true });
         var page = await context.NewPageAsync();
-        httpsServer.SetRoute("/sharedarraybuffer", (req, res) =>
+        HttpsServer.SetRoute("/sharedarraybuffer", (req, res) =>
         {
             res.SetHeader("Cross-Origin-Opener-Policy", "same-origin");
             res.SetHeader("Cross-Origin-Embedder-Policy", "require-corp");
@@ -40,21 +40,23 @@ public class CapabilitiesTests
       <script>window.onload = () => console.log('onload')</script>
     ");
         });
-        await page.GotoAsync(httpsServer.Prefix + "/sharedarraybuffer");
+        await page.GotoAsync(HttpsServer.Prefix + "/sharedarraybuffer");
         Assert.That(await page.EvaluateAsync<string>("() => typeof SharedArrayBuffer"), Is.EqualTo("function"));
     }
 
     [UpstreamTest("CA-002 Web Assembly should work @smoke")]
-    public async Task WebAssemblyShouldWork(IPage page, Server server)
+    public async Task WebAssemblyShouldWork()
     {
-        await page.GotoAsync(server.Prefix + "/wasm/table2.html");
+        var page = await PageFixture();
+        await page.GotoAsync(Server.Prefix + "/wasm/table2.html");
         Assert.That(await page.EvaluateAsync<string>("loadTable()"), Is.EqualTo("42, 83"));
     }
 
     [UpstreamTest("CA-003 WebSocket should work @smoke")]
-    public async Task WebSocketShouldWork(IPage page, Server server)
+    public async Task WebSocketShouldWork()
     {
-        server.SendOnWebSocketConnection("incoming");
+        var page = await PageFixture();
+        Server.SendOnWebSocketConnection("incoming");
         var value = await page.EvaluateAsync<string>(@"host => {
     let cb;
     const result = new Promise(f => cb = f);
@@ -62,14 +64,15 @@ public class CapabilitiesTests
     ws.addEventListener('message', data => { ws.close(); cb(data.data); });
     ws.addEventListener('error', error => cb('Error'));
     return result;
-  }", server.Host);
+  }", Server.Host);
         Assert.That(value, Is.EqualTo("incoming"));
     }
 
     [UpstreamTest("CA-004 should respect CSP @smoke")]
-    public async Task ShouldRespectCSP(IPage page, Server server)
+    public async Task ShouldRespectCSP()
     {
-        server.SetRoute("/empty.html", (req, res) =>
+        var page = await PageFixture();
+        Server.SetRoute("/empty.html", (req, res) =>
         {
             res.SetHeader("Content-Security-Policy", "script-src 'unsafe-inline';");
             res.End(@"
@@ -79,18 +82,19 @@ public class CapabilitiesTests
       </script>");
         });
 
-        await page.GotoAsync(server.EmptyPage);
+        await page.GotoAsync(Server.EmptyPage);
         Assert.That(await page.EvaluateAsync<string>("() => window['testStatus']"), Is.EqualTo("SUCCESS"));
     }
 
     [UpstreamTest("CA-005 should play video @smoke")]
-    public async Task ShouldPlayVideo(IPage page, Func<string, string> asset, string browserName, bool isWindows, bool isLinux, string mode)
+    public async Task ShouldPlayVideo()
     {
-        Info.Skip(browserName == "webkit" && isWindows, "passes locally but fails on GitHub Action bot, apparently due to a Media Pack issue in the Windows Server");
+        var page = await PageFixture();
+        Info.Skip(BrowserName == "webkit" && IsWindows, "passes locally but fails on GitHub Action bot, apparently due to a Media Pack issue in the Windows Server");
 
         // Safari only plays mp4 so we test WebKit with an .mp4 clip.
-        var fileName = browserName == "webkit" ? "video_mp4.html" : "video.html";
-        var absolutePath = asset(fileName);
+        var fileName = BrowserName == "webkit" ? "video_mp4.html" : "video.html";
+        var absolutePath = Asset(fileName);
         // Our test server doesn't support range requests required to play on Mac,
         // so we load the page using a file url.
         await page.GotoAsync(new Uri(absolutePath).AbsoluteUri);
@@ -99,11 +103,12 @@ public class CapabilitiesTests
     }
 
     [UpstreamTest("CA-006 should play webm video @smoke")]
-    public async Task ShouldPlayWebmVideo(IPage page, Func<string, string> asset, string browserName, string platform, int macVersion, string mode)
+    public async Task ShouldPlayWebmVideo()
     {
-        Info.Skip(browserName == "webkit" && platform == "win32", "not supported");
+        var page = await PageFixture();
+        Info.Skip(BrowserName == "webkit" && Platform == "win32", "not supported");
 
-        var absolutePath = asset("video_webm.html");
+        var absolutePath = Asset("video_webm.html");
         // Our test server doesn't support range requests required to play on Mac,
         // so we load the page using a file url.
         await page.GotoAsync(new Uri(absolutePath).AbsoluteUri);
@@ -112,13 +117,14 @@ public class CapabilitiesTests
     }
 
     [UpstreamTest("CA-007 should play audio @smoke")]
-    public async Task ShouldPlayAudio(IPage page, Server server, string browserName, string platform, int macVersion)
+    public async Task ShouldPlayAudio()
     {
-        Info.Fixme(browserName == "webkit" && platform == "win32", "https://github.com/microsoft/playwright/issues/10892");
-        Info.Skip(browserName == "webkit" && platform == "darwin" && macVersion == 15, "audio output is unreliable on hosted macOS 15 runners");
+        var page = await PageFixture();
+        Info.Fixme(BrowserName == "webkit" && Platform == "win32", "https://github.com/microsoft/playwright/issues/10892");
+        Info.Skip(BrowserName == "webkit" && Platform == "darwin" && MacVersion == 15, "audio output is unreliable on hosted macOS 15 runners");
 
-        await page.GotoAsync(server.EmptyPage);
-        await page.SetContentAsync($"<audio src=\"{server.Prefix}/example.mp3\"></audio>");
+        await page.GotoAsync(Server.EmptyPage);
+        await page.SetContentAsync($"<audio src=\"{Server.Prefix}/example.mp3\"></audio>");
         await page.EvalOnSelectorAsync("audio", "e => e.play()");
         await page.WaitForTimeoutAsync(3000);
         await page.EvalOnSelectorAsync("audio", "e => e.pause()");
@@ -126,8 +132,9 @@ public class CapabilitiesTests
     }
 
     [UpstreamTest("CA-008 should support webgl @smoke")]
-    public async Task ShouldSupportWebgl(IPage page)
+    public async Task ShouldSupportWebgl()
     {
+        var page = await PageFixture();
         var hasWebGL = await page.EvaluateAsync<bool>(@"() => {
     const canvas = document.createElement('canvas');
     return !!canvas.getContext('webgl');
@@ -136,9 +143,10 @@ public class CapabilitiesTests
     }
 
     [UpstreamTest("CA-009 should support webgl 2 @smoke")]
-    public async Task ShouldSupportWebgl2(IPage page, string browserName, bool isWindows)
+    public async Task ShouldSupportWebgl2()
     {
-        Info.Fixme(browserName == "firefox" && isWindows);
+        var page = await PageFixture();
+        Info.Fixme(BrowserName == "firefox" && IsWindows);
 
         var hasWebGL2 = await page.EvaluateAsync<bool>(@"() => {
     const canvas = document.createElement('canvas');
@@ -148,18 +156,20 @@ public class CapabilitiesTests
     }
 
     [UpstreamTest("CA-010 should not crash on page with mp4 @smoke")]
-    public async Task ShouldNotCrashOnPageWithMp4(IPage page, Server server, string platform, string browserName)
+    public async Task ShouldNotCrashOnPageWithMp4()
     {
-        Info.Fixme(browserName == "webkit" && platform == "win32", "https://github.com/microsoft/playwright/issues/11009, times out in setContent");
-        await page.SetContentAsync($"<video><source src=\"{server.Prefix}/movie.mp4\"/></video>");
+        var page = await PageFixture();
+        Info.Fixme(BrowserName == "webkit" && Platform == "win32", "https://github.com/microsoft/playwright/issues/11009, times out in setContent");
+        await page.SetContentAsync($"<video><source src=\"{Server.Prefix}/movie.mp4\"/></video>");
         await page.WaitForTimeoutAsync(1000);
     }
 
     [UpstreamTest("CA-011 should not crash on showDirectoryPicker")]
-    public async Task ShouldNotCrashOnShowDirectoryPicker(IPage page, Server server, string browserName, int browserMajorVersion)
+    public async Task ShouldNotCrashOnShowDirectoryPicker()
     {
-        Info.Skip(browserName != "chromium", "showDirectoryPicker is only available in Chromium");
-        await page.GotoAsync(server.EmptyPage);
+        var page = await PageFixture();
+        Info.Skip(BrowserName != "chromium", "showDirectoryPicker is only available in Chromium");
+        await page.GotoAsync(Server.EmptyPage);
         // "User activation is required to show a file picker." - so we click first.
         await page.Locator("body").ClickAsync();
         await page.EvaluateAsync(@"() => {
@@ -174,9 +184,10 @@ public class CapabilitiesTests
     }
 
     [UpstreamTest("CA-012 should not crash on storage.getDirectory()")]
-    public async Task ShouldNotCrashOnStorageGetDirectory(IPage page, Server server, string browserName)
+    public async Task ShouldNotCrashOnStorageGetDirectory()
     {
-        await page.GotoAsync(server.EmptyPage);
+        var page = await PageFixture();
+        await page.GotoAsync(Server.EmptyPage);
         // .NET: error is the value of the call or its exception, as upstream's .catch(e => e) gives.
         object error;
         try
@@ -190,7 +201,7 @@ public class CapabilitiesTests
         {
             error = e;
         }
-        if (browserName == "webkit")
+        if (BrowserName == "webkit")
         {
             Assert.That(((Exception)error).Message, Does.Contain("UnknownError: The operation failed for an unknown transient reason"));
         }
@@ -201,30 +212,33 @@ public class CapabilitiesTests
     }
 
     [UpstreamTest("CA-013 navigator.clipboard should be present")]
-    public async Task NavigatorClipboardShouldBePresent(IPage page, Server server)
+    public async Task NavigatorClipboardShouldBePresent()
     {
-        await page.GotoAsync(server.EmptyPage);
+        var page = await PageFixture();
+        await page.GotoAsync(Server.EmptyPage);
         Assert.That(await page.EvaluateAsync<object>("() => navigator.clipboard"), Is.Not.Null);
     }
 
     [UpstreamTest("CA-014 should set CloseEvent.wasClean to false when the server terminates a WebSocket connection")]
-    public async Task ShouldSetCloseEventWasCleanToFalseWhenTheServerTerminatesAWebSocketConnection(IPage page, Server server)
+    public async Task ShouldSetCloseEventWasCleanToFalseWhenTheServerTerminatesAWebSocketConnection()
     {
-        server.OnceWebSocketConnection(socket =>
+        var page = await PageFixture();
+        Server.OnceWebSocketConnection(socket =>
         {
             socket.Terminate();
         });
         var wasClean = await page.EvaluateAsync<bool>(@"port => new Promise(resolve => {
     const ws = new WebSocket('ws://localhost:' + port + '/ws');
     ws.addEventListener('close', error => resolve(error.wasClean));
-  })", server.Port);
+  })", Server.Port);
         Assert.That(wasClean, Is.EqualTo(false));
     }
 
     [UpstreamTest("CA-015 serviceWorker should intercept document request")]
-    public async Task ServiceWorkerShouldInterceptDocumentRequest(IPage page, Server server)
+    public async Task ServiceWorkerShouldInterceptDocumentRequest()
     {
-        server.SetRoute("/sw.js", (req, res) =>
+        var page = await PageFixture();
+        Server.SetRoute("/sw.js", (req, res) =>
         {
             res.SetHeader("Content-Type", "application/javascript");
             res.End(@"
@@ -236,7 +250,7 @@ public class CapabilitiesTests
       });
     ");
         });
-        await page.GotoAsync(server.EmptyPage);
+        await page.GotoAsync(Server.EmptyPage);
         await page.EvaluateAsync(@"async () => {
     await navigator.serviceWorker.register('/sw.js');
     await new Promise(resolve => navigator.serviceWorker.oncontrollerchange = resolve);
@@ -246,10 +260,11 @@ public class CapabilitiesTests
     }
 
     [UpstreamTest("CA-016 webkit should define window.safari")]
-    public async Task WebkitShouldDefineWindowSafari(IPage page, Server server, string browserName)
+    public async Task WebkitShouldDefineWindowSafari()
     {
-        Info.Skip(browserName != "webkit");
-        await page.GotoAsync(server.EmptyPage);
+        var page = await PageFixture();
+        Info.Skip(BrowserName != "webkit");
+        await page.GotoAsync(Server.EmptyPage);
         var defined = await page.EvaluateAsync<bool>("() => !!window.safari");
         Assert.That(defined, Is.True);
         Assert.That(await page.EvaluateAsync<string>("() => typeof window.safari.pushNotification"), Is.EqualTo("object"));
@@ -257,9 +272,10 @@ public class CapabilitiesTests
     }
 
     [UpstreamTest("CA-017 make sure that XMLHttpRequest upload events are emitted correctly")]
-    public async Task MakeSureThatXMLHttpRequestUploadEventsAreEmittedCorrectly(IPage page, Server server)
+    public async Task MakeSureThatXMLHttpRequestUploadEventsAreEmittedCorrectly()
     {
-        await page.GotoAsync(server.EmptyPage);
+        var page = await PageFixture();
+        await page.GotoAsync(Server.EmptyPage);
         var events = await page.EvaluateAsync<string[]>(@"async () => {
     const events = [];
     const xhr = new XMLHttpRequest();
@@ -276,28 +292,31 @@ public class CapabilitiesTests
     }
 
     [UpstreamTest("CA-018 loading in HTMLImageElement.prototype")]
-    public async Task LoadingInHTMLImageElementPrototype(IPage page, Server server)
+    public async Task LoadingInHTMLImageElementPrototype()
     {
-        await page.GotoAsync(server.EmptyPage);
+        var page = await PageFixture();
+        await page.GotoAsync(Server.EmptyPage);
         var defined = await page.EvaluateAsync<bool>("() => 'loading' in HTMLImageElement.prototype");
         Assert.That(defined, Is.True);
     }
 
     [UpstreamTest("CA-019 window.GestureEvent in WebKit")]
-    public async Task WindowGestureEventInWebKit(IPage page, Server server, string browserName)
+    public async Task WindowGestureEventInWebKit()
     {
-        await page.GotoAsync(server.EmptyPage);
+        var page = await PageFixture();
+        await page.GotoAsync(Server.EmptyPage);
         var defined = await page.EvaluateAsync<bool>("() => 'GestureEvent' in window");
-        Assert.That(defined, Is.EqualTo(browserName == "webkit"));
+        Assert.That(defined, Is.EqualTo(BrowserName == "webkit"));
         var type = await page.EvaluateAsync<string>("() => typeof window.GestureEvent");
-        Assert.That(type, Is.EqualTo(browserName == "webkit" ? "function" : "undefined"));
+        Assert.That(type, Is.EqualTo(BrowserName == "webkit" ? "function" : "undefined"));
     }
 
     [UpstreamTest("CA-020 requestFullscreen")]
-    public async Task RequestFullscreen(IPage page, Server server, string browserName, bool headless)
+    public async Task RequestFullscreen()
     {
-        Info.Fixme(browserName == "firefox" && !headless, "Error: Request for fullscreen was denied because requesting element is not in the currently focused tab");
-        await page.GotoAsync(server.EmptyPage);
+        var page = await PageFixture();
+        Info.Fixme(BrowserName == "firefox" && !Headless, "Error: Request for fullscreen was denied because requesting element is not in the currently focused tab");
+        await page.GotoAsync(Server.EmptyPage);
         await page.EvaluateAsync(@"() => {
     const result = new Promise(resolve => document.addEventListener('fullscreenchange', resolve));
     void document.documentElement.requestFullscreen().then(() => console.log('success')).catch(e => console.log(e));
@@ -313,11 +332,12 @@ public class CapabilitiesTests
     }
 
     [UpstreamTest("CA-021 should send no Content-Length header for GET requests with a Content-Type")]
-    public async Task ShouldSendNoContentLengthHeaderForGETRequestsWithAContentType(IPage page, Server server)
+    public async Task ShouldSendNoContentLengthHeaderForGETRequestsWithAContentType()
     {
-        await page.GotoAsync(server.EmptyPage);
+        var page = await PageFixture();
+        await page.GotoAsync(Server.EmptyPage);
         var (request, _) = await PromiseAll(
-            server.WaitForRequest("/empty.html"),
+            Server.WaitForRequest("/empty.html"),
             page.EvaluateAsync(@"() => fetch('/empty.html', {
       'headers': { 'Content-Type': 'application/json' },
       'method': 'GET'
@@ -326,9 +346,10 @@ public class CapabilitiesTests
     }
 
     [UpstreamTest("CA-022 Intl.ListFormat should work")]
-    public async Task IntlListFormatShouldWork(IPage page, Server server, string browserName)
+    public async Task IntlListFormatShouldWork()
     {
-        await page.GotoAsync(server.EmptyPage);
+        var page = await PageFixture();
+        await page.GotoAsync(Server.EmptyPage);
         var formatted = await page.EvaluateAsync<string>(@"() => {
     const data = ['first', 'second', 'third'];
     const listFormat = new Intl.ListFormat('en', {
@@ -341,9 +362,10 @@ public class CapabilitiesTests
     }
 
     [UpstreamTest("CA-023 service worker should cover the iframe")]
-    public async Task ServiceWorkerShouldCoverTheIframe(IPage page, Server server)
+    public async Task ServiceWorkerShouldCoverTheIframe()
     {
-        server.SetRoute("/sw.html", (req, res) =>
+        var page = await PageFixture();
+        Server.SetRoute("/sw.html", (req, res) =>
         {
             res.WriteHead(200, new() { ["content-type"] = "text/html" });
             res.End(@"
@@ -354,13 +376,13 @@ public class CapabilitiesTests
     ");
         });
 
-        server.SetRoute("/iframe.html", (req, res) =>
+        Server.SetRoute("/iframe.html", (req, res) =>
         {
             res.WriteHead(200, new() { ["content-type"] = "text/html" });
             res.End("<div>from the server</div>");
         });
 
-        server.SetRoute("/sw.js", (req, res) =>
+        Server.SetRoute("/sw.js", (req, res) =>
         {
             res.WriteHead(200, new() { ["content-type"] = "application/javascript" });
             res.End(@"
@@ -382,7 +404,7 @@ public class CapabilitiesTests
     ");
         });
 
-        await page.GotoAsync(server.Prefix + "/sw.html");
+        await page.GotoAsync(Server.Prefix + "/sw.html");
         await page.EvaluateAsync("() => window['activationPromise']");
 
         await page.EvaluateAsync(@"() => {
@@ -395,9 +417,10 @@ public class CapabilitiesTests
     }
 
     [UpstreamTest("CA-024 service worker should register in an iframe")]
-    public async Task ServiceWorkerShouldRegisterInAnIframe(IPage page, Server server)
+    public async Task ServiceWorkerShouldRegisterInAnIframe()
     {
-        server.SetRoute("/main.html", (req, res) =>
+        var page = await PageFixture();
+        Server.SetRoute("/main.html", (req, res) =>
         {
             res.WriteHead(200, new() { ["content-type"] = "text/html" });
             res.End(@"
@@ -405,7 +428,7 @@ public class CapabilitiesTests
     ");
         });
 
-        server.SetRoute("/dir/iframe.html", (req, res) =>
+        Server.SetRoute("/dir/iframe.html", (req, res) =>
         {
             res.WriteHead(200, new() { ["content-type"] = "text/html" });
             res.End(@"
@@ -416,7 +439,7 @@ public class CapabilitiesTests
     ");
         });
 
-        server.SetRoute("/dir/sw.js", (req, res) =>
+        Server.SetRoute("/dir/sw.js", (req, res) =>
         {
             res.WriteHead(200, new() { ["content-type"] = "application/javascript" });
             res.End(@"
@@ -438,7 +461,7 @@ public class CapabilitiesTests
     ");
         });
 
-        await page.GotoAsync(server.Prefix + "/main.html");
+        await page.GotoAsync(Server.Prefix + "/main.html");
         var iframe = page.Frames[1];
         await iframe.EvaluateAsync("() => window['activationPromise']");
 
@@ -450,12 +473,13 @@ public class CapabilitiesTests
     }
 
     [UpstreamTest("CA-025 should be able to render avif images")]
-    public async Task ShouldBeAbleToRenderAvifImages(IPage page, Server server, string browserName, string platform, bool isFrozenWebkit)
+    public async Task ShouldBeAbleToRenderAvifImages()
     {
-        Info.Skip(browserName == "webkit" && platform == "win32");
-        Info.Skip(isFrozenWebkit);
-        await page.GotoAsync(server.EmptyPage);
-        await page.SetContentAsync($"<img src=\"{server.Prefix}/rgb.avif\" onerror=\"window.error = true\">");
+        var page = await PageFixture();
+        Info.Skip(BrowserName == "webkit" && Platform == "win32");
+        Info.Skip(IsFrozenWebkit);
+        await page.GotoAsync(Server.EmptyPage);
+        await page.SetContentAsync($"<img src=\"{Server.Prefix}/rgb.avif\" onerror=\"window.error = true\">");
         await Expect(async () => ExpectToEqual(await page.Locator("img").BoundingBoxAsync(), ObjectContaining(new
         {
             width = 128,
@@ -465,8 +489,9 @@ public class CapabilitiesTests
     }
 
     [UpstreamTest("CA-026 should not crash when clicking a label with a <input type=\"file\"/>")]
-    public async Task ShouldNotCrashWhenClickingALabelWithAInputTypeFile(IPage page)
+    public async Task ShouldNotCrashWhenClickingALabelWithAInputTypeFile()
     {
+        var page = await PageFixture();
         await page.SetContentAsync(@"
     <form>
       <label>
@@ -482,8 +507,9 @@ public class CapabilitiesTests
     }
 
     [UpstreamTest("CA-027 should not crash when clicking a color input")]
-    public async Task ShouldNotCrashWhenClickingAColorInput(IPage page)
+    public async Task ShouldNotCrashWhenClickingAColorInput()
     {
+        var page = await PageFixture();
         await page.SetContentAsync("<input type=\"color\">");
         var input = page.Locator("input");
 
@@ -493,9 +519,10 @@ public class CapabilitiesTests
     }
 
     [UpstreamTest("CA-028 should not auto play audio")]
-    public async Task ShouldNotAutoPlayAudio(IPage page, string browserName, bool isWindows)
+    public async Task ShouldNotAutoPlayAudio()
     {
-        Info.Skip(browserName == "webkit" && isWindows, "audio does not play at all");
+        var page = await PageFixture();
+        Info.Skip(BrowserName == "webkit" && IsWindows, "audio does not play at all");
         Info.Skip(Environment.GetEnvironmentVariable("PW_CLOCK") == "frozen", "no way to inject real setTimeout");
         await page.RouteAsync("**/*", async route =>
         {
@@ -524,7 +551,7 @@ public class CapabilitiesTests
             });
         });
         await page.GotoAsync("http://127.0.0.1/audio.html");
-        if (browserName == "webkit")
+        if (BrowserName == "webkit")
         {
             await Expect(page.Locator("#log")).ToHaveTextAsync(new Regex("State: (interrupted|suspended)"));
         }
@@ -535,9 +562,11 @@ public class CapabilitiesTests
     }
 
     [UpstreamTest("CA-029 should not crash on feature detection for PublicKeyCredential")]
-    public async Task ShouldNotCrashOnFeatureDetectionForPublicKeyCredential(IPage page, Server server, IBrowserContext context)
+    public async Task ShouldNotCrashOnFeatureDetectionForPublicKeyCredential()
     {
-        await page.GotoAsync(server.EmptyPage);
+        var page = await PageFixture();
+        var context = await ContextFixture();
+        await page.GotoAsync(Server.EmptyPage);
         Assert.That(await page.EvaluateAsync<string>("() => typeof PublicKeyCredential"), Is.EqualTo("function"));
         Assert.That(await page.EvaluateAsync<string>("() => PublicKeyCredential.name"), Is.EqualTo("PublicKeyCredential"));
         Assert.That(await page.EvaluateAsync<bool>("() => ({}) instanceof PublicKeyCredential"), Is.EqualTo(false));

@@ -22,15 +22,15 @@ using static Microsoft.Playwright.Tests.Fixtures.Utils;
 namespace Microsoft.Playwright.Tests.Page;
 
 /// <summary>Port of tests/page/expect-misc.spec.ts.</summary>
-public class ExpectMiscTests
+public class ExpectMiscTests : UpstreamPageTest
 {
-    public class ToHaveCount
+    public class ToHaveCount : UpstreamPageTest
     {
         [UpstreamTest("EX-181 toHaveCount pass")]
-        public async Task ToHaveCountPass(IPage page)
+        public async Task ToHaveCountPass()
         {
-            await page.SetContentAsync("<select><option>One</option></select>");
-            var locator = page.Locator("option");
+            await Page.SetContentAsync("<select><option>One</option></select>");
+            var locator = Page.Locator("option");
             var done = false;
             // .NET: expect(locator).toHaveCount(2).then(() => { done = true; }) is a local function that is called in its place.
             async Task Then()
@@ -39,62 +39,62 @@ public class ExpectMiscTests
                 done = true;
             }
             var promise = Then();
-            await page.WaitForTimeoutAsync(1000);
+            await Page.WaitForTimeoutAsync(1000);
             Assert.That(done, Is.EqualTo(false));
-            await page.SetContentAsync("<select><option>One</option><option>Two</option></select>");
+            await Page.SetContentAsync("<select><option>One</option><option>Two</option></select>");
             await promise;
             Assert.That(done, Is.EqualTo(true));
         }
 
         [UpstreamTest("EX-182 pass zero")]
-        public async Task PassZero(IPage page)
+        public async Task PassZero()
         {
-            await page.SetContentAsync("<div></div>");
-            var locator = page.Locator("span");
+            await Page.SetContentAsync("<div></div>");
+            var locator = Page.Locator("span");
             await Expect(locator).ToHaveCountAsync(0);
             await Expect(locator).Not.ToHaveCountAsync(1);
         }
 
         [UpstreamTest("EX-183 eventually pass zero")]
-        public async Task EventuallyPassZero(IPage page)
+        public async Task EventuallyPassZero()
         {
-            await page.SetContentAsync("<div><span>hello</span></div>");
-            var locator = page.Locator("span");
-            SetTimeout(() => IgnoreErrors(page.EvaluateAsync("() => document.querySelector('div').textContent = ''")), 200);
+            await Page.SetContentAsync("<div><span>hello</span></div>");
+            var locator = Page.Locator("span");
+            SetTimeout(() => IgnoreErrors(Page.EvaluateAsync("() => document.querySelector('div').textContent = ''")), 200);
             await Expect(locator).ToHaveCountAsync(0);
             await Expect(locator).Not.ToHaveCountAsync(1);
         }
 
         [UpstreamTest("EX-184 eventually pass non-zero")]
-        public async Task EventuallyPassNonZero(IPage page)
+        public async Task EventuallyPassNonZero()
         {
-            await page.SetContentAsync("<ul></ul>");
+            await Page.SetContentAsync("<ul></ul>");
             SetTimeout(async () =>
             {
-                await page.SetContentAsync("<ul><li>one</li><li>two</li></ul>");
+                await Page.SetContentAsync("<ul><li>one</li><li>two</li></ul>");
             }, 500);
-            var locator = page.Locator("li");
+            var locator = Page.Locator("li");
             await Expect(locator).ToHaveCountAsync(2);
         }
 
         [UpstreamTest("EX-185 eventually pass not non-zero")]
-        public async Task EventuallyPassNotNonZero(IPage page)
+        public async Task EventuallyPassNotNonZero()
         {
-            await page.SetContentAsync("<ul><li>one</li><li>two</li></ul>");
+            await Page.SetContentAsync("<ul><li>one</li><li>two</li></ul>");
             SetTimeout(async () =>
             {
-                await page.SetContentAsync("<ul></ul>");
+                await Page.SetContentAsync("<ul></ul>");
             }, 500);
-            var locator = page.Locator("li");
+            var locator = Page.Locator("li");
             await Expect(locator).Not.ToHaveCountAsync(2);
         }
 
         [UpstreamTest("EX-186 fail zero")]
         [LocalFixme("dotnet: the message of ToHaveCountAsync is \"Locator expected to have count '0'\\nBut was: '1' \\nCall log: ...\"")]
-        public async Task FailZero(IPage page)
+        public async Task FailZero()
         {
-            await page.SetContentAsync("<div><span></span></div>");
-            var locator = page.Locator("span");
+            await Page.SetContentAsync("<div><span></span></div>");
+            var locator = Page.Locator("span");
             var error = await Catch(() => Expect(locator).ToHaveCountAsync(0, new() { Timeout = 1000 }));
             Assert.That(StripAnsi(error.Message), Does.Contain(@"expect(locator).toHaveCount(expected) failed
 
@@ -107,10 +107,10 @@ Timeout:  1000ms"));
 
         [UpstreamTest("EX-187 fail zero 2")]
         [LocalFixme("dotnet: the message of Not.ToHaveCountAsync is \"Locator expected not to have count '1'\\nBut was: '1' \\nCall log: ...\"")]
-        public async Task FailZero2(IPage page)
+        public async Task FailZero2()
         {
-            await page.SetContentAsync("<div><span></span></div>");
-            var locator = page.Locator("span");
+            await Page.SetContentAsync("<div><span></span></div>");
+            var locator = Page.Locator("span");
             var error = await Catch(() => Expect(locator).Not.ToHaveCountAsync(1, new() { Timeout = 1000 }));
             Assert.That(StripAnsi(error.Message), Does.Contain(@"expect(locator).not.toHaveCount(expected) failed
 
@@ -122,44 +122,44 @@ Timeout:  1000ms"));
         }
     }
 
-    public class ToHaveJSProperty
+    public class ToHaveJSProperty : UpstreamPageTest
     {
         [UpstreamTest("EX-188 pass")]
-        public async Task Pass(IPage page)
+        public async Task Pass()
         {
-            await page.SetContentAsync("<div></div>");
-            await page.EvalOnSelectorAsync("div", "e => e.foo = { a: 1, b: 'string', c: new Date(1627503992000) }");
-            var locator = page.Locator("div");
+            await Page.SetContentAsync("<div></div>");
+            await Page.EvalOnSelectorAsync("div", "e => e.foo = { a: 1, b: 'string', c: new Date(1627503992000) }");
+            var locator = Page.Locator("div");
             await Expect(locator).ToHaveJSPropertyAsync("foo", new { a = 1, b = "string", c = DateTime.UnixEpoch.AddMilliseconds(1627503992000) });
         }
 
         [UpstreamTest("EX-189 fail")]
         [LocalFixme("dotnet: the message of ToHaveJSPropertyAsync is \"Locator expected to have JavaScript property 'foo' '{ a = 1, b = string, c = <date> }'\\nBut was: 'System.Dynamic.ExpandoObject' \\nCall log: ...\", without a diff of the two objects")]
-        public async Task Fail(IPage page)
+        public async Task Fail()
         {
-            await page.SetContentAsync("<div></div>");
-            await page.EvalOnSelectorAsync("div", "e => e.foo = { a: 1, b: 'string', c: new Date(1627503992000) }");
-            var locator = page.Locator("div");
+            await Page.SetContentAsync("<div></div>");
+            await Page.EvalOnSelectorAsync("div", "e => e.foo = { a: 1, b: 'string', c: new Date(1627503992000) }");
+            var locator = Page.Locator("div");
             var error = await Catch(() => Expect(locator).ToHaveJSPropertyAsync("foo", new { a = 1, b = "string", c = DateTime.UnixEpoch.AddMilliseconds(1627503992001) }, new() { Timeout = 1000 }));
             Assert.That(error.Message, Does.Contain("-   \"c\""));
         }
 
         [UpstreamTest("EX-190 pass string")]
-        public async Task PassString(IPage page)
+        public async Task PassString()
         {
-            await page.SetContentAsync("<div></div>");
-            await page.EvalOnSelectorAsync("div", "e => e.foo = 'string'");
-            var locator = page.Locator("div");
+            await Page.SetContentAsync("<div></div>");
+            await Page.EvalOnSelectorAsync("div", "e => e.foo = 'string'");
+            var locator = Page.Locator("div");
             await Expect(locator).ToHaveJSPropertyAsync("foo", "string");
         }
 
         [UpstreamTest("EX-191 fail string")]
         [LocalFixme("dotnet: the message of ToHaveJSPropertyAsync is \"Locator expected to have JavaScript property 'foo' 'error'\\nBut was: 'string' \\nCall log: ...\"")]
-        public async Task FailString(IPage page)
+        public async Task FailString()
         {
-            await page.SetContentAsync("<div></div>");
-            await page.EvalOnSelectorAsync("div", "e => e.foo = 'string'");
-            var locator = page.Locator("div");
+            await Page.SetContentAsync("<div></div>");
+            await Page.EvalOnSelectorAsync("div", "e => e.foo = 'string'");
+            var locator = Page.Locator("div");
             var error = await Catch(() => Expect(locator).ToHaveJSPropertyAsync("foo", "error", new() { Timeout = 200 }));
             Assert.That(StripAnsi(error.Message), Does.Contain(@"expect(locator).toHaveJSProperty(expected) failed
 
@@ -171,21 +171,21 @@ Timeout:  200ms"));
         }
 
         [UpstreamTest("EX-192 pass number")]
-        public async Task PassNumber(IPage page)
+        public async Task PassNumber()
         {
-            await page.SetContentAsync("<div></div>");
-            await page.EvalOnSelectorAsync("div", "e => e.foo = 2021");
-            var locator = page.Locator("div");
+            await Page.SetContentAsync("<div></div>");
+            await Page.EvalOnSelectorAsync("div", "e => e.foo = 2021");
+            var locator = Page.Locator("div");
             await Expect(locator).ToHaveJSPropertyAsync("foo", 2021);
         }
 
         [UpstreamTest("EX-193 fail number")]
         [LocalFixme("dotnet: the message of ToHaveJSPropertyAsync is \"Locator expected to have JavaScript property 'foo' '1'\\nBut was: '2021' \\nCall log: ...\"")]
-        public async Task FailNumber(IPage page)
+        public async Task FailNumber()
         {
-            await page.SetContentAsync("<div></div>");
-            await page.EvalOnSelectorAsync("div", "e => e.foo = 2021");
-            var locator = page.Locator("div");
+            await Page.SetContentAsync("<div></div>");
+            await Page.EvalOnSelectorAsync("div", "e => e.foo = 2021");
+            var locator = Page.Locator("div");
             var error = await Catch(() => Expect(locator).ToHaveJSPropertyAsync("foo", 1, new() { Timeout = 200 }));
             Assert.That(StripAnsi(error.Message), Does.Contain(@"expect(locator).toHaveJSProperty(expected) failed
 
@@ -197,21 +197,21 @@ Timeout:  200ms"));
         }
 
         [UpstreamTest("EX-194 pass boolean")]
-        public async Task PassBoolean(IPage page)
+        public async Task PassBoolean()
         {
-            await page.SetContentAsync("<div></div>");
-            await page.EvalOnSelectorAsync("div", "e => e.foo = true");
-            var locator = page.Locator("div");
+            await Page.SetContentAsync("<div></div>");
+            await Page.EvalOnSelectorAsync("div", "e => e.foo = true");
+            var locator = Page.Locator("div");
             await Expect(locator).ToHaveJSPropertyAsync("foo", true);
         }
 
         [UpstreamTest("EX-195 fail boolean")]
         [LocalFixme("dotnet: the message of ToHaveJSPropertyAsync is \"Locator expected to have JavaScript property 'foo' 'True'\\nBut was: 'False' \\nCall log: ...\"")]
-        public async Task FailBoolean(IPage page)
+        public async Task FailBoolean()
         {
-            await page.SetContentAsync("<div></div>");
-            await page.EvalOnSelectorAsync("div", "e => e.foo = false");
-            var locator = page.Locator("div");
+            await Page.SetContentAsync("<div></div>");
+            await Page.EvalOnSelectorAsync("div", "e => e.foo = false");
+            var locator = Page.Locator("div");
             var error = await Catch(() => Expect(locator).ToHaveJSPropertyAsync("foo", true, new() { Timeout = 200 }));
             Assert.That(StripAnsi(error.Message), Does.Contain(@"expect(locator).toHaveJSProperty(expected) failed
 
@@ -223,21 +223,21 @@ Timeout:  200ms"));
         }
 
         [UpstreamTest("EX-196 pass boolean 2")]
-        public async Task PassBoolean2(IPage page)
+        public async Task PassBoolean2()
         {
-            await page.SetContentAsync("<div></div>");
-            await page.EvalOnSelectorAsync("div", "e => e.foo = false");
-            var locator = page.Locator("div");
+            await Page.SetContentAsync("<div></div>");
+            await Page.EvalOnSelectorAsync("div", "e => e.foo = false");
+            var locator = Page.Locator("div");
             await Expect(locator).ToHaveJSPropertyAsync("foo", false);
         }
 
         [UpstreamTest("EX-197 fail boolean 2")]
         [LocalFixme("dotnet: the message of ToHaveJSPropertyAsync is \"Locator expected to have JavaScript property 'foo' 'True'\\nBut was: 'False' \\nCall log: ...\"")]
-        public async Task FailBoolean2(IPage page)
+        public async Task FailBoolean2()
         {
-            await page.SetContentAsync("<div></div>");
-            await page.EvalOnSelectorAsync("div", "e => e.foo = false");
-            var locator = page.Locator("div");
+            await Page.SetContentAsync("<div></div>");
+            await Page.EvalOnSelectorAsync("div", "e => e.foo = false");
+            var locator = Page.Locator("div");
             var error = await Catch(() => Expect(locator).ToHaveJSPropertyAsync("foo", true, new() { Timeout = 200 }));
             Assert.That(StripAnsi(error.Message), Does.Contain(@"expect(locator).toHaveJSProperty(expected) failed
 
@@ -249,20 +249,20 @@ Timeout:  200ms"));
         }
 
         [UpstreamTest("EX-199 pass null")]
-        public async Task PassNull(IPage page)
+        public async Task PassNull()
         {
-            await page.SetContentAsync("<div></div>");
-            await page.EvalOnSelectorAsync("div", "e => e.foo = null");
-            var locator = page.Locator("div");
+            await Page.SetContentAsync("<div></div>");
+            await Page.EvalOnSelectorAsync("div", "e => e.foo = null");
+            var locator = Page.Locator("div");
             await Expect(locator).ToHaveJSPropertyAsync("foo", null);
         }
 
         [UpstreamTest("EX-200 pass nested")]
-        public async Task PassNested(IPage page)
+        public async Task PassNested()
         {
-            await page.SetContentAsync("<div></div>");
-            await page.EvalOnSelectorAsync("div", "e => e.foo = { nested: { a: 1, b: 'string', c: new Date(1627503992000) } }");
-            var locator = page.Locator("div");
+            await Page.SetContentAsync("<div></div>");
+            await Page.EvalOnSelectorAsync("div", "e => e.foo = { nested: { a: 1, b: 'string', c: new Date(1627503992000) } }");
+            var locator = Page.Locator("div");
             await Expect(locator).ToHaveJSPropertyAsync("foo.nested", new { a = 1, b = "string", c = DateTime.UnixEpoch.AddMilliseconds(1627503992000) });
             await Expect(locator).ToHaveJSPropertyAsync("foo.nested.a", 1);
             await Expect(locator).ToHaveJSPropertyAsync("foo.nested.b", "string");
@@ -271,11 +271,11 @@ Timeout:  200ms"));
 
         [UpstreamTest("EX-201 fail nested")]
         [LocalFixme("dotnet: the message of ToHaveJSPropertyAsync is \"Locator expected to have JavaScript property 'foo.bar' '{ a = 1, b = string, c = <date> }'\\nBut was: 'null' \\nCall log: ...\", upstream expects 'Received: undefined'")]
-        public async Task FailNested(IPage page)
+        public async Task FailNested()
         {
-            await page.SetContentAsync("<div></div>");
-            await page.EvalOnSelectorAsync("div", "e => e.foo = { nested: { a: 1, b: 'string', c: new Date(1627503992000) } }");
-            var locator = page.Locator("div");
+            await Page.SetContentAsync("<div></div>");
+            await Page.EvalOnSelectorAsync("div", "e => e.foo = { nested: { a: 1, b: 'string', c: new Date(1627503992000) } }");
+            var locator = Page.Locator("div");
             var error1 = await Catch(() => Expect(locator).ToHaveJSPropertyAsync("foo.bar", new { a = 1, b = "string", c = DateTime.UnixEpoch.AddMilliseconds(1627503992001) }, new() { Timeout = 1000 }));
             Assert.That(StripAnsi(error1.Message), Does.Contain("Received: undefined"));
             var error2 = await Catch(() => Expect(locator).ToHaveJSPropertyAsync("foo.nested.a", 2, new() { Timeout = 1000 }));
@@ -283,29 +283,29 @@ Timeout:  200ms"));
         }
     }
 
-    public class ToHaveClass
+    public class ToHaveClass : UpstreamPageTest
     {
         [UpstreamTest("EX-202 pass")]
-        public async Task Pass(IPage page)
+        public async Task Pass()
         {
-            await page.SetContentAsync("<div class=\"foo bar baz\"></div>");
-            var locator = page.Locator("div");
+            await Page.SetContentAsync("<div class=\"foo bar baz\"></div>");
+            var locator = Page.Locator("div");
             await Expect(locator).ToHaveClassAsync("foo bar baz");
         }
 
         [UpstreamTest("EX-203 pass with SVGs")]
-        public async Task PassWithSVGs(IPage page)
+        public async Task PassWithSVGs()
         {
-            await page.SetContentAsync("<svg class=\"c1 c2\" role=\"img\" xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 512 512\"></svg>");
-            await Expect(page.Locator("svg")).ToHaveClassAsync(new Regex("c1"));
+            await Page.SetContentAsync("<svg class=\"c1 c2\" role=\"img\" xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 512 512\"></svg>");
+            await Expect(Page.Locator("svg")).ToHaveClassAsync(new Regex("c1"));
         }
 
         [UpstreamTest("EX-204 fail")]
         [LocalFixme("dotnet: the message of ToHaveClassAsync is \"Locator expected to have class 'foo bar baz'\\nBut was: 'bar baz' \\nCall log: ...\"")]
-        public async Task Fail(IPage page)
+        public async Task Fail()
         {
-            await page.SetContentAsync("<div class=\"bar baz\"></div>");
-            var locator = page.Locator("div");
+            await Page.SetContentAsync("<div class=\"bar baz\"></div>");
+            var locator = Page.Locator("div");
             var error = await Catch(() => Expect(locator).ToHaveClassAsync("foo bar baz", new() { Timeout = 1000 }));
             Assert.That(StripAnsi(error.Message), Does.Contain(@"expect(locator).toHaveClass(expected) failed
 
@@ -320,13 +320,13 @@ Call log:
         }
     }
 
-    public class ToContainClass
+    public class ToContainClass : UpstreamPageTest
     {
         [UpstreamTest("EX-207 pass")]
-        public async Task Pass(IPage page)
+        public async Task Pass()
         {
-            await page.SetContentAsync("<div class=\"foo bar baz\"></div>");
-            var locator = page.Locator("div");
+            await Page.SetContentAsync("<div class=\"foo bar baz\"></div>");
+            var locator = Page.Locator("div");
             await Expect(locator).ToContainClassAsync("");
             await Expect(locator).ToContainClassAsync("bar");
             await Expect(locator).ToContainClassAsync("baz bar");
@@ -337,18 +337,18 @@ Call log:
         }
 
         [UpstreamTest("EX-208 pass with SVGs")]
-        public async Task PassWithSVGs(IPage page)
+        public async Task PassWithSVGs()
         {
-            await page.SetContentAsync("<svg class=\"c1 c2\" role=\"img\" xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 512 512\"></svg>");
-            await Expect(page.Locator("svg")).ToContainClassAsync("c1");
+            await Page.SetContentAsync("<svg class=\"c1 c2\" role=\"img\" xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 512 512\"></svg>");
+            await Expect(Page.Locator("svg")).ToContainClassAsync("c1");
         }
 
         [UpstreamTest("EX-209 fail")]
         [LocalFixme("dotnet: the message of ToContainClassAsync is \"Locator expected to contain class names 'does-not-exist'\\nBut was: 'bar baz' \\nCall log: ...\"")]
-        public async Task Fail(IPage page)
+        public async Task Fail()
         {
-            await page.SetContentAsync("<div class=\"bar baz\"></div>");
-            var locator = page.Locator("div");
+            await Page.SetContentAsync("<div class=\"bar baz\"></div>");
+            var locator = Page.Locator("div");
             var error = await Catch(() => Expect(locator).ToContainClassAsync("does-not-exist", new() { Timeout = 1000 }));
             Assert.That(StripAnsi(error.Message), Does.Contain(@"expect(locator).toContainClass(expected) failed
 
@@ -363,10 +363,10 @@ Call log:
         }
 
         [UpstreamTest("EX-210 pass with array")]
-        public async Task PassWithArray(IPage page)
+        public async Task PassWithArray()
         {
-            await page.SetContentAsync("<div class=\"foo\"></div><div class=\"hello bar\"></div><div class=\"baz\"></div>");
-            var locator = page.Locator("div");
+            await Page.SetContentAsync("<div class=\"foo\"></div><div class=\"hello bar\"></div><div class=\"baz\"></div>");
+            var locator = Page.Locator("div");
             await Expect(locator).ToContainClassAsync(new[] { "foo", "hello", "baz" });
             // .NET: left out, ToContainClassAsync takes strings only:
             // expect(() => expect(locator).toContainClass(['foo', 'hello', /baz/] as any)).toThrow(/"expected" argument in toContainClass cannot contain RegExp values/);
@@ -376,10 +376,10 @@ Call log:
 
         [UpstreamTest("EX-211 fail with array")]
         [LocalFixme("dotnet: the message of ToContainClassAsync is \"Locator expected to contain class names '['foo', 'bar', 'baz']'\\nBut was: '['foo', 'bar', 'bar']' \\nCall log: ...\"")]
-        public async Task FailWithArray(IPage page)
+        public async Task FailWithArray()
         {
-            await page.SetContentAsync("<div class=\"foo\"></div><div class=\"bar\"></div><div class=\"bar\"></div>");
-            var locator = page.Locator("div");
+            await Page.SetContentAsync("<div class=\"foo\"></div><div class=\"bar\"></div><div class=\"bar\"></div>");
+            var locator = Page.Locator("div");
             var error = await Catch(() => Expect(locator).ToContainClassAsync(new[] { "foo", "bar", "baz" }, new() { Timeout = 1000 }));
             Assert.That(StripAnsi(error.Message), Does.Contain("expect(locator).toContainClass(expected) failed"));
             Assert.That(StripAnsi(error.Message), Does.Contain("Timeout: 1000ms"));
@@ -387,21 +387,21 @@ Call log:
         }
     }
 
-    public class ToHaveTitle
+    public class ToHaveTitle : UpstreamPageTest
     {
         [UpstreamTest("EX-212 pass")]
-        public async Task Pass(IPage page)
+        public async Task Pass()
         {
-            await page.SetContentAsync("<title>  Hello     world</title>");
-            await Expect(page).ToHaveTitleAsync("Hello  world");
+            await Page.SetContentAsync("<title>  Hello     world</title>");
+            await Expect(Page).ToHaveTitleAsync("Hello  world");
         }
 
         [UpstreamTest("EX-213 fail")]
         [LocalFixme("dotnet: the message of ToHaveTitleAsync is \"Page title expected to be 'Hello'\\nBut was: 'Bye' \\nCall log: ...\"")]
-        public async Task Fail(IPage page)
+        public async Task Fail()
         {
-            await page.SetContentAsync("<title>Bye</title>");
-            var error = await Catch(() => Expect(page).ToHaveTitleAsync("Hello", new() { Timeout = 1000 }));
+            await Page.SetContentAsync("<title>Bye</title>");
+            var error = await Catch(() => Expect(Page).ToHaveTitleAsync("Hello", new() { Timeout = 1000 }));
             Assert.That(StripAnsi(error.Message), Does.Contain(@"expect(page).toHaveTitle(expected) failed
 
 Expected: ""Hello""
@@ -414,21 +414,21 @@ Call log:
         }
     }
 
-    public class ToHaveURL
+    public class ToHaveURL : UpstreamPageTest
     {
         [UpstreamTest("EX-214 pass")]
-        public async Task Pass(IPage page)
+        public async Task Pass()
         {
-            await page.GotoAsync("data:text/html,<div>A</div>");
-            await Expect(page).ToHaveURLAsync("data:text/html,<div>A</div>");
+            await Page.GotoAsync("data:text/html,<div>A</div>");
+            await Expect(Page).ToHaveURLAsync("data:text/html,<div>A</div>");
         }
 
         [UpstreamTest("EX-215 fail string")]
         [LocalFixme("dotnet: the message of ToHaveURLAsync is \"Page URL expected to be 'wrong'\\nBut was: 'data:text/html,<div>A</div>' \\nCall log: ...\"")]
-        public async Task FailString(IPage page)
+        public async Task FailString()
         {
-            await page.GotoAsync("data:text/html,<div>A</div>");
-            var error = await Catch(() => Expect(page).ToHaveURLAsync("wrong", new() { Timeout = 1000 }));
+            await Page.GotoAsync("data:text/html,<div>A</div>");
+            var error = await Catch(() => Expect(Page).ToHaveURLAsync("wrong", new() { Timeout = 1000 }));
             Assert.That(StripAnsi(error.Message), Does.Contain(@"expect(page).toHaveURL(expected) failed
 
 Expected: ""wrong""
@@ -440,29 +440,29 @@ Call log:
         }
 
         [UpstreamTest("EX-221 support ignoreCase")]
-        public async Task SupportIgnoreCase(IPage page)
+        public async Task SupportIgnoreCase()
         {
-            await page.GotoAsync("data:text/html,<div>A</div>");
-            await Expect(page).ToHaveURLAsync("DATA:teXT/HTml,<div>a</div>", new() { IgnoreCase = true });
+            await Page.GotoAsync("data:text/html,<div>A</div>");
+            await Expect(Page).ToHaveURLAsync("DATA:teXT/HTml,<div>a</div>", new() { IgnoreCase = true });
         }
     }
 
-    public class ToHaveAttribute
+    public class ToHaveAttribute : UpstreamPageTest
     {
         [UpstreamTest("EX-223 pass")]
-        public async Task Pass(IPage page)
+        public async Task Pass()
         {
-            await page.SetContentAsync("<div id=node>Text content</div>");
-            var locator = page.Locator("#node");
+            await Page.SetContentAsync("<div id=node>Text content</div>");
+            var locator = Page.Locator("#node");
             await Expect(locator).ToHaveAttributeAsync("id", "node");
         }
 
         [UpstreamTest("EX-224 should not match missing attribute")]
         [LocalFixme("dotnet: the message of ToHaveAttributeAsync is \"Locator expected to have attribute 'disabled' ''\\nBut was: 'null' \\nCall log: ...\"")]
-        public async Task ShouldNotMatchMissingAttribute(IPage page)
+        public async Task ShouldNotMatchMissingAttribute()
         {
-            await page.SetContentAsync("<div checked id=node>Text content</div>");
-            var locator = page.Locator("#node");
+            await Page.SetContentAsync("<div checked id=node>Text content</div>");
+            var locator = Page.Locator("#node");
             {
                 var error = await Catch(() => Expect(locator).ToHaveAttributeAsync("disabled", "", new() { Timeout = 1000 }));
                 Assert.That(StripAnsi(error.Message), Does.Contain(@"expect(locator).toHaveAttribute(expected) failed
@@ -495,10 +495,10 @@ Call log:
 
         [UpstreamTest("EX-225 should match boolean attribute")]
         [LocalFixme("dotnet: the message of Not.ToHaveAttributeAsync is \"Locator expected not to have attribute 'checked' ''\\nBut was: '' \\nCall log: ...\"")]
-        public async Task ShouldMatchBooleanAttribute(IPage page)
+        public async Task ShouldMatchBooleanAttribute()
         {
-            await page.SetContentAsync("<div checked id=node>Text content</div>");
-            var locator = page.Locator("#node");
+            await Page.SetContentAsync("<div checked id=node>Text content</div>");
+            var locator = Page.Locator("#node");
             await Expect(locator).ToHaveAttributeAsync("checked", "");
             await Expect(locator).ToHaveAttributeAsync("checked", new Regex(".*"));
             {
@@ -527,29 +527,29 @@ Timeout: 1000ms"));
         }
 
         [UpstreamTest("EX-228 support ignoreCase")]
-        public async Task SupportIgnoreCase(IPage page)
+        public async Task SupportIgnoreCase()
         {
-            await page.SetContentAsync("<div id=NoDe>Text content</div>");
-            var locator = page.Locator("#NoDe");
+            await Page.SetContentAsync("<div id=NoDe>Text content</div>");
+            var locator = Page.Locator("#NoDe");
             await Expect(locator).ToHaveAttributeAsync("id", "node", new() { IgnoreCase = true });
             await Expect(locator).Not.ToHaveAttributeAsync("id", "node");
         }
     }
 
-    public class ToHaveCSS
+    public class ToHaveCSS : UpstreamPageTest
     {
         [UpstreamTest("EX-229 pass")]
-        public async Task Pass(IPage page)
+        public async Task Pass()
         {
-            await page.SetContentAsync("<div id=node style=\"color: rgb(255, 0, 0)\">Text content</div>");
-            var locator = page.Locator("#node");
+            await Page.SetContentAsync("<div id=node style=\"color: rgb(255, 0, 0)\">Text content</div>");
+            var locator = Page.Locator("#node");
             await Expect(locator).ToHaveCSSAsync("color", "rgb(255, 0, 0)");
         }
 
         [UpstreamTest("EX-230 should support pseudo element")]
-        public async Task ShouldSupportPseudoElement(IPage page)
+        public async Task ShouldSupportPseudoElement()
         {
-            await page.SetContentAsync(@"
+            await Page.SetContentAsync(@"
       <style>
         #node::before {
           color: rgb(255, 0, 0);
@@ -558,77 +558,77 @@ Timeout: 1000ms"));
       </style>
       <div id=node></div>
     ");
-            var locator = page.Locator("#node");
+            var locator = Page.Locator("#node");
             await Expect(locator).ToHaveCSSAsync("color", "rgb(255, 0, 0)", new() { Pseudo = PseudoElement.Before });
         }
 
         [UpstreamTest("EX-231 custom css properties")]
-        public async Task CustomCssProperties(IPage page)
+        public async Task CustomCssProperties()
         {
-            await page.SetContentAsync("<div id=node style=\"--custom-color-property:#FF00FF;\">Text content</div>");
-            var locator = page.Locator("#node");
+            await Page.SetContentAsync("<div id=node style=\"--custom-color-property:#FF00FF;\">Text content</div>");
+            var locator = Page.Locator("#node");
             await Expect(locator).ToHaveCSSAsync("--custom-color-property", "#FF00FF");
         }
     }
 
-    public class ToHaveId
+    public class ToHaveId : UpstreamPageTest
     {
         [UpstreamTest("EX-232 pass")]
-        public async Task Pass(IPage page)
+        public async Task Pass()
         {
-            await page.SetContentAsync("<div id=node>Text content</div>");
-            var locator = page.Locator("#node");
+            await Page.SetContentAsync("<div id=node>Text content</div>");
+            var locator = Page.Locator("#node");
             await Expect(locator).ToHaveIdAsync("node");
         }
     }
 
-    public class ToBeInViewport
+    public class ToBeInViewport : UpstreamPageTest
     {
         [UpstreamTest("EX-233 should work")]
         [LocalFixme("dotnet: Locator.WithElementAsync makes a negative timeout from the default timeout 0, and the call passes only when it ends before the timer of the driver")]
-        public async Task ShouldWork(IPage page)
+        public async Task ShouldWork()
         {
-            await page.SetContentAsync(@"
+            await Page.SetContentAsync(@"
       <div id=big style=""height: 10000px;""></div>
       <div id=small>foo</div>
     ");
-            await Expect(page.Locator("#big")).ToBeInViewportAsync();
-            await Expect(page.Locator("#small")).Not.ToBeInViewportAsync();
-            await page.Locator("#small").ScrollIntoViewIfNeededAsync();
-            await Expect(page.Locator("#small")).ToBeInViewportAsync();
-            await Expect(page.Locator("#small")).ToBeInViewportAsync(new() { Ratio = 1 });
+            await Expect(Page.Locator("#big")).ToBeInViewportAsync();
+            await Expect(Page.Locator("#small")).Not.ToBeInViewportAsync();
+            await Page.Locator("#small").ScrollIntoViewIfNeededAsync();
+            await Expect(Page.Locator("#small")).ToBeInViewportAsync();
+            await Expect(Page.Locator("#small")).ToBeInViewportAsync(new() { Ratio = 1 });
         }
 
         [UpstreamTest("EX-234 should respect ratio option")]
-        public async Task ShouldRespectRatioOption(IPage page, bool isAndroid)
+        public async Task ShouldRespectRatioOption()
         {
-            Info.Fixme(isAndroid, "ratio 0.24 is not in viewport for unknown reason");
+            Info.Fixme(IsAndroid, "ratio 0.24 is not in viewport for unknown reason");
 
-            await page.SetContentAsync(@"
+            await Page.SetContentAsync(@"
       <style>body, div, html { padding: 0; margin: 0; }</style>
       <div id=big style=""height: 400vh;""></div>
     ");
-            await Expect(page.Locator("div")).ToBeInViewportAsync();
-            await Expect(page.Locator("div")).ToBeInViewportAsync(new() { Ratio = 0.1f });
-            await Expect(page.Locator("div")).ToBeInViewportAsync(new() { Ratio = 0.2f });
+            await Expect(Page.Locator("div")).ToBeInViewportAsync();
+            await Expect(Page.Locator("div")).ToBeInViewportAsync(new() { Ratio = 0.1f });
+            await Expect(Page.Locator("div")).ToBeInViewportAsync(new() { Ratio = 0.2f });
 
-            await Expect(page.Locator("div")).ToBeInViewportAsync(new() { Ratio = 0.24f });
+            await Expect(Page.Locator("div")).ToBeInViewportAsync(new() { Ratio = 0.24f });
             // In this test, element's ratio is 0.25.
-            await Expect(page.Locator("div")).ToBeInViewportAsync(new() { Ratio = 0.25f });
-            await Expect(page.Locator("div")).Not.ToBeInViewportAsync(new() { Ratio = 0.26f });
+            await Expect(Page.Locator("div")).ToBeInViewportAsync(new() { Ratio = 0.25f });
+            await Expect(Page.Locator("div")).Not.ToBeInViewportAsync(new() { Ratio = 0.26f });
 
-            await Expect(page.Locator("div")).Not.ToBeInViewportAsync(new() { Ratio = 0.3f });
-            await Expect(page.Locator("div")).Not.ToBeInViewportAsync(new() { Ratio = 0.7f });
-            await Expect(page.Locator("div")).Not.ToBeInViewportAsync(new() { Ratio = 0.8f });
+            await Expect(Page.Locator("div")).Not.ToBeInViewportAsync(new() { Ratio = 0.3f });
+            await Expect(Page.Locator("div")).Not.ToBeInViewportAsync(new() { Ratio = 0.7f });
+            await Expect(Page.Locator("div")).Not.ToBeInViewportAsync(new() { Ratio = 0.8f });
         }
 
         [UpstreamTest("EX-235 should have good stack")]
-        public async Task ShouldHaveGoodStack(IPage page)
+        public async Task ShouldHaveGoodStack()
         {
             Exception error = null;
             try
             {
-                await Expect(page.Locator("body")).Not.ToBeInViewportAsync(new() { Timeout = 3000 });
+                await Expect(Page.Locator("body")).Not.ToBeInViewportAsync(new() { Timeout = 3000 });
             }
             catch (Exception e)
             {
@@ -644,22 +644,22 @@ Timeout: 1000ms"));
         }
 
         [UpstreamTest("EX-236 should report intersection even if fully covered by other element")]
-        public async Task ShouldReportIntersectionEvenIfFullyCoveredByOtherElement(IPage page)
+        public async Task ShouldReportIntersectionEvenIfFullyCoveredByOtherElement()
         {
-            await page.SetContentAsync(@"
+            await Page.SetContentAsync(@"
       <h1>hello</h1>
       <div style=""position: relative; height: 10000px; top: -5000px;></div>
     ");
-            await Expect(page.Locator("h1")).ToBeInViewportAsync();
+            await Expect(Page.Locator("h1")).ToBeInViewportAsync();
         }
     }
 
     [UpstreamTest("EX-237 toHaveCount should not produce logs twice")]
     [LocalFixme("dotnet: the call log has Locator(\"option\"), upstream expects locator('option')")]
-    public async Task ToHaveCountShouldNotProduceLogsTwice(IPage page)
+    public async Task ToHaveCountShouldNotProduceLogsTwice()
     {
-        await page.SetContentAsync("<select><option>One</option></select>");
-        var error = await Catch(() => Expect(page.Locator("option")).ToHaveCountAsync(2, new() { Timeout = 2000 }));
+        await Page.SetContentAsync("<select><option>One</option></select>");
+        var error = await Catch(() => Expect(Page.Locator("option")).ToHaveCountAsync(2, new() { Timeout = 2000 }));
         var waitingForMessage = "waiting for locator('option')";
         Assert.That(error.Message, Does.Contain(waitingForMessage));
         Assert.That(error.Message, Does.Contain("locator resolved to 1 element"));
@@ -669,10 +669,10 @@ Timeout: 1000ms"));
 
     [UpstreamTest("EX-238 toHaveText should not produce logs twice")]
     [LocalFixme("dotnet: the call log has Locator(\"div\"), upstream expects locator('div')")]
-    public async Task ToHaveTextShouldNotProduceLogsTwice(IPage page)
+    public async Task ToHaveTextShouldNotProduceLogsTwice()
     {
-        await page.SetContentAsync("<div>hello</div>");
-        var error = await Catch(() => Expect(page.Locator("div")).ToHaveTextAsync("world", new() { Timeout = 2000 }));
+        await Page.SetContentAsync("<div>hello</div>");
+        var error = await Catch(() => Expect(Page.Locator("div")).ToHaveTextAsync("world", new() { Timeout = 2000 }));
         var waitingForMessage = "waiting for locator('div')";
         Assert.That(error.Message, Does.Contain(waitingForMessage));
         Assert.That(error.Message, Does.Contain("locator resolved to <div>hello</div>"));
@@ -682,10 +682,10 @@ Timeout: 1000ms"));
 
     [UpstreamTest("EX-239 toHaveText that does not match should not produce logs twice")]
     [LocalFixme("dotnet: the call log has Locator(\"span\"), upstream expects locator('span')")]
-    public async Task ToHaveTextThatDoesNotMatchShouldNotProduceLogsTwice(IPage page)
+    public async Task ToHaveTextThatDoesNotMatchShouldNotProduceLogsTwice()
     {
-        await page.SetContentAsync("<div>hello</div>");
-        var error = await Catch(() => Expect(page.Locator("span")).ToHaveTextAsync("world", new() { Timeout = 2000 }));
+        await Page.SetContentAsync("<div>hello</div>");
+        var error = await Catch(() => Expect(Page.Locator("span")).ToHaveTextAsync("world", new() { Timeout = 2000 }));
         var waitingForMessage = "waiting for locator('span')";
         Assert.That(error.Message, Does.Contain(waitingForMessage));
         Assert.That(error.Message, Does.Not.Contain("locator resolved to"));
@@ -694,10 +694,10 @@ Timeout: 1000ms"));
 
     [UpstreamTest("EX-240 strict mode violation error format")]
     [LocalFixme("dotnet: the message of ToHaveTextAsync is \"Locator expected to have text\\nError: strict mode violation: Locator(\"div\") resolved to 2 elements:\\n    1) <div>a</div> aka GetByText(\"a\")\\n    2) <div>b</div> aka GetByText(\"b\")\\n 'foo'\\nBut was: 'null' \\nCall log: ...\"")]
-    public async Task StrictModeViolationErrorFormat(IPage page)
+    public async Task StrictModeViolationErrorFormat()
     {
-        await page.SetContentAsync("<div>a</div><div>b</div>");
-        var error = await Catch(() => Expect(page.Locator("div")).ToHaveTextAsync("foo"));
+        await Page.SetContentAsync("<div>a</div><div>b</div>");
+        var error = await Catch(() => Expect(Page.Locator("div")).ToHaveTextAsync("foo"));
         Assert.That(StripAnsi(error.Message), Does.Contain(@"expect(locator).toHaveText(expected) failed
 
 Locator: locator('div')
@@ -712,10 +712,10 @@ Call log:
 
     [UpstreamTest("EX-241 invalid selector error format")]
     [LocalFixme("dotnet: the message of ToBeVisibleAsync is \"Locator expected to be visible\\nError: Unexpected token \"#\" while parsing css selector \"##\". Did you mean to CSS.escape it? \\nCall log: ...\"")]
-    public async Task InvalidSelectorErrorFormat(IPage page)
+    public async Task InvalidSelectorErrorFormat()
     {
-        await page.SetContentAsync("<div>a</div><div>b</div>");
-        var error = await Catch(() => Expect(page.Locator("##")).ToBeVisibleAsync());
+        await Page.SetContentAsync("<div>a</div><div>b</div>");
+        var error = await Catch(() => Expect(Page.Locator("##")).ToBeVisibleAsync());
         Assert.That(StripAnsi(error.Message), Does.Contain(@"expect(locator).toBeVisible() failed
 
 Locator: ##
@@ -728,12 +728,12 @@ Call log:
 
     [UpstreamTest("EX-242 should report expect error details when page closes during expect")]
     [LocalFixme("dotnet: the message of ToHaveTextAsync is \"Locator expected to have text 'world'\\nBut was: 'hello' \\nCall log: ...\"")]
-    public async Task ShouldReportExpectErrorDetailsWhenPageClosesDuringExpect(IPage page)
+    public async Task ShouldReportExpectErrorDetailsWhenPageClosesDuringExpect()
     {
-        await page.SetContentAsync("<div>hello</div>");
-        var promise = Catch(() => Expect(page.Locator("div")).ToHaveTextAsync("world", new() { Timeout = 10000 }));
-        await page.WaitForTimeoutAsync(1000);
-        await page.CloseAsync();
+        await Page.SetContentAsync("<div>hello</div>");
+        var promise = Catch(() => Expect(Page.Locator("div")).ToHaveTextAsync("world", new() { Timeout = 10000 }));
+        await Page.WaitForTimeoutAsync(1000);
+        await Page.CloseAsync();
         var error = await promise;
         Assert.That(StripAnsi(error.Message), Does.Contain("expect(locator).toHaveText(expected) failed"));
         Assert.That(StripAnsi(error.Message), Does.Contain("Expected: \"world\""));
@@ -742,11 +742,11 @@ Call log:
 
     [UpstreamTest("EX-243 should report page close reason when page closes during expect")]
     [LocalFixme("dotnet: the message of ToHaveTextAsync is \"Locator expected to have text\\nError: Bye bye. 'world'\\nBut was: 'null' \\nCall log: ...\"")]
-    public async Task ShouldReportPageCloseReasonWhenPageClosesDuringExpect(IPage page)
+    public async Task ShouldReportPageCloseReasonWhenPageClosesDuringExpect()
     {
-        await page.SetContentAsync("<div>hello</div>");
-        var promise = Catch(() => Expect(page.Locator("non-existent")).ToHaveTextAsync("world", new() { Timeout = 10000 }));
-        await page.CloseAsync(new() { Reason = "Bye bye." });
+        await Page.SetContentAsync("<div>hello</div>");
+        var promise = Catch(() => Expect(Page.Locator("non-existent")).ToHaveTextAsync("world", new() { Timeout = 10000 }));
+        await Page.CloseAsync(new() { Reason = "Bye bye." });
         var error = await promise;
         Assert.That(StripAnsi(error.Message), Does.Contain("expect(locator).toHaveText(expected) failed"));
         Assert.That(StripAnsi(error.Message), Does.Contain("Bye bye."));

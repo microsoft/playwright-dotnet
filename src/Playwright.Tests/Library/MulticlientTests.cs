@@ -22,46 +22,53 @@ using static Microsoft.Playwright.Tests.Fixtures.Utils;
 namespace Microsoft.Playwright.Tests.Library;
 
 /// <summary>Port of tests/library/multiclient.spec.ts.</summary>
-public class MulticlientTests
+public class MulticlientTests : UpstreamBrowserTest
 {
     [SetUp]
     public void Slow() => Info.Slow(true, "All connect tests are slow");
 
-    public delegate Task<IBrowser> ConnectFixture(string wsEndpoint, BrowserTypeConnectOptions options = null);
+    private readonly List<IBrowser> _browsers = [];
+    private Task<PlaywrightServer> _remoteServer;
+    private Task<(IPage pageA, IPage pageB)> _twoPages;
 
     // .NET: browserType.launchServer({ _sharedBrowser: true }) is not in the .NET API. startRemoteServer('launchServer', { sharedBrowser: true }) makes this call in Node.js, and closes the server.
-    [Fixture]
-    public static Task<PlaywrightServer> RemoteServer(StartRemoteServer startRemoteServer) => startRemoteServer("launchServer", new() { SharedBrowser = true });
+    private Task<PlaywrightServer> RemoteServer() => _remoteServer ??= StartRemoteServer("launchServer", new() { SharedBrowser = true });
 
-    [Fixture]
-    public static async Task Connect(IBrowserType browserType, Func<ConnectFixture, Task> use)
+    private async Task<IBrowser> Connect(string wsEndpoint, BrowserTypeConnectOptions options = null)
     {
-        var browsers = new List<IBrowser>();
-        await use(async (wsEndpoint, options) =>
+        var browser = await BrowserType.ConnectAsync(wsEndpoint, options);
+        _browsers.Add(browser);
+        return browser;
+    }
+
+    [TearDown]
+    public async Task ConnectTearDown()
+    {
+        await PromiseAll(_browsers.Select(b => b.CloseAsync()));
+        _browsers.Clear();
+    }
+
+    private Task<(IPage pageA, IPage pageB)> TwoPages()
+    {
+        return _twoPages ??= Make();
+
+        async Task<(IPage pageA, IPage pageB)> Make()
         {
-            var browser = await browserType.ConnectAsync(wsEndpoint, options);
-            browsers.Add(browser);
-            return browser;
-        });
-        await PromiseAll(browsers.Select(b => b.CloseAsync()));
+            var remoteServer = await RemoteServer();
+            var browserA = await Connect(remoteServer.WsEndpoint());
+            var contextA = await browserA.NewContextAsync(ContextOptions());
+            var pageA = await contextA.NewPageAsync();
+
+            var browserB = await Connect(remoteServer.WsEndpoint());
+            var contextB = browserB.Contexts[0];
+            var pageB = contextB.Pages[0];
+
+            return (pageA, pageB);
+        }
     }
 
-    [Fixture]
-    public static async Task TwoPages(PlaywrightServer remoteServer, ConnectFixture connect, BrowserNewContextOptions contextOptions, Func<(IPage pageA, IPage pageB), Task> use)
-    {
-        var browserA = await connect(remoteServer.WsEndpoint());
-        var contextA = await browserA.NewContextAsync(contextOptions);
-        var pageA = await contextA.NewPageAsync();
-
-        var browserB = await connect(remoteServer.WsEndpoint());
-        var contextB = browserB.Contexts[0];
-        var pageB = contextB.Pages[0];
-
-        await use((pageA, pageB));
-    }
-
-    [BeforeEach]
-    public static void Skip(string mode) => Info.Skip(mode != "default");
+    [SetUp]
+    public void Skip() => Info.Skip(Mode != "default");
 
     private static async Task Disconnect(IPage page)
     {
@@ -71,22 +78,23 @@ public class MulticlientTests
     }
 
     [UpstreamTest("MC-001 should connect two clients")]
-    public async Task ShouldConnectTwoClients(ConnectFixture connect, PlaywrightServer remoteServer, Server server, BrowserNewContextOptions contextOptions)
+    public async Task ShouldConnectTwoClients()
     {
-        var browserA = await connect(remoteServer.WsEndpoint());
+        var remoteServer = await RemoteServer();
+        var browserA = await Connect(remoteServer.WsEndpoint());
         Assert.That(browserA.Contexts.Count, Is.EqualTo(0));
-        var contextA1 = await browserA.NewContextAsync(contextOptions);
+        var contextA1 = await browserA.NewContextAsync(ContextOptions());
         var pageA1 = await contextA1.NewPageAsync();
-        await pageA1.GotoAsync(server.EmptyPage);
+        await pageA1.GotoAsync(Server.EmptyPage);
 
-        var browserB = await connect(remoteServer.WsEndpoint());
+        var browserB = await Connect(remoteServer.WsEndpoint());
         Assert.That(browserB.Contexts.Count, Is.EqualTo(1));
         var contextB1 = browserB.Contexts[0];
         Assert.That(contextB1.Pages.Count, Is.EqualTo(1));
         var pageB1 = contextB1.Pages[0];
-        await Expect(pageB1).ToHaveURLAsync(server.EmptyPage);
+        await Expect(pageB1).ToHaveURLAsync(Server.EmptyPage);
 
-        var contextB2 = await browserB.NewContextAsync(new(contextOptions) { BaseURL = server.Prefix });
+        var contextB2 = await browserB.NewContextAsync(new(ContextOptions()) { BaseURL = Server.Prefix });
         Assert.That(browserB.Contexts, Is.EqualTo(new[] { contextB1, contextB2 }));
         await Expect(() => Assert.That(browserA.Contexts.Count, Is.EqualTo(2))).ToPassAsync();
         var contextA2 = browserA.Contexts[1];
@@ -101,19 +109,20 @@ public class MulticlientTests
         // Both contexts and pages should be still operational after any client disconnects.
         await Disconnect(pageA1);
 
-        await Expect(pageB1).ToHaveURLAsync(server.EmptyPage);
-        await Expect(pageB2).ToHaveURLAsync(server.Prefix + "/frames/frame.html");
+        await Expect(pageB1).ToHaveURLAsync(Server.EmptyPage);
+        await Expect(pageB2).ToHaveURLAsync(Server.Prefix + "/frames/frame.html");
     }
 
     [UpstreamTest("MC-002 should fire context event on remote newContext")]
-    public async Task ShouldFireContextEventOnRemoteNewContext(ConnectFixture connect, PlaywrightServer remoteServer, BrowserNewContextOptions contextOptions)
+    public async Task ShouldFireContextEventOnRemoteNewContext()
     {
-        var browserA = await connect(remoteServer.WsEndpoint());
+        var remoteServer = await RemoteServer();
+        var browserA = await Connect(remoteServer.WsEndpoint());
         var events = new List<IBrowserContext>();
         browserA.Context += (_, ctx) => events.Add(ctx);
 
-        var browserB = await connect(remoteServer.WsEndpoint());
-        var contextB = await browserB.NewContextAsync(contextOptions);
+        var browserB = await Connect(remoteServer.WsEndpoint());
+        var contextB = await browserB.NewContextAsync(ContextOptions());
 
         await Expect(() => Assert.That(events, Has.Count.EqualTo(1))).ToPassAsync();
         Assert.That(browserA.Contexts, Is.EqualTo(new[] { events[0] }));
@@ -121,8 +130,9 @@ public class MulticlientTests
     }
 
     [UpstreamTest("MC-003 should have separate default timeouts")]
-    public async Task ShouldHaveSeparateDefaultTimeouts((IPage pageA, IPage pageB) twoPages)
+    public async Task ShouldHaveSeparateDefaultTimeouts()
     {
+        var twoPages = await TwoPages();
         var (pageA, pageB) = twoPages;
         pageA.SetDefaultTimeout(500);
         pageB.SetDefaultTimeout(600);
@@ -135,8 +145,9 @@ public class MulticlientTests
     }
 
     [UpstreamTest("MC-004 should receive viewport size changes")]
-    public async Task ShouldReceiveViewportSizeChanges((IPage pageA, IPage pageB) twoPages)
+    public async Task ShouldReceiveViewportSizeChanges()
     {
+        var twoPages = await TwoPages();
         var (pageA, pageB) = twoPages;
 
         await pageA.SetViewportSizeAsync(567, 456);
@@ -149,8 +160,9 @@ public class MulticlientTests
     }
 
     [UpstreamTest("MC-007 should unpause clock")]
-    public async Task ShouldUnpauseClock((IPage pageA, IPage pageB) twoPages)
+    public async Task ShouldUnpauseClock()
     {
+        var twoPages = await TwoPages();
         var (pageA, pageB) = twoPages;
         // .NET: a time in milliseconds is a DateTime.
         await pageA.Clock.InstallAsync(new() { TimeDate = DateTime.UnixEpoch.AddMilliseconds(1000) });
@@ -161,8 +173,9 @@ public class MulticlientTests
     }
 
     [UpstreamTest("MC-008 last emulateMedia wins")]
-    public async Task LastEmulateMediaWins((IPage pageA, IPage pageB) twoPages)
+    public async Task LastEmulateMediaWins()
     {
+        var twoPages = await TwoPages();
         var (pageA, pageB) = twoPages;
         await pageA.EmulateMediaAsync(new() { Media = Media.Print });
         Assert.That(await pageB.EvaluateAsync<bool>("() => window.matchMedia('screen').matches"), Is.EqualTo(false));
@@ -173,21 +186,22 @@ public class MulticlientTests
     }
 
     [UpstreamTest("MC-009 should chain routes")]
-    public async Task ShouldChainRoutes((IPage pageA, IPage pageB) twoPages, Server server)
+    public async Task ShouldChainRoutes()
     {
+        var twoPages = await TwoPages();
         var (pageA, pageB) = twoPages;
 
-        server.SetRoute("/foo", (req, res) =>
+        Server.SetRoute("/foo", (req, res) =>
         {
             res.WriteHead(200, new() { ["Content-Type"] = "text/html" });
             res.End("<div>server-foo</div>");
         });
-        server.SetRoute("/bar", (req, res) =>
+        Server.SetRoute("/bar", (req, res) =>
         {
             res.WriteHead(200, new() { ["Content-Type"] = "text/html" });
             res.End("<div>server-bar</div>");
         });
-        server.SetRoute("/qux", (req, res) =>
+        Server.SetRoute("/qux", (req, res) =>
         {
             res.WriteHead(200, new() { ["Content-Type"] = "text/html" });
             res.End("<div>server-qux</div>");
@@ -224,39 +238,40 @@ public class MulticlientTests
             await route.FulfillAsync(new() { Body = "<div>intercepted2-qux</div>", ContentType = "text/html" });
         });
 
-        await pageA.GotoAsync(server.Prefix + "/foo");
+        await pageA.GotoAsync(Server.Prefix + "/foo");
         await Expect(pageB.Locator("div")).ToHaveTextAsync("intercepted2-foo");
 
-        await pageA.GotoAsync(server.Prefix + "/bar");
+        await pageA.GotoAsync(Server.Prefix + "/bar");
         await Expect(pageB.Locator("div")).ToHaveTextAsync("intercepted-bar");
 
-        await pageA.GotoAsync(server.Prefix + "/qux");
+        await pageA.GotoAsync(Server.Prefix + "/qux");
         await Expect(pageB.Locator("div")).ToHaveTextAsync("intercepted2-qux");
 
         stall = true;
-        var gotoPromise = pageB.GotoAsync(server.Prefix + "/foo");
+        var gotoPromise = pageB.GotoAsync(Server.Prefix + "/foo");
         await stallPromise.Task;
         await pageA.Context.Browser.CloseAsync();
 
         await gotoPromise;
         await Expect(pageB.Locator("div")).ToHaveTextAsync("intercepted2-foo");
 
-        await pageB.GotoAsync(server.Prefix + "/bar");
+        await pageB.GotoAsync(Server.Prefix + "/bar");
         await Expect(pageB.Locator("div")).ToHaveTextAsync("intercepted2-bar");
     }
 
     [UpstreamTest("MC-010 should chain routes with changed url")]
     [Ignore("fixme")]
-    public async Task ShouldChainRoutesWithChangedUrl((IPage pageA, IPage pageB) twoPages, Server server)
+    public async Task ShouldChainRoutesWithChangedUrl()
     {
+        var twoPages = await TwoPages();
         var (pageA, pageB) = twoPages;
 
-        server.SetRoute("/foo", (req, res) =>
+        Server.SetRoute("/foo", (req, res) =>
         {
             res.WriteHead(200, new() { ["Content-Type"] = "text/html" });
             res.End("<div>server-foo</div>");
         });
-        server.SetRoute("/baz", (req, res) =>
+        Server.SetRoute("/baz", (req, res) =>
         {
             res.WriteHead(200, new() { ["Content-Type"] = "text/html" });
             res.End("<div>server-baz</div>");
@@ -264,20 +279,21 @@ public class MulticlientTests
 
         await pageA.RouteAsync("**/foo", async route =>
         {
-            await route.FallbackAsync(new() { Url = server.Prefix + "/baz" });
+            await route.FallbackAsync(new() { Url = Server.Prefix + "/baz" });
         });
         await pageB.RouteAsync("**/baz", async route =>
         {
             await route.FulfillAsync(new() { Body = "<div>intercepted2-baz</div>", ContentType = "text/html" });
         });
 
-        await pageA.GotoAsync(server.Prefix + "/foo");
+        await pageA.GotoAsync(Server.Prefix + "/foo");
         await Expect(pageB.Locator("div")).ToHaveTextAsync("intercepted2-baz");
     }
 
     [UpstreamTest("MC-011 should remove exposed bindings upon disconnect")]
-    public async Task ShouldRemoveExposedBindingsUponDisconnect((IPage pageA, IPage pageB) twoPages)
+    public async Task ShouldRemoveExposedBindingsUponDisconnect()
     {
+        var twoPages = await TwoPages();
         var (pageA, pageB) = twoPages;
 
         await pageA.ExposeBindingAsync("pageBindingA", _ => "pageBindingAResult");
@@ -306,11 +322,12 @@ public class MulticlientTests
     }
 
     [UpstreamTest("MC-012 should unroute websockets")]
-    public async Task ShouldUnrouteWebsockets((IPage pageA, IPage pageB) twoPages, Server server)
+    public async Task ShouldUnrouteWebsockets()
     {
+        var twoPages = await TwoPages();
         var (pageA, pageB) = twoPages;
 
-        await pageA.GotoAsync(server.EmptyPage);
+        await pageA.GotoAsync(Server.EmptyPage);
         await pageA.RouteWebSocketAsync(new Regex(".*"), _ => { });
         await pageA.RouteWebSocketAsync(new Regex(".*"), _ => { });
         await pageA.RouteWebSocketAsync(new Regex(".*"), _ => { });
@@ -322,31 +339,32 @@ public class MulticlientTests
 
         var promise = new TaskCompletionSource<IWebSocketRoute>(TaskCreationOptions.RunContinuationsAsynchronously);
         await pageB.RouteWebSocketAsync(new Regex(".*"), ws => promise.TrySetResult(ws));
-        await pageB.GotoAsync(server.EmptyPage);
-        await pageB.EvaluateAsync("host => window.ws = new WebSocket('ws://' + host + '/ws')", server.Host);
+        await pageB.GotoAsync(Server.EmptyPage);
+        await pageB.EvaluateAsync("host => window.ws = new WebSocket('ws://' + host + '/ws')", Server.Host);
         await promise.Task;
     }
 
     [UpstreamTest("MC-013 should remove init scripts upon disconnect")]
-    public async Task ShouldRemoveInitScriptsUponDisconnect((IPage pageA, IPage pageB) twoPages, Server server)
+    public async Task ShouldRemoveInitScriptsUponDisconnect()
     {
+        var twoPages = await TwoPages();
         var (pageA, pageB) = twoPages;
 
         await pageA.AddInitScriptAsync("(() => window.pageValueA = 'pageValueA')()");
         await pageA.Context.AddInitScriptAsync("(() => window.contextValueA = 'contextValueA')()");
-        await pageB.GotoAsync(server.EmptyPage);
+        await pageB.GotoAsync(Server.EmptyPage);
         Assert.That(await pageB.EvaluateAsync<string>("() => window.pageValueA"), Is.EqualTo("pageValueA"));
         Assert.That(await pageB.EvaluateAsync<string>("() => window.contextValueA"), Is.EqualTo("contextValueA"));
 
         await pageB.AddInitScriptAsync("(() => window.pageValueB = 'pageValueB')()");
         await pageB.Context.AddInitScriptAsync("(() => window.contextValueB = 'contextValueB')()");
-        await pageA.GotoAsync(server.EmptyPage);
+        await pageA.GotoAsync(Server.EmptyPage);
         Assert.That(await pageA.EvaluateAsync<string>("() => window.pageValueB"), Is.EqualTo("pageValueB"));
         Assert.That(await pageA.EvaluateAsync<string>("() => window.contextValueB"), Is.EqualTo("contextValueB"));
 
         await Disconnect(pageB);
 
-        await pageA.GotoAsync(server.EmptyPage);
+        await pageA.GotoAsync(Server.EmptyPage);
         Assert.That(await pageA.EvaluateAsync<object>("() => window.pageValueB"), Is.Null);
         Assert.That(await pageA.EvaluateAsync<object>("() => window.contextValueB"), Is.Null);
         Assert.That(await pageA.EvaluateAsync<string>("() => window.pageValueA"), Is.EqualTo("pageValueA"));
@@ -354,11 +372,12 @@ public class MulticlientTests
     }
 
     [UpstreamTest("MC-014 should remove locator handlers upon disconnect")]
-    public async Task ShouldRemoveLocatorHandlersUponDisconnect((IPage pageA, IPage pageB) twoPages, Server server)
+    public async Task ShouldRemoveLocatorHandlersUponDisconnect()
     {
+        var twoPages = await TwoPages();
         var (pageA, pageB) = twoPages;
 
-        await pageA.GotoAsync(server.Prefix + "/input/handle-locator.html");
+        await pageA.GotoAsync(Server.Prefix + "/input/handle-locator.html");
 
         var count = 0;
         await pageA.AddLocatorHandlerAsync(pageA.GetByText("This interstitial covers the button"), async () =>
@@ -392,8 +411,9 @@ public class MulticlientTests
     }
 
     [UpstreamTest("MC-016 should avoid side effects upon disconnect")]
-    public async Task ShouldAvoidSideEffectsUponDisconnect((IPage pageA, IPage pageB) twoPages, Server server)
+    public async Task ShouldAvoidSideEffectsUponDisconnect()
     {
+        var twoPages = await TwoPages();
         var (pageA, pageB) = twoPages;
 
         var counter = 0;
@@ -415,13 +435,14 @@ public class MulticlientTests
     }
 
     [UpstreamTest("MC-017 screencast should deliver cached last frame to a new client")]
-    public async Task ScreencastShouldDeliverCachedLastFrameToANewClient((IPage pageA, IPage pageB) twoPages, Server server, string trace, string video)
+    public async Task ScreencastShouldDeliverCachedLastFrameToANewClient()
     {
-        Info.Skip(trace == "on", "trace=on has screencast active on the page already");
-        Info.Skip(video == "on", "video=on has screencast active on the page already");
+        var twoPages = await TwoPages();
+        Info.Skip(Trace == "on", "trace=on has screencast active on the page already");
+        Info.Skip(Video == "on", "video=on has screencast active on the page already");
 
         var (pageA, pageB) = twoPages;
-        await pageA.GotoAsync(server.EmptyPage);
+        await pageA.GotoAsync(Server.EmptyPage);
         await pageA.EvaluateAsync("() => document.body.style.backgroundColor = 'red'");
 
         var framesA = new List<byte[]>();
@@ -456,9 +477,10 @@ public class MulticlientTests
     }
 
     [UpstreamTest("MC-018 should stop tracing upon disconnect")]
-    public async Task ShouldStopTracingUponDisconnect((IPage pageA, IPage pageB) twoPages, string trace)
+    public async Task ShouldStopTracingUponDisconnect()
     {
-        Info.Skip(trace == "on");
+        var twoPages = await TwoPages();
+        Info.Skip(Trace == "on");
 
         var (pageA, pageB) = twoPages;
 
@@ -472,11 +494,12 @@ public class MulticlientTests
     }
 
     [UpstreamTest("MC-020 should run locator handlers after reconnecting with a pending callback")]
-    public async Task ShouldRunLocatorHandlersAfterReconnectingWithAPendingCallback(ConnectFixture connect, PlaywrightServer remoteServer, Server server, BrowserNewPageOptions newPageOptions)
+    public async Task ShouldRunLocatorHandlersAfterReconnectingWithAPendingCallback()
     {
-        var browser = await connect(remoteServer.WsEndpoint());
-        var page = await browser.NewPageAsync(newPageOptions);
-        await page.GotoAsync(server.Prefix + "/input/handle-locator.html");
+        var remoteServer = await RemoteServer();
+        var browser = await Connect(remoteServer.WsEndpoint());
+        var page = await browser.NewPageAsync(NewPageOptions());
+        await page.GotoAsync(Server.Prefix + "/input/handle-locator.html");
 
         var called = 0;
         await page.AddLocatorHandlerAsync(page.GetByText("This interstitial covers the button"), async () =>
@@ -493,7 +516,7 @@ public class MulticlientTests
 
         await Disconnect(page);
 
-        var reconnectedBrowser = await connect(remoteServer.WsEndpoint());
+        var reconnectedBrowser = await Connect(remoteServer.WsEndpoint());
         var reconnectedPage = reconnectedBrowser.Contexts[0].Pages[0];
         await reconnectedPage.AddLocatorHandlerAsync(reconnectedPage.GetByText("This interstitial covers the button"), async () =>
         {

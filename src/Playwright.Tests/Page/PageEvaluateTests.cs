@@ -25,45 +25,45 @@ using static Microsoft.Playwright.Tests.Fixtures.Utils;
 namespace Microsoft.Playwright.Tests.Page;
 
 /// <summary>Port of tests/page/page-evaluate.spec.ts.</summary>
-public class PageEvaluateTests
+public class PageEvaluateTests : UpstreamPageTest
 {
     [UpstreamTest("EV-001 should work @smoke")]
-    public async Task ShouldWork(IPage page)
+    public async Task ShouldWork()
     {
-        var result = await page.EvaluateAsync<int>("() => 7 * 3");
+        var result = await Page.EvaluateAsync<int>("() => 7 * 3");
         Assert.That(result, Is.EqualTo(21));
     }
 
     [UpstreamTest("EV-002 should transfer NaN")]
-    public async Task ShouldTransferNaN(IPage page)
+    public async Task ShouldTransferNaN()
     {
-        var result = await page.EvaluateAsync<double>("a => a", double.NaN);
+        var result = await Page.EvaluateAsync<double>("a => a", double.NaN);
         Assert.That(ObjectIs(result, double.NaN), Is.EqualTo(true));
     }
 
     [UpstreamTest("EV-003 should transfer -0")]
-    public async Task ShouldTransfer0(IPage page)
+    public async Task ShouldTransfer0()
     {
-        var result = await page.EvaluateAsync<double>("a => a", -0d);
+        var result = await Page.EvaluateAsync<double>("a => a", -0d);
         Assert.That(ObjectIs(result, -0d), Is.EqualTo(true));
     }
 
     [UpstreamTest("EV-004 should transfer Infinity")]
-    public async Task ShouldTransferInfinity_EV004(IPage page)
+    public async Task ShouldTransferInfinity_EV004()
     {
-        var result = await page.EvaluateAsync<double>("a => a", double.PositiveInfinity);
+        var result = await Page.EvaluateAsync<double>("a => a", double.PositiveInfinity);
         Assert.That(ObjectIs(result, double.PositiveInfinity), Is.EqualTo(true));
     }
 
     [UpstreamTest("EV-005 should transfer -Infinity")]
-    public async Task ShouldTransferInfinity_EV005(IPage page)
+    public async Task ShouldTransferInfinity_EV005()
     {
-        var result = await page.EvaluateAsync<double>("a => a", double.NegativeInfinity);
+        var result = await Page.EvaluateAsync<double>("a => a", double.NegativeInfinity);
         Assert.That(ObjectIs(result, double.NegativeInfinity), Is.EqualTo(true));
     }
 
     [UpstreamTest("EV-006 should roundtrip unserializable values")]
-    public async Task ShouldRoundtripUnserializableValues(IPage page)
+    public async Task ShouldRoundtripUnserializableValues()
     {
         var value = new
         {
@@ -72,33 +72,33 @@ public class PageEvaluateTests
             nZero = -0d,
             nan = double.NaN,
         };
-        var result = await page.EvaluateAsync<object>("value => value", value);
+        var result = await Page.EvaluateAsync<object>("value => value", value);
         ExpectToEqual(result, value);
     }
 
     [UpstreamTest("EV-007 should roundtrip promise to value")]
-    public async Task ShouldRoundtripPromiseToValue(IPage page)
+    public async Task ShouldRoundtripPromiseToValue()
     {
         {
-            var result = await page.EvaluateAsync<object>("value => Promise.resolve(value)", null);
+            var result = await Page.EvaluateAsync<object>("value => Promise.resolve(value)", null);
             Assert.That(result == null, Is.True);
         }
         {
-            var result = await page.EvaluateAsync<double>("value => Promise.resolve(value)", double.PositiveInfinity);
+            var result = await Page.EvaluateAsync<double>("value => Promise.resolve(value)", double.PositiveInfinity);
             Assert.That(result == double.PositiveInfinity, Is.True);
         }
         {
-            var result = await page.EvaluateAsync<double>("value => Promise.resolve(value)", -0d);
+            var result = await Page.EvaluateAsync<double>("value => Promise.resolve(value)", -0d);
             Assert.That(result == -0d, Is.True);
         }
         {
-            var result = await page.EvaluateAsync<object>("value => Promise.resolve(value)", null);
+            var result = await Page.EvaluateAsync<object>("value => Promise.resolve(value)", null);
             Assert.That(result == null, Is.True);
         }
     }
 
     [UpstreamTest("EV-008 should roundtrip promise to unserializable values")]
-    public async Task ShouldRoundtripPromiseToUnserializableValues(IPage page)
+    public async Task ShouldRoundtripPromiseToUnserializableValues()
     {
         var value = new
         {
@@ -107,27 +107,27 @@ public class PageEvaluateTests
             nZero = -0d,
             nan = double.NaN,
         };
-        var result = await page.EvaluateAsync<object>("value => Promise.resolve(value)", value);
+        var result = await Page.EvaluateAsync<object>("value => Promise.resolve(value)", value);
         ExpectToEqual(result, value);
     }
 
     [UpstreamTest("EV-009 should transfer arrays")]
-    public async Task ShouldTransferArrays(IPage page)
+    public async Task ShouldTransferArrays()
     {
-        var result = await page.EvaluateAsync<int[]>("a => a", new[] { 1, 2, 3 });
+        var result = await Page.EvaluateAsync<int[]>("a => a", new[] { 1, 2, 3 });
         Assert.That(result, Is.EqualTo(new[] { 1, 2, 3 }));
     }
 
     [UpstreamTest("EV-010 should transfer arrays as arrays, not objects")]
-    public async Task ShouldTransferArraysAsArraysNotObjects(IPage page)
+    public async Task ShouldTransferArraysAsArraysNotObjects()
     {
-        var result = await page.EvaluateAsync<bool>("a => Array.isArray(a)", new[] { 1, 2, 3 });
+        var result = await Page.EvaluateAsync<bool>("a => Array.isArray(a)", new[] { 1, 2, 3 });
         Assert.That(result, Is.EqualTo(true));
     }
 
     [UpstreamTest("EV-011 should transfer typed arrays")]
     [LocalFixme("dotnet: a .NET array is not sent as a typed array: the elements of sbyte[], byte[], ushort[], uint[], float[] and ulong[] arrive as empty objects ([{}, {}, {}]), and short[], int[], long[] and double[] arrive as a plain Array")]
-    public async Task ShouldTransferTypedArrays(IPage page)
+    public async Task ShouldTransferTypedArrays()
     {
         var testCases = new object[]
         {
@@ -146,63 +146,63 @@ public class PageEvaluateTests
 
         foreach (var typedArray in testCases)
         {
-            var result = await page.EvaluateAsync<object>("a => a", typedArray);
+            var result = await Page.EvaluateAsync<object>("a => a", typedArray);
             ExpectToEqual(result, typedArray);
         }
     }
 
     [UpstreamTest("EV-012 should transfer bigint")]
-    public async Task ShouldTransferBigint(IPage page)
+    public async Task ShouldTransferBigint()
     {
-        Assert.That(await page.EvaluateAsync<BigInteger>("() => 42n"), Is.EqualTo(new BigInteger(42)));
-        Assert.That(await page.EvaluateAsync<BigInteger>("a => a", new BigInteger(17)), Is.EqualTo(new BigInteger(17)));
+        Assert.That(await Page.EvaluateAsync<BigInteger>("() => 42n"), Is.EqualTo(new BigInteger(42)));
+        Assert.That(await Page.EvaluateAsync<BigInteger>("a => a", new BigInteger(17)), Is.EqualTo(new BigInteger(17)));
     }
 
     [UpstreamTest("EV-013 should transfer maps as empty objects")]
     [LocalFixme("dotnet: there is no Map: a Dictionary<int, int> is sent as an Array of { Key, Value } objects, 'Array [{\"Key\":1,\"Value\":2}]', not as an empty object")]
-    public async Task ShouldTransferMapsAsEmptyObjects(IPage page)
+    public async Task ShouldTransferMapsAsEmptyObjects()
     {
-        var result = await page.EvaluateAsync<string>("a => a.x.constructor.name + ' ' + JSON.stringify(a.x)", new { x = new Dictionary<int, int> { [1] = 2 } });
+        var result = await Page.EvaluateAsync<string>("a => a.x.constructor.name + ' ' + JSON.stringify(a.x)", new { x = new Dictionary<int, int> { [1] = 2 } });
         Assert.That(result, Is.EqualTo("Object {}"));
-        ExpectToEqual(await page.EvaluateAsync<object>("() => new Map([[1, 2]])"), new { });
+        ExpectToEqual(await Page.EvaluateAsync<object>("() => new Map([[1, 2]])"), new { });
     }
 
     [UpstreamTest("EV-014 should transfer sets as empty objects")]
     [LocalFixme("dotnet: there is no Set: a HashSet<int> is sent as an Array, 'Array [1,2]', not as an empty object")]
-    public async Task ShouldTransferSetsAsEmptyObjects(IPage page)
+    public async Task ShouldTransferSetsAsEmptyObjects()
     {
-        var result = await page.EvaluateAsync<string>("a => a.x.constructor.name + ' ' + JSON.stringify(a.x)", new { x = new HashSet<int> { 1, 2 } });
+        var result = await Page.EvaluateAsync<string>("a => a.x.constructor.name + ' ' + JSON.stringify(a.x)", new { x = new HashSet<int> { 1, 2 } });
         Assert.That(result, Is.EqualTo("Object {}"));
-        ExpectToEqual(await page.EvaluateAsync<object>("() => new Set([1, 2])"), new { });
+        ExpectToEqual(await Page.EvaluateAsync<object>("() => new Set([1, 2])"), new { });
     }
 
     [UpstreamTest("EV-015 should modify global environment")]
-    public async Task ShouldModifyGlobalEnvironment(IPage page)
+    public async Task ShouldModifyGlobalEnvironment()
     {
-        await page.EvaluateAsync("() => window['globalVar'] = 123");
-        Assert.That(await page.EvaluateAsync<int>("globalVar"), Is.EqualTo(123));
+        await Page.EvaluateAsync("() => window['globalVar'] = 123");
+        Assert.That(await Page.EvaluateAsync<int>("globalVar"), Is.EqualTo(123));
     }
 
     [UpstreamTest("EV-016 should evaluate in the page context")]
-    public async Task ShouldEvaluateInThePageContext(IPage page, Server server)
+    public async Task ShouldEvaluateInThePageContext()
     {
-        await page.GotoAsync(server.Prefix + "/global-var.html");
-        Assert.That(await page.EvaluateAsync<int>("globalVar"), Is.EqualTo(123));
+        await Page.GotoAsync(Server.Prefix + "/global-var.html");
+        Assert.That(await Page.EvaluateAsync<int>("globalVar"), Is.EqualTo(123));
     }
 
     [UpstreamTest("EV-017 should return undefined for objects with symbols")]
-    public async Task ShouldReturnUndefinedForObjectsWithSymbols(IPage page)
+    public async Task ShouldReturnUndefinedForObjectsWithSymbols()
     {
-        ExpectToEqual(await page.EvaluateAsync<object>("() => [Symbol('foo4')]"), new object[] { null });
+        ExpectToEqual(await Page.EvaluateAsync<object>("() => [Symbol('foo4')]"), new object[] { null });
         ExpectToEqual(
-            await page.EvaluateAsync<object>(@"() => {
+            await Page.EvaluateAsync<object>(@"() => {
     const a = {};
     a[Symbol('foo4')] = 42;
     return a;
   }"),
             new { });
         ExpectToEqual(
-            await page.EvaluateAsync<object>(@"() => {
+            await Page.EvaluateAsync<object>(@"() => {
     return { foo: [{ a: Symbol('foo4') }] };
   }"),
             new { foo = new[] { new Dictionary<string, object> { ["a"] = null } } });
@@ -210,47 +210,47 @@ public class PageEvaluateTests
 
     [UpstreamTest("EV-018 should work with function shorthands")]
     [LocalFixme("dotnet: evaluate does not send isFunction, so the driver evaluates the text as an expression, and a method shorthand is a SyntaxError there")]
-    public async Task ShouldWorkWithFunctionShorthands(IPage page)
+    public async Task ShouldWorkWithFunctionShorthands()
     {
         var a = new
         {
             sum = "sum([a, b]) { return a + b; }",
             mult = "async mult([a, b]) { return a * b; }",
         };
-        Assert.That(await page.EvaluateAsync<int>(a.sum, new[] { 1, 2 }), Is.EqualTo(3));
-        Assert.That(await page.EvaluateAsync<int>(a.mult, new[] { 2, 4 }), Is.EqualTo(8));
+        Assert.That(await Page.EvaluateAsync<int>(a.sum, new[] { 1, 2 }), Is.EqualTo(3));
+        Assert.That(await Page.EvaluateAsync<int>(a.mult, new[] { 2, 4 }), Is.EqualTo(8));
     }
 
     [UpstreamTest("EV-019 should work with unicode chars")]
-    public async Task ShouldWorkWithUnicodeChars(IPage page)
+    public async Task ShouldWorkWithUnicodeChars()
     {
-        var result = await page.EvaluateAsync<int>("a => a['中文字符']", new Dictionary<string, object> { ["中文字符"] = 42 });
+        var result = await Page.EvaluateAsync<int>("a => a['中文字符']", new Dictionary<string, object> { ["中文字符"] = 42 });
         Assert.That(result, Is.EqualTo(42));
     }
 
     [UpstreamTest("EV-020 should work with large strings")]
-    public async Task ShouldWorkWithLargeStrings(IPage page, bool isAndroid)
+    public async Task ShouldWorkWithLargeStrings()
     {
-        Info.Skip(isAndroid, "string is too long :(");
+        Info.Skip(IsAndroid, "string is too long :(");
 
         var expected = string.Concat(Enumerable.Repeat("x", 40000));
-        Assert.That(await page.EvaluateAsync<string>("data => data", expected), Is.EqualTo(expected));
+        Assert.That(await Page.EvaluateAsync<string>("data => data", expected), Is.EqualTo(expected));
     }
 
     [UpstreamTest("EV-021 should work with large unicode strings")]
-    public async Task ShouldWorkWithLargeUnicodeStrings(IPage page, string browserName, string platform, bool isAndroid)
+    public async Task ShouldWorkWithLargeUnicodeStrings()
     {
-        Info.Skip(isAndroid, "string is too long :(");
+        Info.Skip(IsAndroid, "string is too long :(");
 
         var expected = string.Concat(Enumerable.Repeat("🎭", 10000));
-        Assert.That(await page.EvaluateAsync<string>("data => data", expected), Is.EqualTo(expected));
+        Assert.That(await Page.EvaluateAsync<string>("data => data", expected), Is.EqualTo(expected));
     }
 
     [UpstreamTest("EV-022 should throw when evaluation triggers reload")]
-    public async Task ShouldThrowWhenEvaluationTriggersReload(IPage page)
+    public async Task ShouldThrowWhenEvaluationTriggersReload()
     {
         Exception error = null;
-        error = await Catch(() => page.EvaluateAsync(@"() => {
+        error = await Catch(() => Page.EvaluateAsync(@"() => {
     location.reload();
     return new Promise(() => { });
   }"));
@@ -258,106 +258,106 @@ public class PageEvaluateTests
     }
 
     [UpstreamTest("EV-023 should await promise")]
-    public async Task ShouldAwaitPromise(IPage page)
+    public async Task ShouldAwaitPromise()
     {
-        var result = await page.EvaluateAsync<int>("() => Promise.resolve(8 * 7)");
+        var result = await Page.EvaluateAsync<int>("() => Promise.resolve(8 * 7)");
         Assert.That(result, Is.EqualTo(56));
     }
 
     [UpstreamTest("EV-024 should work right after framenavigated")]
-    public async Task ShouldWorkRightAfterFramenavigated(IPage page, Server server)
+    public async Task ShouldWorkRightAfterFramenavigated()
     {
         Task<int> frameEvaluation = null;
-        page.FrameNavigated += (_, frame) =>
+        Page.FrameNavigated += (_, frame) =>
         {
             frameEvaluation = frame.EvaluateAsync<int>("() => 6 * 7");
         };
-        await page.GotoAsync(server.EmptyPage);
+        await Page.GotoAsync(Server.EmptyPage);
         Assert.That(await frameEvaluation, Is.EqualTo(42));
     }
 
     [UpstreamTest("EV-025 should work right after a cross-origin navigation")]
-    public async Task ShouldWorkRightAfterACrossOriginNavigation(IPage page, Server server)
+    public async Task ShouldWorkRightAfterACrossOriginNavigation()
     {
-        await page.GotoAsync(server.EmptyPage);
+        await Page.GotoAsync(Server.EmptyPage);
         Task<int> frameEvaluation = null;
-        page.FrameNavigated += (_, frame) =>
+        Page.FrameNavigated += (_, frame) =>
         {
             frameEvaluation = frame.EvaluateAsync<int>("() => 6 * 7");
         };
-        await page.GotoAsync(server.CrossProcessPrefix + "/empty.html");
+        await Page.GotoAsync(Server.CrossProcessPrefix + "/empty.html");
         Assert.That(await frameEvaluation, Is.EqualTo(42));
     }
 
     [UpstreamTest("EV-026 should work from-inside an exposed function")]
-    public async Task ShouldWorkFromInsideAnExposedFunction(IPage page)
+    public async Task ShouldWorkFromInsideAnExposedFunction()
     {
         // Setup inpage callback, which calls Page.evaluate
-        await page.ExposeFunctionAsync("callController", async (int a, int b) =>
+        await Page.ExposeFunctionAsync("callController", async (int a, int b) =>
         {
-            return await page.EvaluateAsync<int>("({ a, b }) => a * b", new { a, b });
+            return await Page.EvaluateAsync<int>("({ a, b }) => a * b", new { a, b });
         });
-        var result = await page.EvaluateAsync<int>(@"async function() {
+        var result = await Page.EvaluateAsync<int>(@"async function() {
     return await window['callController'](9, 3);
   }");
         Assert.That(result, Is.EqualTo(27));
     }
 
     [UpstreamTest("EV-027 should reject promise with exception")]
-    public async Task ShouldRejectPromiseWithException(IPage page)
+    public async Task ShouldRejectPromiseWithException()
     {
         Exception error = null;
         // @ts-ignore
-        error = await Catch(() => page.EvaluateAsync("() => not_existing_object.property"));
+        error = await Catch(() => Page.EvaluateAsync("() => not_existing_object.property"));
         Assert.That(error, Is.Not.Null);
         Assert.That(error.Message, Does.Contain("not_existing_object"));
     }
 
     [UpstreamTest("EV-028 should support thrown strings as error messages")]
-    public async Task ShouldSupportThrownStringsAsErrorMessages(IPage page)
+    public async Task ShouldSupportThrownStringsAsErrorMessages()
     {
         Exception error = null;
-        error = await Catch(() => page.EvaluateAsync("() => { throw 'qwerty'; }"));
+        error = await Catch(() => Page.EvaluateAsync("() => { throw 'qwerty'; }"));
         Assert.That(error, Is.Not.Null);
         Assert.That(error.Message, Does.Contain("qwerty"));
     }
 
     [UpstreamTest("EV-029 should support thrown numbers as error messages")]
-    public async Task ShouldSupportThrownNumbersAsErrorMessages(IPage page)
+    public async Task ShouldSupportThrownNumbersAsErrorMessages()
     {
         Exception error = null;
-        error = await Catch(() => page.EvaluateAsync("() => { throw 100500; }"));
+        error = await Catch(() => Page.EvaluateAsync("() => { throw 100500; }"));
         Assert.That(error, Is.Not.Null);
         Assert.That(error.Message, Does.Contain("100500"));
     }
 
     [UpstreamTest("EV-030 should reject when a falsy value is thrown")]
-    public async Task ShouldRejectWhenAFalsyValueIsThrown(IPage page)
+    public async Task ShouldRejectWhenAFalsyValueIsThrown()
     {
         foreach (var value in new[] { "null", "undefined", "0", "''", "false", "NaN", "-0", "0n" })
         {
-            var error = await Catch(() => page.EvaluateAsync($"(() => {{ throw {value}; }})()"));
+            var error = await Catch(() => Page.EvaluateAsync($"(() => {{ throw {value}; }})()"));
             Assert.That(error, Is.InstanceOf<Exception>(), $"throw {value}");
-            var rejection = await Catch(() => page.EvaluateAsync($"Promise.reject({value})"));
+            var rejection = await Catch(() => Page.EvaluateAsync($"Promise.reject({value})"));
             Assert.That(rejection, Is.InstanceOf<Exception>(), $"Promise.reject({value})");
         }
     }
 
     [UpstreamTest("EV-031 should include a non-error rejection value in the error message")]
-    public async Task ShouldIncludeANonErrorRejectionValueInTheErrorMessage(IPage page)
+    public async Task ShouldIncludeANonErrorRejectionValueInTheErrorMessage()
     {
-        var error = await Catch(() => page.EvaluateAsync("() => Promise.reject(7)"));
+        var error = await Catch(() => Page.EvaluateAsync("() => Promise.reject(7)"));
         Assert.That(error.Message, Does.Contain("7"));
-        var nullError = await Catch(() => page.EvaluateAsync("() => { throw null; }"));
+        var nullError = await Catch(() => Page.EvaluateAsync("() => { throw null; }"));
         Assert.That(nullError.Message, Does.Contain("null"));
     }
 
     [UpstreamTest("EV-032 should return complex objects")]
     [LocalFixme("dotnet: an argument that is 200 objects deep does not leave the client: the connection serializes the message with the default MaxDepth of System.Text.Json, 64, and throws a JsonException")]
-    public async Task ShouldReturnComplexObjects(IPage page)
+    public async Task ShouldReturnComplexObjects()
     {
         var @object = new { foo = "bar!" };
-        var result = await page.EvaluateAsync<object>("a => a", @object);
+        var result = await Page.EvaluateAsync<object>("a => a", @object);
         Assert.That(result, Is.Not.SameAs(@object));
         ExpectToEqual(result, @object);
 
@@ -368,49 +368,49 @@ public class PageEvaluateTests
             argument = new { children = new[] { argument } };
         }
         // .NET: JsonSerializer stops at 64 levels unless MaxDepth says otherwise
-        Assert.That(await page.EvaluateAsync<int>("value => JSON.stringify(value).length", argument), Is.EqualTo(JsonSerializer.Serialize(argument, new JsonSerializerOptions { MaxDepth = 1000 }).Length));
+        Assert.That(await Page.EvaluateAsync<int>("value => JSON.stringify(value).length", argument), Is.EqualTo(JsonSerializer.Serialize(argument, new JsonSerializerOptions { MaxDepth = 1000 }).Length));
 
         // An argument that is too deep rejects and does not hang.
         for (var i = 0; i < 800; i++)
         {
             argument = new { children = new[] { argument } };
         }
-        var error = await Catch(() => page.EvaluateAsync<int>("value => JSON.stringify(value).length", argument));
+        var error = await Catch(() => Page.EvaluateAsync<int>("value => JSON.stringify(value).length", argument));
         Assert.That(error.Message, Does.Match("Maximum call stack size exceeded|too much recursion"));
     }
 
     [UpstreamTest("EV-033 should return NaN")]
-    public async Task ShouldReturnNaN(IPage page)
+    public async Task ShouldReturnNaN()
     {
-        var result = await page.EvaluateAsync<double>("() => NaN");
+        var result = await Page.EvaluateAsync<double>("() => NaN");
         Assert.That(ObjectIs(result, double.NaN), Is.EqualTo(true));
     }
 
     [UpstreamTest("EV-034 should return -0")]
-    public async Task ShouldReturn0(IPage page)
+    public async Task ShouldReturn0()
     {
-        var result = await page.EvaluateAsync<double>("() => -0");
+        var result = await Page.EvaluateAsync<double>("() => -0");
         Assert.That(ObjectIs(result, -0d), Is.EqualTo(true));
     }
 
     [UpstreamTest("EV-035 should return Infinity")]
-    public async Task ShouldReturnInfinity_EV035(IPage page)
+    public async Task ShouldReturnInfinity_EV035()
     {
-        var result = await page.EvaluateAsync<double>("() => Infinity");
+        var result = await Page.EvaluateAsync<double>("() => Infinity");
         Assert.That(ObjectIs(result, double.PositiveInfinity), Is.EqualTo(true));
     }
 
     [UpstreamTest("EV-036 should return -Infinity")]
-    public async Task ShouldReturnInfinity_EV036(IPage page)
+    public async Task ShouldReturnInfinity_EV036()
     {
-        var result = await page.EvaluateAsync<double>("() => -Infinity");
+        var result = await Page.EvaluateAsync<double>("() => -Infinity");
         Assert.That(ObjectIs(result, double.NegativeInfinity), Is.EqualTo(true));
     }
 
     [UpstreamTest("EV-037 should work with overwritten Promise")]
-    public async Task ShouldWorkWithOverwrittenPromise(IPage page)
+    public async Task ShouldWorkWithOverwrittenPromise()
     {
-        await page.EvaluateAsync(@"() => {
+        await Page.EvaluateAsync(@"() => {
     const originalPromise = window.Promise;
     class Promise2 {
       _promise;
@@ -448,48 +448,48 @@ public class PageEvaluateTests
 
         // Sanity check.
         Assert.That(
-            await page.EvaluateAsync<bool>(@"() => {
+            await Page.EvaluateAsync<bool>(@"() => {
     const p = Promise.all([Promise.race([]), new Promise(() => { }).then(() => { })]);
     return p instanceof window['__Promise2'];
   }"),
             Is.EqualTo(true));
 
         // Now, the new promise should be awaitable.
-        Assert.That(await page.EvaluateAsync<int>("() => Promise.resolve(42)"), Is.EqualTo(42));
+        Assert.That(await Page.EvaluateAsync<int>("() => Promise.resolve(42)"), Is.EqualTo(42));
         // No page timers below: the frozen-clock project never fires them.
-        var handle = await page.EvaluateHandleAsync("() => new Promise(f => queueMicrotask(() => f(42)))");
+        var handle = await Page.EvaluateHandleAsync("() => new Promise(f => queueMicrotask(() => f(42)))");
         Assert.That(await handle.JsonValueAsync<int>(), Is.EqualTo(42));
-        var error = await Catch(() => page.WaitForFunctionAsync("() => false", null, new() { Timeout = 500 }));
+        var error = await Catch(() => Page.WaitForFunctionAsync("() => false", null, new() { Timeout = 500 }));
         Assert.That(error.Message, Does.Contain("Timeout 500ms exceeded"));
-        await page.EvaluateAsync("() => window.__done = true");
-        await page.WaitForFunctionAsync("() => window.__done");
+        await Page.EvaluateAsync("() => window.__done = true");
+        await Page.WaitForFunctionAsync("() => window.__done");
     }
 
     [UpstreamTest("EV-042 should return undefined properties")]
-    public async Task ShouldReturnUndefinedProperties(IPage page)
+    public async Task ShouldReturnUndefinedProperties()
     {
-        var value = await page.EvaluateAsync<object>("() => ({ a: undefined })");
+        var value = await Page.EvaluateAsync<object>("() => ({ a: undefined })");
         // .NET: 'a' in value
         Assert.That(((IDictionary<string, object>)value).ContainsKey("a"), Is.EqualTo(true));
     }
 
     [UpstreamTest("EV-043 should properly serialize null arguments")]
-    public async Task ShouldProperlySerializeNullArguments(IPage page)
+    public async Task ShouldProperlySerializeNullArguments()
     {
-        Assert.That(await page.EvaluateAsync<object>("x => x", null), Is.Null);
+        Assert.That(await Page.EvaluateAsync<object>("x => x", null), Is.Null);
     }
 
     [UpstreamTest("EV-044 should properly serialize null fields")]
-    public async Task ShouldProperlySerializeNullFields(IPage page)
+    public async Task ShouldProperlySerializeNullFields()
     {
-        ExpectToEqual(await page.EvaluateAsync<object>("() => ({ a: null })"), new Dictionary<string, object> { ["a"] = null });
+        ExpectToEqual(await Page.EvaluateAsync<object>("() => ({ a: null })"), new Dictionary<string, object> { ["a"] = null });
     }
 
     [UpstreamTest("EV-045 should properly serialize PerformanceMeasure object")]
-    public async Task ShouldProperlySerializePerformanceMeasureObject(IPage page)
+    public async Task ShouldProperlySerializePerformanceMeasureObject()
     {
         ExpectToEqual(
-            await page.EvaluateAsync<object>(@"() => {
+            await Page.EvaluateAsync<object>(@"() => {
     window.builtins.performance.mark('start');
     window.builtins.performance.mark('end');
     window.builtins.performance.measure('my-measure', 'start', 'end');
@@ -508,11 +508,11 @@ public class PageEvaluateTests
     }
 
     [UpstreamTest("EV-046 should properly serialize window.performance object")]
-    public async Task ShouldProperlySerializeWindowPerformanceObject(IPage page)
+    public async Task ShouldProperlySerializeWindowPerformanceObject()
     {
         Info.Skip(!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("PW_CLOCK")));
 
-        ExpectToEqual(await page.EvaluateAsync<object>("() => performance"), ObjectContaining(new
+        ExpectToEqual(await Page.EvaluateAsync<object>("() => performance"), ObjectContaining(new
         {
             navigation = new
             {
@@ -548,16 +548,16 @@ public class PageEvaluateTests
     }
 
     [UpstreamTest("EV-047 should return undefined for non-serializable objects")]
-    public async Task ShouldReturnUndefinedForNonSerializableObjects(IPage page)
+    public async Task ShouldReturnUndefinedForNonSerializableObjects()
     {
-        Assert.That(await page.EvaluateAsync<object>("() => function() {}"), Is.Null);
+        Assert.That(await Page.EvaluateAsync<object>("() => function() {}"), Is.Null);
     }
 
     [UpstreamTest("EV-048 should throw for too deep reference chain")]
-    public async Task ShouldThrowForTooDeepReferenceChain(IPage page, string browserName, bool isBidi)
+    public async Task ShouldThrowForTooDeepReferenceChain()
     {
-        Info.Fixme(browserName == "firefox" && !isBidi, "Firefox Juggler -> Playwright serialiser does not throw for deep references.\nThis causes large objects to get serialised back to the Playwright client.\nThere our validators throw 'Maximum call stack size exceeded'.");
-        var error = await ThrowsAsync<PlaywrightException>(() => page.EvaluateAsync(
+        Info.Fixme(BrowserName == "firefox" && !IsBidi, "Firefox Juggler -> Playwright serialiser does not throw for deep references.\nThis causes large objects to get serialised back to the Playwright client.\nThere our validators throw 'Maximum call stack size exceeded'.");
+        var error = await ThrowsAsync<PlaywrightException>(() => Page.EvaluateAsync(
             @"depth => {
     const obj = {};
     let temp = obj;
@@ -572,12 +572,12 @@ public class PageEvaluateTests
     }
 
     [UpstreamTest("EV-049 should throw for too deep reference chain 2")]
-    public async Task ShouldThrowForTooDeepReferenceChain2(IPage page, string browserName, bool isAndroid)
+    public async Task ShouldThrowForTooDeepReferenceChain2()
     {
-        Info.Skip(browserName != "chromium", "this is a chromium-only limitation");
-        Info.Skip(isAndroid, "something fails there");
+        Info.Skip(BrowserName != "chromium", "this is a chromium-only limitation");
+        Info.Skip(IsAndroid, "something fails there");
 
-        var error = await ThrowsAsync<PlaywrightException>(() => page.EvaluateAsync(
+        var error = await ThrowsAsync<PlaywrightException>(() => Page.EvaluateAsync(
             @"depth => {
     let node = {};
     for (let i = 0; i < depth; i++)
@@ -589,16 +589,16 @@ public class PageEvaluateTests
     }
 
     [UpstreamTest("EV-054 should alias Window, Document and Node")]
-    public async Task ShouldAliasWindowDocumentAndNode(IPage page)
+    public async Task ShouldAliasWindowDocumentAndNode()
     {
-        var @object = await page.EvaluateAsync<string[]>("[window, document, document.body]");
+        var @object = await Page.EvaluateAsync<string[]>("[window, document, document.body]");
         Assert.That(@object, Is.EqualTo(new[] { "ref: <Window>", "ref: <Document>", "ref: <Node>" }));
     }
 
     [UpstreamTest("EV-055 should work for circular object")]
-    public async Task ShouldWorkForCircularObject(IPage page)
+    public async Task ShouldWorkForCircularObject()
     {
-        var result = await page.EvaluateAsync<object>(@"() => {
+        var result = await Page.EvaluateAsync<object>(@"() => {
     const a = {};
     a.b = a;
     return a;
@@ -609,9 +609,9 @@ public class PageEvaluateTests
     }
 
     [UpstreamTest("EV-056 should be able to throw a tricky error")]
-    public async Task ShouldBeAbleToThrowATrickyError(IPage page)
+    public async Task ShouldBeAbleToThrowATrickyError()
     {
-        var windowHandle = await page.EvaluateHandleAsync("() => window");
+        var windowHandle = await Page.EvaluateHandleAsync("() => window");
         // .NET: await windowHandle.jsonValue().catch(e => e.message)
         string errorText;
         try
@@ -622,7 +622,7 @@ public class PageEvaluateTests
         {
             errorText = e.Message;
         }
-        var error = await Catch(() => page.EvaluateAsync(
+        var error = await Catch(() => Page.EvaluateAsync(
             @"errorText => {
     throw new Error(errorText);
   }",
@@ -631,51 +631,51 @@ public class PageEvaluateTests
     }
 
     [UpstreamTest("EV-057 should accept a string")]
-    public async Task ShouldAcceptAString(IPage page)
+    public async Task ShouldAcceptAString()
     {
-        var result = await page.EvaluateAsync<int>("1 + 2");
+        var result = await Page.EvaluateAsync<int>("1 + 2");
         Assert.That(result, Is.EqualTo(3));
     }
 
     [UpstreamTest("EV-058 should accept a string with semi colons")]
-    public async Task ShouldAcceptAStringWithSemiColons(IPage page)
+    public async Task ShouldAcceptAStringWithSemiColons()
     {
-        var result = await page.EvaluateAsync<int>("1 + 5;");
+        var result = await Page.EvaluateAsync<int>("1 + 5;");
         Assert.That(result, Is.EqualTo(6));
     }
 
     [UpstreamTest("EV-059 should accept a string with comments")]
-    public async Task ShouldAcceptAStringWithComments(IPage page)
+    public async Task ShouldAcceptAStringWithComments()
     {
-        var result = await page.EvaluateAsync<int>("2 + 5;\n// do some math!");
+        var result = await Page.EvaluateAsync<int>("2 + 5;\n// do some math!");
         Assert.That(result, Is.EqualTo(7));
     }
 
     [UpstreamTest("EV-060 should accept element handle as an argument")]
-    public async Task ShouldAcceptElementHandleAsAnArgument(IPage page)
+    public async Task ShouldAcceptElementHandleAsAnArgument()
     {
-        await page.SetContentAsync("<section>42</section>");
-        var element = await page.QuerySelectorAsync("section");
-        var text = await page.EvaluateAsync<string>("e => e.textContent", element);
+        await Page.SetContentAsync("<section>42</section>");
+        var element = await Page.QuerySelectorAsync("section");
+        var text = await Page.EvaluateAsync<string>("e => e.textContent", element);
         Assert.That(text, Is.EqualTo("42"));
     }
 
     [UpstreamTest("EV-061 should throw if underlying element was disposed")]
-    public async Task ShouldThrowIfUnderlyingElementWasDisposed(IPage page)
+    public async Task ShouldThrowIfUnderlyingElementWasDisposed()
     {
-        await page.SetContentAsync("<section>39</section>");
-        var element = await page.QuerySelectorAsync("section");
+        await Page.SetContentAsync("<section>39</section>");
+        var element = await Page.QuerySelectorAsync("section");
         Assert.That(element, Is.Not.Null);
         await element.DisposeAsync();
         Exception error = null;
-        error = await Catch(() => page.EvaluateAsync("e => e.textContent", element));
+        error = await Catch(() => Page.EvaluateAsync("e => e.textContent", element));
         Assert.That(error.Message, Does.Contain("no object with guid"));
     }
 
     [UpstreamTest("EV-062 should simulate a user gesture")]
-    public async Task ShouldSimulateAUserGesture(IPage page)
+    public async Task ShouldSimulateAUserGesture()
     {
-        var result = await page.EvaluateAsync<bool>(@"() => {
+        var result = await Page.EvaluateAsync<bool>(@"() => {
     document.body.appendChild(document.createTextNode('test'));
     document.execCommand('selectAll');
     return document.execCommand('copy');
@@ -684,11 +684,11 @@ public class PageEvaluateTests
     }
 
     [UpstreamTest("EV-063 should throw a nice error after a navigation")]
-    public async Task ShouldThrowANiceErrorAfterANavigation(IPage page)
+    public async Task ShouldThrowANiceErrorAfterANavigation()
     {
         Info.Skip(Environment.GetEnvironmentVariable("PW_CLOCK") == "frozen");
-        var navigationPromise = page.WaitForNavigationAsync();
-        var error = await Catch(() => page.EvaluateAsync(@"() => new Promise(f => setTimeout(() => {
+        var navigationPromise = Page.WaitForNavigationAsync();
+        var error = await Catch(() => Page.EvaluateAsync(@"() => new Promise(f => setTimeout(() => {
     window.location.reload();
     setTimeout(() => f(42), 1000);
   }, 0))"));
@@ -697,10 +697,10 @@ public class PageEvaluateTests
     }
 
     [UpstreamTest("EV-064 should not throw an error when evaluation does a navigation")]
-    public async Task ShouldNotThrowAnErrorWhenEvaluationDoesANavigation(IPage page, Server server)
+    public async Task ShouldNotThrowAnErrorWhenEvaluationDoesANavigation()
     {
-        await page.GotoAsync(server.Prefix + "/one-style.html");
-        var result = await page.EvaluateAsync<int[]>(@"() => {
+        await Page.GotoAsync(Server.Prefix + "/one-style.html");
+        var result = await Page.EvaluateAsync<int[]>(@"() => {
     window.location.href = '/empty.html';
     return [42];
   }");
@@ -708,10 +708,10 @@ public class PageEvaluateTests
     }
 
     [UpstreamTest("EV-065 should not throw an error when evaluation does a synchronous navigation and returns an object")]
-    public async Task ShouldNotThrowAnErrorWhenEvaluationDoesASynchronousNavigationAndReturnsAnObject(IPage page, Server server, string browserName)
+    public async Task ShouldNotThrowAnErrorWhenEvaluationDoesASynchronousNavigationAndReturnsAnObject()
     {
         // It is important to be on about:blank for sync reload.
-        var result = await page.EvaluateAsync<object>(@"() => {
+        var result = await Page.EvaluateAsync<object>(@"() => {
     window.location.reload();
     return { a: 42 };
   }");
@@ -719,10 +719,10 @@ public class PageEvaluateTests
     }
 
     [UpstreamTest("EV-066 should not throw an error when evaluation does a synchronous navigation and returns undefined")]
-    public async Task ShouldNotThrowAnErrorWhenEvaluationDoesASynchronousNavigationAndReturnsUndefined(IPage page)
+    public async Task ShouldNotThrowAnErrorWhenEvaluationDoesASynchronousNavigationAndReturnsUndefined()
     {
         // It is important to be on about:blank for sync reload.
-        var result = await page.EvaluateAsync<object>(@"() => {
+        var result = await Page.EvaluateAsync<object>(@"() => {
     window.location.reload();
     return undefined;
   }");
@@ -730,39 +730,39 @@ public class PageEvaluateTests
     }
 
     [UpstreamTest("EV-067 should transfer 100Mb of data from page to node.js")]
-    public async Task ShouldTransfer100MbOfDataFromPageToNodeJs(string mode, IPage page)
+    public async Task ShouldTransfer100MbOfDataFromPageToNodeJs()
     {
-        Info.Skip(mode != "default");
+        Info.Skip(Mode != "default");
 
         // This is too slow with wire.
-        var a = await page.EvaluateAsync<string>("() => Array(100 * 1024 * 1024 + 1).join('a')");
+        var a = await Page.EvaluateAsync<string>("() => Array(100 * 1024 * 1024 + 1).join('a')");
         Assert.That(a.Length, Is.EqualTo(100 * 1024 * 1024));
     }
 
     [UpstreamTest("EV-068 should throw error with detailed information on exception inside promise ")]
-    public async Task ShouldThrowErrorWithDetailedInformationOnExceptionInsidePromise(IPage page)
+    public async Task ShouldThrowErrorWithDetailedInformationOnExceptionInsidePromise()
     {
         Exception error = null;
-        error = await Catch(() => page.EvaluateAsync(@"() => new Promise(() => {
+        error = await Catch(() => Page.EvaluateAsync(@"() => new Promise(() => {
     throw new Error('Error in promise');
   })"));
         Assert.That(error.Message, Does.Contain("Error in promise"));
     }
 
     [UpstreamTest("EV-069 should work even when JSON is set to null")]
-    public async Task ShouldWorkEvenWhenJSONIsSetToNull(IPage page)
+    public async Task ShouldWorkEvenWhenJSONIsSetToNull()
     {
-        await page.EvaluateAsync("() => { window.JSON.stringify = null; window.JSON = null; }");
-        var result = await page.EvaluateAsync<object>("() => ({ abc: 123 })");
+        await Page.EvaluateAsync("() => { window.JSON.stringify = null; window.JSON = null; }");
+        var result = await Page.EvaluateAsync<object>("() => ({ abc: 123 })");
         ExpectToEqual(result, new { abc = 123 });
     }
 
     [UpstreamTest("EV-070 should await promise from popup")]
-    public async Task ShouldAwaitPromiseFromPopup(IPage page, Server server)
+    public async Task ShouldAwaitPromiseFromPopup()
     {
         // Something is wrong about the way Firefox waits for the chained promise
-        await page.GotoAsync(server.EmptyPage);
-        var result = await page.EvaluateAsync<int>(@"() => {
+        await Page.GotoAsync(Server.EmptyPage);
+        var result = await Page.EvaluateAsync<int>(@"() => {
     const win = window.open('about:blank');
     return new win['Promise'](f => f(42));
   }");
@@ -770,18 +770,18 @@ public class PageEvaluateTests
     }
 
     [UpstreamTest("EV-071 should work with new Function() and CSP")]
-    public async Task ShouldWorkWithNewFunctionAndCSP(IPage page, Server server)
+    public async Task ShouldWorkWithNewFunctionAndCSP()
     {
-        server.SetCSP("/empty.html", "script-src " + server.Prefix);
-        await page.GotoAsync(server.Prefix + "/empty.html");
-        Assert.That(await page.EvaluateAsync<bool>("() => new Function('return true')()"), Is.EqualTo(true));
+        Server.SetCSP("/empty.html", "script-src " + Server.Prefix);
+        await Page.GotoAsync(Server.Prefix + "/empty.html");
+        Assert.That(await Page.EvaluateAsync<bool>("() => new Function('return true')()"), Is.EqualTo(true));
     }
 
     [UpstreamTest("EV-072 should work with non-strict expressions")]
-    public async Task ShouldWorkWithNonStrictExpressions(IPage page, Server server)
+    public async Task ShouldWorkWithNonStrictExpressions()
     {
         Assert.That(
-            await page.EvaluateAsync<double>(@"() => {
+            await Page.EvaluateAsync<double>(@"() => {
     // @ts-ignore
     y = 3.14;
     // @ts-ignore
@@ -791,9 +791,9 @@ public class PageEvaluateTests
     }
 
     [UpstreamTest("EV-073 should respect use strict expression")]
-    public async Task ShouldRespectUseStrictExpression(IPage page)
+    public async Task ShouldRespectUseStrictExpression()
     {
-        var error = await Catch(() => page.EvaluateAsync(@"() => {
+        var error = await Catch(() => Page.EvaluateAsync(@"() => {
     'use strict';
     // @ts-ignore
     variableY = 3.14;
@@ -804,32 +804,32 @@ public class PageEvaluateTests
     }
 
     [UpstreamTest("EV-074 should not leak utility script")]
-    public async Task ShouldNotLeakUtilityScript(IPage page)
+    public async Task ShouldNotLeakUtilityScript()
     {
-        Assert.That(await page.EvaluateAsync<bool>("this === window"), Is.EqualTo(true));
+        Assert.That(await Page.EvaluateAsync<bool>("this === window"), Is.EqualTo(true));
     }
 
     [UpstreamTest("EV-075 should not leak handles")]
     [LocalFixme("dotnet: the message is 'handles is not defined', without the 'page.evaluate: ' prefix of the call (only in firefox)")]
-    public async Task ShouldNotLeakHandles(IPage page)
+    public async Task ShouldNotLeakHandles()
     {
-        var error = await Catch(() => page.EvaluateAsync("handles.length"));
+        var error = await Catch(() => Page.EvaluateAsync("handles.length"));
         Assert.That(error.Message, Does.Contain(" handles"));
     }
 
     [UpstreamTest("EV-076 should work with CSP")]
-    public async Task ShouldWorkWithCSP(IPage page, Server server)
+    public async Task ShouldWorkWithCSP()
     {
-        server.SetCSP("/empty.html", "script-src 'self'");
-        await page.GotoAsync(server.EmptyPage);
-        Assert.That(await page.EvaluateAsync<int>("() => 2 + 2"), Is.EqualTo(4));
+        Server.SetCSP("/empty.html", "script-src 'self'");
+        await Page.GotoAsync(Server.EmptyPage);
+        Assert.That(await Page.EvaluateAsync<int>("() => 2 + 2"), Is.EqualTo(4));
     }
 
     [UpstreamTest("EV-077 should evaluate exception with a function on the stack")]
     [LocalFixme("dotnet: an Error in the result is an Exception whose Message is the stack of the error, and whose StackTrace is null")]
-    public async Task ShouldEvaluateExceptionWithAFunctionOnTheStack(IPage page)
+    public async Task ShouldEvaluateExceptionWithAFunctionOnTheStack()
     {
-        var error = await page.EvaluateAsync<Exception>(@"() => {
+        var error = await Page.EvaluateAsync<Exception>(@"() => {
     return (function functionOnStack() {
       return new Error('error message');
     })();
@@ -840,9 +840,9 @@ public class PageEvaluateTests
 
     [UpstreamTest("EV-078 should evaluate exception")]
     [LocalFixme("dotnet: an Error in the result is an Exception whose Message is the stack of the error, and whose StackTrace is null; the name is lost")]
-    public async Task ShouldEvaluateException(IPage page)
+    public async Task ShouldEvaluateException()
     {
-        var error = await page.EvaluateAsync<object>(@"() => {
+        var error = await Page.EvaluateAsync<object>(@"() => {
     function innerFunction() {
       const e = new Error('error message');
       e.name = 'foobar';
@@ -858,70 +858,70 @@ public class PageEvaluateTests
     }
 
     [UpstreamTest("EV-080 should evaluate date")]
-    public async Task ShouldEvaluateDate(IPage page)
+    public async Task ShouldEvaluateDate()
     {
-        var result = await page.EvaluateAsync<object>("() => ({ date: new Date('2020-05-27T01:31:38.506Z') })");
+        var result = await Page.EvaluateAsync<object>("() => ({ date: new Date('2020-05-27T01:31:38.506Z') })");
         ExpectToEqual(result, new { date = new DateTime(2020, 5, 27, 1, 31, 38, 506, DateTimeKind.Utc) });
     }
 
     [UpstreamTest("EV-081 should roundtrip date")]
-    public async Task ShouldRoundtripDate(IPage page)
+    public async Task ShouldRoundtripDate()
     {
         var date = new DateTime(2020, 5, 27, 1, 31, 38, 506, DateTimeKind.Utc);
-        var result = await page.EvaluateAsync<DateTime>("date => date", date);
+        var result = await Page.EvaluateAsync<DateTime>("date => date", date);
         // .NET: toUTCString()
         Assert.That(result.ToUniversalTime().ToString("R", CultureInfo.InvariantCulture), Is.EqualTo(date.ToUniversalTime().ToString("R", CultureInfo.InvariantCulture)));
     }
 
     [UpstreamTest("EV-082 should roundtrip regex")]
-    public async Task ShouldRoundtripRegex(IPage page)
+    public async Task ShouldRoundtripRegex()
     {
         var regex = new Regex("hello", RegexOptions.IgnoreCase | RegexOptions.Multiline);
-        var result = await page.EvaluateAsync<Regex>("regex => regex", regex);
+        var result = await Page.EvaluateAsync<Regex>("regex => regex", regex);
         // .NET: toString() of a RegExp has the flags, ToString() of a Regex does not
         Assert.That((result.ToString(), result.Options), Is.EqualTo((regex.ToString(), regex.Options)));
     }
 
     [UpstreamTest("EV-083 should jsonValue() date")]
-    public async Task ShouldJsonValueDate(IPage page)
+    public async Task ShouldJsonValueDate()
     {
-        var resultHandle = await page.EvaluateHandleAsync("() => ({ date: new Date('2020-05-27T01:31:38.506Z') })");
+        var resultHandle = await Page.EvaluateHandleAsync("() => ({ date: new Date('2020-05-27T01:31:38.506Z') })");
         ExpectToEqual(await resultHandle.JsonValueAsync<object>(), new { date = new DateTime(2020, 5, 27, 1, 31, 38, 506, DateTimeKind.Utc) });
     }
 
     [UpstreamTest("EV-084 should evaluate url")]
-    public async Task ShouldEvaluateUrl(IPage page)
+    public async Task ShouldEvaluateUrl()
     {
-        var result = await page.EvaluateAsync<object>("() => ({ url: new URL('https://example.com') })");
+        var result = await Page.EvaluateAsync<object>("() => ({ url: new URL('https://example.com') })");
         ExpectToEqual(result, new { url = new Uri("https://example.com") });
     }
 
     [UpstreamTest("EV-085 should roundtrip url")]
-    public async Task ShouldRoundtripUrl(IPage page)
+    public async Task ShouldRoundtripUrl()
     {
         var url = new Uri("https://example.com");
-        var result = await page.EvaluateAsync<Uri>("url => url", url);
+        var result = await Page.EvaluateAsync<Uri>("url => url", url);
         Assert.That(result.ToString(), Is.EqualTo(url.ToString()));
     }
 
     [UpstreamTest("EV-086 should jsonValue() url")]
-    public async Task ShouldJsonValueUrl(IPage page)
+    public async Task ShouldJsonValueUrl()
     {
-        var resultHandle = await page.EvaluateHandleAsync("() => ({ url: new URL('https://example.com') })");
+        var resultHandle = await Page.EvaluateHandleAsync("() => ({ url: new URL('https://example.com') })");
         ExpectToEqual(await resultHandle.JsonValueAsync<object>(), new { url = new Uri("https://example.com") });
     }
 
     [UpstreamTest("EV-087 should not use toJSON when evaluating")]
-    public async Task ShouldNotUseToJSONWhenEvaluating(IPage page)
+    public async Task ShouldNotUseToJSONWhenEvaluating()
     {
-        var result = await page.EvaluateAsync<object>("() => ({ toJSON: () => 'string', data: 'data' })");
+        var result = await Page.EvaluateAsync<object>("() => ({ toJSON: () => 'string', data: 'data' })");
         ExpectToEqual(result, new { data = "data", toJSON = new { } });
     }
 
     [UpstreamTest("EV-088 should not use Array.prototype.toJSON when evaluating")]
-    public async Task ShouldNotUseArrayPrototypeToJSONWhenEvaluating(IPage page)
+    public async Task ShouldNotUseArrayPrototypeToJSONWhenEvaluating()
     {
-        var result = await page.EvaluateAsync<int[]>(@"() => {
+        var result = await Page.EvaluateAsync<int[]>(@"() => {
     Array.prototype.toJSON = () => 'busted';
     return [1, 2, 3];
   }");
@@ -929,24 +929,24 @@ public class PageEvaluateTests
     }
 
     [UpstreamTest("EV-089 should not add a toJSON property to newly created Arrays after evaluation")]
-    public async Task ShouldNotAddAToJSONPropertyToNewlyCreatedArraysAfterEvaluation(IPage page, string browserName)
+    public async Task ShouldNotAddAToJSONPropertyToNewlyCreatedArraysAfterEvaluation()
     {
-        await page.EvaluateAsync("() => []");
-        var hasToJSONProperty = await page.EvaluateAsync<bool>("() => 'toJSON' in []");
+        await Page.EvaluateAsync("() => []");
+        var hasToJSONProperty = await Page.EvaluateAsync<bool>("() => 'toJSON' in []");
         Assert.That(hasToJSONProperty, Is.EqualTo(false));
     }
 
     [UpstreamTest("EV-090 should not use toJSON in jsonValue")]
-    public async Task ShouldNotUseToJSONInJsonValue(IPage page)
+    public async Task ShouldNotUseToJSONInJsonValue()
     {
-        var resultHandle = await page.EvaluateHandleAsync("() => ({ toJSON: () => 'string', data: 'data' })");
+        var resultHandle = await Page.EvaluateHandleAsync("() => ({ toJSON: () => 'string', data: 'data' })");
         ExpectToEqual(await resultHandle.JsonValueAsync<object>(), new { data = "data", toJSON = new { } });
     }
 
     [UpstreamTest("EV-091 should ignore buggy toJSON")]
-    public async Task ShouldIgnoreBuggyToJSON(IPage page)
+    public async Task ShouldIgnoreBuggyToJSON()
     {
-        var result = await page.EvaluateAsync<object>(@"() => {
+        var result = await Page.EvaluateAsync<object>(@"() => {
     class Foo {
       toJSON() {
         throw new Error('Bad');
@@ -963,28 +963,28 @@ public class PageEvaluateTests
     }
 
     [UpstreamTest("EV-092 should not expose the injected script export")]
-    public async Task ShouldNotExposeTheInjectedScriptExport(IPage page)
+    public async Task ShouldNotExposeTheInjectedScriptExport()
     {
-        Assert.That(await page.EvaluateAsync<bool>("typeof pwExport === \"undefined\""), Is.EqualTo(true));
+        Assert.That(await Page.EvaluateAsync<bool>("typeof pwExport === \"undefined\""), Is.EqualTo(true));
     }
 
     [UpstreamTest("EV-093 should throw when frame is detached")]
     [LocalFixme("dotnet: the message is 'Frame was detached', without the 'frame.evaluate: ' prefix of the call")]
-    public async Task ShouldThrowWhenFrameIsDetached(IPage page, Server server)
+    public async Task ShouldThrowWhenFrameIsDetached()
     {
-        await AttachFrame(page, "frame1", server.EmptyPage);
-        var frame = page.Frames[1];
+        await AttachFrame(Page, "frame1", Server.EmptyPage);
+        var frame = Page.Frames[1];
         var promise = Catch(() => frame.EvaluateAsync("() => new Promise(() => {})"));
-        await DetachFrame(page, "frame1");
+        await DetachFrame(Page, "frame1");
         var error = await promise;
         Assert.That(error, Is.Not.Null);
         Assert.That(error.Message, Does.Match("frame.evaluate: (Frame was detached|Execution context was destroyed)"));
     }
 
     [UpstreamTest("EV-094 should work with overridden Object.defineProperty")]
-    public async Task ShouldWorkWithOverriddenObjectDefineProperty(IPage page, Server server)
+    public async Task ShouldWorkWithOverriddenObjectDefineProperty()
     {
-        server.SetRoute("/test", (req, res) =>
+        Server.SetRoute("/test", (req, res) =>
         {
             res.WriteHead(200, new()
             {
@@ -999,14 +999,14 @@ public class PageEvaluateTests
     Object.prototype.hasOwnProperty = null;
     </script>");
         });
-        await page.GotoAsync(server.Prefix + "/test");
-        Assert.That(await page.EvaluateAsync<int>("1+2"), Is.EqualTo(3));
+        await Page.GotoAsync(Server.Prefix + "/test");
+        Assert.That(await Page.EvaluateAsync<int>("1+2"), Is.EqualTo(3));
     }
 
     [UpstreamTest("EV-095 should work with busted Array.prototype.map/push")]
-    public async Task ShouldWorkWithBustedArrayPrototypeMapPush(IPage page, Server server)
+    public async Task ShouldWorkWithBustedArrayPrototypeMapPush()
     {
-        server.SetRoute("/test", (req, res) =>
+        Server.SetRoute("/test", (req, res) =>
         {
             res.WriteHead(200, new()
             {
@@ -1017,13 +1017,13 @@ public class PageEvaluateTests
       Array.prototype.push = null;
     </script>");
         });
-        await page.GotoAsync(server.Prefix + "/test");
-        Assert.That(await page.EvaluateAsync<int>("1+2"), Is.EqualTo(3));
-        Assert.That(await (await page.EvaluateHandleAsync("1+2")).JsonValueAsync<int>(), Is.EqualTo(3));
+        await Page.GotoAsync(Server.Prefix + "/test");
+        Assert.That(await Page.EvaluateAsync<int>("1+2"), Is.EqualTo(3));
+        Assert.That(await (await Page.EvaluateHandleAsync("1+2")).JsonValueAsync<int>(), Is.EqualTo(3));
     }
 
     [UpstreamTest("EV-096 should work with overridden globalThis.Window/Document/Node")]
-    public async Task ShouldWorkWithOverriddenGlobalThisWindowDocumentNode(IPage page, Server server)
+    public async Task ShouldWorkWithOverriddenGlobalThisWindowDocumentNode()
     {
         var testCases = new[]
         {
@@ -1041,16 +1041,16 @@ public class PageEvaluateTests
         {
             await Info.Step(testCase, async () =>
             {
-                await page.GotoAsync(server.EmptyPage);
-                await page.EvaluateAsync(testCase);
-                Assert.That(await page.EvaluateAsync<int>("1+2"), Is.EqualTo(3));
-                Assert.That(await page.EvaluateAsync<string[]>("() => ['foo']"), Is.EqualTo(new[] { "foo" }));
+                await Page.GotoAsync(Server.EmptyPage);
+                await Page.EvaluateAsync(testCase);
+                Assert.That(await Page.EvaluateAsync<int>("1+2"), Is.EqualTo(3));
+                Assert.That(await Page.EvaluateAsync<string[]>("() => ['foo']"), Is.EqualTo(new[] { "foo" }));
             });
         }
     }
 
     [UpstreamTest("EV-097 should work with overridden URL/Date/RegExp")]
-    public async Task ShouldWorkWithOverriddenURLDateRegExp(IPage page, Server server)
+    public async Task ShouldWorkWithOverriddenURLDateRegExp()
     {
         var testCases = new[]
         {
@@ -1065,19 +1065,19 @@ public class PageEvaluateTests
         {
             await Info.Step(testCase, async () =>
             {
-                await page.GotoAsync(server.EmptyPage);
-                await page.EvaluateAsync(testCase);
-                Assert.That(await page.EvaluateAsync<int>("1+2"), Is.EqualTo(3));
-                ExpectToEqual(await page.EvaluateAsync<object>("() => ({ 'a': 2023 })"), new { a = 2023 });
+                await Page.GotoAsync(Server.EmptyPage);
+                await Page.EvaluateAsync(testCase);
+                Assert.That(await Page.EvaluateAsync<int>("1+2"), Is.EqualTo(3));
+                ExpectToEqual(await Page.EvaluateAsync<object>("() => ({ 'a': 2023 })"), new { a = 2023 });
             });
         }
     }
 
     [UpstreamTest("EV-098 should work with Array.from/map")]
-    public async Task ShouldWorkWithArrayFromMap(IPage page)
+    public async Task ShouldWorkWithArrayFromMap()
     {
         Assert.That(
-            await page.EvaluateAsync<string>(@"() => {
+            await Page.EvaluateAsync<string>(@"() => {
     const r = (str, amount) => Array.from(Array(amount)).map(() => str).join('');
     return r('([a-f0-9]{2})', 3);
   }"),
@@ -1085,12 +1085,12 @@ public class PageEvaluateTests
     }
 
     [UpstreamTest("EV-099 should work with a using declaration")]
-    public async Task ShouldWorkWithAUsingDeclaration(IPage page, (int Major, int Minor, int Patch) nodeVersion, string browserName, int browserMajorVersion)
+    public async Task ShouldWorkWithAUsingDeclaration()
     {
-        Info.Skip(nodeVersion.Major < 24, "using is lowered to a module-scope helper that does not survive evaluate serialization on Node < 24");
-        Info.Skip(browserName == "webkit", "WebKit does not support using declarations");
-        Info.Skip(browserName == "chromium" && browserMajorVersion < 134, "Chromium supports using declarations since 134");
-        var disposed = await page.EvaluateAsync<bool>(@"() => {
+        Info.Skip(NodeVersion.Major < 24, "using is lowered to a module-scope helper that does not survive evaluate serialization on Node < 24");
+        Info.Skip(BrowserName == "webkit", "WebKit does not support using declarations");
+        Info.Skip(BrowserName == "chromium" && BrowserMajorVersion < 134, "Chromium supports using declarations since 134");
+        var disposed = await Page.EvaluateAsync<bool>(@"() => {
     let disposed = false;
     {
       using r = { [Symbol.dispose]: () => { disposed = true; } };
@@ -1102,14 +1102,14 @@ public class PageEvaluateTests
     }
 
     [UpstreamTest("EV-100 should ignore dangerous object keys")]
-    public async Task ShouldIgnoreDangerousObjectKeys(IPage page)
+    public async Task ShouldIgnoreDangerousObjectKeys()
     {
         var input = new
         {
             __proto__ = new { polluted = true },
             safeKey = "safeValue",
         };
-        var result = await page.EvaluateAsync<object>("arg => arg", input);
+        var result = await Page.EvaluateAsync<object>("arg => arg", input);
         ExpectToEqual(result, new { safeKey = "safeValue" });
     }
 }

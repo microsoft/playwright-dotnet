@@ -22,74 +22,74 @@ using static Microsoft.Playwright.Tests.Fixtures.Utils;
 namespace Microsoft.Playwright.Tests.Page;
 
 /// <summary>Port of tests/page/page-navigation.spec.ts.</summary>
-public class PageNavigationTests
+public class PageNavigationTests : UpstreamPageTest
 {
     [UpstreamTest("NA-067 should work with _blank target")]
-    public async Task ShouldWorkWithBlankTarget(IPage page, Server server)
+    public async Task ShouldWorkWithBlankTarget()
     {
-        server.SetRoute("/empty.html", (req, res) =>
+        Server.SetRoute("/empty.html", (req, res) =>
         {
-            res.End($"<a href=\"{server.EmptyPage}\" target=\"_blank\">Click me</a>");
+            res.End($"<a href=\"{Server.EmptyPage}\" target=\"_blank\">Click me</a>");
         });
-        await page.GotoAsync(server.EmptyPage);
-        await page.ClickAsync("\"Click me\"");
+        await Page.GotoAsync(Server.EmptyPage);
+        await Page.ClickAsync("\"Click me\"");
     }
 
     [UpstreamTest("NA-068 should work with cross-process _blank target")]
-    public async Task ShouldWorkWithCrossProcessBlankTarget(IPage page, Server server)
+    public async Task ShouldWorkWithCrossProcessBlankTarget()
     {
-        server.SetRoute("/empty.html", (req, res) =>
+        Server.SetRoute("/empty.html", (req, res) =>
         {
-            res.End($"<a href=\"{server.CrossProcessPrefix}/empty.html\" target=\"_blank\">Click me</a>");
+            res.End($"<a href=\"{Server.CrossProcessPrefix}/empty.html\" target=\"_blank\">Click me</a>");
         });
-        await page.GotoAsync(server.EmptyPage);
-        await page.ClickAsync("\"Click me\"");
+        await Page.GotoAsync(Server.EmptyPage);
+        await Page.ClickAsync("\"Click me\"");
     }
 
     [UpstreamTest("NA-069 should work with _blank target in form")]
-    public async Task ShouldWorkWithBlankTargetInForm(IPage page, Server server)
+    public async Task ShouldWorkWithBlankTargetInForm()
     {
-        server.SetRoute("/done.html?", (req, res) =>
+        Server.SetRoute("/done.html?", (req, res) =>
         {
             res.End("Done");
         });
-        server.SetRoute("/done.html", (req, res) =>
+        Server.SetRoute("/done.html", (req, res) =>
         {
             res.End("Done");
         });
-        await page.GotoAsync(server.EmptyPage);
+        await Page.GotoAsync(Server.EmptyPage);
 
-        await page.SetContentAsync(@"<form target=""_blank"" action=""done.html"" >
+        await Page.SetContentAsync(@"<form target=""_blank"" action=""done.html"" >
     <input type=""submit"" value=""Click me"">
   </form>");
         await PromiseAll(
-            page.WaitForPopupAsync(),
-            page.ClickAsync("\"Click me\""));
+            Page.WaitForPopupAsync(),
+            Page.ClickAsync("\"Click me\""));
 
-        await page.SetContentAsync(@"<form target=""_blank"" action=""done.html"" method=""post"">
+        await Page.SetContentAsync(@"<form target=""_blank"" action=""done.html"" method=""post"">
     <input type=""submit"" value=""Click me"">
   </form>");
         await PromiseAll(
-            page.WaitForPopupAsync(),
-            page.ClickAsync("\"Click me\""));
+            Page.WaitForPopupAsync(),
+            Page.ClickAsync("\"Click me\""));
     }
 
     [UpstreamTest("NA-070 should not throw TargetClosedException on cross-origin redirect after click")]
-    public async Task ShouldNotThrowTargetClosedExceptionOnCrossOriginRedirectAfterClick(IPage page, Server server)
+    public async Task ShouldNotThrowTargetClosedExceptionOnCrossOriginRedirectAfterClick()
     {
-        server.SetRoute("/target.html", (req, res) => res.End("<title>final page</title>"));
-        server.SetRedirect("/redirect", server.CrossProcessPrefix + "/target.html");
-        await page.GotoAsync(server.Prefix + "/empty.html");
-        await page.SetContentAsync($@"
-    <form action=""{server.Prefix}/redirect"" method=""POST"">
+        Server.SetRoute("/target.html", (req, res) => res.End("<title>final page</title>"));
+        Server.SetRedirect("/redirect", Server.CrossProcessPrefix + "/target.html");
+        await Page.GotoAsync(Server.Prefix + "/empty.html");
+        await Page.SetContentAsync($@"
+    <form action=""{Server.Prefix}/redirect"" method=""POST"">
       <button type=""submit"">Submit</button>
     </form>
   ");
         await PromiseAll(
-            page.WaitForNavigationAsync(),
+            Page.WaitForNavigationAsync(),
             // triggers POST -> 302 -> cross-origin
-            page.ClickAsync("button"));
-        await Expect(page).ToHaveURLAsync(server.CrossProcessPrefix + "/target.html");
-        await Expect(page).ToHaveTitleAsync("final page");
+            Page.ClickAsync("button"));
+        await Expect(Page).ToHaveURLAsync(Server.CrossProcessPrefix + "/target.html");
+        await Expect(Page).ToHaveTitleAsync("final page");
     }
 }

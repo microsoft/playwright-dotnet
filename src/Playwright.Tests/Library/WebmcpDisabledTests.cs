@@ -20,19 +20,19 @@ using static Microsoft.Playwright.Tests.Fixtures.Utils;
 namespace Microsoft.Playwright.Tests.Library;
 
 /// <summary>Port of tests/library/webmcp-disabled.spec.ts.</summary>
-public class WebmcpDisabledTests
+public class WebmcpDisabledTests : UpstreamPageTest
 {
-    [BeforeEach]
-    public static void Skip(string browserName) => Info.Skip(browserName == "webkit", "WebKit does not implement WebMCP");
+    [SetUp]
+    public void Skip() => Info.Skip(BrowserName == "webkit", "WebKit does not implement WebMCP");
 
-    [BeforeEach]
-    public static void Skip2(bool isBidi) => Info.Skip(isBidi, "WebMCP is not implemented over BiDi");
+    [SetUp]
+    public void Skip2() => Info.Skip(IsBidi, "WebMCP is not implemented over BiDi");
 
     [UpstreamTest("WM-015 should throw when the browser was launched without WebMCP")]
-    public async Task ShouldThrowWhenTheBrowserWasLaunchedWithoutWebMCP(IPage page, string browserName)
+    public async Task ShouldThrowWhenTheBrowserWasLaunchedWithoutWebMCP()
     {
-        var error = await Catch(() => page.Webmcp.ToolsAsync());
+        var error = await Catch(() => Page.Webmcp.ToolsAsync());
         Assert.That(error.Message, Does.Contain("WebMCP is not enabled."));
-        Assert.That(error.Message, Does.Contain(browserName == "firefox" ? "dom.modelcontext.enabled" : "--enable-features=WebMCP"));
+        Assert.That(error.Message, Does.Contain(BrowserName == "firefox" ? "dom.modelcontext.enabled" : "--enable-features=WebMCP"));
     }
 }

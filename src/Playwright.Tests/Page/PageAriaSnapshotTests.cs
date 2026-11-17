@@ -21,7 +21,7 @@ using static Microsoft.Playwright.Tests.Fixtures.Utils;
 namespace Microsoft.Playwright.Tests.Page;
 
 /// <summary>Port of tests/page/page-aria-snapshot.spec.ts.</summary>
-public class PageAriaSnapshotTests
+public class PageAriaSnapshotTests : UpstreamPageTest
 {
     private static async Task CheckAndMatchSnapshot(ILocator locator, string snapshot)
     {
@@ -30,37 +30,37 @@ public class PageAriaSnapshotTests
     }
 
     [UpstreamTest("AR-001 should snapshot")]
-    public async Task ShouldSnapshot(IPage page)
+    public async Task ShouldSnapshot()
     {
-        await page.SetContentAsync("<h1>title</h1>");
-        await CheckAndMatchSnapshot(page.Locator("body"), @"
+        await Page.SetContentAsync("<h1>title</h1>");
+        await CheckAndMatchSnapshot(Page.Locator("body"), @"
     - heading ""title"" [level=1]
   ");
     }
 
     [UpstreamTest("AR-002 should snapshot list")]
-    public async Task ShouldSnapshotList(IPage page)
+    public async Task ShouldSnapshotList()
     {
-        await page.SetContentAsync(@"
+        await Page.SetContentAsync(@"
     <h1>title</h1>
     <h1>title 2</h1>
   ");
-        await CheckAndMatchSnapshot(page.Locator("body"), @"
+        await CheckAndMatchSnapshot(Page.Locator("body"), @"
     - heading ""title"" [level=1]
     - heading ""title 2"" [level=1]
   ");
     }
 
     [UpstreamTest("AR-003 should snapshot list with accessible name")]
-    public async Task ShouldSnapshotListWithAccessibleName(IPage page)
+    public async Task ShouldSnapshotListWithAccessibleName()
     {
-        await page.SetContentAsync(@"
+        await Page.SetContentAsync(@"
     <ul aria-label=""my list"">
       <li>one</li>
       <li>two</li>
     </ul>
   ");
-        await CheckAndMatchSnapshot(page.Locator("body"), @"
+        await CheckAndMatchSnapshot(Page.Locator("body"), @"
     - list ""my list"":
       - listitem: one
       - listitem: two
@@ -68,16 +68,16 @@ public class PageAriaSnapshotTests
     }
 
     [UpstreamTest("AR-004 should quote names that look like regexes")]
-    public async Task ShouldQuoteNamesThatLookLikeRegexes(IPage page)
+    public async Task ShouldQuoteNamesThatLookLikeRegexes()
     {
-        await page.SetContentAsync(@"
+        await Page.SetContentAsync(@"
     <nav>
       <a href=""/"">/</a>
       <a href=""/docs/"">/docs/</a>
       <a href=""/a(b/"">/a(b/</a>
     </nav>
   ");
-        await CheckAndMatchSnapshot(page.Locator("nav"), @"
+        await CheckAndMatchSnapshot(Page.Locator("nav"), @"
     - navigation:
       - link ""/"":
         - /url: /
@@ -89,16 +89,16 @@ public class PageAriaSnapshotTests
     }
 
     [UpstreamTest("AR-005 should snapshot complex")]
-    public async Task ShouldSnapshotComplex(IPage page)
+    public async Task ShouldSnapshotComplex()
     {
-        await page.SetContentAsync(@"
+        await Page.SetContentAsync(@"
     <ul>
       <li>
         <a href='about:blank'>link</a>
       </li>
     </ul>
   ");
-        await CheckAndMatchSnapshot(page.Locator("body"), @"
+        await CheckAndMatchSnapshot(Page.Locator("body"), @"
     - list:
       - listitem:
         - link ""link"":
@@ -107,75 +107,75 @@ public class PageAriaSnapshotTests
     }
 
     [UpstreamTest("AR-006 should allow text nodes")]
-    public async Task ShouldAllowTextNodes(IPage page)
+    public async Task ShouldAllowTextNodes()
     {
-        await page.SetContentAsync(@"
+        await Page.SetContentAsync(@"
     <h1>Microsoft</h1>
     <div>Open source projects and samples from Microsoft</div>
   ");
 
-        await CheckAndMatchSnapshot(page.Locator("body"), @"
+        await CheckAndMatchSnapshot(Page.Locator("body"), @"
     - heading ""Microsoft"" [level=1]
     - text: Open source projects and samples from Microsoft
   ");
     }
 
     [UpstreamTest("AR-007 should snapshot details visibility")]
-    public async Task ShouldSnapshotDetailsVisibility(IPage page)
+    public async Task ShouldSnapshotDetailsVisibility()
     {
-        await page.SetContentAsync(@"
+        await Page.SetContentAsync(@"
     <details>
       <summary>Summary</summary>
       <div>Details</div>
     </details>
   ");
 
-        await CheckAndMatchSnapshot(page.Locator("body"), @"
+        await CheckAndMatchSnapshot(Page.Locator("body"), @"
     - group: Summary
   ");
     }
 
     [UpstreamTest("AR-008 should not snapshot text directly inside closed details")]
-    public async Task ShouldNotSnapshotTextDirectlyInsideClosedDetails(IPage page)
+    public async Task ShouldNotSnapshotTextDirectlyInsideClosedDetails()
     {
-        await page.SetContentAsync(@"
+        await Page.SetContentAsync(@"
     <details>
       <summary>Summary</summary>
       Details
     </details>
   ");
 
-        await CheckAndMatchSnapshot(page.Locator("body"), @"
+        await CheckAndMatchSnapshot(Page.Locator("body"), @"
     - group: Summary
   ");
 
-        await page.EvalOnSelectorAsync("details", "details => details.open = true");
-        await CheckAndMatchSnapshot(page.Locator("body"), @"
+        await Page.EvalOnSelectorAsync("details", "details => details.open = true");
+        await CheckAndMatchSnapshot(Page.Locator("body"), @"
     - group: Summary Details
   ");
     }
 
     [UpstreamTest("AR-009 should not snapshot text that is not assigned to a slot")]
-    public async Task ShouldNotSnapshotTextThatIsNotAssignedToASlot(IPage page)
+    public async Task ShouldNotSnapshotTextThatIsNotAssignedToASlot()
     {
-        await page.SetContentAsync(@"
+        await Page.SetContentAsync(@"
     <div role=button>Light</div>
     <script>
       document.querySelector('div').attachShadow({ mode: 'open' }).innerHTML = '<p>Shadow</p>';
     </script>
   ");
 
-        await CheckAndMatchSnapshot(page.Locator("body"), @"
+        await CheckAndMatchSnapshot(Page.Locator("body"), @"
     - button ""Shadow"":
       - paragraph: Shadow
   ");
-        await Expect(page.GetByRole(AriaRole.Button, new() { Name = "Shadow", Exact = true })).ToBeVisibleAsync();
+        await Expect(Page.GetByRole(AriaRole.Button, new() { Name = "Shadow", Exact = true })).ToBeVisibleAsync();
     }
 
     [UpstreamTest("AR-010 should snapshot integration")]
-    public async Task ShouldSnapshotIntegration(IPage page)
+    public async Task ShouldSnapshotIntegration()
     {
-        await page.SetContentAsync(@"
+        await Page.SetContentAsync(@"
     <h1>Microsoft</h1>
     <div>Open source projects and samples from Microsoft</div>
     <ul>
@@ -208,7 +208,7 @@ public class PageAriaSnapshotTests
       </li>
     </ul>");
 
-        await CheckAndMatchSnapshot(page.Locator("body"), @"
+        await CheckAndMatchSnapshot(Page.Locator("body"), @"
     - heading ""Microsoft"" [level=1]
     - text: Open source projects and samples from Microsoft
     - list:
@@ -221,9 +221,9 @@ public class PageAriaSnapshotTests
     }
 
     [UpstreamTest("AR-011 should support multiline text")]
-    public async Task ShouldSupportMultilineText(IPage page)
+    public async Task ShouldSupportMultilineText()
     {
-        await page.SetContentAsync(@"
+        await Page.SetContentAsync(@"
     <p>
       Line 1
       Line 2
@@ -231,10 +231,10 @@ public class PageAriaSnapshotTests
     </p>
   ");
 
-        await CheckAndMatchSnapshot(page.Locator("body"), @"
+        await CheckAndMatchSnapshot(Page.Locator("body"), @"
     - paragraph: Line 1 Line 2 Line 3
   ");
-        await Expect(page.Locator("body")).ToMatchAriaSnapshotAsync(@"
+        await Expect(Page.Locator("body")).ToMatchAriaSnapshotAsync(@"
     - paragraph: |
           Line 1
           Line 2
@@ -243,45 +243,45 @@ public class PageAriaSnapshotTests
     }
 
     [UpstreamTest("AR-012 should concatenate span text")]
-    public async Task ShouldConcatenateSpanText(IPage page)
+    public async Task ShouldConcatenateSpanText()
     {
-        await page.SetContentAsync(@"
+        await Page.SetContentAsync(@"
     <span>One</span> <span>Two</span> <span>Three</span>
   ");
 
-        await CheckAndMatchSnapshot(page.Locator("body"), @"
+        await CheckAndMatchSnapshot(Page.Locator("body"), @"
     - text: One Two Three
   ");
     }
 
     [UpstreamTest("AR-013 should concatenate span text 2")]
-    public async Task ShouldConcatenateSpanText2(IPage page)
+    public async Task ShouldConcatenateSpanText2()
     {
-        await page.SetContentAsync(@"
+        await Page.SetContentAsync(@"
     <span>One </span><span>Two </span><span>Three</span>
   ");
 
-        await CheckAndMatchSnapshot(page.Locator("body"), @"
+        await CheckAndMatchSnapshot(Page.Locator("body"), @"
     - text: One Two Three
   ");
     }
 
     [UpstreamTest("AR-014 should concatenate div text with spaces")]
-    public async Task ShouldConcatenateDivTextWithSpaces(IPage page)
+    public async Task ShouldConcatenateDivTextWithSpaces()
     {
-        await page.SetContentAsync(@"
+        await Page.SetContentAsync(@"
     <div>One</div><div>Two</div><div>Three</div>
   ");
 
-        await CheckAndMatchSnapshot(page.Locator("body"), @"
+        await CheckAndMatchSnapshot(Page.Locator("body"), @"
     - text: One Two Three
   ");
     }
 
     [UpstreamTest("AR-015 should include pseudo in text")]
-    public async Task ShouldIncludePseudoInText(IPage page)
+    public async Task ShouldIncludePseudoInText()
     {
-        await page.SetContentAsync(@"
+        await Page.SetContentAsync(@"
     <style>
       span:before {
         content: 'world';
@@ -296,16 +296,16 @@ public class PageAriaSnapshotTests
     </a>
   ");
 
-        await CheckAndMatchSnapshot(page.Locator("body"), @"
+        await CheckAndMatchSnapshot(Page.Locator("body"), @"
     - link ""worldhello hellobye"":
       - /url: about:blank
   ");
     }
 
     [UpstreamTest("AR-016 should not include hidden pseudo in text")]
-    public async Task ShouldNotIncludeHiddenPseudoInText(IPage page)
+    public async Task ShouldNotIncludeHiddenPseudoInText()
     {
-        await page.SetContentAsync(@"
+        await Page.SetContentAsync(@"
     <style>
       span:before {
         content: 'world';
@@ -322,16 +322,16 @@ public class PageAriaSnapshotTests
     </a>
   ");
 
-        await CheckAndMatchSnapshot(page.Locator("body"), @"
+        await CheckAndMatchSnapshot(Page.Locator("body"), @"
     - link ""hello hello"":
       - /url: about:blank
   ");
     }
 
     [UpstreamTest("AR-017 should include new line for block pseudo")]
-    public async Task ShouldIncludeNewLineForBlockPseudo(IPage page)
+    public async Task ShouldIncludeNewLineForBlockPseudo()
     {
-        await page.SetContentAsync(@"
+        await Page.SetContentAsync(@"
     <style>
       span:before {
         content: 'world';
@@ -348,17 +348,17 @@ public class PageAriaSnapshotTests
     </a>
   ");
 
-        await CheckAndMatchSnapshot(page.Locator("body"), @"
+        await CheckAndMatchSnapshot(Page.Locator("body"), @"
     - link ""world hello hello bye"":
       - /url: about:blank
   ");
     }
 
     [UpstreamTest("AR-018 should work with slots")]
-    public async Task ShouldWorkWithSlots(IPage page)
+    public async Task ShouldWorkWithSlots()
     {
         // Text "foo" is assigned to the slot, should not be used twice.
-        await page.SetContentAsync(@"
+        await Page.SetContentAsync(@"
     <button><div>foo</div></button>
     <script>
       (() => {
@@ -369,12 +369,12 @@ public class PageAriaSnapshotTests
       })();
     </script>
   ");
-        await CheckAndMatchSnapshot(page.Locator("body"), @"
+        await CheckAndMatchSnapshot(Page.Locator("body"), @"
     - button ""foo""
   ");
 
         // Text "foo" is assigned to the slot, should be used instead of slot content.
-        await page.SetContentAsync(@"
+        await Page.SetContentAsync(@"
     <div>foo</div>
     <script>
       (() => {
@@ -390,12 +390,12 @@ public class PageAriaSnapshotTests
       })();
     </script>
   ");
-        await CheckAndMatchSnapshot(page.Locator("body"), @"
+        await CheckAndMatchSnapshot(Page.Locator("body"), @"
     - button ""foo""
   ");
 
         // Nothing is assigned to the slot, should use slot content.
-        await page.SetContentAsync(@"
+        await Page.SetContentAsync(@"
     <div></div>
     <script>
       (() => {
@@ -411,15 +411,15 @@ public class PageAriaSnapshotTests
       })();
     </script>
   ");
-        await CheckAndMatchSnapshot(page.Locator("body"), @"
+        await CheckAndMatchSnapshot(Page.Locator("body"), @"
     - button ""pre""
   ");
     }
 
     [UpstreamTest("AR-019 should snapshot inner text")]
-    public async Task ShouldSnapshotInnerText(IPage page)
+    public async Task ShouldSnapshotInnerText()
     {
-        await page.SetContentAsync(@"
+        await Page.SetContentAsync(@"
     <div role=""listitem"">
       <div>
         <div>
@@ -447,7 +447,7 @@ public class PageAriaSnapshotTests
     </div>
   ");
 
-        await CheckAndMatchSnapshot(page.Locator("body"), @"
+        await CheckAndMatchSnapshot(Page.Locator("body"), @"
     - listitem:
       - text: a.test.ts
       - button ""Run""
@@ -462,60 +462,60 @@ public class PageAriaSnapshotTests
     }
 
     [UpstreamTest("AR-020 should include pseudo codepoints")]
-    public async Task ShouldIncludePseudoCodepoints(IPage page, Server server)
+    public async Task ShouldIncludePseudoCodepoints()
     {
-        await page.GotoAsync(server.EmptyPage);
-        await page.SetContentAsync(@"
+        await Page.GotoAsync(Server.EmptyPage);
+        await Page.SetContentAsync(@"
     <link href=""codicon.css"" rel=""stylesheet"" />
     <p class='codicon codicon-check'>hello</p>
   ");
 
-        await CheckAndMatchSnapshot(page.Locator("body"), @"
+        await CheckAndMatchSnapshot(Page.Locator("body"), @"
     - paragraph: " + "" + @"hello
   ");
     }
 
     [UpstreamTest("AR-021 check aria-hidden text")]
-    public async Task CheckAriaHiddenText(IPage page)
+    public async Task CheckAriaHiddenText()
     {
-        await page.SetContentAsync(@"
+        await Page.SetContentAsync(@"
     <p>
       <span>hello</span>
       <span aria-hidden=""true"">world</span>
     </p>
   ");
 
-        await CheckAndMatchSnapshot(page.Locator("body"), @"
+        await CheckAndMatchSnapshot(Page.Locator("body"), @"
     - paragraph: hello
   ");
     }
 
     [UpstreamTest("AR-022 should ignore presentation and none roles")]
-    public async Task ShouldIgnorePresentationAndNoneRoles(IPage page)
+    public async Task ShouldIgnorePresentationAndNoneRoles()
     {
-        await page.SetContentAsync(@"
+        await Page.SetContentAsync(@"
     <ul>
       <li role='presentation'>hello</li>
       <li role='none'>world</li>
     </ul>
   ");
 
-        await CheckAndMatchSnapshot(page.Locator("body"), @"
+        await CheckAndMatchSnapshot(Page.Locator("body"), @"
     - list: hello world
   ");
     }
 
     [UpstreamTest("AR-023 should treat input value as text in templates, but not for checkbox/radio/file")]
-    public async Task ShouldTreatInputValueAsTextInTemplatesButNotForCheckboxRadioFile(IPage page)
+    public async Task ShouldTreatInputValueAsTextInTemplatesButNotForCheckboxRadioFile()
     {
-        await page.SetContentAsync(@"
+        await Page.SetContentAsync(@"
     <input value='hello world'>
     <input type=file>
     <input type=checkbox checked>
     <input type=radio checked>
   ");
 
-        await CheckAndMatchSnapshot(page.Locator("body"), @"
+        await CheckAndMatchSnapshot(Page.Locator("body"), @"
     - textbox: hello world
     - button ""Choose File""
     - checkbox [checked]
@@ -524,23 +524,23 @@ public class PageAriaSnapshotTests
     }
 
     [UpstreamTest("AR-024 should not use on as checkbox value")]
-    public async Task ShouldNotUseOnAsCheckboxValue(IPage page)
+    public async Task ShouldNotUseOnAsCheckboxValue()
     {
-        await page.SetContentAsync(@"
+        await Page.SetContentAsync(@"
     <input type='checkbox'>
     <input type='radio'>
   ");
 
-        await CheckAndMatchSnapshot(page.Locator("body"), @"
+        await CheckAndMatchSnapshot(Page.Locator("body"), @"
     - checkbox
     - radio
   ");
     }
 
     [UpstreamTest("AR-025 should respect aria-owns")]
-    public async Task ShouldRespectAriaOwns(IPage page)
+    public async Task ShouldRespectAriaOwns()
     {
-        await page.SetContentAsync(@"
+        await Page.SetContentAsync(@"
     <a href='about:blank' aria-owns='input p'>
       <div role='region'>Link 1</div>
     </a>
@@ -554,7 +554,7 @@ public class PageAriaSnapshotTests
         // - Different from Chrome DevTools which attributes ownership to the last element.
         // - CDT also does not include non-owned children in accessible name.
         // - Disregarding these as aria-owns can't suggest multiple parts by spec.
-        await CheckAndMatchSnapshot(page.Locator("body"), @"
+        await CheckAndMatchSnapshot(Page.Locator("body"), @"
     - link ""Link 1 Value Paragraph"":
       - /url: about:blank
       - region: Link 1
@@ -567,15 +567,15 @@ public class PageAriaSnapshotTests
     }
 
     [UpstreamTest("AR-026 should be ok with circular ownership")]
-    public async Task ShouldBeOkWithCircularOwnership(IPage page)
+    public async Task ShouldBeOkWithCircularOwnership()
     {
-        await page.SetContentAsync(@"
+        await Page.SetContentAsync(@"
     <a href='about:blank' id='parent'>
       <div role='region' aria-owns='parent'>Hello</div>
     </a>
   ");
 
-        await CheckAndMatchSnapshot(page.Locator("body"), @"
+        await CheckAndMatchSnapshot(Page.Locator("body"), @"
     - link ""Hello"":
       - /url: about:blank
       - region: Hello
@@ -583,9 +583,9 @@ public class PageAriaSnapshotTests
     }
 
     [UpstreamTest("AR-027 should escape yaml text in text nodes")]
-    public async Task ShouldEscapeYamlTextInTextNodes(IPage page)
+    public async Task ShouldEscapeYamlTextInTextNodes()
     {
-        await page.SetContentAsync(@"
+        await Page.SetContentAsync(@"
     <details>
       <summary>one: <a href=""#"">link1</a> ""two <a href=""#"">link2</a> 'three <a href=""#"">link3</a> `four</summary>
     </details>
@@ -598,7 +598,7 @@ public class PageAriaSnapshotTests
     <div>[Select all]</div>
   ");
 
-        await CheckAndMatchSnapshot(page.Locator("body"), @"
+        await CheckAndMatchSnapshot(Page.Locator("body"), @"
     - group:
       - text: ""one:""
       - link ""link1"":
@@ -631,9 +631,9 @@ public class PageAriaSnapshotTests
     }
 
     [UpstreamTest("AR-028 should normalize whitespace")]
-    public async Task ShouldNormalizeWhitespace(IPage page)
+    public async Task ShouldNormalizeWhitespace()
     {
-        await page.SetContentAsync(@"
+        await Page.SetContentAsync(@"
     <details>
       <summary> one  " + "\n" + @" two <a href=""#""> link &nbsp;" + "\n" + @"  1 </a> </summary>
     </details>
@@ -641,7 +641,7 @@ public class PageAriaSnapshotTests
     <button>hello" + "­​" + @"world</button>
   ");
 
-        await CheckAndMatchSnapshot(page.Locator("body"), @"
+        await CheckAndMatchSnapshot(Page.Locator("body"), @"
     - group:
       - text: one two
       - link ""link 1"":
@@ -651,7 +651,7 @@ public class PageAriaSnapshotTests
   ");
 
         // Weird whitespace in the template should be normalized.
-        await Expect(page.Locator("body")).ToMatchAriaSnapshotAsync(@"
+        await Expect(Page.Locator("body")).ToMatchAriaSnapshotAsync(@"
     - group:
       - text: |
           one
@@ -664,16 +664,16 @@ public class PageAriaSnapshotTests
     }
 
     [UpstreamTest("AR-029 should handle long strings")]
-    public async Task ShouldHandleLongStrings(IPage page)
+    public async Task ShouldHandleLongStrings()
     {
         var s = new string('a', 10000);
-        await page.SetContentAsync($@"
+        await Page.SetContentAsync($@"
     <a href='about:blank'>
       <div role='region'>{s}</div>
     </a>
   ");
 
-        await CheckAndMatchSnapshot(page.Locator("body"), $@"
+        await CheckAndMatchSnapshot(Page.Locator("body"), $@"
     - link:
       - /url: about:blank
       - region: {s}
@@ -681,9 +681,9 @@ public class PageAriaSnapshotTests
     }
 
     [UpstreamTest("AR-030 should escape special yaml characters")]
-    public async Task ShouldEscapeSpecialYamlCharacters(IPage page)
+    public async Task ShouldEscapeSpecialYamlCharacters()
     {
-        await page.SetContentAsync(@"
+        await Page.SetContentAsync(@"
     <a href=""#"">@hello</a>@hello
     <a href=""#"">]hello</a>]hello
     <a href=""#"">hello" + "\n" + @"</a>
@@ -691,7 +691,7 @@ public class PageAriaSnapshotTests
     <a href=""#"">#hello</a>#hello
   ");
 
-        await CheckAndMatchSnapshot(page.Locator("body"), @"
+        await CheckAndMatchSnapshot(Page.Locator("body"), @"
     - link ""@hello"":
       - /url: ""#""
     - text: ""@hello""
@@ -711,9 +711,9 @@ public class PageAriaSnapshotTests
     }
 
     [UpstreamTest("AR-031 should escape special yaml values")]
-    public async Task ShouldEscapeSpecialYamlValues(IPage page)
+    public async Task ShouldEscapeSpecialYamlValues()
     {
-        await page.SetContentAsync(@"
+        await Page.SetContentAsync(@"
     <a href=""#"">true</a>False
     <a href=""#"">NO</a>yes
     <a href=""#"">y</a>N
@@ -727,7 +727,7 @@ public class PageAriaSnapshotTests
     <input type=text value=""555"">
   ");
 
-        await CheckAndMatchSnapshot(page.Locator("body"), @"
+        await CheckAndMatchSnapshot(Page.Locator("body"), @"
     - link ""true"":
       - /url: ""#""
     - text: ""False""
@@ -763,24 +763,24 @@ public class PageAriaSnapshotTests
     }
 
     [UpstreamTest("AR-032 should not report textarea textContent")]
-    public async Task ShouldNotReportTextareaTextContent(IPage page)
+    public async Task ShouldNotReportTextareaTextContent()
     {
-        await page.SetContentAsync("<textarea>Before</textarea>");
-        await CheckAndMatchSnapshot(page.Locator("body"), @"
+        await Page.SetContentAsync("<textarea>Before</textarea>");
+        await CheckAndMatchSnapshot(Page.Locator("body"), @"
     - textbox: Before
   ");
-        await page.EvaluateAsync(@"() => {
+        await Page.EvaluateAsync(@"() => {
     document.querySelector('textarea').value = 'After';
   }");
-        await CheckAndMatchSnapshot(page.Locator("body"), @"
+        await CheckAndMatchSnapshot(Page.Locator("body"), @"
     - textbox: After
   ");
     }
 
     [UpstreamTest("AR-033 should not show visible children of hidden elements")]
-    public async Task ShouldNotShowVisibleChildrenOfHiddenElements(IPage page)
+    public async Task ShouldNotShowVisibleChildrenOfHiddenElements()
     {
-        await page.SetContentAsync(@"
+        await Page.SetContentAsync(@"
     <div style=""visibility: hidden;"">
       <div style=""visibility: visible;"">
         <button>Button</button>
@@ -788,13 +788,13 @@ public class PageAriaSnapshotTests
     </div>
   ");
 
-        Assert.That(await page.Locator("body").AriaSnapshotAsync(), Is.EqualTo(""));
+        Assert.That(await Page.Locator("body").AriaSnapshotAsync(), Is.EqualTo(""));
     }
 
     [UpstreamTest("AR-034 should not show unhidden children of aria-hidden elements")]
-    public async Task ShouldNotShowUnhiddenChildrenOfAriaHiddenElements(IPage page)
+    public async Task ShouldNotShowUnhiddenChildrenOfAriaHiddenElements()
     {
-        await page.SetContentAsync(@"
+        await Page.SetContentAsync(@"
     <div aria-hidden=""true"">
       <div aria-hidden=""false"">
         <button>Button</button>
@@ -802,48 +802,48 @@ public class PageAriaSnapshotTests
     </div>
   ");
 
-        Assert.That(await page.Locator("body").AriaSnapshotAsync(), Is.EqualTo(""));
+        Assert.That(await Page.Locator("body").AriaSnapshotAsync(), Is.EqualTo(""));
     }
 
     [UpstreamTest("AR-035 should snapshot placeholder when different from the name")]
-    public async Task ShouldSnapshotPlaceholderWhenDifferentFromTheName(IPage page)
+    public async Task ShouldSnapshotPlaceholderWhenDifferentFromTheName()
     {
-        await page.SetContentAsync(@"
+        await Page.SetContentAsync(@"
     <input placeholder=""Placeholder"">
   ");
-        ExpectToContainYaml(await page.Locator("body").AriaSnapshotAsync(), @"
+        ExpectToContainYaml(await Page.Locator("body").AriaSnapshotAsync(), @"
     - textbox ""Placeholder""
   ");
 
-        await page.SetContentAsync(@"
+        await Page.SetContentAsync(@"
     <input placeholder=""Placeholder"" aria-label=""Label"">
   ");
-        ExpectToContainYaml(await page.Locator("body").AriaSnapshotAsync(), @"
+        ExpectToContainYaml(await Page.Locator("body").AriaSnapshotAsync(), @"
     - textbox ""Label"":
       - /placeholder: Placeholder
   ");
     }
 
     [UpstreamTest("AR-036 match values both against regex and string")]
-    public async Task MatchValuesBothAgainstRegexAndString(IPage page)
+    public async Task MatchValuesBothAgainstRegexAndString()
     {
-        await page.SetContentAsync("<a href=\"/auth?r=/\">Log in</a>");
-        await CheckAndMatchSnapshot(page.Locator("body"), @"
+        await Page.SetContentAsync("<a href=\"/auth?r=/\">Log in</a>");
+        await CheckAndMatchSnapshot(Page.Locator("body"), @"
     - link ""Log in"":
       - /url: /auth?r=/
   ");
     }
 
     [UpstreamTest("AR-037 auto-waits the locator and does not include iframes")]
-    public async Task AutoWaitsTheLocatorAndDoesNotIncludeIframes(IPage page)
+    public async Task AutoWaitsTheLocatorAndDoesNotIncludeIframes()
     {
-        await page.SetContentAsync(@"
+        await Page.SetContentAsync(@"
     <div>Hello</div>
   ");
 
-        var snapshotPromise = page.Locator("#target").AriaSnapshotAsync();
-        await page.WaitForTimeoutAsync(2000);
-        await page.SetContentAsync(@"
+        var snapshotPromise = Page.Locator("#target").AriaSnapshotAsync();
+        await Page.WaitForTimeoutAsync(2000);
+        await Page.SetContentAsync(@"
     <div id=target>
       Hello
       <iframe srcdoc=""<ul><li>Item 1</li><li>Item 2</li></ul>""></iframe>
@@ -855,9 +855,9 @@ public class PageAriaSnapshotTests
     }
 
     [UpstreamTest("AR-038 should limit depth")]
-    public async Task ShouldLimitDepth(IPage page)
+    public async Task ShouldLimitDepth()
     {
-        await page.SetContentAsync(@"
+        await Page.SetContentAsync(@"
     <ul id=target>
       <li>item2</li>
       <li>
@@ -868,7 +868,7 @@ public class PageAriaSnapshotTests
     </ul>
   ");
 
-        var snapshot = await page.Locator("#target").AriaSnapshotAsync(new() { Depth = 1 });
+        var snapshot = await Page.Locator("#target").AriaSnapshotAsync(new() { Depth = 1 });
         ExpectToContainYaml(snapshot, @"
     - list:
       - listitem: item2
@@ -877,14 +877,14 @@ public class PageAriaSnapshotTests
     }
 
     [UpstreamTest("AR-039 should snapshot a locator inside an iframe")]
-    public async Task ShouldSnapshotALocatorInsideAnIframe(IPage page)
+    public async Task ShouldSnapshotALocatorInsideAnIframe()
     {
-        await page.SetContentAsync(@"
+        await Page.SetContentAsync(@"
     <h1>Main Page</h1>
     <iframe srcdoc=""<ul><li>Item 1</li><li>Item 2</li></ul>""></iframe>
   ");
 
-        var list = page.Frames[1].Locator("ul");
+        var list = Page.Frames[1].Locator("ul");
         var snapshot = await list.AriaSnapshotAsync();
         ExpectToContainYaml(snapshot, @"
     - list:
@@ -894,79 +894,79 @@ public class PageAriaSnapshotTests
     }
 
     [UpstreamTest("AR-040 should include frames on frameset pages")]
-    public async Task ShouldIncludeFramesOnFramesetPages(IPage page, Server server)
+    public async Task ShouldIncludeFramesOnFramesetPages()
     {
-        server.SetRoute("/frameset.html", (req, res) =>
+        Server.SetRoute("/frameset.html", (req, res) =>
         {
             res.SetHeader("Content-Type", "text/html");
             res.End("<frameset cols=\"50%,50%\"><frame src=\"/frames/frame.html\"><frame src=\"/frames/frame.html\"></frameset>");
         });
-        await page.GotoAsync(server.Prefix + "/frameset.html");
+        await Page.GotoAsync(Server.Prefix + "/frameset.html");
         // Like iframes, frames are listed in the snapshot, but their content is not included.
-        Assert.That(await page.AriaSnapshotAsync(new() { Timeout = 3000 }), Is.EqualTo(Unshift(@"
+        Assert.That(await Page.AriaSnapshotAsync(new() { Timeout = 3000 }), Is.EqualTo(Unshift(@"
     - iframe
     - iframe
   ")));
     }
 
     [UpstreamTest("AR-041 should snapshot a locator inside a frameset frame")]
-    public async Task ShouldSnapshotALocatorInsideAFramesetFrame(IPage page, Server server)
+    public async Task ShouldSnapshotALocatorInsideAFramesetFrame()
     {
-        await page.GotoAsync(server.Prefix + "/frames/frameset.html");
-        await CheckAndMatchSnapshot(page.FrameLocator("frame").First.Locator("body"), @"
+        await Page.GotoAsync(Server.Prefix + "/frames/frameset.html");
+        await CheckAndMatchSnapshot(Page.FrameLocator("frame").First.Locator("body"), @"
     - text: Hi, I'm frame
   ");
     }
 
     [UpstreamTest("AR-042 should snapshot with box from page")]
-    public async Task ShouldSnapshotWithBoxFromPage(IPage page)
+    public async Task ShouldSnapshotWithBoxFromPage()
     {
-        await page.SetContentAsync(@"
+        await Page.SetContentAsync(@"
     <button style=""position:absolute;left:100px;top:50px;width:80px;height:40px;margin:0;padding:0;border:0;"">click</button>
   ");
 
-        var snapshot = await page.AriaSnapshotAsync(new() { Boxes = true });
+        var snapshot = await Page.AriaSnapshotAsync(new() { Boxes = true });
         Assert.That(snapshot, Is.EqualTo("- button \"click\" [box=100,50,80,40]"));
     }
 
     [UpstreamTest("AR-043 should snapshot with box from locator")]
-    public async Task ShouldSnapshotWithBoxFromLocator(IPage page)
+    public async Task ShouldSnapshotWithBoxFromLocator()
     {
-        await page.SetContentAsync(@"
+        await Page.SetContentAsync(@"
     <div style=""position:absolute;left:10px;top:20px;width:200px;height:100px;"">
       <button style=""position:absolute;left:5px;top:5px;width:60px;height:30px;margin:0;padding:0;border:0;"">ok</button>
     </div>
   ");
 
-        var snapshot = await page.Locator("div").AriaSnapshotAsync(new() { Boxes = true });
+        var snapshot = await Page.Locator("div").AriaSnapshotAsync(new() { Boxes = true });
         Assert.That(snapshot, Is.EqualTo("- button \"ok\" [box=15,25,60,30]"));
     }
 
     [UpstreamTest("AR-044 should not include box when option is omitted")]
-    public async Task ShouldNotIncludeBoxWhenOptionIsOmitted(IPage page)
+    public async Task ShouldNotIncludeBoxWhenOptionIsOmitted()
     {
-        await page.SetContentAsync("<button>click</button>");
-        var snapshot = await page.AriaSnapshotAsync();
+        await Page.SetContentAsync("<button>click</button>");
+        var snapshot = await Page.AriaSnapshotAsync();
         Assert.That(snapshot, Does.Not.Match(@"\[box="));
     }
 
     [UpstreamTest("AR-045 should not include hidden iframes")]
-    public async Task ShouldNotIncludeHiddenIframes(IPage page)
+    public async Task ShouldNotIncludeHiddenIframes()
     {
-        await page.SetContentAsync(@"
+        await Page.SetContentAsync(@"
     <iframe name=""visible"" srcdoc=""<button>Visible</button>""></iframe>
     <iframe name=""hidden"" style=""visibility: hidden"" srcdoc=""<button>Hidden</button>""></iframe>
     <iframe name=""none"" style=""display: none"" srcdoc=""<button>None</button>""></iframe>
   ");
-        Assert.That(await page.AriaSnapshotAsync(), Is.EqualTo(Unshift(@"
+        Assert.That(await Page.AriaSnapshotAsync(), Is.EqualTo(Unshift(@"
     - iframe
   ")));
     }
 
     [UpstreamTest("AR-171 should include inert elements and elements outside of a modal dialog")]
-    public async Task ShouldIncludeInertElementsAndElementsOutsideOfAModalDialog(IPage page)
+    public async Task ShouldIncludeInertElementsAndElementsOutsideOfAModalDialog()
     {
-        await page.SetContentAsync(@"
+        await Page.SetContentAsync(@"
     <button>Hi</button>
     <button inert>Hello</button>
     <div inert>
@@ -980,7 +980,7 @@ public class PageAriaSnapshotTests
     </script>
   ");
 
-        await CheckAndMatchSnapshot(page.Locator("body"), @"
+        await CheckAndMatchSnapshot(Page.Locator("body"), @"
     - button ""Hi""
     - button ""Hello""
     - button ""Yay""

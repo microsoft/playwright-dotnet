@@ -22,29 +22,29 @@ using static Microsoft.Playwright.Tests.Fixtures.Utils;
 namespace Microsoft.Playwright.Tests.Page;
 
 /// <summary>Port of tests/page/jshandle-json-value.spec.ts.</summary>
-public class JshandleJsonValueTests
+public class JshandleJsonValueTests : UpstreamPageTest
 {
     [UpstreamTest("JH-007 should work @smoke")]
-    public async Task ShouldWork(IPage page)
+    public async Task ShouldWork()
     {
-        var aHandle = await page.EvaluateHandleAsync("() => ({ foo: 'bar' })");
+        var aHandle = await Page.EvaluateHandleAsync("() => ({ foo: 'bar' })");
         var json = await aHandle.JsonValueAsync<object>();
         ExpectToEqual(json, new { foo = "bar" });
     }
 
     [UpstreamTest("JH-008 should work with dates")]
-    public async Task ShouldWorkWithDates(IPage page)
+    public async Task ShouldWorkWithDates()
     {
-        var dateHandle = await page.EvaluateHandleAsync("() => new Date('2017-09-26T00:00:00.000Z')");
+        var dateHandle = await Page.EvaluateHandleAsync("() => new Date('2017-09-26T00:00:00.000Z')");
         var date = await dateHandle.JsonValueAsync<DateTime>();
         // .NET: toJSON()
         Assert.That(date.ToUniversalTime().ToString("yyyy-MM-dd'T'HH:mm:ss.fff'Z'", CultureInfo.InvariantCulture), Is.EqualTo("2017-09-26T00:00:00.000Z"));
     }
 
     [UpstreamTest("JH-009 should handle circular objects")]
-    public async Task ShouldHandleCircularObjects(IPage page)
+    public async Task ShouldHandleCircularObjects()
     {
-        var handle = await page.EvaluateHandleAsync("const a = {}; a.b = a; a");
+        var handle = await Page.EvaluateHandleAsync("const a = {}; a.b = a; a");
         var a = new Dictionary<string, object>();
         a["b"] = a;
         ExpectToEqual(await handle.JsonValueAsync<object>(), a);

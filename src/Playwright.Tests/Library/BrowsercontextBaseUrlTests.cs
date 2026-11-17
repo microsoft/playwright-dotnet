@@ -22,80 +22,80 @@ using static Microsoft.Playwright.Tests.Fixtures.Utils;
 namespace Microsoft.Playwright.Tests.Library;
 
 /// <summary>Port of tests/library/browsercontext-base-url.spec.ts.</summary>
-public class BrowsercontextBaseUrlTests
+public class BrowsercontextBaseUrlTests : UpstreamBrowserTest
 {
     [UpstreamTest("NA-089 should construct a new URL when a baseURL in browser.newContext is passed to page.goto @smoke")]
-    public async Task ShouldConstructANewURLWhenABaseURLInBrowserNewContextIsPassedToPageGoto(IBrowser browser, Server server, BrowserNewContextOptions contextOptions)
+    public async Task ShouldConstructANewURLWhenABaseURLInBrowserNewContextIsPassedToPageGoto()
     {
-        var context = await browser.NewContextAsync(new(contextOptions)
+        var context = await Browser.NewContextAsync(new(ContextOptions())
         {
-            BaseURL = server.Prefix,
+            BaseURL = Server.Prefix,
         });
         var page = await context.NewPageAsync();
-        Assert.That((await page.GotoAsync("/empty.html")).Url, Is.EqualTo(server.EmptyPage));
+        Assert.That((await page.GotoAsync("/empty.html")).Url, Is.EqualTo(Server.EmptyPage));
         await context.CloseAsync();
     }
 
     [UpstreamTest("NA-090 should construct a new URL when a baseURL in browser.newPage is passed to page.goto")]
-    public async Task ShouldConstructANewURLWhenABaseURLInBrowserNewPageIsPassedToPageGoto(IBrowser browser, Server server, BrowserNewPageOptions newPageOptions)
+    public async Task ShouldConstructANewURLWhenABaseURLInBrowserNewPageIsPassedToPageGoto()
     {
-        var page = await browser.NewPageAsync(new(newPageOptions)
+        var page = await Browser.NewPageAsync(new(NewPageOptions())
         {
-            BaseURL = server.Prefix,
+            BaseURL = Server.Prefix,
         });
-        Assert.That((await page.GotoAsync("/empty.html")).Url, Is.EqualTo(server.EmptyPage));
+        Assert.That((await page.GotoAsync("/empty.html")).Url, Is.EqualTo(Server.EmptyPage));
         await page.CloseAsync();
     }
 
     [UpstreamTest("NA-091 should construct a new URL when a baseURL in browserType.launchPersistentContext is passed to page.goto")]
-    public async Task ShouldConstructANewURLWhenABaseURLInBrowserTypeLaunchPersistentContextIsPassedToPageGoto(IBrowserType browserType, Server server, CreateUserDataDir createUserDataDir, BrowserTypeLaunchPersistentContextOptions launchPersistentContextOptions)
+    public async Task ShouldConstructANewURLWhenABaseURLInBrowserTypeLaunchPersistentContextIsPassedToPageGoto()
     {
-        var userDataDir = await createUserDataDir();
-        var context = await browserType.LaunchPersistentContextAsync(userDataDir, new(launchPersistentContextOptions)
+        var userDataDir = await CreateUserDataDir();
+        var context = await BrowserType.LaunchPersistentContextAsync(userDataDir, new(LaunchPersistentContextOptions())
         {
-            BaseURL = server.Prefix,
+            BaseURL = Server.Prefix,
         });
         var page = await context.NewPageAsync();
-        Assert.That((await page.GotoAsync("/empty.html")).Url, Is.EqualTo(server.EmptyPage));
+        Assert.That((await page.GotoAsync("/empty.html")).Url, Is.EqualTo(Server.EmptyPage));
         await context.CloseAsync();
     }
 
     [UpstreamTest("NA-092 should construct the URLs correctly when a baseURL without a trailing slash in browser.newPage is passed to page.goto")]
-    public async Task ShouldConstructTheURLsCorrectlyWhenABaseURLWithoutATrailingSlashInBrowserNewPageIsPassedToPageGoto(IBrowser browser, Server server, BrowserNewPageOptions newPageOptions)
+    public async Task ShouldConstructTheURLsCorrectlyWhenABaseURLWithoutATrailingSlashInBrowserNewPageIsPassedToPageGoto()
     {
-        var page = await browser.NewPageAsync(new(newPageOptions)
+        var page = await Browser.NewPageAsync(new(NewPageOptions())
         {
-            BaseURL = server.Prefix + "/url-construction",
+            BaseURL = Server.Prefix + "/url-construction",
         });
-        Assert.That((await page.GotoAsync("mypage.html")).Url, Is.EqualTo(server.Prefix + "/mypage.html"));
-        Assert.That((await page.GotoAsync("./mypage.html")).Url, Is.EqualTo(server.Prefix + "/mypage.html"));
-        Assert.That((await page.GotoAsync("/mypage.html")).Url, Is.EqualTo(server.Prefix + "/mypage.html"));
+        Assert.That((await page.GotoAsync("mypage.html")).Url, Is.EqualTo(Server.Prefix + "/mypage.html"));
+        Assert.That((await page.GotoAsync("./mypage.html")).Url, Is.EqualTo(Server.Prefix + "/mypage.html"));
+        Assert.That((await page.GotoAsync("/mypage.html")).Url, Is.EqualTo(Server.Prefix + "/mypage.html"));
         await page.CloseAsync();
     }
 
     [UpstreamTest("NA-093 should construct the URLs correctly when a baseURL with a trailing slash in browser.newPage is passed to page.goto")]
-    public async Task ShouldConstructTheURLsCorrectlyWhenABaseURLWithATrailingSlashInBrowserNewPageIsPassedToPageGoto(IBrowser browser, Server server, BrowserNewPageOptions newPageOptions)
+    public async Task ShouldConstructTheURLsCorrectlyWhenABaseURLWithATrailingSlashInBrowserNewPageIsPassedToPageGoto()
     {
-        var page = await browser.NewPageAsync(new(newPageOptions)
+        var page = await Browser.NewPageAsync(new(NewPageOptions())
         {
-            BaseURL = server.Prefix + "/url-construction/",
+            BaseURL = Server.Prefix + "/url-construction/",
         });
-        Assert.That((await page.GotoAsync("mypage.html")).Url, Is.EqualTo(server.Prefix + "/url-construction/mypage.html"));
-        Assert.That((await page.GotoAsync("./mypage.html")).Url, Is.EqualTo(server.Prefix + "/url-construction/mypage.html"));
-        Assert.That((await page.GotoAsync("/mypage.html")).Url, Is.EqualTo(server.Prefix + "/mypage.html"));
-        Assert.That((await page.GotoAsync(".")).Url, Is.EqualTo(server.Prefix + "/url-construction/"));
-        Assert.That((await page.GotoAsync("/")).Url, Is.EqualTo(server.Prefix + "/"));
+        Assert.That((await page.GotoAsync("mypage.html")).Url, Is.EqualTo(Server.Prefix + "/url-construction/mypage.html"));
+        Assert.That((await page.GotoAsync("./mypage.html")).Url, Is.EqualTo(Server.Prefix + "/url-construction/mypage.html"));
+        Assert.That((await page.GotoAsync("/mypage.html")).Url, Is.EqualTo(Server.Prefix + "/mypage.html"));
+        Assert.That((await page.GotoAsync(".")).Url, Is.EqualTo(Server.Prefix + "/url-construction/"));
+        Assert.That((await page.GotoAsync("/")).Url, Is.EqualTo(Server.Prefix + "/"));
         await page.CloseAsync();
     }
 
     [UpstreamTest("NA-094 should not construct a new URL when valid URLs are passed")]
-    public async Task ShouldNotConstructANewURLWhenValidURLsArePassed(IBrowser browser, Server server, BrowserNewPageOptions newPageOptions)
+    public async Task ShouldNotConstructANewURLWhenValidURLsArePassed()
     {
-        var page = await browser.NewPageAsync(new(newPageOptions)
+        var page = await Browser.NewPageAsync(new(NewPageOptions())
         {
             BaseURL = "http://microsoft.com",
         });
-        Assert.That((await page.GotoAsync(server.EmptyPage)).Url, Is.EqualTo(server.EmptyPage));
+        Assert.That((await page.GotoAsync(Server.EmptyPage)).Url, Is.EqualTo(Server.EmptyPage));
 
         await page.GotoAsync("data:text/html,Hello world");
         Assert.That(await page.EvaluateAsync<string>("() => window.location.href"), Is.EqualTo("data:text/html,Hello world"));
@@ -106,15 +106,15 @@ public class BrowsercontextBaseUrlTests
     }
 
     [UpstreamTest("NA-095 should be able to match a URL relative to its given URL with urlMatcher")]
-    public async Task ShouldBeAbleToMatchAURLRelativeToItsGivenURLWithUrlMatcher(IBrowser browser, Server server, BrowserNewPageOptions newPageOptions)
+    public async Task ShouldBeAbleToMatchAURLRelativeToItsGivenURLWithUrlMatcher()
     {
-        var page = await browser.NewPageAsync(new(newPageOptions)
+        var page = await Browser.NewPageAsync(new(NewPageOptions())
         {
-            BaseURL = server.Prefix + "/foobar/",
+            BaseURL = Server.Prefix + "/foobar/",
         });
         await page.GotoAsync("/kek/index.html");
         await page.WaitForURLAsync("/kek/index.html");
-        Assert.That(page.Url, Is.EqualTo(server.Prefix + "/kek/index.html"));
+        Assert.That(page.Url, Is.EqualTo(Server.Prefix + "/kek/index.html"));
 
         await page.RouteAsync("./kek/index.html", route => route.FulfillAsync(new()
         {
@@ -124,18 +124,18 @@ public class BrowsercontextBaseUrlTests
             page.WaitForRequestAsync("./kek/index.html"),
             page.WaitForResponseAsync("./kek/index.html"),
             page.GotoAsync("./kek/index.html"));
-        Assert.That(request.Url, Is.EqualTo(server.Prefix + "/foobar/kek/index.html"));
-        Assert.That(response.Url, Is.EqualTo(server.Prefix + "/foobar/kek/index.html"));
+        Assert.That(request.Url, Is.EqualTo(Server.Prefix + "/foobar/kek/index.html"));
+        Assert.That(response.Url, Is.EqualTo(Server.Prefix + "/foobar/kek/index.html"));
         Assert.That(Encoding.UTF8.GetString(await response.BodyAsync()), Is.EqualTo("base-url-matched-route"));
         await page.CloseAsync();
     }
 
     [UpstreamTest("NA-096 should not construct a new URL with baseURL when a glob was used")]
-    public async Task ShouldNotConstructANewURLWithBaseURLWhenAGlobWasUsed(IBrowser browser, Server server, BrowserNewPageOptions newPageOptions)
+    public async Task ShouldNotConstructANewURLWithBaseURLWhenAGlobWasUsed()
     {
-        var page = await browser.NewPageAsync(new(newPageOptions)
+        var page = await Browser.NewPageAsync(new(NewPageOptions())
         {
-            BaseURL = server.Prefix + "/foobar/",
+            BaseURL = Server.Prefix + "/foobar/",
         });
         await page.GotoAsync("./kek/index.html");
         await page.WaitForURLAsync("**/foobar/kek/index.html");

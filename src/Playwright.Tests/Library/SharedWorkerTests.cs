@@ -19,18 +19,19 @@ using Microsoft.Playwright.Tests.Fixtures;
 namespace Microsoft.Playwright.Tests.Library;
 
 /// <summary>Port of tests/library/shared-worker.spec.ts.</summary>
-public class SharedWorkerTests
+public class SharedWorkerTests : UpstreamBrowserTest
 {
     [UpstreamTest("WO-026 should survive shared worker restart")]
-    public async Task ShouldSurviveSharedWorkerRestart(IBrowserContext context, Server server)
+    public async Task ShouldSurviveSharedWorkerRestart()
     {
+        var context = await ContextFixture();
         var page1 = await context.NewPageAsync();
-        await page1.GotoAsync(server.Prefix + "/shared-worker/shared-worker.html");
+        await page1.GotoAsync(Server.Prefix + "/shared-worker/shared-worker.html");
         Assert.That(await page1.EvaluateAsync<string>("window.sharedWorkerResponsePromise"), Is.EqualTo("echo:hello"));
         await page1.CloseAsync();
 
         var page2 = await context.NewPageAsync();
-        await page2.GotoAsync(server.Prefix + "/shared-worker/shared-worker.html");
+        await page2.GotoAsync(Server.Prefix + "/shared-worker/shared-worker.html");
         Assert.That(await page2.EvaluateAsync<string>("window.sharedWorkerResponsePromise"), Is.EqualTo("echo:hello"));
         await page2.CloseAsync();
     }

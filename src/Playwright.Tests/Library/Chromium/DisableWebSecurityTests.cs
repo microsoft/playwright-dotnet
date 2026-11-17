@@ -22,32 +22,31 @@ using static Microsoft.Playwright.Assertions;
 namespace Microsoft.Playwright.Tests.Library.Chromium;
 
 /// <summary>Port of tests/library/chromium/disable-web-security.spec.ts.</summary>
-public class DisableWebSecurityTests
+public class DisableWebSecurityTests : UpstreamPageTest
 {
     // .NET: upstream runs the files of tests/library/chromium only in the Chromium project.
-    [BeforeEach]
-    public static void Skip(string browserName) => Info.Skip(browserName != "chromium", "chromium only");
+    [SetUp]
+    public void Skip() => Info.Skip(BrowserName != "chromium", "chromium only");
 
     // it.use({
     //   launchOptions: async ({ launchOptions }, use) => {
     //     await use({ ...launchOptions, args: ['--disable-web-security'] });
     //   }
     // });
-    [Fixture]
-    public static BrowserTypeLaunchOptions LaunchOptions(BrowserTypeLaunchOptions launchOptions) => new(launchOptions) { Args = ["--disable-web-security"] };
+    public override BrowserTypeLaunchOptions LaunchOptions() => new(base.LaunchOptions()) { Args = ["--disable-web-security"] };
 
     [UpstreamTest("CR-045 test utility world in popup w/ --disable-web-security")]
-    public async Task TestUtilityWorldInPopupWDisableWebSecurity(IPage page, Server server)
+    public async Task TestUtilityWorldInPopupWDisableWebSecurity()
     {
-        server.SetRoute("/main.html", (req, res) =>
+        Server.SetRoute("/main.html", (req, res) =>
         {
             res.WriteHead(200, new()
             {
                 ["Content-Type"] = "text/html",
             });
-            res.End($"<a href=\"{server.Prefix}/target.html\" target=\"_blank\">Click me</a>");
+            res.End($"<a href=\"{Server.Prefix}/target.html\" target=\"_blank\">Click me</a>");
         });
-        server.SetRoute("/target.html", (req, res) =>
+        Server.SetRoute("/target.html", (req, res) =>
         {
             res.WriteHead(200, new()
             {
@@ -56,25 +55,25 @@ public class DisableWebSecurityTests
             res.End("<html></html>");
         });
 
-        await page.GotoAsync(server.Prefix + "/main.html");
-        var page1Promise = page.Context.WaitForPageAsync();
-        await page.GetByRole(AriaRole.Link, new() { Name = "Click me" }).ClickAsync();
+        await Page.GotoAsync(Server.Prefix + "/main.html");
+        var page1Promise = Page.Context.WaitForPageAsync();
+        await Page.GetByRole(AriaRole.Link, new() { Name = "Click me" }).ClickAsync();
         var page1 = await page1Promise;
         await Expect(page1).ToHaveURLAsync(new Regex("target"));
     }
 
     [UpstreamTest("CR-046 test init script w/ --disable-web-security")]
-    public async Task TestInitScriptWDisableWebSecurity(IPage page, Server server)
+    public async Task TestInitScriptWDisableWebSecurity()
     {
-        server.SetRoute("/main.html", (req, res) =>
+        Server.SetRoute("/main.html", (req, res) =>
         {
             res.WriteHead(200, new()
             {
                 ["Content-Type"] = "text/html",
             });
-            res.End($"<a href=\"{server.Prefix}/target.html\" target=\"_blank\">Click me</a>");
+            res.End($"<a href=\"{Server.Prefix}/target.html\" target=\"_blank\">Click me</a>");
         });
-        server.SetRoute("/target.html", (req, res) =>
+        Server.SetRoute("/target.html", (req, res) =>
         {
             res.WriteHead(200, new()
             {
@@ -83,10 +82,10 @@ public class DisableWebSecurityTests
             res.End("<html></html>");
         });
 
-        await page.Context.AddInitScriptAsync("window.injected = 123");
-        await page.GotoAsync(server.Prefix + "/main.html");
-        var page1Promise = page.Context.WaitForPageAsync();
-        await page.GetByRole(AriaRole.Link, new() { Name = "Click me" }).ClickAsync();
+        await Page.Context.AddInitScriptAsync("window.injected = 123");
+        await Page.GotoAsync(Server.Prefix + "/main.html");
+        var page1Promise = Page.Context.WaitForPageAsync();
+        await Page.GetByRole(AriaRole.Link, new() { Name = "Click me" }).ClickAsync();
         var page1 = await page1Promise;
         var value = await page1.EvaluateAsync<int>("window.injected");
         Assert.That(value, Is.EqualTo(123));

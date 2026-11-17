@@ -20,16 +20,16 @@ using static Microsoft.Playwright.Tests.Fixtures.Utils;
 namespace Microsoft.Playwright.Tests.Library;
 
 /// <summary>Port of tests/library/browsercontext-strict.spec.ts.</summary>
-public class BrowsercontextStrictTests
+public class BrowsercontextStrictTests : UpstreamPageTest
 {
     [UpstreamTest("SM-011 should not fail page.textContent in non-strict mode")]
-    public async Task ShouldNotFailPageTextContentInNonStrictMode(IPage page)
+    public async Task ShouldNotFailPageTextContentInNonStrictMode()
     {
-        await page.SetContentAsync("<span>span1</span><div><span>target</span></div>");
-        Assert.That(await page.TextContentAsync("span", new() { Strict = false }), Is.EqualTo("span1"));
+        await Page.SetContentAsync("<span>span1</span><div><span>target</span></div>");
+        Assert.That(await Page.TextContentAsync("span", new() { Strict = false }), Is.EqualTo("span1"));
     }
 
-    public class StrictContextMode
+    public class StrictContextMode : UpstreamPageTest
     {
         // it.use({
         //   contextOptions: async ({ contextOptions }, use) => {
@@ -37,34 +37,33 @@ public class BrowsercontextStrictTests
         //     await use(options);
         //   }
         // });
-        [Fixture]
-        public static async Task ContextOptions(BrowserNewContextOptions contextOptions, Func<BrowserNewContextOptions, Task> use)
+        public override BrowserNewContextOptions ContextOptions()
         {
-            var options = new BrowserNewContextOptions(contextOptions) { StrictSelectors = true };
-            await use(options);
+            var options = new BrowserNewContextOptions(base.ContextOptions()) { StrictSelectors = true };
+            return options;
         }
 
         [UpstreamTest("SM-012 should fail page.textContent in strict mode")]
-        public async Task ShouldFailPageTextContentInStrictMode(IPage page)
+        public async Task ShouldFailPageTextContentInStrictMode()
         {
-            await page.SetContentAsync("<span>span1</span><div><span>target</span></div>");
-            var error = await Catch(() => page.TextContentAsync("span"));
+            await Page.SetContentAsync("<span>span1</span><div><span>target</span></div>");
+            var error = await Catch(() => Page.TextContentAsync("span"));
             Assert.That(error.Message, Does.Contain("strict mode violation"));
         }
 
         [UpstreamTest("SM-013 should fail page.click in strict mode")]
-        public async Task ShouldFailPageClickInStrictMode(IPage page)
+        public async Task ShouldFailPageClickInStrictMode()
         {
-            await page.SetContentAsync("<button>button1</button><button>target</button>");
-            var error = await Catch(() => page.ClickAsync("button"));
+            await Page.SetContentAsync("<button>button1</button><button>target</button>");
+            var error = await Catch(() => Page.ClickAsync("button"));
             Assert.That(error.Message, Does.Contain("strict mode violation"));
         }
 
         [UpstreamTest("SM-014 should opt out of strict mode")]
-        public async Task ShouldOptOutOfStrictMode(IPage page)
+        public async Task ShouldOptOutOfStrictMode()
         {
-            await page.SetContentAsync("<span>span1</span><div><span>target</span></div>");
-            Assert.That(await page.TextContentAsync("span", new() { Strict = false }), Is.EqualTo("span1"));
+            await Page.SetContentAsync("<span>span1</span><div><span>target</span></div>");
+            Assert.That(await Page.TextContentAsync("span", new() { Strict = false }), Is.EqualTo("span1"));
         }
     }
 }

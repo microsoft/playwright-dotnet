@@ -21,56 +21,56 @@ using static Microsoft.Playwright.Tests.Fixtures.Utils;
 namespace Microsoft.Playwright.Tests.Page;
 
 /// <summary>Port of tests/page/page-set-extra-http-headers.spec.ts.</summary>
-public class PageSetExtraHttpHeadersTests
+public class PageSetExtraHttpHeadersTests : UpstreamPageTest
 {
     [UpstreamTest("NE-114 should work @smoke")]
-    public async Task ShouldWork(IPage page, Server server)
+    public async Task ShouldWork()
     {
-        await page.SetExtraHTTPHeadersAsync(new Dictionary<string, string>
+        await Page.SetExtraHTTPHeadersAsync(new Dictionary<string, string>
         {
             ["foo"] = "bar",
         });
         var (request, _) = await PromiseAll(
-            server.WaitForRequest("/empty.html"),
-            page.GotoAsync(server.EmptyPage));
+            Server.WaitForRequest("/empty.html"),
+            Page.GotoAsync(Server.EmptyPage));
         Assert.That(request.Headers["foo"], Is.EqualTo("bar"));
         Assert.That(request.Headers["baz"], Is.Null);
     }
 
     [UpstreamTest("NE-115 should work with redirects")]
-    public async Task ShouldWorkWithRedirects(IPage page, Server server)
+    public async Task ShouldWorkWithRedirects()
     {
-        server.SetRedirect("/foo.html", "/empty.html");
-        await page.SetExtraHTTPHeadersAsync(new Dictionary<string, string>
+        Server.SetRedirect("/foo.html", "/empty.html");
+        await Page.SetExtraHTTPHeadersAsync(new Dictionary<string, string>
         {
             ["foo"] = "bar"
         });
         var (request, _) = await PromiseAll(
-            server.WaitForRequest("/empty.html"),
-            page.GotoAsync(server.Prefix + "/foo.html"));
+            Server.WaitForRequest("/empty.html"),
+            Page.GotoAsync(Server.Prefix + "/foo.html"));
         Assert.That(request.Headers["foo"], Is.EqualTo("bar"));
     }
 
     [UpstreamTest("NE-116 should work with extra headers from browser context")]
-    public async Task ShouldWorkWithExtraHeadersFromBrowserContext(IPage page, Server server)
+    public async Task ShouldWorkWithExtraHeadersFromBrowserContext()
     {
-        await page.Context.SetExtraHTTPHeadersAsync(new Dictionary<string, string>
+        await Page.Context.SetExtraHTTPHeadersAsync(new Dictionary<string, string>
         {
             ["foo"] = "bar",
         });
         var (request, _) = await PromiseAll(
-            server.WaitForRequest("/empty.html"),
-            page.GotoAsync(server.EmptyPage));
+            Server.WaitForRequest("/empty.html"),
+            Page.GotoAsync(Server.EmptyPage));
         Assert.That(request.Headers["foo"], Is.EqualTo("bar"));
     }
 
     [UpstreamTest("NE-118 should not duplicate referer header")]
-    public async Task ShouldNotDuplicateRefererHeader(IPage page, Server server, string browserName, int browserMajorVersion)
+    public async Task ShouldNotDuplicateRefererHeader()
     {
-        Info.Fixme(browserName == "chromium" && browserMajorVersion < 154, "Request has referer and Referer");
-        await page.SetExtraHTTPHeadersAsync(new Dictionary<string, string> { ["referer"] = server.EmptyPage });
-        var response = await page.GotoAsync(server.EmptyPage);
+        Info.Fixme(BrowserName == "chromium" && BrowserMajorVersion < 154, "Request has referer and Referer");
+        await Page.SetExtraHTTPHeadersAsync(new Dictionary<string, string> { ["referer"] = Server.EmptyPage });
+        var response = await Page.GotoAsync(Server.EmptyPage);
         Assert.That(response.Ok, Is.EqualTo(true));
-        Assert.That(response.Request.Headers["referer"], Is.EqualTo(server.EmptyPage));
+        Assert.That(response.Request.Headers["referer"], Is.EqualTo(Server.EmptyPage));
     }
 }

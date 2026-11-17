@@ -19,19 +19,19 @@ using Microsoft.Playwright.Tests.Fixtures;
 namespace Microsoft.Playwright.Tests.Library;
 
 /// <summary>Port of tests/library/page-clock.frozen.spec.ts.</summary>
-public class PageClockFrozenTests
+public class PageClockFrozenTests : UpstreamPageTest
 {
     [UpstreamTest("CK-055 clock should be frozen")]
-    public async Task ClockShouldBeFrozen(IPage page)
+    public async Task ClockShouldBeFrozen()
     {
         Info.Skip(Environment.GetEnvironmentVariable("PW_CLOCK") != "frozen");
-        Assert.That(await page.EvaluateAsync<long>("Date.now()"), Is.EqualTo(1000));
+        Assert.That(await Page.EvaluateAsync<long>("Date.now()"), Is.EqualTo(1000));
     }
 
     [UpstreamTest("CK-056 clock should be realtime")]
-    public async Task ClockShouldBeRealtime(IPage page)
+    public async Task ClockShouldBeRealtime()
     {
         Info.Skip(Environment.GetEnvironmentVariable("PW_CLOCK") != "realtime");
-        Assert.That(await page.EvaluateAsync<long>("Date.now()"), Is.LessThan(10000));
+        Assert.That(await Page.EvaluateAsync<long>("Date.now()"), Is.LessThan(10000));
     }
 }

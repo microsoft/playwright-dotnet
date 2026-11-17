@@ -20,10 +20,10 @@ using static Microsoft.Playwright.Tests.Fixtures.Utils;
 namespace Microsoft.Playwright.Tests.Page;
 
 /// <summary>Port of tests/page/firefox-network-response.spec.ts.</summary>
-public class FirefoxNetworkResponseTests
+public class FirefoxNetworkResponseTests : UpstreamPageTest
 {
-    [BeforeEach]
-    public static void Skip(string browserName, bool isBidi) => Info.Skip(browserName != "firefox" || isBidi, "Tests the Firefox network observer.");
+    [SetUp]
+    public void Skip() => Info.Skip(BrowserName != "firefox" || IsBidi, "Tests the Firefox network observer.");
 
     private static async Task ExpectHeaderFields(IResponse response, Header[] expected)
     {
@@ -53,9 +53,9 @@ public class FirefoxNetworkResponseTests
     }
 
     [UpstreamTest("FF-005 should preserve original response header fields for ${status} responses")]
-    [Case(200)]
-    [Case(302)]
-    public async Task ShouldPreserveOriginalResponseHeaderFieldsForResponses(int status, IPage page, Server server)
+    [TestCase(200)]
+    [TestCase(302)]
+    public async Task ShouldPreserveOriginalResponseHeaderFieldsForResponses(int status)
     {
         var headers = new Header[]
         {
@@ -72,7 +72,7 @@ public class FirefoxNetworkResponseTests
             new() { Name = "Proxy-Authenticate", Value = "Basic realm=\"five, six\"" },
             new() { Name = "Proxy-Authenticate", Value = "Basic realm=\"five, six\"" },
         };
-        server.SetRoute("/headers", (request, response) =>
+        Server.SetRoute("/headers", (request, response) =>
         {
             response.WriteHeadRaw(status, [
                 "Content-Type", "text/html",
@@ -81,21 +81,21 @@ public class FirefoxNetworkResponseTests
             ]);
             response.End("body");
         });
-        var finalResponse = await page.GotoAsync(server.Prefix + "/headers");
+        var finalResponse = await Page.GotoAsync(Server.Prefix + "/headers");
         var response = status == 302 ? await finalResponse.Request.RedirectedFrom.ResponseAsync() : finalResponse;
         Assert.That(response.Status, Is.EqualTo(status));
         await ExpectHeaderFields(response, headers);
     }
 
     [UpstreamTest("FF-006 should preserve synthesized response header fields")]
-    public async Task ShouldPreserveSynthesizedResponseHeaderFields(IPage page, Server server)
+    public async Task ShouldPreserveSynthesizedResponseHeaderFields()
     {
         var cookies = new[]
         {
             "a=b; Expires=Wed, 21 Oct 2037 07:28:00 GMT",
             "c=d; Expires=Wed, 21 Oct 2037 07:28:00 GMT; Path=/",
         };
-        await page.RouteAsync("**/headers", route => route.FulfillAsync(new()
+        await Page.RouteAsync("**/headers", route => route.FulfillAsync(new()
         {
             ContentType = "text/html",
             Headers = new Dictionary<string, string>
@@ -107,7 +107,7 @@ public class FirefoxNetworkResponseTests
             },
             Body = "fulfilled",
         }));
-        var response = await page.GotoAsync(server.Prefix + "/headers");
+        var response = await Page.GotoAsync(Server.Prefix + "/headers");
         Assert.That(await response.TextAsync(), Is.EqualTo("fulfilled"));
         await ExpectHeaderFields(response, [
             new() { Name = "x-literal", Value = "first, \"second, third\"" },
@@ -118,10 +118,10 @@ public class FirefoxNetworkResponseTests
     }
 
     [UpstreamTest("FF-007 should report current effective fields after cache revalidation")]
-    public async Task ShouldReportCurrentEffectiveFieldsAfterCacheRevalidation(IPage page, Server server)
+    public async Task ShouldReportCurrentEffectiveFieldsAfterCacheRevalidation()
     {
         var validators = new List<string>();
-        server.SetRoute("/cached-headers", (request, response) =>
+        Server.SetRoute("/cached-headers", (request, response) =>
         {
             validators.Add(request.Headers["if-none-match"]);
             if (validators.Count == 1)
@@ -151,11 +151,11 @@ public class FirefoxNetworkResponseTests
             response.End();
         });
 
-        await page.GotoAsync(server.EmptyPage);
-        var url = server.Prefix + "/cached-headers";
-        var initial = await FetchResponse(page, url);
-        var revalidated = await FetchResponse(page, url);
-        var cached = await FetchResponse(page, url);
+        await Page.GotoAsync(Server.EmptyPage);
+        var url = Server.Prefix + "/cached-headers";
+        var initial = await FetchResponse(Page, url);
+        var revalidated = await FetchResponse(Page, url);
+        var cached = await FetchResponse(Page, url);
 
         Assert.That(validators, Is.EqualTo(new[] { null, "\"v1\"" }));
         foreach (var (_, fetched) in new[] { initial, revalidated, cached })
@@ -182,9 +182,9 @@ public class FirefoxNetworkResponseTests
     }
 
     [UpstreamTest("FF-008 should report a standalone 304 response without waiting for a cache merge")]
-    public async Task ShouldReportAStandalone304ResponseWithoutWaitingForACacheMerge(IPage page, Server server)
+    public async Task ShouldReportAStandalone304ResponseWithoutWaitingForACacheMerge()
     {
-        server.SetRoute("/standalone-304", (request, response) =>
+        Server.SetRoute("/standalone-304", (request, response) =>
         {
             response.WriteHead(304, new()
             {
@@ -193,8 +193,8 @@ public class FirefoxNetworkResponseTests
             });
             response.End();
         });
-        await page.GotoAsync(server.EmptyPage);
-        var (response, fetched) = await FetchResponse(page, server.Prefix + "/standalone-304");
+        await Page.GotoAsync(Server.EmptyPage);
+        var (response, fetched) = await FetchResponse(Page, Server.Prefix + "/standalone-304");
         Assert.That(response.Status, Is.EqualTo(304));
         ExpectToEqual(fetched, new { status = 304, body = "" });
         Assert.That(await response.HeaderValuesAsync("x-literal"), Is.EqualTo(new[] { "standalone, value" }));

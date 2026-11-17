@@ -20,57 +20,57 @@ using Microsoft.Playwright.Tests.Fixtures;
 namespace Microsoft.Playwright.Tests.Page;
 
 /// <summary>Port of tests/page/locator-click.spec.ts.</summary>
-public class LocatorClickTests
+public class LocatorClickTests : UpstreamPageTest
 {
     [UpstreamTest("LO-052 should work @smoke")]
-    public async Task ShouldWork(IPage page, Server server)
+    public async Task ShouldWork()
     {
-        await page.GotoAsync(server.Prefix + "/input/button.html");
-        var button = page.Locator("button");
+        await Page.GotoAsync(Server.Prefix + "/input/button.html");
+        var button = Page.Locator("button");
         await button.ClickAsync();
-        Assert.That(await page.EvaluateAsync<string>("() => window['result']"), Is.EqualTo("Clicked"));
+        Assert.That(await Page.EvaluateAsync<string>("() => window['result']"), Is.EqualTo("Clicked"));
     }
 
     [UpstreamTest("LO-053 should work with Node removed")]
-    public async Task ShouldWorkWithNodeRemoved(IPage page, Server server)
+    public async Task ShouldWorkWithNodeRemoved()
     {
-        await page.GotoAsync(server.Prefix + "/input/button.html");
-        await page.EvaluateAsync("() => delete window['Node']");
-        var button = page.Locator("button");
+        await Page.GotoAsync(Server.Prefix + "/input/button.html");
+        await Page.EvaluateAsync("() => delete window['Node']");
+        var button = Page.Locator("button");
         await button.ClickAsync();
-        Assert.That(await page.EvaluateAsync<string>("() => window['result']"), Is.EqualTo("Clicked"));
+        Assert.That(await Page.EvaluateAsync<string>("() => window['result']"), Is.EqualTo("Clicked"));
     }
 
     [UpstreamTest("LO-054 should double click the button")]
-    public async Task ShouldDoubleClickTheButton(IPage page, Server server)
+    public async Task ShouldDoubleClickTheButton()
     {
-        await page.GotoAsync(server.Prefix + "/input/button.html");
-        await page.EvaluateAsync(@"() => {
+        await Page.GotoAsync(Server.Prefix + "/input/button.html");
+        await Page.EvaluateAsync(@"() => {
     window['double'] = false;
     const button = document.querySelector('button');
     button.addEventListener('dblclick', event => {
       window['double'] = true;
     });
   }");
-        var button = page.Locator("button");
+        var button = Page.Locator("button");
         await button.DblClickAsync();
-        Assert.That(await page.EvaluateAsync<bool>("double"), Is.EqualTo(true));
-        Assert.That(await page.EvaluateAsync<string>("result"), Is.EqualTo("Clicked"));
+        Assert.That(await Page.EvaluateAsync<bool>("double"), Is.EqualTo(true));
+        Assert.That(await Page.EvaluateAsync<string>("result"), Is.EqualTo("Clicked"));
     }
 
     [UpstreamTest("LO-055 should click if the target element is removed in pointerup event")]
-    public async Task ShouldClickIfTheTargetElementIsRemovedInPointerupEvent(IPage page)
+    public async Task ShouldClickIfTheTargetElementIsRemovedInPointerupEvent()
     {
-        await page.SetContentAsync("<button id=clickme>Clickable</button>");
-        await page.EvalOnSelectorAsync("#clickme", "element => element.addEventListener('pointerup', () => element.remove(), false)");
-        await page.Locator("#clickme").ClickAsync();
+        await Page.SetContentAsync("<button id=clickme>Clickable</button>");
+        await Page.EvalOnSelectorAsync("#clickme", "element => element.addEventListener('pointerup', () => element.remove(), false)");
+        await Page.Locator("#clickme").ClickAsync();
     }
 
     [UpstreamTest("LO-056 should click if the target element is removed in pointerdown event")]
-    public async Task ShouldClickIfTheTargetElementIsRemovedInPointerdownEvent(IPage page)
+    public async Task ShouldClickIfTheTargetElementIsRemovedInPointerdownEvent()
     {
-        await page.SetContentAsync("<button id=clickme>Clickable</button>");
-        await page.EvalOnSelectorAsync("#clickme", "element => element.addEventListener('pointerdown', () => element.remove(), false)");
-        await page.Locator("#clickme").ClickAsync();
+        await Page.SetContentAsync("<button id=clickme>Clickable</button>");
+        await Page.EvalOnSelectorAsync("#clickme", "element => element.addEventListener('pointerdown', () => element.remove(), false)");
+        await Page.Locator("#clickme").ClickAsync();
     }
 }

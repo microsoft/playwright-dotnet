@@ -20,100 +20,100 @@ using Microsoft.Playwright.Tests.Fixtures;
 namespace Microsoft.Playwright.Tests.Page;
 
 /// <summary>Port of tests/page/elementhandle-misc.spec.ts.</summary>
-public class ElementhandleMiscTests
+public class ElementhandleMiscTests : UpstreamPageTest
 {
     [UpstreamTest("EH-045 should hover")]
-    public async Task ShouldHover(IPage page, Server server)
+    public async Task ShouldHover()
     {
-        await page.GotoAsync(server.Prefix + "/input/scrollable.html");
-        var button = await page.QuerySelectorAsync("#button-6");
+        await Page.GotoAsync(Server.Prefix + "/input/scrollable.html");
+        var button = await Page.QuerySelectorAsync("#button-6");
         await button.HoverAsync();
-        Assert.That(await page.EvaluateAsync<string>("() => document.querySelector('button:hover').id"), Is.EqualTo("button-6"));
+        Assert.That(await Page.EvaluateAsync<string>("() => document.querySelector('button:hover').id"), Is.EqualTo("button-6"));
     }
 
     [UpstreamTest("EH-046 should hover when Node is removed")]
-    public async Task ShouldHoverWhenNodeIsRemoved(IPage page, Server server)
+    public async Task ShouldHoverWhenNodeIsRemoved()
     {
-        await page.GotoAsync(server.Prefix + "/input/scrollable.html");
-        await page.EvaluateAsync("() => delete window['Node']");
-        var button = await page.QuerySelectorAsync("#button-6");
+        await Page.GotoAsync(Server.Prefix + "/input/scrollable.html");
+        await Page.EvaluateAsync("() => delete window['Node']");
+        var button = await Page.QuerySelectorAsync("#button-6");
         await button.HoverAsync();
-        Assert.That(await page.EvaluateAsync<string>("() => document.querySelector('button:hover').id"), Is.EqualTo("button-6"));
+        Assert.That(await Page.EvaluateAsync<string>("() => document.querySelector('button:hover').id"), Is.EqualTo("button-6"));
     }
 
     [UpstreamTest("EH-047 should fill input")]
-    public async Task ShouldFillInput(IPage page, Server server)
+    public async Task ShouldFillInput()
     {
-        await page.GotoAsync(server.Prefix + "/input/textarea.html");
-        var handle = await page.QuerySelectorAsync("input");
+        await Page.GotoAsync(Server.Prefix + "/input/textarea.html");
+        var handle = await Page.QuerySelectorAsync("input");
         await handle.FillAsync("some value");
-        Assert.That(await page.EvaluateAsync<string>("() => window['result']"), Is.EqualTo("some value"));
+        Assert.That(await Page.EvaluateAsync<string>("() => window['result']"), Is.EqualTo("some value"));
     }
 
     [UpstreamTest("EH-048 should fill input when Node is removed")]
-    public async Task ShouldFillInputWhenNodeIsRemoved(IPage page, Server server)
+    public async Task ShouldFillInputWhenNodeIsRemoved()
     {
-        await page.GotoAsync(server.Prefix + "/input/textarea.html");
-        await page.EvaluateAsync("() => delete window['Node']");
-        var handle = await page.QuerySelectorAsync("input");
+        await Page.GotoAsync(Server.Prefix + "/input/textarea.html");
+        await Page.EvaluateAsync("() => delete window['Node']");
+        var handle = await Page.QuerySelectorAsync("input");
         await handle.FillAsync("some value");
-        Assert.That(await page.EvaluateAsync<string>("() => window['result']"), Is.EqualTo("some value"));
+        Assert.That(await Page.EvaluateAsync<string>("() => window['result']"), Is.EqualTo("some value"));
     }
 
     [UpstreamTest("EH-049 should check the box")]
-    public async Task ShouldCheckTheBox(IPage page)
+    public async Task ShouldCheckTheBox()
     {
-        await page.SetContentAsync("<input id='checkbox' type='checkbox'></input>");
-        var input = await page.QuerySelectorAsync("input");
+        await Page.SetContentAsync("<input id='checkbox' type='checkbox'></input>");
+        var input = await Page.QuerySelectorAsync("input");
         await input.CheckAsync();
-        Assert.That(await page.EvaluateAsync<bool>("checkbox.checked"), Is.EqualTo(true));
+        Assert.That(await Page.EvaluateAsync<bool>("checkbox.checked"), Is.EqualTo(true));
     }
 
     [UpstreamTest("EH-050 should check the box using setChecked")]
-    public async Task ShouldCheckTheBoxUsingSetChecked(IPage page)
+    public async Task ShouldCheckTheBoxUsingSetChecked()
     {
-        await page.SetContentAsync("<input id='checkbox' type='checkbox'></input>");
-        var input = await page.QuerySelectorAsync("input");
+        await Page.SetContentAsync("<input id='checkbox' type='checkbox'></input>");
+        var input = await Page.QuerySelectorAsync("input");
         await input.SetCheckedAsync(true);
-        Assert.That(await page.EvaluateAsync<bool>("checkbox.checked"), Is.EqualTo(true));
+        Assert.That(await Page.EvaluateAsync<bool>("checkbox.checked"), Is.EqualTo(true));
         await input.SetCheckedAsync(false);
-        Assert.That(await page.EvaluateAsync<bool>("checkbox.checked"), Is.EqualTo(false));
+        Assert.That(await Page.EvaluateAsync<bool>("checkbox.checked"), Is.EqualTo(false));
     }
 
     [UpstreamTest("EH-051 should uncheck the box")]
-    public async Task ShouldUncheckTheBox(IPage page)
+    public async Task ShouldUncheckTheBox()
     {
-        await page.SetContentAsync("<input id='checkbox' type='checkbox' checked></input>");
-        var input = await page.QuerySelectorAsync("input");
+        await Page.SetContentAsync("<input id='checkbox' type='checkbox' checked></input>");
+        var input = await Page.QuerySelectorAsync("input");
         await input.UncheckAsync();
-        Assert.That(await page.EvaluateAsync<bool>("checkbox.checked"), Is.EqualTo(false));
+        Assert.That(await Page.EvaluateAsync<bool>("checkbox.checked"), Is.EqualTo(false));
     }
 
     [UpstreamTest("EH-052 should select single option")]
-    public async Task ShouldSelectSingleOption(IPage page, Server server)
+    public async Task ShouldSelectSingleOption()
     {
-        await page.GotoAsync(server.Prefix + "/input/select.html");
-        var select = await page.QuerySelectorAsync("select");
+        await Page.GotoAsync(Server.Prefix + "/input/select.html");
+        var select = await Page.QuerySelectorAsync("select");
         await select.SelectOptionAsync("blue");
-        Assert.That(await page.EvaluateAsync<string[]>("() => window['result'].onInput"), Is.EqualTo(new[] { "blue" }));
-        Assert.That(await page.EvaluateAsync<string[]>("() => window['result'].onChange"), Is.EqualTo(new[] { "blue" }));
+        Assert.That(await Page.EvaluateAsync<string[]>("() => window['result'].onInput"), Is.EqualTo(new[] { "blue" }));
+        Assert.That(await Page.EvaluateAsync<string[]>("() => window['result'].onChange"), Is.EqualTo(new[] { "blue" }));
     }
 
     [UpstreamTest("EH-053 should focus a button")]
-    public async Task ShouldFocusAButton(IPage page, Server server)
+    public async Task ShouldFocusAButton()
     {
-        await page.GotoAsync(server.Prefix + "/input/button.html");
-        var button = await page.QuerySelectorAsync("button");
+        await Page.GotoAsync(Server.Prefix + "/input/button.html");
+        var button = await Page.QuerySelectorAsync("button");
         Assert.That(await button.EvaluateAsync<bool>("button => document.activeElement === button"), Is.EqualTo(false));
         await button.FocusAsync();
         Assert.That(await button.EvaluateAsync<bool>("button => document.activeElement === button"), Is.EqualTo(true));
     }
 
     [UpstreamTest("EH-054 should allow disposing twice")]
-    public async Task ShouldAllowDisposingTwice(IPage page)
+    public async Task ShouldAllowDisposingTwice()
     {
-        await page.SetContentAsync("<section>39</section>");
-        var element = await page.QuerySelectorAsync("section");
+        await Page.SetContentAsync("<section>39</section>");
+        var element = await Page.QuerySelectorAsync("section");
         Assert.That(element, Is.Not.Null);
         await element.DisposeAsync();
         await element.DisposeAsync();

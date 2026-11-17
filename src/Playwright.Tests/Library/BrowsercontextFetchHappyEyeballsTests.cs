@@ -20,31 +20,32 @@ using static Microsoft.Playwright.Assertions;
 namespace Microsoft.Playwright.Tests.Library;
 
 /// <summary>Port of tests/library/browsercontext-fetch-happy-eyeballs.spec.ts.</summary>
-public class BrowsercontextFetchHappyEyeballsTests
+public class BrowsercontextFetchHappyEyeballsTests : UpstreamBrowserTest
 {
-    [BeforeEach]
-    public static void Skip(string mode) => Info.Skip(mode != "default");
+    [SetUp]
+    public void Skip() => Info.Skip(Mode != "default");
 
     // .NET: __testHookLookup, the DNS lookup hook of the Node.js client, and interceptedHostnameLookup, the variable that it sets,
     // are left out: the .NET API does not have the option, and the tests that pass it are not ported.
 
-    [BeforeEach]
-    public void BeforeEach(Server server)
+    [SetUp]
+    public void BeforeEach()
     {
         // .NET: interceptedHostnameLookup = undefined is left out with the variable.
         // Force a new connection every time, so that we can intercept the hostname lookup.
-        server.SetExtraHeaders("/simple.json", new()
+        Server.SetExtraHeaders("/simple.json", new()
         {
             ["Connection"] = "close",
         });
     }
 
     [UpstreamTest("FE-188 should work with ip6 and port as the host")]
-    public async Task ShouldWorkWithIp6AndPortAsTheHost(IAPIRequestContext request, Server server)
+    public async Task ShouldWorkWithIp6AndPortAsTheHost()
     {
+        var request = await RequestFixture();
         Info.Skip(!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("INSIDE_DOCKER")), "docker does not support IPv6 by default");
-        var response = await request.GetAsync($"http://[::1]:{server.Port}/simple.json");
-        Assert.That(response.Url, Is.EqualTo($"http://[::1]:{server.Port}/simple.json"));
+        var response = await request.GetAsync($"http://[::1]:{Server.Port}/simple.json");
+        Assert.That(response.Url, Is.EqualTo($"http://[::1]:{Server.Port}/simple.json"));
         await Expect(response).ToBeOKAsync();
     }
 }

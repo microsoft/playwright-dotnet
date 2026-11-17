@@ -22,25 +22,28 @@ using static Microsoft.Playwright.Tests.Fixtures.Utils;
 namespace Microsoft.Playwright.Tests.Library;
 
 /// <summary>Port of tests/library/browsercontext-viewport.spec.ts.</summary>
-public class BrowsercontextViewportTests
+public class BrowsercontextViewportTests : UpstreamBrowserTest
 {
     [UpstreamTest("VP-001 should get the proper default viewport size")]
-    public async Task ShouldGetTheProperDefaultViewportSize(IPage page, Server server)
+    public async Task ShouldGetTheProperDefaultViewportSize()
     {
+        var page = await PageFixture();
         await VerifyViewport(page, 1280, 720);
     }
 
     [UpstreamTest("VP-002 should set the proper viewport size")]
-    public async Task ShouldSetTheProperViewportSize(IPage page, Server server)
+    public async Task ShouldSetTheProperViewportSize()
     {
+        var page = await PageFixture();
         await VerifyViewport(page, 1280, 720);
         await page.SetViewportSizeAsync(345, 456);
         await VerifyViewport(page, 345, 456);
     }
 
     [UpstreamTest("VP-003 should return correct outerWidth and outerHeight")]
-    public async Task ShouldReturnCorrectOuterWidthAndOuterHeight(IPage page)
+    public async Task ShouldReturnCorrectOuterWidthAndOuterHeight()
     {
+        var page = await PageFixture();
         await page.SetViewportSizeAsync(410, 420);
         var size = await page.EvaluateAsync<JsonElement>(@"() => {
     return {
@@ -57,10 +60,10 @@ public class BrowsercontextViewportTests
     }
 
     [UpstreamTest("VP-004 landscape viewport should have width larger than height")]
-    public async Task LandscapeViewportShouldHaveWidthLargerThanHeight(IPlaywright playwright)
+    public async Task LandscapeViewportShouldHaveWidthLargerThanHeight()
     {
         // .NET: deviceDescriptors of the driver, which the test imports, is playwright.Devices.
-        var deviceDescriptors = playwright.Devices;
+        var deviceDescriptors = Playwright.Devices;
         foreach (var device in deviceDescriptors.Keys)
         {
             var configuration = deviceDescriptors[device];
@@ -72,8 +75,9 @@ public class BrowsercontextViewportTests
     }
 
     [UpstreamTest("VP-005 should emulate device width")]
-    public async Task ShouldEmulateDeviceWidth(IPage page, Server server)
+    public async Task ShouldEmulateDeviceWidth()
     {
+        var page = await PageFixture();
         ExpectToEqual(page.ViewportSize, new { width = 1280, height = 720 });
         await page.SetViewportSizeAsync(300, 300);
         Assert.That(await page.EvaluateAsync<int>("() => window.screen.width"), Is.EqualTo(300));
@@ -94,8 +98,9 @@ public class BrowsercontextViewportTests
     }
 
     [UpstreamTest("VP-006 should emulate device height")]
-    public async Task ShouldEmulateDeviceHeight(IPage page, Server server)
+    public async Task ShouldEmulateDeviceHeight()
     {
+        var page = await PageFixture();
         ExpectToEqual(page.ViewportSize, new { width = 1280, height = 720 });
         await page.SetViewportSizeAsync(300, 300);
         Assert.That(await page.EvaluateAsync<int>("() => window.screen.height"), Is.EqualTo(300));
@@ -116,23 +121,26 @@ public class BrowsercontextViewportTests
     }
 
     [UpstreamTest("VP-007 should emulate availWidth and availHeight")]
-    public async Task ShouldEmulateAvailWidthAndAvailHeight(IPage page)
+    public async Task ShouldEmulateAvailWidthAndAvailHeight()
     {
+        var page = await PageFixture();
         await page.SetViewportSizeAsync(500, 600);
         Assert.That(await page.EvaluateAsync<int>("() => window.screen.availWidth"), Is.EqualTo(500));
         Assert.That(await page.EvaluateAsync<int>("() => window.screen.availHeight"), Is.EqualTo(600));
     }
 
     [UpstreamTest("VP-008 should not have touch by default")]
-    public async Task ShouldNotHaveTouchByDefault(IPage page, Server server, string browserName, string platform)
+    public async Task ShouldNotHaveTouchByDefault()
     {
-        await page.GotoAsync(server.Prefix + "/mobile.html");
+        var page = await PageFixture();
+        await page.GotoAsync(Server.Prefix + "/mobile.html");
         Assert.That(await page.EvaluateAsync<bool>("() => 'ontouchstart' in window"), Is.EqualTo(false));
     }
 
     [UpstreamTest("VP-009 should throw on tap if hasTouch is not enabled")]
-    public async Task ShouldThrowOnTapIfHasTouchIsNotEnabled(IPage page)
+    public async Task ShouldThrowOnTapIfHasTouchIsNotEnabled()
     {
+        var page = await PageFixture();
         await page.SetContentAsync("<div>a</div>");
         {
             var error = await Catch(() => page.TapAsync("div"));
@@ -147,22 +155,22 @@ public class BrowsercontextViewportTests
     }
 
     [UpstreamTest("VP-010 should support touch with null viewport")]
-    public async Task ShouldSupportTouchWithNullViewport(IBrowser browser, Server server, BrowserNewContextOptions contextOptions)
+    public async Task ShouldSupportTouchWithNullViewport()
     {
-        var context = await browser.NewContextAsync(new(contextOptions) { ViewportSize = ViewportSize.NoViewport, HasTouch = true });
+        var context = await Browser.NewContextAsync(new(ContextOptions()) { ViewportSize = ViewportSize.NoViewport, HasTouch = true });
         var page = await context.NewPageAsync();
-        await page.GotoAsync(server.Prefix + "/mobile.html");
+        await page.GotoAsync(Server.Prefix + "/mobile.html");
         Assert.That(await page.EvaluateAsync<bool>("() => 'ontouchstart' in window"), Is.EqualTo(true));
         await context.CloseAsync();
     }
 
     [UpstreamTest("VP-011 should keep touch emulation after screenshot beyond viewport")]
     [LocalFixme("dotnet: Locator.WithElementAsync makes a negative timeout from the default timeout 0, and the call passes only when it ends before the timer of the driver")]
-    public async Task ShouldKeepTouchEmulationAfterScreenshotBeyondViewport(IBrowser browser, Server server, BrowserNewContextOptions contextOptions)
+    public async Task ShouldKeepTouchEmulationAfterScreenshotBeyondViewport()
     {
-        var context = await browser.NewContextAsync(new(contextOptions) { ViewportSize = new() { Width = 393, Height = 727 }, HasTouch = true });
+        var context = await Browser.NewContextAsync(new(ContextOptions()) { ViewportSize = new() { Width = 393, Height = 727 }, HasTouch = true });
         var page = await context.NewPageAsync();
-        await page.GotoAsync(server.EmptyPage);
+        await page.GotoAsync(Server.EmptyPage);
         await page.SetContentAsync("<div id=\"tall\" style=\"height:3000px\">tall</div>");
         var probe = () => page.EvaluateAsync<JsonElement>(@"() => ({
     ontouchstart: 'ontouchstart' in window,
@@ -175,15 +183,15 @@ public class BrowsercontextViewportTests
         ExpectToEqual(await probe(), expected);
         await page.Locator("#tall").ScreenshotAsync();
         ExpectToEqual(await probe(), expected);
-        await page.GotoAsync(server.EmptyPage);
+        await page.GotoAsync(Server.EmptyPage);
         ExpectToEqual(await probe(), expected);
         await context.CloseAsync();
     }
 
     [UpstreamTest("VP-012 should set both screen and viewport options")]
-    public async Task ShouldSetBothScreenAndViewportOptions(ContextFactory contextFactory, string browserName, bool isBidi)
+    public async Task ShouldSetBothScreenAndViewportOptions()
     {
-        var context = await contextFactory(new()
+        var context = await ContextFactory(new()
         {
             ScreenSize = new() { Width = 1280, Height = 720 },
             ViewportSize = new() { Width = 1000, Height = 600 },
@@ -196,21 +204,21 @@ public class BrowsercontextViewportTests
     }
 
     [UpstreamTest("VP-013 should report null viewportSize when given null viewport")]
-    public async Task ShouldReportNullViewportSizeWhenGivenNullViewport(IBrowser browser, Server server, BrowserNewContextOptions contextOptions)
+    public async Task ShouldReportNullViewportSizeWhenGivenNullViewport()
     {
-        var context = await browser.NewContextAsync(new(contextOptions) { ViewportSize = ViewportSize.NoViewport });
+        var context = await Browser.NewContextAsync(new(ContextOptions()) { ViewportSize = ViewportSize.NoViewport });
         var page = await context.NewPageAsync();
         Assert.That(page.ViewportSize, Is.Null);
         await context.CloseAsync();
     }
 
     [UpstreamTest("VP-014 should drag with high dpi")]
-    public async Task ShouldDragWithHighDpi(IBrowser browser, Server server, bool headless, BrowserNewPageOptions newPageOptions)
+    public async Task ShouldDragWithHighDpi()
     {
-        Info.Skip(!headless, "Stray mouse events mess up the test");
+        Info.Skip(!Headless, "Stray mouse events mess up the test");
 
-        var page = await browser.NewPageAsync(new(newPageOptions) { DeviceScaleFactor = 2 });
-        await page.GotoAsync(server.Prefix + "/drag-n-drop.html");
+        var page = await Browser.NewPageAsync(new(NewPageOptions()) { DeviceScaleFactor = 2 });
+        await page.GotoAsync(Server.Prefix + "/drag-n-drop.html");
         await page.HoverAsync("#source");
         await page.Mouse.DownAsync();
         await page.HoverAsync("#target");
@@ -220,17 +228,17 @@ public class BrowsercontextViewportTests
     }
 
     [UpstreamTest("VP-015 WebKit Windows headed should have a minimal viewport")]
-    public async Task WebKitWindowsHeadedShouldHaveAMinimalViewport(ContextFactory contextFactory, string browserName, bool headless, bool isWindows)
+    public async Task WebKitWindowsHeadedShouldHaveAMinimalViewport()
     {
-        Info.Skip(browserName != "webkit" || headless || !isWindows, "Not relevant for this browser");
+        Info.Skip(BrowserName != "webkit" || Headless || !IsWindows, "Not relevant for this browser");
 
-        var error = await ThrowsAsync<PlaywrightException>(() => contextFactory(new()
+        var error = await ThrowsAsync<PlaywrightException>(() => ContextFactory(new()
         {
             ViewportSize = new() { Width = 100, Height = 100 },
         }));
         Assert.That(error.Message, Does.Contain("WebKit on Windows has a minimal viewport of 250x240."));
 
-        var context = await contextFactory();
+        var context = await ContextFactory();
         var page = await context.NewPageAsync();
         var error2 = await ThrowsAsync<PlaywrightException>(() => page.SetViewportSizeAsync(100, 100));
         Assert.That(error2.Message, Does.Contain("WebKit on Windows has a minimal viewport of 250x240."));
@@ -238,13 +246,13 @@ public class BrowsercontextViewportTests
     }
 
     [UpstreamTest("VP-016 should be able to get correct orientation angle on non-mobile devices")]
-    public async Task ShouldBeAbleToGetCorrectOrientationAngleOnNonMobileDevices(IBrowser browser, string browserName, Server server, BrowserNewContextOptions contextOptions)
+    public async Task ShouldBeAbleToGetCorrectOrientationAngleOnNonMobileDevices()
     {
-        Info.Skip(browserName == "webkit", "Desktop webkit dont support orientation API");
+        Info.Skip(BrowserName == "webkit", "Desktop webkit dont support orientation API");
 
-        var context = await browser.NewContextAsync(new(contextOptions) { ViewportSize = new() { Width = 300, Height = 400 }, IsMobile = false });
+        var context = await Browser.NewContextAsync(new(ContextOptions()) { ViewportSize = new() { Width = 300, Height = 400 }, IsMobile = false });
         var page = await context.NewPageAsync();
-        await page.GotoAsync(server.Prefix + "/index.html");
+        await page.GotoAsync(Server.Prefix + "/index.html");
         Assert.That(await page.EvaluateAsync<int>("() => window.screen.orientation.angle"), Is.EqualTo(0));
         await page.SetViewportSizeAsync(400, 300);
         Assert.That(await page.EvaluateAsync<int>("() => window.screen.orientation.angle"), Is.EqualTo(0));
@@ -252,13 +260,13 @@ public class BrowsercontextViewportTests
     }
 
     [UpstreamTest("VP-017 should set window.screen.orientation.type for mobile devices")]
-    public async Task ShouldSetWindowScreenOrientationTypeForMobileDevices(ContextFactory contextFactory, Server server, IPlaywright playwright)
+    public async Task ShouldSetWindowScreenOrientationTypeForMobileDevices()
     {
         // .NET: devices of '@playwright/test', which the test imports, is playwright.Devices.
-        var devices = playwright.Devices;
-        var context = await contextFactory(devices["iPhone 14"]);
+        var devices = Playwright.Devices;
+        var context = await ContextFactory(devices["iPhone 14"]);
         var page = await context.NewPageAsync();
-        await page.GotoAsync(server.Prefix + "/index.html");
+        await page.GotoAsync(Server.Prefix + "/index.html");
         Assert.That(await page.EvaluateAsync<string>("() => window.screen.orientation.type"), Is.EqualTo("portrait-primary"));
         await context.CloseAsync();
     }

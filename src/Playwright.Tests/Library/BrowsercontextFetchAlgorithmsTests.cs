@@ -27,8 +27,14 @@ using Microsoft.Playwright.Tests.Fixtures;
 
 namespace Microsoft.Playwright.Tests.Library;
 
+public abstract class BrowsercontextFetchAlgorithmsTestsBase : UpstreamBrowserTest
+{
+    [SetUp]
+    public void Skip() => Info.Skip(Mode != "default");
+}
+
 /// <summary>Port of tests/library/browsercontext-fetch-algorithms.spec.ts.</summary>
-public class BrowsercontextFetchAlgorithmsTests
+public class BrowsercontextFetchAlgorithmsTests : BrowsercontextFetchAlgorithmsTestsBase
 {
     // .NET: util.promisify(zlib.gzip) is a GZipStream.
     private static async Task<byte[]> Gzip(string buffer)
@@ -63,17 +69,14 @@ public class BrowsercontextFetchAlgorithmsTests
         return result.ToArray();
     }
 
-    [BeforeEach]
-    public static void Skip(string mode) => Info.Skip(mode != "default");
-
-    public class Algorithms
+    public class Algorithms : BrowsercontextFetchAlgorithmsTestsBase
     {
         private const string responseBody = "str";
 
         [TestFixture("gzip")]
         [TestFixture("deflate")]
         [TestFixture("br")]
-        public class Decompression
+        public class Decompression : BrowsercontextFetchAlgorithmsTestsBase
         {
             private readonly string type;
             private readonly Task<byte[]> zipped;
@@ -92,36 +95,39 @@ public class BrowsercontextFetchAlgorithmsTests
             }
 
             [UpstreamTest("FE-180 should support decompression")]
-            public async Task ShouldSupportDecompression(IBrowserContext context, Server server)
+            public async Task ShouldSupportDecompression()
             {
-                server.SetRoute("/compressed", async (req, res) =>
+                var context = await ContextFixture();
+                Server.SetRoute("/compressed", async (req, res) =>
                 {
                     res.SetHeader("Content-Encoding", type);
                     res.End(await zipped);
                 });
 
-                var response = await context.APIRequest.GetAsync(server.Prefix + "/compressed");
+                var response = await context.APIRequest.GetAsync(Server.Prefix + "/compressed");
                 Assert.That(await response.TextAsync(), Is.EqualTo(responseBody));
             }
 
             [UpstreamTest("FE-181 should not fail if response content-length header is missing (${type})")]
-            public async Task ShouldNotFailIfResponseContentLengthHeaderIsMissing(IBrowserContext context, Server server)
+            public async Task ShouldNotFailIfResponseContentLengthHeaderIsMissing()
             {
-                server.SetRoute("/compressed", async (req, res) =>
+                var context = await ContextFixture();
+                Server.SetRoute("/compressed", async (req, res) =>
                 {
                     res.SetHeader("Content-Encoding", type);
                     res.RemoveHeader("Content-Length");
                     res.End(await zipped);
                 });
 
-                var response = await context.APIRequest.GetAsync(server.Prefix + "/compressed");
+                var response = await context.APIRequest.GetAsync(Server.Prefix + "/compressed");
                 Assert.That(await response.TextAsync(), Is.EqualTo(responseBody));
             }
 
             [UpstreamTest("FE-182 should not fail with chunked responses (without Content-Length header)")]
-            public async Task ShouldNotFailWithChunkedResponsesWithoutContentLengthHeader(IBrowserContext context, Server server)
+            public async Task ShouldNotFailWithChunkedResponsesWithoutContentLengthHeader()
             {
-                server.SetRoute("/compressed", async (req, res) =>
+                var context = await ContextFixture();
+                Server.SetRoute("/compressed", async (req, res) =>
                 {
                     res.SetHeader("Content-Encoding", type);
                     res.SetHeader("Transfer-Encoding", "chunked");
@@ -130,34 +136,36 @@ public class BrowsercontextFetchAlgorithmsTests
                     res.End();
                 });
 
-                var response = await context.APIRequest.GetAsync(server.Prefix + "/compressed");
+                var response = await context.APIRequest.GetAsync(Server.Prefix + "/compressed");
                 Assert.That(await response.TextAsync(), Is.EqualTo(responseBody));
             }
 
             [UpstreamTest("FE-183 should not fail with an empty response without content-length header (Z_BUF_ERROR)")]
-            public async Task ShouldNotFailWithAnEmptyResponseWithoutContentLengthHeaderZBUFERROR(IBrowserContext context, Server server)
+            public async Task ShouldNotFailWithAnEmptyResponseWithoutContentLengthHeaderZBUFERROR()
             {
-                server.SetRoute("/compressed", async (req, res) =>
+                var context = await ContextFixture();
+                Server.SetRoute("/compressed", async (req, res) =>
                 {
                     res.SetHeader("Content-Encoding", type);
                     res.RemoveHeader("Content-Length");
                     res.End();
                 });
 
-                var response = await context.APIRequest.GetAsync(server.Prefix + "/compressed");
+                var response = await context.APIRequest.GetAsync(Server.Prefix + "/compressed");
                 Assert.That(await response.TextAsync(), Is.EqualTo(""));
             }
 
             [UpstreamTest("FE-184 should not fail with an empty response with content-length header (Z_BUF_ERROR)")]
-            public async Task ShouldNotFailWithAnEmptyResponseWithContentLengthHeaderZBUFERROR(IBrowserContext context, Server server)
+            public async Task ShouldNotFailWithAnEmptyResponseWithContentLengthHeaderZBUFERROR()
             {
-                server.SetRoute("/compressed", async (req, res) =>
+                var context = await ContextFixture();
+                Server.SetRoute("/compressed", async (req, res) =>
                 {
                     res.SetHeader("Content-Encoding", type);
                     res.End();
                 });
 
-                await context.APIRequest.GetAsync(server.Prefix + "/compressed");
+                await context.APIRequest.GetAsync(Server.Prefix + "/compressed");
             }
         }
     }

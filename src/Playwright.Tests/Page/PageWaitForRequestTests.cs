@@ -22,42 +22,42 @@ using static Microsoft.Playwright.Tests.Fixtures.Utils;
 namespace Microsoft.Playwright.Tests.Page;
 
 /// <summary>Port of tests/page/page-wait-for-request.spec.ts.</summary>
-public class PageWaitForRequestTests
+public class PageWaitForRequestTests : UpstreamPageTest
 {
     [UpstreamTest("WA-121 should work")]
-    public async Task ShouldWork(IPage page, Server server)
+    public async Task ShouldWork()
     {
-        await page.GotoAsync(server.EmptyPage);
+        await Page.GotoAsync(Server.EmptyPage);
         var (request, _) = await PromiseAll(
-            page.WaitForRequestAsync(server.Prefix + "/digits/2.png"),
-            page.EvaluateAsync(@"() => {
+            Page.WaitForRequestAsync(Server.Prefix + "/digits/2.png"),
+            Page.EvaluateAsync(@"() => {
       void fetch('/digits/1.png');
       void fetch('/digits/2.png');
       void fetch('/digits/3.png');
     }"));
-        Assert.That(request.Url, Is.EqualTo(server.Prefix + "/digits/2.png"));
+        Assert.That(request.Url, Is.EqualTo(Server.Prefix + "/digits/2.png"));
     }
 
     [UpstreamTest("WA-122 should work with predicate")]
-    public async Task ShouldWorkWithPredicate(IPage page, Server server)
+    public async Task ShouldWorkWithPredicate()
     {
-        await page.GotoAsync(server.EmptyPage);
+        await Page.GotoAsync(Server.EmptyPage);
         var (request, _) = await PromiseAll(
-            page.WaitForRequestAsync(request => request.Url == server.Prefix + "/digits/2.png"),
-            page.EvaluateAsync(@"() => {
+            Page.WaitForRequestAsync(request => request.Url == Server.Prefix + "/digits/2.png"),
+            Page.EvaluateAsync(@"() => {
       void fetch('/digits/1.png');
       void fetch('/digits/2.png');
       void fetch('/digits/3.png');
     }"));
-        Assert.That(request.Url, Is.EqualTo(server.Prefix + "/digits/2.png"));
+        Assert.That(request.Url, Is.EqualTo(Server.Prefix + "/digits/2.png"));
     }
 
     [UpstreamTest("WA-123 should respect timeout")]
     [LocalFixme("dotnet: the message is 'Timeout 1ms exceeded while waiting for event \"Request\"', upstream expects 'event \"request\"'")]
-    public async Task ShouldRespectTimeout(IPage page, IPlaywright playwright)
+    public async Task ShouldRespectTimeout()
     {
         Exception error = null;
-        error = await Catch(() => page.WaitForRequestAsync(_ => false, new() { Timeout = 1 }));
+        error = await Catch(() => Page.WaitForRequestAsync(_ => false, new() { Timeout = 1 }));
         Assert.That(error, Is.InstanceOf<TimeoutException>());
         Assert.That(error.Message, Does.Contain("Timeout 1ms exceeded while waiting for event \"request\""));
         // Error stack should point to the api call.
@@ -67,45 +67,45 @@ public class PageWaitForRequestTests
     }
 
     [UpstreamTest("WA-124 should respect default timeout")]
-    public async Task ShouldRespectDefaultTimeout(IPage page, IPlaywright playwright)
+    public async Task ShouldRespectDefaultTimeout()
     {
         Exception error = null;
-        page.SetDefaultTimeout(1);
-        error = await Catch(() => page.WaitForRequestAsync(_ => false));
+        Page.SetDefaultTimeout(1);
+        error = await Catch(() => Page.WaitForRequestAsync(_ => false));
         Assert.That(error, Is.InstanceOf<TimeoutException>());
     }
 
     [UpstreamTest("WA-125 should log the url")]
     [LocalFixme("dotnet: WaitForRequestAsync(url) does not log 'waiting for request \"<url>\"' on its waiter as upstream does, the message is only 'Timeout 1000ms exceeded while waiting for event \"Request\"'")]
-    public async Task ShouldLogTheUrl(IPage page)
+    public async Task ShouldLogTheUrl()
     {
-        var error = await Catch(() => page.WaitForRequestAsync("long-long-long-long-long-long-long-long-long-long-long-long-long-long.css", new() { Timeout = 1000 }));
+        var error = await Catch(() => Page.WaitForRequestAsync("long-long-long-long-long-long-long-long-long-long-long-long-long-long.css", new() { Timeout = 1000 }));
         Assert.That(error.Message, Does.Contain("waiting for request \"long-long-long-long-long-long-long-long-long-long…\""));
     }
 
     [UpstreamTest("WA-126 should work with no timeout")]
-    public async Task ShouldWorkWithNoTimeout(IPage page, Server server)
+    public async Task ShouldWorkWithNoTimeout()
     {
-        await page.GotoAsync(server.EmptyPage);
+        await Page.GotoAsync(Server.EmptyPage);
         var (request, _) = await PromiseAll(
-            page.WaitForRequestAsync(server.Prefix + "/digits/2.png", new() { Timeout = 0 }),
-            page.EvaluateAsync(@"() => window.builtins.setTimeout(() => {
+            Page.WaitForRequestAsync(Server.Prefix + "/digits/2.png", new() { Timeout = 0 }),
+            Page.EvaluateAsync(@"() => window.builtins.setTimeout(() => {
       void fetch('/digits/1.png');
       void fetch('/digits/2.png');
       void fetch('/digits/3.png');
     }, 50)"));
-        Assert.That(request.Url, Is.EqualTo(server.Prefix + "/digits/2.png"));
+        Assert.That(request.Url, Is.EqualTo(Server.Prefix + "/digits/2.png"));
     }
 
     [UpstreamTest("WA-127 should work with url match")]
-    public async Task ShouldWorkWithUrlMatch(IPage page, Server server)
+    public async Task ShouldWorkWithUrlMatch()
     {
-        await page.GotoAsync(server.EmptyPage);
+        await Page.GotoAsync(Server.EmptyPage);
         var (request, _) = await PromiseAll(
-            page.WaitForRequestAsync(new Regex(@"digits\/\d\.png")),
-            page.EvaluateAsync(@"() => {
+            Page.WaitForRequestAsync(new Regex(@"digits\/\d\.png")),
+            Page.EvaluateAsync(@"() => {
       void fetch('/digits/1.png');
     }"));
-        Assert.That(request.Url, Is.EqualTo(server.Prefix + "/digits/1.png"));
+        Assert.That(request.Url, Is.EqualTo(Server.Prefix + "/digits/1.png"));
     }
 }

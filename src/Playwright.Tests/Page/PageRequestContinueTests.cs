@@ -24,19 +24,19 @@ using static Microsoft.Playwright.Tests.Fixtures.Utils;
 namespace Microsoft.Playwright.Tests.Page;
 
 /// <summary>Port of tests/page/page-request-continue.spec.ts.</summary>
-public class PageRequestContinueTests
+public class PageRequestContinueTests : UpstreamPageTest
 {
     [UpstreamTest("RO-057 should work")]
-    public async Task ShouldWork(IPage page, Server server)
+    public async Task ShouldWork()
     {
-        await page.RouteAsync("**/*", route => route.ContinueAsync());
-        await page.GotoAsync(server.EmptyPage);
+        await Page.RouteAsync("**/*", route => route.ContinueAsync());
+        await Page.GotoAsync(Server.EmptyPage);
     }
 
     [UpstreamTest("RO-058 should amend HTTP headers")]
-    public async Task ShouldAmendHTTPHeaders(IPage page, Server server)
+    public async Task ShouldAmendHTTPHeaders()
     {
-        await page.RouteAsync("**/*", route =>
+        await Page.RouteAsync("**/*", route =>
         {
             var headers = new Dictionary<string, string>(route.Request.Headers)
             {
@@ -44,21 +44,21 @@ public class PageRequestContinueTests
             };
             IgnoreErrors(route.ContinueAsync(new() { Headers = headers }));
         });
-        await page.GotoAsync(server.EmptyPage);
+        await Page.GotoAsync(Server.EmptyPage);
         var (request, _) = await PromiseAll(
-            server.WaitForRequest("/sleep.zzz"),
-            page.EvaluateAsync("() => fetch('/sleep.zzz')"));
+            Server.WaitForRequest("/sleep.zzz"),
+            Page.EvaluateAsync("() => fetch('/sleep.zzz')"));
         Assert.That(request.Headers["foo"], Is.EqualTo("bar"));
     }
 
     [UpstreamTest("RO-059 should not allow to override unsafe HTTP headers")]
-    public async Task ShouldNotAllowToOverrideUnsafeHTTPHeaders(IPage page, Server server, string browserName, bool isAndroid, bool isElectron)
+    public async Task ShouldNotAllowToOverrideUnsafeHTTPHeaders()
     {
-        Info.Skip(isAndroid);
+        Info.Skip(IsAndroid);
         var routePromise = new TaskCompletionSource<IRoute>(TaskCreationOptions.RunContinuationsAsynchronously);
-        await page.RouteAsync("**/*", route => routePromise.TrySetResult(route));
-        var serverRequestPromise = server.WaitForRequest("/empty.html");
-        IgnoreErrors(page.GotoAsync(server.EmptyPage));
+        await Page.RouteAsync("**/*", route => routePromise.TrySetResult(route));
+        var serverRequestPromise = Server.WaitForRequest("/empty.html");
+        IgnoreErrors(Page.GotoAsync(Server.EmptyPage));
         var route = await routePromise.Task;
         await route.ContinueAsync(new()
         {
@@ -70,21 +70,21 @@ public class PageRequestContinueTests
         });
         var serverRequest = await serverRequestPromise;
         Assert.That(serverRequest.Headers["trailer"], Is.Null);
-        Assert.That(serverRequest.Headers["host"], Is.EqualTo(new Uri(server.EmptyPage).Authority));
+        Assert.That(serverRequest.Headers["host"], Is.EqualTo(new Uri(Server.EmptyPage).Authority));
     }
 
     [UpstreamTest("RO-060 should delete header with undefined value")]
     [LocalFixme("dotnet: route.ContinueAsync() with a null header value fails with \"headers[N].value: expected string, got undefined\"; the Node.js client leaves out a header whose value is undefined")]
-    public async Task ShouldDeleteHeaderWithUndefinedValue(IPage page, Server server, string browserName)
+    public async Task ShouldDeleteHeaderWithUndefinedValue()
     {
-        await page.GotoAsync(server.Prefix + "/empty.html");
-        server.SetRoute("/something", (request, response) =>
+        await Page.GotoAsync(Server.Prefix + "/empty.html");
+        Server.SetRoute("/something", (request, response) =>
         {
             response.WriteHead(200, new() { ["Access-Control-Allow-Origin"] = "*" });
             response.End("done");
         });
         IRequest interceptedRequest = null;
-        await page.RouteAsync(server.Prefix + "/something", async route =>
+        await Page.RouteAsync(Server.Prefix + "/something", async route =>
         {
             interceptedRequest = route.Request;
             var headers = await route.Request.AllHeadersAsync();
@@ -98,7 +98,7 @@ public class PageRequestContinueTests
         });
 
         var (text, serverRequest) = await PromiseAll(
-            page.EvaluateAsync<string>(@"async url => {
+            Page.EvaluateAsync<string>(@"async url => {
       const data = await fetch(url, {
         headers: {
           foo: 'a',
@@ -106,8 +106,8 @@ public class PageRequestContinueTests
         }
       });
       return data.text();
-    }", server.Prefix + "/something"),
-            server.WaitForRequest("/something"));
+    }", Server.Prefix + "/something"),
+            Server.WaitForRequest("/something"));
         Assert.That(text, Is.EqualTo("done"));
         // .NET: a dictionary throws for a key that it does not have.
         Assert.That(interceptedRequest.Headers.GetValueOrDefault("foo"), Is.Null);
@@ -116,38 +116,38 @@ public class PageRequestContinueTests
     }
 
     [UpstreamTest("RO-061 should amend method")]
-    public async Task ShouldAmendMethod(IPage page, Server server)
+    public async Task ShouldAmendMethod()
     {
-        var sRequest = server.WaitForRequest("/sleep.zzz");
-        await page.GotoAsync(server.EmptyPage);
-        await page.RouteAsync("**/*", route => route.ContinueAsync(new() { Method = "POST" }));
+        var sRequest = Server.WaitForRequest("/sleep.zzz");
+        await Page.GotoAsync(Server.EmptyPage);
+        await Page.RouteAsync("**/*", route => route.ContinueAsync(new() { Method = "POST" }));
         var (request, _) = await PromiseAll(
-            server.WaitForRequest("/sleep.zzz"),
-            page.EvaluateAsync("() => fetch('/sleep.zzz')"));
+            Server.WaitForRequest("/sleep.zzz"),
+            Page.EvaluateAsync("() => fetch('/sleep.zzz')"));
         Assert.That(request.Method, Is.EqualTo("POST"));
         Assert.That((await sRequest).Method, Is.EqualTo("POST"));
     }
 
     [UpstreamTest("RO-062 should override request url")]
-    public async Task ShouldOverrideRequestUrl(IPage page, Server server)
+    public async Task ShouldOverrideRequestUrl()
     {
-        var serverRequest = server.WaitForRequest("/global-var.html");
-        await page.RouteAsync("**/foo", route =>
+        var serverRequest = Server.WaitForRequest("/global-var.html");
+        await Page.RouteAsync("**/foo", route =>
         {
-            IgnoreErrors(route.ContinueAsync(new() { Url = server.Prefix + "/global-var.html" }));
+            IgnoreErrors(route.ContinueAsync(new() { Url = Server.Prefix + "/global-var.html" }));
         });
-        var response = await page.GotoAsync(server.Prefix + "/foo");
-        Assert.That(response.Request.Url, Is.EqualTo(server.Prefix + "/global-var.html"));
-        Assert.That(response.Url, Is.EqualTo(server.Prefix + "/global-var.html"));
-        Assert.That(await page.EvaluateAsync<int>("() => window['globalVar']"), Is.EqualTo(123));
+        var response = await Page.GotoAsync(Server.Prefix + "/foo");
+        Assert.That(response.Request.Url, Is.EqualTo(Server.Prefix + "/global-var.html"));
+        Assert.That(response.Url, Is.EqualTo(Server.Prefix + "/global-var.html"));
+        Assert.That(await Page.EvaluateAsync<int>("() => window['globalVar']"), Is.EqualTo(123));
         Assert.That((await serverRequest).Method, Is.EqualTo("GET"));
     }
 
     [UpstreamTest("RO-063 should not allow changing protocol when overriding url")]
-    public async Task ShouldNotAllowChangingProtocolWhenOverridingUrl(IPage page, Server server)
+    public async Task ShouldNotAllowChangingProtocolWhenOverridingUrl()
     {
         var errorPromise = new TaskCompletionSource<Exception>(TaskCreationOptions.RunContinuationsAsynchronously);
-        await page.RouteAsync("**/*", async route =>
+        await Page.RouteAsync("**/*", async route =>
         {
             try
             {
@@ -159,80 +159,80 @@ public class PageRequestContinueTests
                 errorPromise.TrySetResult(e);
             }
         });
-        IgnoreErrors(page.GotoAsync(server.EmptyPage));
+        IgnoreErrors(Page.GotoAsync(Server.EmptyPage));
         var error = await errorPromise.Task;
         Assert.That(error, Is.Not.Null);
         Assert.That(error.Message, Does.Contain("New URL must have same protocol as overridden URL"));
     }
 
     [UpstreamTest("RO-064 should not throw if request was cancelled by the page")]
-    public async Task ShouldNotThrowIfRequestWasCancelledByThePage(IPage page, Server server, bool isAndroid)
+    public async Task ShouldNotThrowIfRequestWasCancelledByThePage()
     {
-        Info.Fixme(isAndroid, "net::ERR_CONNECTION_RESET");
+        Info.Fixme(IsAndroid, "net::ERR_CONNECTION_RESET");
 
         var interceptPromise = new TaskCompletionSource<IRoute>(TaskCreationOptions.RunContinuationsAsynchronously);
-        await page.RouteAsync("**/data.json", route => interceptPromise.TrySetResult(route));
-        await page.GotoAsync(server.EmptyPage);
-        IgnoreErrors(page.EvaluateAsync(@"url => {
+        await Page.RouteAsync("**/data.json", route => interceptPromise.TrySetResult(route));
+        await Page.GotoAsync(Server.EmptyPage);
+        IgnoreErrors(Page.EvaluateAsync(@"url => {
     globalThis.controller = new AbortController();
     return fetch(url, { signal: globalThis.controller.signal });
-  }", server.Prefix + "/data.json"));
+  }", Server.Prefix + "/data.json"));
         var route = await interceptPromise.Task;
-        var failurePromise = Once<IRequest>(h => page.RequestFailed += h, h => page.RequestFailed -= h);
-        await page.EvaluateAsync("() => globalThis.controller.abort()");
+        var failurePromise = Once<IRequest>(h => Page.RequestFailed += h, h => Page.RequestFailed -= h);
+        await Page.EvaluateAsync("() => globalThis.controller.abort()");
         var cancelledRequest = await failurePromise;
         Assert.That(cancelledRequest.Failure, Does.Match("cancelled|aborted").IgnoreCase);
         await route.ContinueAsync(); // Should not throw.
     }
 
     [UpstreamTest("RO-065 should override method along with url")]
-    public async Task ShouldOverrideMethodAlongWithUrl(IPage page, Server server)
+    public async Task ShouldOverrideMethodAlongWithUrl()
     {
-        var request = server.WaitForRequest("/empty.html");
-        await page.RouteAsync("**/foo", route =>
+        var request = Server.WaitForRequest("/empty.html");
+        await Page.RouteAsync("**/foo", route =>
         {
             IgnoreErrors(route.ContinueAsync(new()
             {
-                Url = server.EmptyPage,
+                Url = Server.EmptyPage,
                 Method = "POST",
             }));
         });
-        await page.GotoAsync(server.Prefix + "/foo");
+        await Page.GotoAsync(Server.Prefix + "/foo");
         Assert.That((await request).Method, Is.EqualTo("POST"));
     }
 
     [UpstreamTest("RO-066 should amend method on main request")]
-    public async Task ShouldAmendMethodOnMainRequest(IPage page, Server server)
+    public async Task ShouldAmendMethodOnMainRequest()
     {
-        var request = server.WaitForRequest("/empty.html");
-        await page.RouteAsync("**/*", route => route.ContinueAsync(new() { Method = "POST" }));
-        await page.GotoAsync(server.EmptyPage);
+        var request = Server.WaitForRequest("/empty.html");
+        await Page.RouteAsync("**/*", route => route.ContinueAsync(new() { Method = "POST" }));
+        await Page.GotoAsync(Server.EmptyPage);
         Assert.That((await request).Method, Is.EqualTo("POST"));
     }
 
-    public class PostData
+    public class PostData : UpstreamPageTest
     {
         [UpstreamTest("RO-067 should amend post data")]
-        public async Task ShouldAmendPostData(IPage page, Server server)
+        public async Task ShouldAmendPostData()
         {
-            await page.GotoAsync(server.EmptyPage);
-            await page.RouteAsync("**/*", route =>
+            await Page.GotoAsync(Server.EmptyPage);
+            await Page.RouteAsync("**/*", route =>
             {
                 // .NET: postData is a byte[].
                 IgnoreErrors(route.ContinueAsync(new() { PostData = Encoding.UTF8.GetBytes("doggo") }));
             });
             var (serverRequest, _) = await PromiseAll(
-                server.WaitForRequest("/sleep.zzz"),
-                page.EvaluateAsync("() => fetch('/sleep.zzz', { method: 'POST', body: 'birdy' })"));
+                Server.WaitForRequest("/sleep.zzz"),
+                Page.EvaluateAsync("() => fetch('/sleep.zzz', { method: 'POST', body: 'birdy' })"));
             Assert.That(Encoding.UTF8.GetString(await serverRequest.PostBody), Is.EqualTo("doggo"));
         }
 
         [UpstreamTest("RO-068 should compute content-length from post data")]
-        public async Task ShouldComputeContentLengthFromPostData(IPage page, Server server)
+        public async Task ShouldComputeContentLengthFromPostData()
         {
-            await page.GotoAsync(server.EmptyPage);
+            await Page.GotoAsync(Server.EmptyPage);
             var data = new string('a', 7500);
-            await page.RouteAsync("**/*", route =>
+            await Page.RouteAsync("**/*", route =>
             {
                 var headers = route.Request.Headers;
                 headers["content-type"] = "application/json";
@@ -240,73 +240,73 @@ public class PageRequestContinueTests
                 IgnoreErrors(route.ContinueAsync(new() { PostData = Encoding.UTF8.GetBytes(data), Headers = headers }));
             });
             var (serverRequest, _) = await PromiseAll(
-                server.WaitForRequest("/sleep.zzz"),
-                page.EvaluateAsync("() => fetch('/sleep.zzz', { method: 'PATCH', body: 'birdy' })"));
+                Server.WaitForRequest("/sleep.zzz"),
+                Page.EvaluateAsync("() => fetch('/sleep.zzz', { method: 'PATCH', body: 'birdy' })"));
             Assert.That(Encoding.UTF8.GetString(await serverRequest.PostBody), Is.EqualTo(data));
             Assert.That(serverRequest.Headers["content-length"], Is.EqualTo(data.Length.ToString(CultureInfo.InvariantCulture)));
             Assert.That(serverRequest.Headers["content-type"], Is.EqualTo("application/json"));
         }
 
         [UpstreamTest("RO-069 should amend method and post data")]
-        public async Task ShouldAmendMethodAndPostData(IPage page, Server server)
+        public async Task ShouldAmendMethodAndPostData()
         {
-            await page.GotoAsync(server.EmptyPage);
-            await page.RouteAsync("**/*", route =>
+            await Page.GotoAsync(Server.EmptyPage);
+            await Page.RouteAsync("**/*", route =>
             {
                 // .NET: postData is a byte[].
                 IgnoreErrors(route.ContinueAsync(new() { Method = "POST", PostData = Encoding.UTF8.GetBytes("doggo") }));
             });
             var (serverRequest, _) = await PromiseAll(
-                server.WaitForRequest("/sleep.zzz"),
-                page.EvaluateAsync("() => fetch('/sleep.zzz', { method: 'GET' })"));
+                Server.WaitForRequest("/sleep.zzz"),
+                Page.EvaluateAsync("() => fetch('/sleep.zzz', { method: 'GET' })"));
             Assert.That(serverRequest.Method, Is.EqualTo("POST"));
             Assert.That(Encoding.UTF8.GetString(await serverRequest.PostBody), Is.EqualTo("doggo"));
         }
 
         [UpstreamTest("RO-070 should amend utf8 post data")]
-        public async Task ShouldAmendUtf8PostData(IPage page, Server server)
+        public async Task ShouldAmendUtf8PostData()
         {
-            await page.GotoAsync(server.EmptyPage);
-            await page.RouteAsync("**/*", route =>
+            await Page.GotoAsync(Server.EmptyPage);
+            await Page.RouteAsync("**/*", route =>
             {
                 // .NET: postData is a byte[].
                 IgnoreErrors(route.ContinueAsync(new() { PostData = Encoding.UTF8.GetBytes("пушкин") }));
             });
             var (serverRequest, _) = await PromiseAll(
-                server.WaitForRequest("/sleep.zzz"),
-                page.EvaluateAsync("() => fetch('/sleep.zzz', { method: 'POST', body: 'birdy' })"));
+                Server.WaitForRequest("/sleep.zzz"),
+                Page.EvaluateAsync("() => fetch('/sleep.zzz', { method: 'POST', body: 'birdy' })"));
             Assert.That(serverRequest.Method, Is.EqualTo("POST"));
             Assert.That(Encoding.UTF8.GetString(await serverRequest.PostBody), Is.EqualTo("пушкин"));
         }
 
         [UpstreamTest("RO-071 should amend longer post data")]
-        public async Task ShouldAmendLongerPostData(IPage page, Server server)
+        public async Task ShouldAmendLongerPostData()
         {
-            await page.GotoAsync(server.EmptyPage);
-            await page.RouteAsync("**/*", route =>
+            await Page.GotoAsync(Server.EmptyPage);
+            await Page.RouteAsync("**/*", route =>
             {
                 // .NET: postData is a byte[].
                 IgnoreErrors(route.ContinueAsync(new() { PostData = Encoding.UTF8.GetBytes("doggo-is-longer-than-birdy") }));
             });
             var (serverRequest, _) = await PromiseAll(
-                server.WaitForRequest("/sleep.zzz"),
-                page.EvaluateAsync("() => fetch('/sleep.zzz', { method: 'POST', body: 'birdy' })"));
+                Server.WaitForRequest("/sleep.zzz"),
+                Page.EvaluateAsync("() => fetch('/sleep.zzz', { method: 'POST', body: 'birdy' })"));
             Assert.That(serverRequest.Method, Is.EqualTo("POST"));
             Assert.That(Encoding.UTF8.GetString(await serverRequest.PostBody), Is.EqualTo("doggo-is-longer-than-birdy"));
         }
 
         [UpstreamTest("RO-072 should amend binary post data")]
-        public async Task ShouldAmendBinaryPostData(IPage page, Server server)
+        public async Task ShouldAmendBinaryPostData()
         {
-            await page.GotoAsync(server.EmptyPage);
+            await Page.GotoAsync(Server.EmptyPage);
             var arr = Enumerable.Range(0, 256).ToArray();
-            await page.RouteAsync("**/*", route =>
+            await Page.RouteAsync("**/*", route =>
             {
                 IgnoreErrors(route.ContinueAsync(new() { PostData = arr.Select(value => (byte)value).ToArray() }));
             });
             var (serverRequest, _) = await PromiseAll(
-                server.WaitForRequest("/sleep.zzz"),
-                page.EvaluateAsync("() => fetch('/sleep.zzz', { method: 'POST', body: 'birdy' })"));
+                Server.WaitForRequest("/sleep.zzz"),
+                Page.EvaluateAsync("() => fetch('/sleep.zzz', { method: 'POST', body: 'birdy' })"));
             Assert.That(serverRequest.Method, Is.EqualTo("POST"));
             var buffer = await serverRequest.PostBody;
             Assert.That(buffer.Length, Is.EqualTo(arr.Length));
@@ -317,32 +317,32 @@ public class PageRequestContinueTests
         }
 
         [UpstreamTest("RO-073 should use content-type from original request")]
-        public async Task ShouldUseContentTypeFromOriginalRequest(IPage page, Server server, string browserName)
+        public async Task ShouldUseContentTypeFromOriginalRequest()
         {
-            await page.GotoAsync(server.EmptyPage);
+            await Page.GotoAsync(Server.EmptyPage);
             // .NET: postData is a byte[].
-            await page.RouteAsync($"{server.Prefix}/title.html", route => route.ContinueAsync(new() { PostData = Encoding.UTF8.GetBytes("{\"b\":2}") }));
+            await Page.RouteAsync($"{Server.Prefix}/title.html", route => route.ContinueAsync(new() { PostData = Encoding.UTF8.GetBytes("{\"b\":2}") }));
             var (request, _) = await PromiseAll(
-                server.WaitForRequest("/title.html"),
-                page.EvaluateAsync(@"async url => {
+                Server.WaitForRequest("/title.html"),
+                Page.EvaluateAsync(@"async url => {
         await fetch(url, {
           method: 'POST',
           body: '{""a"":1}',
           headers: { 'content-type': 'application/json' },
         });
-      }", $"{server.Prefix}/title.html"));
+      }", $"{Server.Prefix}/title.html"));
             Assert.That(request.Headers["content-type"], Is.EqualTo("application/json"));
             Assert.That(Encoding.UTF8.GetString(await request.PostBody), Is.EqualTo("{\"b\":2}"));
         }
     }
 
     [UpstreamTest("RO-074 should work with Cross-Origin-Opener-Policy")]
-    public async Task ShouldWorkWithCrossOriginOpenerPolicy(IPage page, Server server, string browserName)
+    public async Task ShouldWorkWithCrossOriginOpenerPolicy()
     {
-        Info.Fixme(browserName == "webkit", "https://github.com/microsoft/playwright/issues/8796");
+        Info.Fixme(BrowserName == "webkit", "https://github.com/microsoft/playwright/issues/8796");
         ServerHeaders serverHeaders = null;
         var serverRequests = new List<string>();
-        server.SetRoute("/empty.html", (req, res) =>
+        Server.SetRoute("/empty.html", (req, res) =>
         {
             serverRequests.Add(req.Url);
             serverHeaders ??= req.Headers;
@@ -356,7 +356,7 @@ public class PageRequestContinueTests
         });
 
         var intercepted = new List<string>();
-        await page.RouteAsync("**/*", route =>
+        await Page.RouteAsync("**/*", route =>
         {
             intercepted.Add(route.Request.Url);
             IgnoreErrors(route.ContinueAsync(new()
@@ -369,30 +369,30 @@ public class PageRequestContinueTests
         });
         var requests = new HashSet<IRequest>();
         var events = new List<string>();
-        page.Request += (_, r) =>
+        Page.Request += (_, r) =>
         {
             events.Add("request");
             requests.Add(r);
         };
-        page.RequestFailed += (_, r) =>
+        Page.RequestFailed += (_, r) =>
         {
             events.Add("requestfailed");
             requests.Add(r);
         };
-        page.RequestFinished += (_, r) =>
+        Page.RequestFinished += (_, r) =>
         {
             events.Add("requestfinished");
             requests.Add(r);
         };
-        page.Response += (_, r) =>
+        Page.Response += (_, r) =>
         {
             events.Add("response");
             requests.Add(r.Request);
         };
-        var response = await page.GotoAsync(server.EmptyPage);
-        Assert.That(intercepted, Is.EqualTo(new[] { server.EmptyPage }));
+        var response = await Page.GotoAsync(Server.EmptyPage);
+        Assert.That(intercepted, Is.EqualTo(new[] { Server.EmptyPage }));
         // There should be only one request to the server.
-        if (browserName == "webkit")
+        if (BrowserName == "webkit")
         {
             Assert.That(serverRequests, Is.EqualTo(new[] { "/empty.html", "/empty.html" }));
         }
@@ -401,7 +401,7 @@ public class PageRequestContinueTests
             Assert.That(serverRequests, Is.EqualTo(new[] { "/empty.html" }));
         }
         Assert.That(serverHeaders["foo"], Is.EqualTo("bar"));
-        Assert.That(page.Url, Is.EqualTo(server.EmptyPage));
+        Assert.That(Page.Url, Is.EqualTo(Server.EmptyPage));
         await response.FinishedAsync();
         Assert.That(events, Is.EqualTo(new[] { "request", "response", "requestfinished" }));
         Assert.That(requests.Count, Is.EqualTo(1));
@@ -409,18 +409,18 @@ public class PageRequestContinueTests
     }
 
     [UpstreamTest("RO-075 should not delete the origin header")]
-    public async Task ShouldNotDeleteTheOriginHeader(IPage page, Server server, bool isAndroid)
+    public async Task ShouldNotDeleteTheOriginHeader()
     {
-        Info.Skip(isAndroid, "No cross-process on Android");
+        Info.Skip(IsAndroid, "No cross-process on Android");
 
-        await page.GotoAsync(server.Prefix + "/empty.html");
-        server.SetRoute("/something", (request, response) =>
+        await Page.GotoAsync(Server.Prefix + "/empty.html");
+        Server.SetRoute("/something", (request, response) =>
         {
             response.WriteHead(200, new() { ["Access-Control-Allow-Origin"] = "*" });
             response.End("done");
         });
         string interceptedOrigin = null;
-        await page.RouteAsync(server.CrossProcessPrefix + "/something", async route =>
+        await Page.RouteAsync(Server.CrossProcessPrefix + "/something", async route =>
         {
             var headers = await route.Request.AllHeadersAsync();
             interceptedOrigin = headers["origin"];
@@ -429,21 +429,21 @@ public class PageRequestContinueTests
         });
 
         var (text, serverRequest) = await PromiseAll(
-            page.EvaluateAsync<string>(@"async url => {
+            Page.EvaluateAsync<string>(@"async url => {
       const data = await fetch(url);
       return data.text();
-    }", server.CrossProcessPrefix + "/something"),
-            server.WaitForRequest("/something"));
+    }", Server.CrossProcessPrefix + "/something"),
+            Server.WaitForRequest("/something"));
         Assert.That(text, Is.EqualTo("done"));
-        Assert.That(interceptedOrigin, Is.EqualTo(server.Prefix));
-        Assert.That(serverRequest.Headers["origin"], Is.EqualTo(server.Prefix));
+        Assert.That(interceptedOrigin, Is.EqualTo(Server.Prefix));
+        Assert.That(serverRequest.Headers["origin"], Is.EqualTo(Server.Prefix));
     }
 
     [UpstreamTest("RO-076 should continue preload link requests")]
-    public async Task ShouldContinuePreloadLinkRequests(IPage page, Server server)
+    public async Task ShouldContinuePreloadLinkRequests()
     {
         var intercepted = false;
-        await page.RouteAsync("**/one-style.css", route =>
+        await Page.RouteAsync("**/one-style.css", route =>
         {
             intercepted = true;
             IgnoreErrors(route.ContinueAsync(new()
@@ -455,21 +455,21 @@ public class PageRequestContinueTests
             }));
         });
         var (serverRequest, _) = await PromiseAll(
-            server.WaitForRequest("/one-style.css"),
-            page.GotoAsync(server.Prefix + "/preload.html"));
+            Server.WaitForRequest("/one-style.css"),
+            Page.GotoAsync(Server.Prefix + "/preload.html"));
         Assert.That(serverRequest.Headers["custom"], Is.EqualTo("value"));
-        await page.WaitForFunctionAsync("() => window.preloadedStyles");
+        await Page.WaitForFunctionAsync("() => window.preloadedStyles");
         Assert.That(intercepted, Is.EqualTo(true));
-        var color = await page.EvaluateAsync<string>("() => window.getComputedStyle(document.body).backgroundColor");
+        var color = await Page.EvaluateAsync<string>("() => window.getComputedStyle(document.body).backgroundColor");
         Assert.That(color, Is.EqualTo("rgb(255, 192, 203)"));
     }
 
     [UpstreamTest("RO-077 should respect set-cookie in redirect response")]
-    public async Task ShouldRespectSetCookieInRedirectResponse(IPage page, Server server)
+    public async Task ShouldRespectSetCookieInRedirectResponse()
     {
-        await page.GotoAsync(server.EmptyPage);
-        await page.SetContentAsync("<a href=\"/set-cookie-redirect\">Set cookie</a>");
-        server.SetRoute("/set-cookie-redirect", (request, response) =>
+        await Page.GotoAsync(Server.EmptyPage);
+        await Page.SetContentAsync("<a href=\"/set-cookie-redirect\">Set cookie</a>");
+        Server.SetRoute("/set-cookie-redirect", (request, response) =>
         {
             response.WriteHead(302, new()
             {
@@ -478,32 +478,32 @@ public class PageRequestContinueTests
             });
             response.End();
         });
-        await page.RouteAsync("**/set-cookie-redirect", route =>
+        await Page.RouteAsync("**/set-cookie-redirect", route =>
         {
             IgnoreErrors(route.ContinueAsync(new()
             {
                 Headers = new Dictionary<string, string>(route.Request.Headers),
             }));
         });
-        var serverRequestPromise = server.WaitForRequest("/empty.html");
-        await page.GotoAsync(server.Prefix + "/set-cookie-redirect");
+        var serverRequestPromise = Server.WaitForRequest("/empty.html");
+        await Page.GotoAsync(Server.Prefix + "/set-cookie-redirect");
         var serverRequest = await serverRequestPromise;
         Assert.That(serverRequest.Headers["cookie"], Is.EqualTo("foo=bar"));
-        Assert.That(await page.EvaluateAsync<string>("() => document.cookie"), Is.EqualTo("foo=bar"));
+        Assert.That(await Page.EvaluateAsync<string>("() => document.cookie"), Is.EqualTo("foo=bar"));
     }
 
     [UpstreamTest("RO-078 continue should not propagate cookie override to redirects")]
-    public async Task ContinueShouldNotPropagateCookieOverrideToRedirects(IPage page, Server server, string browserName)
+    public async Task ContinueShouldNotPropagateCookieOverrideToRedirects()
     {
-        server.SetRoute("/set-cookie", (request, response) =>
+        Server.SetRoute("/set-cookie", (request, response) =>
         {
             response.WriteHead(200, new() { ["Set-Cookie"] = "foo=bar;" });
             response.End();
         });
-        await page.GotoAsync(server.Prefix + "/set-cookie");
-        Assert.That(await page.EvaluateAsync<string>("() => document.cookie"), Is.EqualTo("foo=bar"));
-        server.SetRedirect("/redirect", server.Prefix + "/empty.html");
-        await page.RouteAsync("**/redirect", route =>
+        await Page.GotoAsync(Server.Prefix + "/set-cookie");
+        Assert.That(await Page.EvaluateAsync<string>("() => document.cookie"), Is.EqualTo("foo=bar"));
+        Server.SetRedirect("/redirect", Server.Prefix + "/empty.html");
+        await Page.RouteAsync("**/redirect", route =>
         {
             IgnoreErrors(route.ContinueAsync(new()
             {
@@ -514,22 +514,22 @@ public class PageRequestContinueTests
             }));
         });
         var (serverRequest, _) = await PromiseAll(
-            server.WaitForRequest("/empty.html"),
-            page.GotoAsync(server.Prefix + "/redirect"));
+            Server.WaitForRequest("/empty.html"),
+            Page.GotoAsync(Server.Prefix + "/redirect"));
         Assert.That(serverRequest.Headers["cookie"], Is.EqualTo("foo=bar"));
     }
 
     [UpstreamTest("RO-079 continue should not override cookie")]
-    public async Task ContinueShouldNotOverrideCookie(IPage page, Server server)
+    public async Task ContinueShouldNotOverrideCookie()
     {
-        server.SetRoute("/set-cookie", (request, response) =>
+        Server.SetRoute("/set-cookie", (request, response) =>
         {
             response.WriteHead(200, new() { ["Set-Cookie"] = "foo=bar;" });
             response.End();
         });
-        await page.GotoAsync(server.Prefix + "/set-cookie");
-        Assert.That(await page.EvaluateAsync<string>("() => document.cookie"), Is.EqualTo("foo=bar"));
-        await page.RouteAsync("**", route =>
+        await Page.GotoAsync(Server.Prefix + "/set-cookie");
+        Assert.That(await Page.EvaluateAsync<string>("() => document.cookie"), Is.EqualTo("foo=bar"));
+        await Page.RouteAsync("**", route =>
         {
             IgnoreErrors(route.ContinueAsync(new()
             {
@@ -541,104 +541,104 @@ public class PageRequestContinueTests
             }));
         });
         var (serverRequest, _) = await PromiseAll(
-            server.WaitForRequest("/empty.html"),
-            page.GotoAsync(server.EmptyPage));
+            Server.WaitForRequest("/empty.html"),
+            Page.GotoAsync(Server.EmptyPage));
         // Original cookie from the browser's cookie jar should be sent.
         Assert.That(serverRequest.Headers["cookie"], Is.EqualTo("foo=bar"));
         Assert.That(serverRequest.Headers["custom"], Is.EqualTo("value"));
     }
 
     [UpstreamTest("RO-080 continue with headers should send fresh cookie from the browser cookie store")]
-    public async Task ContinueWithHeadersShouldSendFreshCookieFromTheBrowserCookieStore(IPage page, Server server)
+    public async Task ContinueWithHeadersShouldSendFreshCookieFromTheBrowserCookieStore()
     {
-        server.SetRoute("/set-cookie", (request, response) =>
+        Server.SetRoute("/set-cookie", (request, response) =>
         {
             response.WriteHead(200, new() { ["Set-Cookie"] = "foo=v1;" });
             response.End();
         });
-        await page.GotoAsync(server.Prefix + "/set-cookie");
-        Assert.That(await page.EvaluateAsync<string>("() => document.cookie"), Is.EqualTo("foo=v1"));
+        await Page.GotoAsync(Server.Prefix + "/set-cookie");
+        Assert.That(await Page.EvaluateAsync<string>("() => document.cookie"), Is.EqualTo("foo=v1"));
 
-        await page.RouteAsync("**/empty.html", async route =>
+        await Page.RouteAsync("**/empty.html", async route =>
         {
             // Cookie store changes between interception and continuation.
-            await page.Context.AddCookiesAsync(new[] { new Cookie { Name = "foo", Value = "v2", Url = server.Prefix } });
+            await Page.Context.AddCookiesAsync(new[] { new Cookie { Name = "foo", Value = "v2", Url = Server.Prefix } });
             await route.ContinueAsync(new() { Headers = route.Request.Headers });
         });
 
         var (serverRequest, _) = await PromiseAll(
-            server.WaitForRequest("/empty.html"),
-            page.GotoAsync(server.EmptyPage));
+            Server.WaitForRequest("/empty.html"),
+            Page.GotoAsync(Server.EmptyPage));
         // The fresh cookie from the browser cookie store should be sent, not the stale captured value.
         Assert.That(serverRequest.Headers["cookie"], Is.EqualTo("foo=v2"));
     }
 
     [UpstreamTest("RO-081 continue with headers should send fresh cookie after a redirect")]
-    public async Task ContinueWithHeadersShouldSendFreshCookieAfterARedirect(IPage page, Server server)
+    public async Task ContinueWithHeadersShouldSendFreshCookieAfterARedirect()
     {
-        server.SetRoute("/set-cookie", (request, response) =>
+        Server.SetRoute("/set-cookie", (request, response) =>
         {
             response.WriteHead(200, new() { ["Set-Cookie"] = "foo=v1;" });
             response.End();
         });
-        await page.GotoAsync(server.Prefix + "/set-cookie");
-        Assert.That(await page.EvaluateAsync<string>("() => document.cookie"), Is.EqualTo("foo=v1"));
+        await Page.GotoAsync(Server.Prefix + "/set-cookie");
+        Assert.That(await Page.EvaluateAsync<string>("() => document.cookie"), Is.EqualTo("foo=v1"));
 
         // The redirect updates the cookie before bouncing to the final destination.
-        server.SetRoute("/redirect", (request, response) =>
+        Server.SetRoute("/redirect", (request, response) =>
         {
-            response.WriteHead(302, new() { ["Set-Cookie"] = "foo=v2;", ["location"] = server.Prefix + "/empty.html" });
+            response.WriteHead(302, new() { ["Set-Cookie"] = "foo=v2;", ["location"] = Server.Prefix + "/empty.html" });
             response.End();
         });
 
-        await page.RouteAsync("**/redirect", route =>
+        await Page.RouteAsync("**/redirect", route =>
         {
             IgnoreErrors(route.ContinueAsync(new() { Headers = route.Request.Headers }));
         });
 
         var (serverRequest, _) = await PromiseAll(
-            server.WaitForRequest("/empty.html"),
-            page.GotoAsync(server.Prefix + "/redirect"));
+            Server.WaitForRequest("/empty.html"),
+            Page.GotoAsync(Server.Prefix + "/redirect"));
         // The redirected request should carry the cookie updated by the redirect, not the stale captured value.
         Assert.That(serverRequest.Headers["cookie"], Is.EqualTo("foo=v2"));
     }
 
     [UpstreamTest("RO-082 redirect after continue should be able to delete cookie")]
-    public async Task RedirectAfterContinueShouldBeAbleToDeleteCookie(IPage page, Server server)
+    public async Task RedirectAfterContinueShouldBeAbleToDeleteCookie()
     {
-        server.SetRoute("/set-cookie", (request, response) =>
+        Server.SetRoute("/set-cookie", (request, response) =>
         {
             response.WriteHead(200, new() { ["Set-Cookie"] = "foo=bar;" });
             response.End();
         });
-        await page.GotoAsync(server.Prefix + "/set-cookie");
-        Assert.That(await page.EvaluateAsync<string>("() => document.cookie"), Is.EqualTo("foo=bar"));
+        await Page.GotoAsync(Server.Prefix + "/set-cookie");
+        Assert.That(await Page.EvaluateAsync<string>("() => document.cookie"), Is.EqualTo("foo=bar"));
 
-        server.SetRoute("/delete-cookie", (request, response) =>
+        Server.SetRoute("/delete-cookie", (request, response) =>
         {
             response.WriteHead(200, new() { ["Set-Cookie"] = "foo=bar; expires=Thu, 01 Jan 1970 00:00:00 GMT" });
             response.End();
         });
-        server.SetRedirect("/redirect", "/delete-cookie");
-        await page.RouteAsync("**/redirect", route =>
+        Server.SetRedirect("/redirect", "/delete-cookie");
+        await Page.RouteAsync("**/redirect", route =>
         {
             IgnoreErrors(route.ContinueAsync(new()
             {
                 Headers = new Dictionary<string, string>(route.Request.Headers),
             }));
         });
-        await page.GotoAsync(server.Prefix + "/redirect");
+        await Page.GotoAsync(Server.Prefix + "/redirect");
         var (serverRequest, _) = await PromiseAll(
-            server.WaitForRequest("/empty.html"),
-            page.GotoAsync(server.EmptyPage));
+            Server.WaitForRequest("/empty.html"),
+            Page.GotoAsync(Server.EmptyPage));
         Assert.That(serverRequest.Headers["cookie"], Is.Null.Or.Empty);
     }
 
     [UpstreamTest("RO-083 continue should propagate headers to redirects")]
-    public async Task ContinueShouldPropagateHeadersToRedirects(IPage page, Server server)
+    public async Task ContinueShouldPropagateHeadersToRedirects()
     {
-        server.SetRedirect("/redirect", "/empty.html");
-        await page.RouteAsync("**/redirect", route =>
+        Server.SetRedirect("/redirect", "/empty.html");
+        await Page.RouteAsync("**/redirect", route =>
         {
             IgnoreErrors(route.ContinueAsync(new()
             {
@@ -649,18 +649,18 @@ public class PageRequestContinueTests
             }));
         });
         var (serverRequest, _) = await PromiseAll(
-            server.WaitForRequest("/empty.html"),
-            page.GotoAsync(server.Prefix + "/redirect"));
+            Server.WaitForRequest("/empty.html"),
+            Page.GotoAsync(Server.Prefix + "/redirect"));
         Assert.That(serverRequest.Headers["custom"], Is.EqualTo("value"));
     }
 
     [UpstreamTest("RO-084 continue should drop content-length on redirects")]
-    public async Task ContinueShouldDropContentLengthOnRedirects(IPage page, Server server)
+    public async Task ContinueShouldDropContentLengthOnRedirects()
     {
-        await page.GotoAsync(server.EmptyPage);
+        await Page.GotoAsync(Server.EmptyPage);
 
-        server.SetRedirect("/redirect", "/empty.html");
-        await page.RouteAsync("**/redirect", route =>
+        Server.SetRedirect("/redirect", "/empty.html");
+        await Page.RouteAsync("**/redirect", route =>
         {
             IgnoreErrors(route.ContinueAsync(new()
             {
@@ -671,8 +671,8 @@ public class PageRequestContinueTests
             }));
         });
         var (serverRequest, _) = await PromiseAll(
-            server.WaitForRequest("/empty.html"),
-            page.EvaluateAsync("url => fetch(url, { method: 'POST', body: 'foo' })", server.Prefix + "/redirect"));
+            Server.WaitForRequest("/empty.html"),
+            Page.EvaluateAsync("url => fetch(url, { method: 'POST', body: 'foo' })", Server.Prefix + "/redirect"));
         Assert.That(serverRequest.Method, Is.EqualTo("GET"));
         Assert.That(serverRequest.Headers["content-length"], Is.Null);
         Assert.That(serverRequest.Headers["content-type"], Is.Null);
@@ -680,10 +680,10 @@ public class PageRequestContinueTests
     }
 
     [UpstreamTest("RO-085 redirected requests should report overridden headers")]
-    public async Task RedirectedRequestsShouldReportOverriddenHeaders(IPage page, Server server)
+    public async Task RedirectedRequestsShouldReportOverriddenHeaders()
     {
-        server.SetRedirect("/redirect", "/empty.html");
-        await page.RouteAsync("**/redirect", route =>
+        Server.SetRedirect("/redirect", "/empty.html");
+        await Page.RouteAsync("**/redirect", route =>
         {
             var headers = route.Request.Headers;
             headers["custom"] = "value";
@@ -691,26 +691,26 @@ public class PageRequestContinueTests
         });
 
         var (serverRequest, response) = await PromiseAll(
-            server.WaitForRequest("/empty.html"),
-            page.GotoAsync(server.Prefix + "/redirect"));
+            Server.WaitForRequest("/empty.html"),
+            Page.GotoAsync(Server.Prefix + "/redirect"));
         Assert.That(serverRequest.Headers["custom"], Is.EqualTo("value"));
-        Assert.That(response.Request.Url, Is.EqualTo(server.EmptyPage));
+        Assert.That(response.Request.Url, Is.EqualTo(Server.EmptyPage));
         Assert.That(response.Request.Headers["custom"], Is.EqualTo("value"));
         Assert.That((await response.Request.AllHeadersAsync())["custom"], Is.EqualTo("value"));
     }
 
     [UpstreamTest("RO-086 continue should delete headers on redirects")]
     [LocalFixme("dotnet: route.ContinueAsync() with a null header value fails with \"headers[N].value: expected string, got undefined\"; the Node.js client leaves out a header whose value is undefined")]
-    public async Task ContinueShouldDeleteHeadersOnRedirects(IPage page, Server server)
+    public async Task ContinueShouldDeleteHeadersOnRedirects()
     {
-        await page.GotoAsync(server.Prefix + "/empty.html");
-        server.SetRoute("/something", (request, response) =>
+        await Page.GotoAsync(Server.Prefix + "/empty.html");
+        Server.SetRoute("/something", (request, response) =>
         {
             response.WriteHead(200, new() { ["Access-Control-Allow-Origin"] = "*" });
             response.End("done");
         });
-        server.SetRedirect("/redirect", "/something");
-        await page.RouteAsync("**/redirect", route =>
+        Server.SetRedirect("/redirect", "/something");
+        await Page.RouteAsync("**/redirect", route =>
         {
             IgnoreErrors(route.ContinueAsync(new()
             {
@@ -721,31 +721,31 @@ public class PageRequestContinueTests
             }));
         });
         var (text, serverRequest) = await PromiseAll(
-            page.EvaluateAsync<string>(@"async url => {
+            Page.EvaluateAsync<string>(@"async url => {
       const data = await fetch(url, {
         headers: {
           foo: 'a',
         }
       });
       return data.text();
-    }", server.Prefix + "/redirect"),
-            server.WaitForRequest("/something"));
+    }", Server.Prefix + "/redirect"),
+            Server.WaitForRequest("/something"));
         Assert.That(text, Is.EqualTo("done"));
         Assert.That(serverRequest.Headers["foo"], Is.Null.Or.Empty);
     }
 
     [UpstreamTest("RO-087 propagate headers same origin redirect")]
-    public async Task PropagateHeadersSameOriginRedirect(IPage page, Server server)
+    public async Task PropagateHeadersSameOriginRedirect()
     {
-        await page.GotoAsync(server.Prefix + "/empty.html");
+        await Page.GotoAsync(Server.Prefix + "/empty.html");
         var serverRequestPromise = new TaskCompletionSource<ServerRequest>(TaskCreationOptions.RunContinuationsAsynchronously);
-        server.SetRoute("/something", (request, response) =>
+        Server.SetRoute("/something", (request, response) =>
         {
             if (request.Method == "OPTIONS")
             {
                 response.WriteHead(204, new()
                 {
-                    ["Access-Control-Allow-Origin"] = server.Prefix,
+                    ["Access-Control-Allow-Origin"] = Server.Prefix,
                     ["Access-Control-Allow-Credentials"] = "true",
                     ["Access-Control-Allow-Methods"] = "POST, GET, OPTIONS, DELETE",
                     ["Access-Control-Allow-Headers"] = "authorization,cookie,custom",
@@ -757,9 +757,9 @@ public class PageRequestContinueTests
             response.WriteHead(200, new());
             response.End("done");
         });
-        server.SetRedirect("/redirect", "/something");
-        await page.EvaluateAsync("() => document.cookie = 'a=b'");
-        var text = await page.EvaluateAsync<string>(@"async url => {
+        Server.SetRedirect("/redirect", "/something");
+        await Page.EvaluateAsync("() => document.cookie = 'a=b'");
+        var text = await Page.EvaluateAsync<string>(@"async url => {
     const data = await fetch(url, {
       headers: {
         authorization: 'credentials',
@@ -768,7 +768,7 @@ public class PageRequestContinueTests
       credentials: 'include',
     });
     return data.text();
-  }", server.Prefix + "/redirect");
+  }", Server.Prefix + "/redirect");
         Assert.That(text, Is.EqualTo("done"));
         var serverRequest = await serverRequestPromise.Task;
         Assert.That(serverRequest.Headers["authorization"], Is.EqualTo("credentials"));
@@ -777,17 +777,17 @@ public class PageRequestContinueTests
     }
 
     [UpstreamTest("RO-088 propagate headers cross origin")]
-    public async Task PropagateHeadersCrossOrigin(IPage page, Server server)
+    public async Task PropagateHeadersCrossOrigin()
     {
-        await page.GotoAsync(server.Prefix + "/empty.html");
+        await Page.GotoAsync(Server.Prefix + "/empty.html");
         var serverRequestPromise = new TaskCompletionSource<ServerRequest>(TaskCreationOptions.RunContinuationsAsynchronously);
-        server.SetRoute("/something", (request, response) =>
+        Server.SetRoute("/something", (request, response) =>
         {
             if (request.Method == "OPTIONS")
             {
                 response.WriteHead(204, new()
                 {
-                    ["Access-Control-Allow-Origin"] = server.Prefix,
+                    ["Access-Control-Allow-Origin"] = Server.Prefix,
                     ["Access-Control-Allow-Credentials"] = "true",
                     ["Access-Control-Allow-Methods"] = "POST, GET, OPTIONS, DELETE",
                     ["Access-Control-Allow-Headers"] = "authorization,custom",
@@ -798,12 +798,12 @@ public class PageRequestContinueTests
             serverRequestPromise.TrySetResult(request);
             response.WriteHead(200, new()
             {
-                ["Access-Control-Allow-Origin"] = server.Prefix,
+                ["Access-Control-Allow-Origin"] = Server.Prefix,
                 ["Access-Control-Allow-Credentials"] = "true",
             });
             response.End("done");
         });
-        var text = await page.EvaluateAsync<string>(@"async url => {
+        var text = await Page.EvaluateAsync<string>(@"async url => {
     const data = await fetch(url, {
       headers: {
         authorization: 'credentials',
@@ -812,7 +812,7 @@ public class PageRequestContinueTests
       credentials: 'include',
     });
     return data.text();
-  }", server.CrossProcessPrefix + "/something");
+  }", Server.CrossProcessPrefix + "/something");
         Assert.That(text, Is.EqualTo("done"));
         var serverRequest = await serverRequestPromise.Task;
         Assert.That(serverRequest.Headers["authorization"], Is.EqualTo("credentials"));
@@ -820,19 +820,19 @@ public class PageRequestContinueTests
     }
 
     [UpstreamTest("RO-089 propagate headers cross origin redirect")]
-    public async Task PropagateHeadersCrossOriginRedirect(IPage page, Server server, bool isAndroid)
+    public async Task PropagateHeadersCrossOriginRedirect()
     {
-        Info.Fixme(isAndroid, "receives authorization:credentials header");
+        Info.Fixme(IsAndroid, "receives authorization:credentials header");
 
-        await page.GotoAsync(server.Prefix + "/empty.html");
+        await Page.GotoAsync(Server.Prefix + "/empty.html");
         var serverRequestPromise = new TaskCompletionSource<ServerRequest>(TaskCreationOptions.RunContinuationsAsynchronously);
-        server.SetRoute("/something", (request, response) =>
+        Server.SetRoute("/something", (request, response) =>
         {
             if (request.Method == "OPTIONS")
             {
                 response.WriteHead(204, new()
                 {
-                    ["Access-Control-Allow-Origin"] = server.Prefix,
+                    ["Access-Control-Allow-Origin"] = Server.Prefix,
                     ["Access-Control-Allow-Credentials"] = "true",
                     ["Access-Control-Allow-Methods"] = "POST, GET, OPTIONS, DELETE",
                     ["Access-Control-Allow-Headers"] = "authorization,cookie,custom",
@@ -843,18 +843,18 @@ public class PageRequestContinueTests
             serverRequestPromise.TrySetResult(request);
             response.WriteHead(200, new()
             {
-                ["Access-Control-Allow-Origin"] = server.Prefix,
+                ["Access-Control-Allow-Origin"] = Server.Prefix,
                 ["Access-Control-Allow-Credentials"] = "true",
             });
             response.End("done");
         });
-        server.SetRoute("/redirect", (request, response) =>
+        Server.SetRoute("/redirect", (request, response) =>
         {
-            response.WriteHead(301, new() { ["location"] = $"{server.CrossProcessPrefix}/something" });
+            response.WriteHead(301, new() { ["location"] = $"{Server.CrossProcessPrefix}/something" });
             response.End();
         });
-        await page.EvaluateAsync("() => document.cookie = 'a=b'");
-        var text = await page.EvaluateAsync<string>(@"async url => {
+        await Page.EvaluateAsync("() => document.cookie = 'a=b'");
+        var text = await Page.EvaluateAsync<string>(@"async url => {
     const data = await fetch(url, {
       headers: {
         authorization: 'credentials',
@@ -863,7 +863,7 @@ public class PageRequestContinueTests
       credentials: 'include',
     });
     return data.text();
-  }", server.Prefix + "/redirect");
+  }", Server.Prefix + "/redirect");
         Assert.That(text, Is.EqualTo("done"));
         var serverRequest = await serverRequestPromise.Task;
         // Authorization header not propagated to cross-origin redirect.
@@ -873,19 +873,19 @@ public class PageRequestContinueTests
     }
 
     [UpstreamTest("RO-090 propagate headers cross origin redirect after interception")]
-    public async Task PropagateHeadersCrossOriginRedirectAfterInterception(IPage page, Server server, string browserName, bool isAndroid)
+    public async Task PropagateHeadersCrossOriginRedirectAfterInterception()
     {
-        Info.Skip(isAndroid, "No cross-process on Android");
+        Info.Skip(IsAndroid, "No cross-process on Android");
 
-        await page.GotoAsync(server.Prefix + "/empty.html");
+        await Page.GotoAsync(Server.Prefix + "/empty.html");
         var serverRequestPromise = new TaskCompletionSource<ServerRequest>(TaskCreationOptions.RunContinuationsAsynchronously);
-        server.SetRoute("/something", (request, response) =>
+        Server.SetRoute("/something", (request, response) =>
         {
             if (request.Method == "OPTIONS")
             {
                 response.WriteHead(204, new()
                 {
-                    ["Access-Control-Allow-Origin"] = server.Prefix,
+                    ["Access-Control-Allow-Origin"] = Server.Prefix,
                     ["Access-Control-Allow-Credentials"] = "true",
                     ["Access-Control-Allow-Methods"] = "POST, GET, OPTIONS, DELETE",
                     ["Access-Control-Allow-Headers"] = "authorization,cookie,custom",
@@ -896,18 +896,18 @@ public class PageRequestContinueTests
             serverRequestPromise.TrySetResult(request);
             response.WriteHead(200, new()
             {
-                ["Access-Control-Allow-Origin"] = server.Prefix,
+                ["Access-Control-Allow-Origin"] = Server.Prefix,
                 ["Access-Control-Allow-Credentials"] = "true",
             });
             response.End("done");
         });
-        server.SetRoute("/redirect", (request, response) =>
+        Server.SetRoute("/redirect", (request, response) =>
         {
-            response.WriteHead(301, new() { ["location"] = $"{server.CrossProcessPrefix}/something" });
+            response.WriteHead(301, new() { ["location"] = $"{Server.CrossProcessPrefix}/something" });
             response.End();
         });
-        await page.EvaluateAsync("() => document.cookie = 'a=b'");
-        await page.RouteAsync("**/redirect", async route =>
+        await Page.EvaluateAsync("() => document.cookie = 'a=b'");
+        await Page.RouteAsync("**/redirect", async route =>
         {
             await route.ContinueAsync(new()
             {
@@ -918,7 +918,7 @@ public class PageRequestContinueTests
                 },
             });
         });
-        var text = await page.EvaluateAsync<string>(@"async url => {
+        var text = await Page.EvaluateAsync<string>(@"async url => {
     const data = await fetch(url, {
       headers: {
         authorization: 'none',
@@ -926,10 +926,10 @@ public class PageRequestContinueTests
       credentials: 'include',
     });
     return data.text();
-  }", server.Prefix + "/redirect");
+  }", Server.Prefix + "/redirect");
         Assert.That(text, Is.EqualTo("done"));
         var serverRequest = await serverRequestPromise.Task;
-        if (browserName == "webkit")
+        if (BrowserName == "webkit")
         {
             Assert.That(serverRequest.Headers["authorization"], Is.Null.Or.Empty);
         }
@@ -942,39 +942,39 @@ public class PageRequestContinueTests
     }
 
     [UpstreamTest("RO-091 continue should pass on 307 cross-origin redirect")]
-    public async Task ContinueShouldPassOn307CrossOriginRedirect(IPage page, Server server, bool isAndroid)
+    public async Task ContinueShouldPassOn307CrossOriginRedirect()
     {
-        Info.Skip(isAndroid, "No cross-process on Android");
+        Info.Skip(IsAndroid, "No cross-process on Android");
 
-        server.SetRoute("/final", (request, response) =>
+        Server.SetRoute("/final", (request, response) =>
         {
             response.WriteHead(200, new() { ["content-type"] = "text/html" });
             response.End("<!doctype html><title>final</title><p>ok</p>");
         });
         // Cross-origin 307 redirect that preserves the POST method.
-        server.SetRoute("/redirect307", (request, response) =>
+        Server.SetRoute("/redirect307", (request, response) =>
         {
-            response.WriteHead(307, new() { ["location"] = $"{server.Prefix}/final" });
+            response.WriteHead(307, new() { ["location"] = $"{Server.Prefix}/final" });
             response.End();
         });
 
-        await page.GotoAsync(server.Prefix + "/empty.html");
-        await page.SetContentAsync($@"
-    <form id=""f"" method=""POST"" action=""{server.CrossProcessPrefix}/redirect307"">
+        await Page.GotoAsync(Server.Prefix + "/empty.html");
+        await Page.SetContentAsync($@"
+    <form id=""f"" method=""POST"" action=""{Server.CrossProcessPrefix}/redirect307"">
       <input type=""submit"">
     </form>");
 
-        await page.RouteAsync("**/*", route => route.ContinueAsync());
+        await Page.RouteAsync("**/*", route => route.ContinueAsync());
         await PromiseAll(
-            page.WaitForURLAsync($"{server.Prefix}/final"),
-            page.Locator("input").ClickAsync());
-        await Expect(page.Locator("p")).ToHaveTextAsync("ok");
+            Page.WaitForURLAsync($"{Server.Prefix}/final"),
+            Page.Locator("input").ClickAsync());
+        await Expect(Page.Locator("p")).ToHaveTextAsync("ok");
     }
 
     [UpstreamTest("RO-092 should intercept css variable with background url")]
-    public async Task ShouldInterceptCssVariableWithBackgroundUrl(IPage page, Server server)
+    public async Task ShouldInterceptCssVariableWithBackgroundUrl()
     {
-        server.SetRoute("/test.html", (request, response) =>
+        Server.SetRoute("/test.html", (request, response) =>
         {
             response.SetHeader("Content-Type", "text/html");
             response.End(@"
@@ -993,32 +993,32 @@ public class PageRequestContinueTests
         });
         var interceptPromise = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
         var interceptedRequests = 0;
-        await page.RouteAsync(server.Prefix + "/pptr.png", route =>
+        await Page.RouteAsync(Server.Prefix + "/pptr.png", route =>
         {
             ++interceptedRequests;
             interceptPromise.TrySetResult();
             IgnoreErrors(route.ContinueAsync());
         });
-        await page.GotoAsync(server.Prefix + "/test.html");
-        Assert.That(await page.Locator("div").TextContentAsync(), Is.EqualTo("Yo!"));
+        await Page.GotoAsync(Server.Prefix + "/test.html");
+        Assert.That(await Page.Locator("div").TextContentAsync(), Is.EqualTo("Yo!"));
         await interceptPromise.Task;
-        await page.WaitForTimeoutAsync(1000);
+        await Page.WaitForTimeoutAsync(1000);
         Assert.That(interceptedRequests, Is.EqualTo(1));
     }
 
     [UpstreamTest("RO-093 continue should not change multipart/form-data body")]
-    public async Task ContinueShouldNotChangeMultipartFormDataBody(IPage page, Server server, string browserName)
+    public async Task ContinueShouldNotChangeMultipartFormDataBody()
     {
-        await page.GotoAsync(server.EmptyPage);
-        server.SetRoute("/upload", (request, response) =>
+        await Page.GotoAsync(Server.EmptyPage);
+        Server.SetRoute("/upload", (request, response) =>
         {
             response.WriteHead(200, new() { ["Content-Type"] = "text/plain" });
             response.End("done");
         });
         async Task<ServerRequest> sendFormData()
         {
-            var reqPromise = server.WaitForRequest("/upload");
-            var status = await page.EvaluateAsync<int>(@"async () => {
+            var reqPromise = Server.WaitForRequest("/upload");
+            var status = await Page.EvaluateAsync<int>(@"async () => {
       const newFile = new File(['file content'], 'file.txt');
       const formData = new FormData();
       formData.append('file', newFile);
@@ -1034,7 +1034,7 @@ public class PageRequestContinueTests
             return req;
         }
         var reqBefore = await sendFormData();
-        await page.RouteAsync("**/*", async route =>
+        await Page.RouteAsync("**/*", async route =>
         {
             await route.ContinueAsync();
         });
@@ -1052,30 +1052,30 @@ public class PageRequestContinueTests
     }
 
     [UpstreamTest("RO-094 should not forward Host header on cross-origin redirect")]
-    public async Task ShouldNotForwardHostHeaderOnCrossOriginRedirect(IPage page, Server server, string browserName)
+    public async Task ShouldNotForwardHostHeaderOnCrossOriginRedirect()
     {
         const string redirectTargetPath = "/final";
         const string redirectSourcePath = "/redirect";
 
         string redirectedHost = null;
-        server.SetRoute(redirectTargetPath, (req, res) =>
+        Server.SetRoute(redirectTargetPath, (req, res) =>
         {
             redirectedHost = req.Headers["host"];
             res.End("OK");
         });
 
         string firstHost = null;
-        server.SetRoute(redirectSourcePath, (req, res) =>
+        Server.SetRoute(redirectSourcePath, (req, res) =>
         {
             firstHost = req.Headers["host"];
-            res.WriteHead(302, new() { ["location"] = $"{server.CrossProcessPrefix}{redirectTargetPath}" });
+            res.WriteHead(302, new() { ["location"] = $"{Server.CrossProcessPrefix}{redirectTargetPath}" });
             res.End();
         });
 
-        await page.RouteAsync("**/*", async route =>
+        await Page.RouteAsync("**/*", async route =>
         {
             var headers = route.Request.Headers;
-            if (browserName == "firefox")
+            if (BrowserName == "firefox")
             {
                 Assert.That(headers, Does.ContainKey("host"));
             }
@@ -1086,24 +1086,24 @@ public class PageRequestContinueTests
             await route.ContinueAsync(new() { Headers = headers });
         });
 
-        var response = await page.GotoAsync(server.Prefix + redirectSourcePath);
+        var response = await Page.GotoAsync(Server.Prefix + redirectSourcePath);
         Assert.That(response.Status, Is.EqualTo(200));
-        Assert.That(firstHost, Is.EqualTo(new Uri(server.Prefix).Authority));
-        Assert.That(redirectedHost, Is.EqualTo(new Uri(server.CrossProcessPrefix).Authority));
+        Assert.That(firstHost, Is.EqualTo(new Uri(Server.Prefix).Authority));
+        Assert.That(redirectedHost, Is.EqualTo(new Uri(Server.CrossProcessPrefix).Authority));
     }
 
     [UpstreamTest("RO-095 postData should return empty string when overriding body with empty string")]
-    public async Task PostDataShouldReturnEmptyStringWhenOverridingBodyWithEmptyString(IPage page, Server server)
+    public async Task PostDataShouldReturnEmptyStringWhenOverridingBodyWithEmptyString()
     {
-        await page.GotoAsync(server.EmptyPage);
-        await page.RouteAsync("**/*", route =>
+        await Page.GotoAsync(Server.EmptyPage);
+        await Page.RouteAsync("**/*", route =>
         {
             // .NET: postData is a byte[].
             IgnoreErrors(route.ContinueAsync(new() { PostData = Encoding.UTF8.GetBytes("") }));
         });
         var (request, _) = await PromiseAll(
-            page.WaitForRequestAsync("**"),
-            page.EvaluateAsync("({ url }) => fetch(url, { method: 'POST', body: 'original' })", new { url = server.Prefix + "/sleep.zzz" }));
+            Page.WaitForRequestAsync("**"),
+            Page.EvaluateAsync("({ url }) => fetch(url, { method: 'POST', body: 'original' })", new { url = Server.Prefix + "/sleep.zzz" }));
         Assert.That(request.PostData, Is.EqualTo(""));
     }
 }

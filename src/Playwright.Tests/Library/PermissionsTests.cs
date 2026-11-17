@@ -21,7 +21,7 @@ using static Microsoft.Playwright.Tests.Fixtures.Utils;
 namespace Microsoft.Playwright.Tests.Library;
 
 /// <summary>Port of tests/library/permissions.spec.ts.</summary>
-public class PermissionsTests
+public class PermissionsTests : UpstreamBrowserTest
 {
     private static Task<string> GetPermission(IPage page, string name)
     {
@@ -34,26 +34,29 @@ public class PermissionsTests
         return page.EvaluateAsync<string>("name => navigator.permissions.query({ name }).then(result => result.state)", name);
     }
 
-    public class Permissions
+    public class Permissions : UpstreamBrowserTest
     {
-        [BeforeEach]
-        public static void Fixme(string browserName, bool isWindows) => Info.Fixme(browserName == "webkit" && isWindows, "Permissions API is disabled on Windows WebKit");
+        [SetUp]
+        public void Fixme() => Info.Fixme(BrowserName == "webkit" && IsWindows, "Permissions API is disabled on Windows WebKit");
 
         [UpstreamTest("PE-001 should be prompt by default")]
-        public async Task ShouldBePromptByDefault(IPage page, Server server)
+        public async Task ShouldBePromptByDefault()
         {
-            await page.GotoAsync(server.EmptyPage);
+            var page = await PageFixture();
+            await page.GotoAsync(Server.EmptyPage);
             Assert.That(await GetPermission(page, "geolocation"), Is.EqualTo("prompt"));
         }
 
         [UpstreamTest("PE-002 should deny permission when not listed")]
-        public async Task ShouldDenyPermissionWhenNotListed(IPage page, IBrowserContext context, Server server, string browserName, bool isBidi, bool isFrozenWebkit)
+        public async Task ShouldDenyPermissionWhenNotListed()
         {
-            Info.Skip(isFrozenWebkit);
+            var page = await PageFixture();
+            var context = await ContextFixture();
+            Info.Skip(IsFrozenWebkit);
 
-            await page.GotoAsync(server.EmptyPage);
-            await context.GrantPermissionsAsync([], new() { Origin = server.EmptyPage });
-            if (browserName == "webkit")
+            await page.GotoAsync(Server.EmptyPage);
+            await context.GrantPermissionsAsync([], new() { Origin = Server.EmptyPage });
+            if (BrowserName == "webkit")
             {
                 Assert.That(await GetPermission(page, "geolocation"), Is.EqualTo("prompt"));
                 // Since https://github.com/WebKit/WebKit/pull/45470 WebKit only returns actual
@@ -61,7 +64,7 @@ public class PermissionsTests
                 await page.EvaluateAsync("() => navigator.geolocation.getCurrentPosition(() => { })");
                 Assert.That(await GetPermission(page, "geolocation"), Is.EqualTo("denied"));
             }
-            else if (isBidi)
+            else if (IsBidi)
             {
                 Assert.That(await GetPermission(page, "geolocation"), Is.EqualTo("prompt"));
             }
@@ -72,12 +75,14 @@ public class PermissionsTests
         }
 
         [UpstreamTest("PE-003 should fail when bad permission is given")]
-        public async Task ShouldFailWhenBadPermissionIsGiven(IPage page, IBrowserContext context, Server server, bool isBidi)
+        public async Task ShouldFailWhenBadPermissionIsGiven()
         {
-            await page.GotoAsync(server.EmptyPage);
+            var page = await PageFixture();
+            var context = await ContextFixture();
+            await page.GotoAsync(Server.EmptyPage);
             Exception error = null;
-            error = await Catch(() => context.GrantPermissionsAsync(["foo"], new() { Origin = server.EmptyPage }));
-            if (isBidi)
+            error = await Catch(() => context.GrantPermissionsAsync(["foo"], new() { Origin = Server.EmptyPage }));
+            if (IsBidi)
             {
                 Assert.That(error.Message, Does.Contain("Protocol error (permissions.setPermission): invalid argument"));
             }
@@ -88,34 +93,42 @@ public class PermissionsTests
         }
 
         [UpstreamTest("PE-004 should grant geolocation permission when origin is listed")]
-        public async Task ShouldGrantGeolocationPermissionWhenOriginIsListed(IPage page, IBrowserContext context, Server server)
+        public async Task ShouldGrantGeolocationPermissionWhenOriginIsListed()
         {
-            await page.GotoAsync(server.EmptyPage);
-            await context.GrantPermissionsAsync(["geolocation"], new() { Origin = server.EmptyPage });
+            var page = await PageFixture();
+            var context = await ContextFixture();
+            await page.GotoAsync(Server.EmptyPage);
+            await context.GrantPermissionsAsync(["geolocation"], new() { Origin = Server.EmptyPage });
             Assert.That(await GetPermission(page, "geolocation"), Is.EqualTo("granted"));
         }
 
         [UpstreamTest("PE-005 should prompt for geolocation permission when origin is not listed")]
-        public async Task ShouldPromptForGeolocationPermissionWhenOriginIsNotListed(IPage page, IBrowserContext context, Server server)
+        public async Task ShouldPromptForGeolocationPermissionWhenOriginIsNotListed()
         {
-            await page.GotoAsync(server.EmptyPage);
-            await context.GrantPermissionsAsync(["geolocation"], new() { Origin = server.EmptyPage });
-            await page.GotoAsync(server.CrossProcessPrefix + "/empty.html");
+            var page = await PageFixture();
+            var context = await ContextFixture();
+            await page.GotoAsync(Server.EmptyPage);
+            await context.GrantPermissionsAsync(["geolocation"], new() { Origin = Server.EmptyPage });
+            await page.GotoAsync(Server.CrossProcessPrefix + "/empty.html");
             Assert.That(await GetPermission(page, "geolocation"), Is.EqualTo("prompt"));
         }
 
         [UpstreamTest("PE-006 should grant notifications permission when listed")]
-        public async Task ShouldGrantNotificationsPermissionWhenListed(IPage page, IBrowserContext context, Server server)
+        public async Task ShouldGrantNotificationsPermissionWhenListed()
         {
-            await page.GotoAsync(server.EmptyPage);
-            await context.GrantPermissionsAsync(["notifications"], new() { Origin = server.EmptyPage });
+            var page = await PageFixture();
+            var context = await ContextFixture();
+            await page.GotoAsync(Server.EmptyPage);
+            await context.GrantPermissionsAsync(["notifications"], new() { Origin = Server.EmptyPage });
             Assert.That(await GetPermission(page, "notifications"), Is.EqualTo("granted"));
         }
 
         [UpstreamTest("PE-007 should accumulate when adding")]
-        public async Task ShouldAccumulateWhenAdding(IPage page, IBrowserContext context, Server server)
+        public async Task ShouldAccumulateWhenAdding()
         {
-            await page.GotoAsync(server.EmptyPage);
+            var page = await PageFixture();
+            var context = await ContextFixture();
+            await page.GotoAsync(Server.EmptyPage);
             await context.GrantPermissionsAsync(["geolocation"]);
             await context.GrantPermissionsAsync(["notifications"]);
             Assert.That(await GetPermission(page, "geolocation"), Is.EqualTo("granted"));
@@ -123,9 +136,11 @@ public class PermissionsTests
         }
 
         [UpstreamTest("PE-008 should clear permissions")]
-        public async Task ShouldClearPermissions(IPage page, IBrowserContext context, Server server)
+        public async Task ShouldClearPermissions()
         {
-            await page.GotoAsync(server.EmptyPage);
+            var page = await PageFixture();
+            var context = await ContextFixture();
+            await page.GotoAsync(Server.EmptyPage);
             await context.GrantPermissionsAsync(["geolocation"]);
             await context.ClearPermissionsAsync();
             await context.GrantPermissionsAsync(["notifications"]);
@@ -134,39 +149,45 @@ public class PermissionsTests
         }
 
         [UpstreamTest("PE-009 should grant permission when listed for all domains")]
-        public async Task ShouldGrantPermissionWhenListedForAllDomains(IPage page, IBrowserContext context, Server server)
+        public async Task ShouldGrantPermissionWhenListedForAllDomains()
         {
-            await page.GotoAsync(server.EmptyPage);
+            var page = await PageFixture();
+            var context = await ContextFixture();
+            await page.GotoAsync(Server.EmptyPage);
             await context.GrantPermissionsAsync(["geolocation"]);
             Assert.That(await GetPermission(page, "geolocation"), Is.EqualTo("granted"));
         }
 
         [UpstreamTest("PE-010 should grant permission when creating context")]
-        public async Task ShouldGrantPermissionWhenCreatingContext(Server server, IBrowser browser, BrowserNewContextOptions contextOptions)
+        public async Task ShouldGrantPermissionWhenCreatingContext()
         {
-            var context = await browser.NewContextAsync(new(contextOptions) { Permissions = ["geolocation"] });
+            var context = await Browser.NewContextAsync(new(ContextOptions()) { Permissions = ["geolocation"] });
             var page = await context.NewPageAsync();
-            await page.GotoAsync(server.EmptyPage);
+            await page.GotoAsync(Server.EmptyPage);
             Assert.That(await GetPermission(page, "geolocation"), Is.EqualTo("granted"));
             await context.CloseAsync();
         }
 
         [UpstreamTest("PE-011 should reset permissions")]
-        public async Task ShouldResetPermissions(IPage page, IBrowserContext context, Server server)
+        public async Task ShouldResetPermissions()
         {
-            await page.GotoAsync(server.EmptyPage);
-            await context.GrantPermissionsAsync(["geolocation"], new() { Origin = server.EmptyPage });
+            var page = await PageFixture();
+            var context = await ContextFixture();
+            await page.GotoAsync(Server.EmptyPage);
+            await context.GrantPermissionsAsync(["geolocation"], new() { Origin = Server.EmptyPage });
             Assert.That(await GetPermission(page, "geolocation"), Is.EqualTo("granted"));
             await context.ClearPermissionsAsync();
             Assert.That(await GetPermission(page, "geolocation"), Is.EqualTo("prompt"));
         }
 
         [UpstreamTest("PE-012 should trigger permission onchange")]
-        public async Task ShouldTriggerPermissionOnchange(IPage page, IBrowserContext context, Server server, string browserName, bool isBidi)
+        public async Task ShouldTriggerPermissionOnchange()
         {
-            Info.Fixme(browserName == "webkit");
+            var page = await PageFixture();
+            var context = await ContextFixture();
+            Info.Fixme(BrowserName == "webkit");
 
-            await page.GotoAsync(server.EmptyPage);
+            await page.GotoAsync(Server.EmptyPage);
             await page.EvaluateAsync(@"() => {
       window['events'] = [];
       return navigator.permissions.query({ name: 'geolocation' }).then(function(result) {
@@ -178,13 +199,13 @@ public class PermissionsTests
     }");
             var expectedEvents = new List<string> { "prompt" };
             Assert.That(await page.EvaluateAsync<string[]>("() => window['events']"), Is.EqualTo(expectedEvents));
-            await context.GrantPermissionsAsync([], new() { Origin = server.EmptyPage });
-            if (!isBidi)
+            await context.GrantPermissionsAsync([], new() { Origin = Server.EmptyPage });
+            if (!IsBidi)
             {
                 expectedEvents.Add("denied");
             }
             Assert.That(await page.EvaluateAsync<string[]>("() => window['events']"), Is.EqualTo(expectedEvents));
-            await context.GrantPermissionsAsync(["geolocation"], new() { Origin = server.EmptyPage });
+            await context.GrantPermissionsAsync(["geolocation"], new() { Origin = Server.EmptyPage });
             expectedEvents.Add("granted");
             Assert.That(await page.EvaluateAsync<string[]>("() => window['events']"), Is.EqualTo(expectedEvents));
             await context.ClearPermissionsAsync();
@@ -193,22 +214,22 @@ public class PermissionsTests
         }
 
         [UpstreamTest("PE-013 should isolate permissions between browser contexts")]
-        public async Task ShouldIsolatePermissionsBetweenBrowserContexts(Server server, IBrowser browser, string browserName, bool isBidi, bool isFrozenWebkit, BrowserNewContextOptions contextOptions)
+        public async Task ShouldIsolatePermissionsBetweenBrowserContexts()
         {
-            Info.Skip(isFrozenWebkit);
+            Info.Skip(IsFrozenWebkit);
 
-            var context = await browser.NewContextAsync(contextOptions);
+            var context = await Browser.NewContextAsync(ContextOptions());
             var page = await context.NewPageAsync();
-            await page.GotoAsync(server.EmptyPage);
-            var otherContext = await browser.NewContextAsync(contextOptions);
+            await page.GotoAsync(Server.EmptyPage);
+            var otherContext = await Browser.NewContextAsync(ContextOptions());
             var otherPage = await otherContext.NewPageAsync();
-            await otherPage.GotoAsync(server.EmptyPage);
+            await otherPage.GotoAsync(Server.EmptyPage);
             Assert.That(await GetPermission(page, "geolocation"), Is.EqualTo("prompt"));
             Assert.That(await GetPermission(otherPage, "geolocation"), Is.EqualTo("prompt"));
 
-            await context.GrantPermissionsAsync([], new() { Origin = server.EmptyPage });
-            await otherContext.GrantPermissionsAsync(["geolocation"], new() { Origin = server.EmptyPage });
-            if (browserName == "webkit")
+            await context.GrantPermissionsAsync([], new() { Origin = Server.EmptyPage });
+            await otherContext.GrantPermissionsAsync(["geolocation"], new() { Origin = Server.EmptyPage });
+            if (BrowserName == "webkit")
             {
                 Assert.That(await GetPermission(page, "geolocation"), Is.EqualTo("prompt"));
                 // Since https://github.com/WebKit/WebKit/pull/45470 WebKit only returns actual
@@ -216,7 +237,7 @@ public class PermissionsTests
                 await page.EvaluateAsync("() => navigator.geolocation.getCurrentPosition(() => { })");
                 Assert.That(await GetPermission(page, "geolocation"), Is.EqualTo("denied"));
             }
-            else if (isBidi)
+            else if (IsBidi)
             {
                 Assert.That(await GetPermission(page, "geolocation"), Is.EqualTo("prompt"));
             }
@@ -227,7 +248,7 @@ public class PermissionsTests
             Assert.That(await GetPermission(otherPage, "geolocation"), Is.EqualTo("granted"));
 
             await context.ClearPermissionsAsync();
-            if (browserName == "webkit")
+            if (BrowserName == "webkit")
             {
                 // Since https://github.com/WebKit/WebKit/pull/45470 WebKit returns the cached
                 // permission value, if the geolocation API has been accessed.
@@ -238,7 +259,7 @@ public class PermissionsTests
                 // Geolocation API in the new page in the same context has not been accessed yet,
                 // so the permission status should be prompt.
                 var page2 = await context.NewPageAsync();
-                await page2.GotoAsync(server.EmptyPage);
+                await page2.GotoAsync(Server.EmptyPage);
                 Assert.That(await GetPermission(page2, "geolocation"), Is.EqualTo("prompt"));
                 await page2.CloseAsync();
             }
@@ -253,18 +274,20 @@ public class PermissionsTests
     }
 
     [UpstreamTest("PE-014 should support clipboard read")]
-    public async Task ShouldSupportClipboardRead(IPage page, IBrowserContext context, Server server, string browserName, bool isWindows, bool isHeadlessShell)
+    public async Task ShouldSupportClipboardRead()
     {
-        Info.Fixme(browserName == "firefox", "No such permissions (requires flag) in Firefox");
+        var page = await PageFixture();
+        var context = await ContextFixture();
+        Info.Fixme(BrowserName == "firefox", "No such permissions (requires flag) in Firefox");
 
-        await page.GotoAsync(server.EmptyPage);
+        await page.GotoAsync(Server.EmptyPage);
         // There is no 'clipboard-read' permission in WebKit Web API.
-        if (browserName != "webkit")
+        if (BrowserName != "webkit")
         {
             Assert.That(await GetPermission(page, "clipboard-read"), Is.EqualTo("prompt"));
         }
 
-        if (isHeadlessShell)
+        if (IsHeadlessShell)
         {
             // Chromium (but not headless-shell) shows a dialog and does not resolve the promise.
             var error = await Catch(() => page.EvaluateAsync("() => navigator.clipboard.readText()"));
@@ -272,12 +295,12 @@ public class PermissionsTests
         }
 
         await context.GrantPermissionsAsync(["clipboard-read"]);
-        if (browserName != "webkit")
+        if (BrowserName != "webkit")
         {
             Assert.That(await GetPermission(page, "clipboard-read"), Is.EqualTo("granted"));
         }
         // There is no 'clipboard-write' permission in WebKit Web API.
-        if (browserName == "chromium")
+        if (BrowserName == "chromium")
         {
             await context.GrantPermissionsAsync(["clipboard-write"]);
         }
@@ -286,28 +309,28 @@ public class PermissionsTests
     }
 
     [UpstreamTest("PE-015 should isolate the headless clipboard from the operating system")]
-    public async Task ShouldIsolateTheHeadlessClipboardFromTheOperatingSystem(IBrowserType browserType, Server server, string browserName, bool isFrozenWebkit, BrowserTypeLaunchOptions launchOptions, BrowserNewContextOptions contextOptions)
+    public async Task ShouldIsolateTheHeadlessClipboardFromTheOperatingSystem()
     {
-        Info.Skip(isFrozenWebkit, "needs recent webkit");
+        Info.Skip(IsFrozenWebkit, "needs recent webkit");
 
         // Each headless browser gets its own clipboard, so neither can see the clipboard of the operating system nor of another browser.
-        var browser1 = await browserType.LaunchAsync(new(launchOptions) { Headless = true });
-        var browser2 = await browserType.LaunchAsync(new(launchOptions) { Headless = true });
+        var browser1 = await BrowserType.LaunchAsync(new(LaunchOptions()) { Headless = true });
+        var browser2 = await BrowserType.LaunchAsync(new(LaunchOptions()) { Headless = true });
         // .NET: the results of PromiseAll are an array.
         var pages = await PromiseAll(new[] { browser1, browser2 }.Select(async browser =>
         {
-            var context = await browser.NewContextAsync(contextOptions);
+            var context = await browser.NewContextAsync(ContextOptions());
             // There is no 'clipboard-write' permission in WebKit Web API and no clipboard permission at all in Firefox.
-            if (browserName == "chromium")
+            if (BrowserName == "chromium")
             {
                 await context.GrantPermissionsAsync(["clipboard-read", "clipboard-write"]);
             }
-            else if (browserName == "webkit")
+            else if (BrowserName == "webkit")
             {
                 await context.GrantPermissionsAsync(["clipboard-read"]);
             }
             var page = await context.NewPageAsync();
-            await page.GotoAsync(server.EmptyPage);
+            await page.GotoAsync(Server.EmptyPage);
             return page;
         }));
         var (page1, page2) = (pages[0], pages[1]);
@@ -324,26 +347,28 @@ public class PermissionsTests
     }
 
     [UpstreamTest("PE-016 storage access")]
-    public async Task StorageAccess(IPage page, IBrowserContext context, Server server, string browserName)
+    public async Task StorageAccess()
     {
-        Info.Skip(browserName != "chromium", "chromium-only api");
+        var page = await PageFixture();
+        var context = await ContextFixture();
+        Info.Skip(BrowserName != "chromium", "chromium-only api");
 
         await context.GrantPermissionsAsync(["storage-access"]);
         Assert.That(await GetPermission(page, "storage-access"), Is.EqualTo("granted"));
-        server.SetRoute("/set-cookie.html", (req, res) =>
+        Server.SetRoute("/set-cookie.html", (req, res) =>
         {
             res.SetHeader("Set-Cookie", "name=value; Path=/; SameSite=Strict; Secure");
             res.End();
         });
-        server.SetRoute("/my-frame.html", (req, res) =>
+        Server.SetRoute("/my-frame.html", (req, res) =>
         {
             res.SetHeader("Content-type", "text/html");
-            res.End($"<iframe src=\"{server.CrossProcessPrefix + "/empty.html"}\"></iframe>");
+            res.End($"<iframe src=\"{Server.CrossProcessPrefix + "/empty.html"}\"></iframe>");
         });
 
         // Navigate once to the domain as top level.
-        await page.GotoAsync(server.CrossProcessPrefix + "/set-cookie.html");
-        await page.GotoAsync(server.Prefix + "/my-frame.html");
+        await page.GotoAsync(Server.CrossProcessPrefix + "/set-cookie.html");
+        await page.GotoAsync(Server.Prefix + "/my-frame.html");
 
         var frame = page.Frames[1];
         Assert.That(await GetPermission(frame, "storage-access"), Is.EqualTo("granted"));
@@ -352,21 +377,22 @@ public class PermissionsTests
         Assert.That(await frame.EvaluateAsync<bool>("() => document.hasStorageAccess()"), Is.EqualTo(true));
     }
 
-    public class Describe
+    public class Describe : UpstreamBrowserTest
     {
         // Secure context
         // it.use({ ignoreHTTPSErrors: true, });
-        [Fixture]
-        public static BrowserNewContextOptions ContextOptions(BrowserNewContextOptions contextOptions) => new(contextOptions) { IgnoreHTTPSErrors = true };
+        public override BrowserNewContextOptions ContextOptions() => new(base.ContextOptions()) { IgnoreHTTPSErrors = true };
 
         [UpstreamTest("PE-017 should be able to use the local-fonts API")]
-        public async Task ShouldBeAbleToUseTheLocalFontsAPI(IPage page, IBrowserContext context, Server httpsServer, string browserName, string channel, bool headless)
+        public async Task ShouldBeAbleToUseTheLocalFontsAPI()
         {
-            Info.Skip(browserName != "chromium", "chromium-only api");
-            Info.Skip(!string.IsNullOrEmpty(channel) && channel.StartsWith("msedge", StringComparison.Ordinal), "always times out in edge");
-            Info.Fixme(!headless, "times out in headed");
+            var page = await PageFixture();
+            var context = await ContextFixture();
+            Info.Skip(BrowserName != "chromium", "chromium-only api");
+            Info.Skip(!string.IsNullOrEmpty(Channel) && Channel.StartsWith("msedge", StringComparison.Ordinal), "always times out in edge");
+            Info.Fixme(!Headless, "times out in headed");
 
-            await page.GotoAsync(httpsServer.EmptyPage);
+            await page.GotoAsync(HttpsServer.EmptyPage);
             Assert.That(await GetPermission(page, "local-fonts"), Is.EqualTo("prompt"));
             await context.GrantPermissionsAsync(["local-fonts"]);
             Assert.That(await GetPermission(page, "local-fonts"), Is.EqualTo("granted"));
@@ -375,17 +401,19 @@ public class PermissionsTests
     }
 
     [UpstreamTest("PE-018 local network request is allowed from public origin")]
-    public async Task LocalNetworkRequestIsAllowedFromPublicOrigin(IPage page, IBrowserContext context, Server server, string browserName, string channel, int browserMajorVersion)
+    public async Task LocalNetworkRequestIsAllowedFromPublicOrigin()
     {
-        Info.Skip(browserName == "webkit");
-        Info.Skip(browserName == "chromium" && browserMajorVersion < 145, "local-network-access permission support has changed between versions");
+        var page = await PageFixture();
+        var context = await ContextFixture();
+        Info.Skip(BrowserName == "webkit");
+        Info.Skip(BrowserName == "chromium" && BrowserMajorVersion < 145, "local-network-access permission support has changed between versions");
 
-        if (browserName == "chromium" || browserName == "firefox")
+        if (BrowserName == "chromium" || BrowserName == "firefox")
         {
             await context.GrantPermissionsAsync(["local-network-access"]);
         }
         var serverRequests = new List<string>();
-        server.SetRoute("/cors", (req, res) =>
+        Server.SetRoute("/cors", (req, res) =>
         {
             serverRequests.Add($"{req.Method} {req.Url}");
             if (req.Method == "OPTIONS")
@@ -422,7 +450,7 @@ public class PermissionsTests
       }
     });
     return await response.text();
-  }", server.CrossProcessPrefix + "/cors");
+  }", Server.CrossProcessPrefix + "/cors");
         }
         catch (Exception e)
         {
@@ -436,31 +464,33 @@ public class PermissionsTests
         }));
         Assert.That(clientRequests, Is.EqualTo(new[]
         {
-            $"POST {server.CrossProcessPrefix}/cors",
+            $"POST {Server.CrossProcessPrefix}/cors",
         }));
     }
 
     [UpstreamTest("PE-019 can request screen-wake-lock")]
-    public async Task CanRequestScreenWakeLock(IPage page, IBrowserContext context)
+    public async Task CanRequestScreenWakeLock()
     {
+        var page = await PageFixture();
+        var context = await ContextFixture();
         await context.GrantPermissionsAsync(["screen-wake-lock"]);
         await page.RouteAsync("**/*", route => route.FulfillAsync(new() { Status = 200, Body = "<div>Hello there!</div>", ContentType = "text/html" }));
         await page.GotoAsync("https://example.com");
         await page.EvaluateAsync("() => navigator.wakeLock.request('screen')");
     }
 
-    public class CameraAndMicrophone
+    public class CameraAndMicrophone : UpstreamBrowserTest
     {
         // WebKit exposes deterministic mock capture devices; capture is gated on the
         // 'camera'/'microphone' permissions. Chromium needs --use-fake-device-for-media-stream
         // and Firefox has no camera/microphone permission mapping, so scope to WebKit.
-        [BeforeEach]
-        public static void Skip(string browserName) => Info.Skip(browserName != "webkit", "WebKit mock-capture-device based test");
+        [SetUp]
+        public void Skip() => Info.Skip(BrowserName != "webkit", "WebKit mock-capture-device based test");
 
         // Native Windows WebKit is built without a media-capture backend, so getUserMedia is
         // unavailable there; WSL runs the Linux build, which does have mock capture.
-        [BeforeEach]
-        public static void Skip2(bool isWindows, string channel) => Info.Skip(isWindows && channel != "webkit-wsl", "WebKit has no media capture on Windows");
+        [SetUp]
+        public void Skip2() => Info.Skip(IsWindows && Channel != "webkit-wsl", "WebKit has no media capture on Windows");
 
         private static async Task<object> GetUserMedia(IPage page, object constraints)
         {
@@ -478,12 +508,14 @@ public class PermissionsTests
         }
 
         [UpstreamTest("PE-020 should capture when camera and microphone are granted")]
-        public async Task ShouldCaptureWhenCameraAndMicrophoneAreGranted(IPage page, IBrowserContext context, Server server, bool isFrozenWebkit)
+        public async Task ShouldCaptureWhenCameraAndMicrophoneAreGranted()
         {
-            Info.Skip(isFrozenWebkit, "Mock capture device support requires a newer WebKit build");
+            var page = await PageFixture();
+            var context = await ContextFixture();
+            Info.Skip(IsFrozenWebkit, "Mock capture device support requires a newer WebKit build");
 
-            await context.GrantPermissionsAsync(["camera", "microphone"], new() { Origin = server.Prefix });
-            await page.GotoAsync(server.EmptyPage);
+            await context.GrantPermissionsAsync(["camera", "microphone"], new() { Origin = Server.Prefix });
+            await page.GotoAsync(Server.EmptyPage);
             ExpectToEqual(await GetUserMedia(page, new { video = true, audio = true }), new
             {
                 tracks = new[]
@@ -495,21 +527,24 @@ public class PermissionsTests
         }
 
         [UpstreamTest("PE-021 should reject when no permission is granted")]
-        public async Task ShouldRejectWhenNoPermissionIsGranted(IPage page, Server server, bool isFrozenWebkit)
+        public async Task ShouldRejectWhenNoPermissionIsGranted()
         {
-            Info.Skip(isFrozenWebkit, "Mock capture device support requires a newer WebKit build");
+            var page = await PageFixture();
+            Info.Skip(IsFrozenWebkit, "Mock capture device support requires a newer WebKit build");
 
-            await page.GotoAsync(server.EmptyPage);
+            await page.GotoAsync(Server.EmptyPage);
             ExpectToEqual(await GetUserMedia(page, new { video = true, audio = true }), new { error = "NotAllowedError" });
         }
 
         [UpstreamTest("PE-022 should gate audio and video independently")]
-        public async Task ShouldGateAudioAndVideoIndependently(IPage page, IBrowserContext context, Server server, bool isFrozenWebkit)
+        public async Task ShouldGateAudioAndVideoIndependently()
         {
-            Info.Skip(isFrozenWebkit, "Mock capture device support requires a newer WebKit build");
+            var page = await PageFixture();
+            var context = await ContextFixture();
+            Info.Skip(IsFrozenWebkit, "Mock capture device support requires a newer WebKit build");
 
-            await context.GrantPermissionsAsync(["camera"], new() { Origin = server.Prefix });
-            await page.GotoAsync(server.EmptyPage);
+            await context.GrantPermissionsAsync(["camera"], new() { Origin = Server.Prefix });
+            await page.GotoAsync(Server.EmptyPage);
             // Camera-only request is allowed.
             ExpectToEqual(await GetUserMedia(page, new { video = true }), new { tracks = new[] { new { kind = "video", live = true } } });
             // Microphone request is rejected because it was not granted.
@@ -517,12 +552,14 @@ public class PermissionsTests
         }
 
         [UpstreamTest("PE-023 should stop capturing after permissions are cleared")]
-        public async Task ShouldStopCapturingAfterPermissionsAreCleared(IPage page, IBrowserContext context, Server server, bool isFrozenWebkit)
+        public async Task ShouldStopCapturingAfterPermissionsAreCleared()
         {
-            Info.Skip(isFrozenWebkit, "Mock capture device support requires a newer WebKit build");
+            var page = await PageFixture();
+            var context = await ContextFixture();
+            Info.Skip(IsFrozenWebkit, "Mock capture device support requires a newer WebKit build");
 
-            await context.GrantPermissionsAsync(["camera"], new() { Origin = server.Prefix });
-            await page.GotoAsync(server.EmptyPage);
+            await context.GrantPermissionsAsync(["camera"], new() { Origin = Server.Prefix });
+            await page.GotoAsync(Server.EmptyPage);
             ExpectToEqual(await GetUserMedia(page, new { video = true }), new { tracks = new[] { new { kind = "video", live = true } } });
             await context.ClearPermissionsAsync();
             ExpectToEqual(await GetUserMedia(page, new { video = true }), new { error = "NotAllowedError" });

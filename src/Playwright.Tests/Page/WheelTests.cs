@@ -21,17 +21,17 @@ using static Microsoft.Playwright.Tests.Fixtures.Utils;
 namespace Microsoft.Playwright.Tests.Page;
 
 /// <summary>Port of tests/page/wheel.spec.ts.</summary>
-public class WheelTests
+public class WheelTests : UpstreamPageTest
 {
-    [BeforeEach]
-    public static void Skip(bool isAndroid) => Info.Skip(isAndroid);
+    [SetUp]
+    public void Skip() => Info.Skip(IsAndroid);
 
     private static bool ignoreDelta = false;
 
-    [BeforeAll]
-    public static void BeforeAll(string browserName, bool isElectron, string platform)
+    [OneTimeSetUp]
+    public static void BeforeAll()
     {
-        if (((browserName == "chromium") || isElectron) && platform == "darwin")
+        if (((BrowserName == "chromium") || IsElectron) && Platform == "darwin")
         {
             // Chromium reports deltaX/deltaY scaled by host device scale factor.
             // https://bugs.chromium.org/p/chromium/issues/detail?id=1324819
@@ -61,14 +61,14 @@ public class WheelTests
     }
 
     [UpstreamTest("MO-017 should dispatch wheel events @smoke")]
-    public async Task ShouldDispatchWheelEvents(IPage page, Server server)
+    public async Task ShouldDispatchWheelEvents()
     {
-        await page.SetContentAsync("<div style=\"width: 5000px; height: 5000px;\"></div>");
-        await page.Mouse.MoveAsync(50, 60);
-        await ListenForWheelEvents(page, "div");
-        await page.Mouse.WheelAsync(0, 100);
-        await page.WaitForFunctionAsync("window.scrollY === 100");
-        await ExpectEvent(page, new()
+        await Page.SetContentAsync("<div style=\"width: 5000px; height: 5000px;\"></div>");
+        await Page.Mouse.MoveAsync(50, 60);
+        await ListenForWheelEvents(Page, "div");
+        await Page.Mouse.WheelAsync(0, 100);
+        await Page.WaitForFunctionAsync("window.scrollY === 100");
+        await ExpectEvent(Page, new()
         {
             ["deltaX"] = 0,
             ["deltaY"] = 100,
@@ -83,19 +83,19 @@ public class WheelTests
     }
 
     [UpstreamTest("MO-018 should dispatch wheel events after popup was opened @smoke")]
-    public async Task ShouldDispatchWheelEventsAfterPopupWasOpened(IPage page, Server server)
+    public async Task ShouldDispatchWheelEventsAfterPopupWasOpened()
     {
-        await page.SetContentAsync(@"
+        await Page.SetContentAsync(@"
     <div style=""width: 5000px; height: 5000px;""></div>
   ");
-        await page.Mouse.MoveAsync(50, 60);
-        await ListenForWheelEvents(page, "div");
+        await Page.Mouse.MoveAsync(50, 60);
+        await ListenForWheelEvents(Page, "div");
         await PromiseAll(
-            page.WaitForPopupAsync(),
-            page.EvaluateAsync("() => window.open('')"));
-        await page.Mouse.WheelAsync(0, 100);
-        await page.WaitForFunctionAsync("window.scrollY === 100");
-        await ExpectEvent(page, new()
+            Page.WaitForPopupAsync(),
+            Page.EvaluateAsync("() => window.open('')"));
+        await Page.Mouse.WheelAsync(0, 100);
+        await Page.WaitForFunctionAsync("window.scrollY === 100");
+        await ExpectEvent(Page, new()
         {
             ["deltaX"] = 0,
             ["deltaY"] = 100,
@@ -110,9 +110,9 @@ public class WheelTests
     }
 
     [UpstreamTest("MO-019 should dispatch wheel event on svg element")]
-    public async Task ShouldDispatchWheelEventOnSvgElement(IPage page, string browserName, bool headless, bool isLinux)
+    public async Task ShouldDispatchWheelEventOnSvgElement()
     {
-        await page.SetContentAsync(@"
+        await Page.SetContentAsync(@"
     <body>
       <svg class=""scroll-box""></svg>
     </body>
@@ -126,11 +126,11 @@ public class WheelTests
         height: 200px;
       }
     </style>");
-        await ListenForWheelEvents(page, "svg");
-        await page.Mouse.MoveAsync(100, 100);
-        await page.Mouse.WheelAsync(0, 100);
-        await page.WaitForFunctionAsync("!!window.lastEvent");
-        await ExpectEvent(page, new()
+        await ListenForWheelEvents(Page, "svg");
+        await Page.Mouse.MoveAsync(100, 100);
+        await Page.Mouse.WheelAsync(0, 100);
+        await Page.WaitForFunctionAsync("!!window.lastEvent");
+        await ExpectEvent(Page, new()
         {
             ["deltaX"] = 0,
             ["deltaY"] = 100,
@@ -145,23 +145,23 @@ public class WheelTests
     }
 
     [UpstreamTest("MO-020 should scroll when nobody is listening")]
-    public async Task ShouldScrollWhenNobodyIsListening(IPage page, Server server)
+    public async Task ShouldScrollWhenNobodyIsListening()
     {
-        await page.GotoAsync(server.Prefix + "/input/scrollable.html");
-        await page.Mouse.MoveAsync(50, 60);
-        await page.Mouse.WheelAsync(0, 100);
-        await page.WaitForFunctionAsync("window.scrollY === 100");
+        await Page.GotoAsync(Server.Prefix + "/input/scrollable.html");
+        await Page.Mouse.MoveAsync(50, 60);
+        await Page.Mouse.WheelAsync(0, 100);
+        await Page.WaitForFunctionAsync("window.scrollY === 100");
     }
 
     [UpstreamTest("MO-021 should set the modifiers")]
-    public async Task ShouldSetTheModifiers(IPage page)
+    public async Task ShouldSetTheModifiers()
     {
-        await page.SetContentAsync("<div style=\"width: 5000px; height: 5000px;\"></div>");
-        await page.Mouse.MoveAsync(50, 60);
-        await ListenForWheelEvents(page, "div");
-        await page.Keyboard.DownAsync("Shift");
-        await page.Mouse.WheelAsync(0, 100);
-        await ExpectEvent(page, new()
+        await Page.SetContentAsync("<div style=\"width: 5000px; height: 5000px;\"></div>");
+        await Page.Mouse.MoveAsync(50, 60);
+        await ListenForWheelEvents(Page, "div");
+        await Page.Keyboard.DownAsync("Shift");
+        await Page.Mouse.WheelAsync(0, 100);
+        await ExpectEvent(Page, new()
         {
             ["deltaX"] = 0,
             ["deltaY"] = 100,
@@ -176,13 +176,13 @@ public class WheelTests
     }
 
     [UpstreamTest("MO-022 should scroll horizontally")]
-    public async Task ShouldScrollHorizontally(IPage page)
+    public async Task ShouldScrollHorizontally()
     {
-        await page.SetContentAsync("<div style=\"width: 5000px; height: 5000px;\"></div>");
-        await page.Mouse.MoveAsync(50, 60);
-        await ListenForWheelEvents(page, "div");
-        await page.Mouse.WheelAsync(100, 0);
-        await ExpectEvent(page, new()
+        await Page.SetContentAsync("<div style=\"width: 5000px; height: 5000px;\"></div>");
+        await Page.Mouse.MoveAsync(50, 60);
+        await ListenForWheelEvents(Page, "div");
+        await Page.Mouse.WheelAsync(100, 0);
+        await ExpectEvent(Page, new()
         {
             ["deltaX"] = 100,
             ["deltaY"] = 0,
@@ -194,22 +194,22 @@ public class WheelTests
             ["altKey"] = false,
             ["metaKey"] = false,
         });
-        await page.WaitForFunctionAsync("window.scrollX === 100");
+        await Page.WaitForFunctionAsync("window.scrollX === 100");
     }
 
     [UpstreamTest("MO-023 should work when the event is canceled")]
-    public async Task ShouldWorkWhenTheEventIsCanceled(IPage page)
+    public async Task ShouldWorkWhenTheEventIsCanceled()
     {
-        await page.SetContentAsync("<div style=\"width: 5000px; height: 5000px;\"></div>");
-        await page.Mouse.MoveAsync(50, 60);
-        await ListenForWheelEvents(page, "div");
-        await page.EvaluateAsync(@"() => {
+        await Page.SetContentAsync("<div style=\"width: 5000px; height: 5000px;\"></div>");
+        await Page.Mouse.MoveAsync(50, 60);
+        await ListenForWheelEvents(Page, "div");
+        await Page.EvaluateAsync(@"() => {
     document.querySelector('div').addEventListener('wheel', e => e.preventDefault());
   }");
         // Give wheel listener a chance to propagate through all the layers in Firefox.
-        await Rafraf(page, 10);
-        await page.Mouse.WheelAsync(0, 100);
-        await ExpectEvent(page, new()
+        await Rafraf(Page, 10);
+        await Page.Mouse.WheelAsync(0, 100);
+        await ExpectEvent(Page, new()
         {
             ["deltaX"] = 0,
             ["deltaY"] = 100,
@@ -222,9 +222,9 @@ public class WheelTests
             ["metaKey"] = false,
         });
         // Give the page a chance to scroll.
-        await page.WaitForFunctionAsync("!!window['lastEvent']");
+        await Page.WaitForFunctionAsync("!!window['lastEvent']");
         // Ensure that it did not.
-        Assert.That(await page.EvaluateAsync<int>("window.scrollY"), Is.EqualTo(0));
+        Assert.That(await Page.EvaluateAsync<int>("window.scrollY"), Is.EqualTo(0));
     }
 
     private static async Task ListenForWheelEvents(IPage page, string selector)

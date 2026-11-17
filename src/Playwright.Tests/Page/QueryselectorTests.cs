@@ -21,148 +21,148 @@ using static Microsoft.Playwright.Tests.Fixtures.Utils;
 namespace Microsoft.Playwright.Tests.Page;
 
 /// <summary>Port of tests/page/queryselector.spec.ts.</summary>
-public class QueryselectorTests
+public class QueryselectorTests : UpstreamPageTest
 {
     [UpstreamTest("QS-001 should throw for non-string selector")]
     [LocalFixme("dotnet: the message is 'selector: expected string, got undefined': the client leaves a null selector out of the message, upstream sends null and expects 'selector: expected string, got object'")]
-    public async Task ShouldThrowForNonStringSelector(IPage page)
+    public async Task ShouldThrowForNonStringSelector()
     {
-        var error = await Catch(() => page.QuerySelectorAsync(null));
+        var error = await Catch(() => Page.QuerySelectorAsync(null));
         Assert.That(error.Message, Does.Contain("selector: expected string, got object"));
     }
 
     [UpstreamTest("QS-002 should query existing element with css selector @smoke")]
-    public async Task ShouldQueryExistingElementWithCssSelector(IPage page, Server server)
+    public async Task ShouldQueryExistingElementWithCssSelector()
     {
-        await page.SetContentAsync("<section>test</section>");
-        var element = await page.QuerySelectorAsync("css=section");
+        await Page.SetContentAsync("<section>test</section>");
+        var element = await Page.QuerySelectorAsync("css=section");
         Assert.That(element, Is.Not.Null);
     }
 
     [UpstreamTest("QS-003 should query existing element with text selector")]
-    public async Task ShouldQueryExistingElementWithTextSelector(IPage page, Server server)
+    public async Task ShouldQueryExistingElementWithTextSelector()
     {
-        await page.SetContentAsync("<section>test</section>");
-        var element = await page.QuerySelectorAsync("text=\"test\"");
+        await Page.SetContentAsync("<section>test</section>");
+        var element = await Page.QuerySelectorAsync("text=\"test\"");
         Assert.That(element, Is.Not.Null);
     }
 
     [UpstreamTest("QS-004 should query existing element with xpath selector")]
-    public async Task ShouldQueryExistingElementWithXpathSelector(IPage page, Server server)
+    public async Task ShouldQueryExistingElementWithXpathSelector()
     {
-        await page.SetContentAsync("<section>test</section>");
-        var element = await page.QuerySelectorAsync("xpath=/html/body/section");
+        await Page.SetContentAsync("<section>test</section>");
+        var element = await Page.QuerySelectorAsync("xpath=/html/body/section");
         Assert.That(element, Is.Not.Null);
     }
 
     [UpstreamTest("QS-005 should return null for non-existing element")]
-    public async Task ShouldReturnNullForNonExistingElement(IPage page, Server server)
+    public async Task ShouldReturnNullForNonExistingElement()
     {
-        var element = await page.QuerySelectorAsync("non-existing-element");
+        var element = await Page.QuerySelectorAsync("non-existing-element");
         Assert.That(element, Is.Null);
     }
 
     [UpstreamTest("QS-006 should auto-detect xpath selector")]
-    public async Task ShouldAutoDetectXpathSelector(IPage page, Server server)
+    public async Task ShouldAutoDetectXpathSelector()
     {
-        await page.SetContentAsync("<section>test</section>");
-        var element = await page.QuerySelectorAsync("//html/body/section");
+        await Page.SetContentAsync("<section>test</section>");
+        var element = await Page.QuerySelectorAsync("//html/body/section");
         Assert.That(element, Is.Not.Null);
     }
 
     [UpstreamTest("QS-007 should auto-detect xpath selector with starting parenthesis")]
-    public async Task ShouldAutoDetectXpathSelectorWithStartingParenthesis(IPage page, Server server)
+    public async Task ShouldAutoDetectXpathSelectorWithStartingParenthesis()
     {
-        await page.SetContentAsync("<section>test</section>");
-        var element = await page.QuerySelectorAsync("(//section)[1]");
+        await Page.SetContentAsync("<section>test</section>");
+        var element = await Page.QuerySelectorAsync("(//section)[1]");
         Assert.That(element, Is.Not.Null);
     }
 
     [UpstreamTest("QS-008 should auto-detect xpath selector starting with ..")]
-    public async Task ShouldAutoDetectXpathSelectorStartingWith(IPage page, Server server)
+    public async Task ShouldAutoDetectXpathSelectorStartingWith()
     {
-        await page.SetContentAsync("<div><section>test</section><span></span></div>");
-        var span = await page.QuerySelectorAsync("\"test\" >> ../span");
+        await Page.SetContentAsync("<div><section>test</section><span></span></div>");
+        var span = await Page.QuerySelectorAsync("\"test\" >> ../span");
         Assert.That(await span.EvaluateAsync<string>("e => e.nodeName"), Is.EqualTo("SPAN"));
-        var div = await page.QuerySelectorAsync("\"test\" >> ..");
+        var div = await Page.QuerySelectorAsync("\"test\" >> ..");
         Assert.That(await div.EvaluateAsync<string>("e => e.nodeName"), Is.EqualTo("DIV"));
     }
 
     [UpstreamTest("QS-009 should auto-detect text selector")]
-    public async Task ShouldAutoDetectTextSelector(IPage page, Server server)
+    public async Task ShouldAutoDetectTextSelector()
     {
-        await page.SetContentAsync("<section>test</section>");
-        var element = await page.QuerySelectorAsync("\"test\"");
+        await Page.SetContentAsync("<section>test</section>");
+        var element = await Page.QuerySelectorAsync("\"test\"");
         Assert.That(element, Is.Not.Null);
     }
 
     [UpstreamTest("QS-010 should auto-detect css selector")]
-    public async Task ShouldAutoDetectCssSelector(IPage page, Server server)
+    public async Task ShouldAutoDetectCssSelector()
     {
-        await page.SetContentAsync("<section>test</section>");
-        var element = await page.QuerySelectorAsync("section");
+        await Page.SetContentAsync("<section>test</section>");
+        var element = await Page.QuerySelectorAsync("section");
         Assert.That(element, Is.Not.Null);
     }
 
     [UpstreamTest("QS-011 should support >> syntax")]
-    public async Task ShouldSupportSyntax(IPage page, Server server)
+    public async Task ShouldSupportSyntax()
     {
-        await page.SetContentAsync("<section><div>test</div></section>");
-        var element = await page.QuerySelectorAsync("css=section >> css=div");
+        await Page.SetContentAsync("<section><div>test</div></section>");
+        var element = await Page.QuerySelectorAsync("css=section >> css=div");
         Assert.That(element, Is.Not.Null);
     }
 
     [UpstreamTest("QS-012 should query existing elements")]
-    public async Task ShouldQueryExistingElements(IPage page, Server server)
+    public async Task ShouldQueryExistingElements()
     {
-        await page.SetContentAsync("<div>A</div><br/><div>B</div>");
-        var elements = await page.QuerySelectorAllAsync("div");
+        await Page.SetContentAsync("<div>A</div><br/><div>B</div>");
+        var elements = await Page.QuerySelectorAllAsync("div");
         Assert.That(elements.Count, Is.EqualTo(2));
-        var promises = elements.Select(element => page.EvaluateAsync<string>("e => e.textContent", element));
+        var promises = elements.Select(element => Page.EvaluateAsync<string>("e => e.textContent", element));
         Assert.That(await PromiseAll(promises), Is.EqualTo(new[] { "A", "B" }));
     }
 
     [UpstreamTest("QS-013 should return empty array if nothing is found")]
-    public async Task ShouldReturnEmptyArrayIfNothingIsFound(IPage page, Server server)
+    public async Task ShouldReturnEmptyArrayIfNothingIsFound()
     {
-        await page.GotoAsync(server.EmptyPage);
-        var elements = await page.QuerySelectorAllAsync("div");
+        await Page.GotoAsync(Server.EmptyPage);
+        var elements = await Page.QuerySelectorAllAsync("div");
         Assert.That(elements.Count, Is.EqualTo(0));
     }
 
     [UpstreamTest("QS-014 xpath should query existing element")]
-    public async Task XpathShouldQueryExistingElement(IPage page, Server server)
+    public async Task XpathShouldQueryExistingElement()
     {
-        await page.SetContentAsync("<section>test</section>");
-        var elements = await page.QuerySelectorAllAsync("xpath=/html/body/section");
+        await Page.SetContentAsync("<section>test</section>");
+        var elements = await Page.QuerySelectorAllAsync("xpath=/html/body/section");
         Assert.That(elements[0], Is.Not.Null);
         Assert.That(elements.Count, Is.EqualTo(1));
     }
 
     [UpstreamTest("QS-015 xpath should return empty array for non-existing element")]
-    public async Task XpathShouldReturnEmptyArrayForNonExistingElement(IPage page, Server server)
+    public async Task XpathShouldReturnEmptyArrayForNonExistingElement()
     {
-        var element = await page.QuerySelectorAllAsync("//html/body/non-existing-element");
+        var element = await Page.QuerySelectorAllAsync("//html/body/non-existing-element");
         Assert.That(element, Is.EqualTo(Array.Empty<IElementHandle>()));
     }
 
     [UpstreamTest("QS-016 xpath should return multiple elements")]
-    public async Task XpathShouldReturnMultipleElements(IPage page, Server server)
+    public async Task XpathShouldReturnMultipleElements()
     {
-        await page.SetContentAsync("<div></div><div></div>");
-        var elements = await page.QuerySelectorAllAsync("xpath=/html/body/div");
+        await Page.SetContentAsync("<div></div><div></div>");
+        var elements = await Page.QuerySelectorAllAsync("xpath=/html/body/div");
         Assert.That(elements.Count, Is.EqualTo(2));
     }
 
     [UpstreamTest("QS-017 $$ should work with bogus Array.from")]
-    public async Task ShouldWorkWithBogusArrayFrom(IPage page, Server server)
+    public async Task ShouldWorkWithBogusArrayFrom()
     {
-        await page.SetContentAsync("<div>hello</div><div></div>");
-        var div1 = await page.EvaluateHandleAsync(@"() => {
+        await Page.SetContentAsync("<div>hello</div><div></div>");
+        var div1 = await Page.EvaluateHandleAsync(@"() => {
     Array.from = () => [];
     return document.querySelector('div');
   }");
-        var elements = await page.QuerySelectorAllAsync("div");
+        var elements = await Page.QuerySelectorAllAsync("div");
         Assert.That(elements.Count, Is.EqualTo(2));
         // Check that element handle is functional and belongs to the main world.
         Assert.That(await elements[0].EvaluateAsync<bool>("(div, div1) => div === div1", div1), Is.EqualTo(true));

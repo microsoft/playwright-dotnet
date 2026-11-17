@@ -25,19 +25,21 @@ using static Microsoft.Playwright.Tests.Fixtures.Utils;
 namespace Microsoft.Playwright.Tests.Library;
 
 /// <summary>Port of tests/library/tracing.spec.ts.</summary>
-public class TracingTests
+public class TracingTests : UpstreamBrowserTest
 {
-    [BeforeEach]
-    public static void Skip(string trace) => Info.Skip(trace == "on");
+    [SetUp]
+    public void Skip() => Info.Skip(Trace == "on");
 
     [UpstreamTest("TR-002 should use the correct title for event driven callbacks")]
-    public async Task ShouldUseTheCorrectTitleForEventDrivenCallbacks(IBrowserContext context, IPage page, Server server, TestInfo testInfo)
+    public async Task ShouldUseTheCorrectTitleForEventDrivenCallbacks()
     {
+        var context = await ContextFixture();
+        var page = await PageFixture();
         await context.Tracing.StartAsync();
         // route.* calls should not be included in the trace
         await page.RouteAsync("**/empty.html", route => route.ContinueAsync());
-        await page.GotoAsync(server.Prefix + "/empty.html");
-        await page.GotoAsync(server.Prefix + "/grid.html");
+        await page.GotoAsync(Server.Prefix + "/empty.html");
+        await page.GotoAsync(Server.Prefix + "/grid.html");
 
         // The default internal dialog handler should not provide an action.
         await page.EvaluateAsync("() => alert('yo')");
@@ -49,15 +51,15 @@ public class TracingTests
         };
         await page.EvaluateAsync("() => alert('yo')");
 
-        await context.Tracing.StopAsync(new() { Path = testInfo.OutputPath("trace.zip") });
-        var (events, _, actions, _, _) = await ParseTraceRaw(testInfo.OutputPath("trace.zip"));
+        await context.Tracing.StopAsync(new() { Path = Info.OutputPath("trace.zip") });
+        var (events, _, actions, _, _) = await ParseTraceRaw(Info.OutputPath("trace.zip"));
         Assert.That(events[0].GetProperty("type").GetString(), Is.EqualTo("context-options"));
         Assert.That(actions, Is.EqualTo(new[]
         {
             "Route requests",
-            $"Navigate {server.Host}/empty.html",
+            $"Navigate {Server.Host}/empty.html",
             "Continue request",
-            $"Navigate {server.Host}/grid.html",
+            $"Navigate {Server.Host}/grid.html",
             "Evaluate",
             "Reload",
             "Evaluate",
@@ -66,11 +68,11 @@ public class TracingTests
     }
 
     [UpstreamTest("TR-003 should not store secrets in context options")]
-    public async Task ShouldNotStoreSecretsInContextOptions(IBrowser browser, Server server, TestInfo testInfo, BrowserNewContextOptions contextOptions)
+    public async Task ShouldNotStoreSecretsInContextOptions()
     {
-        var context = await browser.NewContextAsync(new(contextOptions)
+        var context = await Browser.NewContextAsync(new(ContextOptions())
         {
-            BaseURL = server.Prefix,
+            BaseURL = Server.Prefix,
             ViewportSize = new() { Width = 500, Height = 600 },
             DeviceScaleFactor = 2,
             IsMobile = false,
@@ -81,63 +83,69 @@ public class TracingTests
         });
         await context.Tracing.StartAsync();
         var page = await context.NewPageAsync();
-        await page.GotoAsync(server.EmptyPage);
-        await context.Tracing.StopAsync(new() { Path = testInfo.OutputPath("trace.zip") });
+        await page.GotoAsync(Server.EmptyPage);
+        await context.Tracing.StopAsync(new() { Path = Info.OutputPath("trace.zip") });
         await context.CloseAsync();
 
-        var (events, _, _, _, _) = await ParseTraceRaw(testInfo.OutputPath("trace.zip"));
+        var (events, _, _, _, _) = await ParseTraceRaw(Info.OutputPath("trace.zip"));
         Assert.That(events[0].GetProperty("type").GetString(), Is.EqualTo("context-options"));
         ExpectToEqual(events[0].GetProperty("options"), new
         {
-            baseURL = server.Prefix,
+            baseURL = Server.Prefix,
             viewport = new { width = 500, height = 600 },
             deviceScaleFactor = 2,
             isMobile = false,
             userAgent = "custom-ua",
         });
-        var traceText = Encoding.Latin1.GetString(File.ReadAllBytes(testInfo.OutputPath("trace.zip")));
+        var traceText = Encoding.Latin1.GetString(File.ReadAllBytes(Info.OutputPath("trace.zip")));
         Assert.That(traceText, Does.Not.Contain("secret-password"));
         Assert.That(traceText, Does.Not.Contain("secret-header"));
         Assert.That(traceText, Does.Not.Contain("secret-cookie"));
     }
 
     [UpstreamTest("TR-004 should not collect snapshots by default")]
-    public async Task ShouldNotCollectSnapshotsByDefault(IBrowserContext context, IPage page, Server server, TestInfo testInfo)
+    public async Task ShouldNotCollectSnapshotsByDefault()
     {
+        var context = await ContextFixture();
+        var page = await PageFixture();
         await context.Tracing.StartAsync();
-        await page.GotoAsync(server.EmptyPage);
+        await page.GotoAsync(Server.EmptyPage);
         await page.SetContentAsync("<button>Click</button>");
         await page.ClickAsync("\"Click\"");
         await page.CloseAsync();
-        await context.Tracing.StopAsync(new() { Path = testInfo.OutputPath("trace.zip") });
+        await context.Tracing.StopAsync(new() { Path = Info.OutputPath("trace.zip") });
 
-        var (events, _, _, _, _) = await ParseTraceRaw(testInfo.OutputPath("trace.zip"));
+        var (events, _, _, _, _) = await ParseTraceRaw(Info.OutputPath("trace.zip"));
         Assert.That(events.Any(e => e.GetProperty("type").GetString() == "frame-snapshot"), Is.False);
         Assert.That(events.Any(e => e.GetProperty("type").GetString() == "resource-snapshot"), Is.False);
     }
 
     [UpstreamTest("TR-005 should not collect action screenshots and aria snapshots by default")]
-    public async Task ShouldNotCollectActionScreenshotsAndAriaSnapshotsByDefault(IBrowserContext context, IPage page, Server server, TestInfo testInfo)
+    public async Task ShouldNotCollectActionScreenshotsAndAriaSnapshotsByDefault()
     {
+        var context = await ContextFixture();
+        var page = await PageFixture();
         await context.Tracing.StartAsync(new() { Snapshots = true });
-        await page.GotoAsync(server.Prefix + "/input/button.html");
+        await page.GotoAsync(Server.Prefix + "/input/button.html");
         await page.ClickAsync("button");
-        await context.Tracing.StopAsync(new() { Path = testInfo.OutputPath("trace.zip") });
+        await context.Tracing.StopAsync(new() { Path = Info.OutputPath("trace.zip") });
 
-        var (events, _, _, _, _) = await ParseTraceRaw(testInfo.OutputPath("trace.zip"));
+        var (events, _, _, _, _) = await ParseTraceRaw(Info.OutputPath("trace.zip"));
         Assert.That(events.Any(e => e.GetProperty("type").GetString() == "screenshot"), Is.False);
         Assert.That(events.Any(e => e.GetProperty("type").GetString() == "aria-snapshot"), Is.False);
     }
 
     [UpstreamTest("TR-006 should collect action screenshots")]
-    public async Task ShouldCollectActionScreenshots(IBrowserContext context, IPage page, Server server, TestInfo testInfo)
+    public async Task ShouldCollectActionScreenshots()
     {
+        var context = await ContextFixture();
+        var page = await PageFixture();
         await context.Tracing.StartAsync(new() { ScreenSnapshots = true });
-        await page.GotoAsync(server.Prefix + "/input/button.html");
+        await page.GotoAsync(Server.Prefix + "/input/button.html");
         await page.ClickAsync("button");
-        await context.Tracing.StopAsync(new() { Path = testInfo.OutputPath("trace.zip") });
+        await context.Tracing.StopAsync(new() { Path = Info.OutputPath("trace.zip") });
 
-        var (events, resources, _, _, _) = await ParseTraceRaw(testInfo.OutputPath("trace.zip"));
+        var (events, resources, _, _, _) = await ParseTraceRaw(Info.OutputPath("trace.zip"));
         var clickCallId = events.First(e => e.GetProperty("type").GetString() == "before" && e.GetProperty("method").GetString() == "click").GetProperty("callId").GetString();
         var screenshots = events.Where(e => e.GetProperty("type").GetString() == "screenshot" && e.GetProperty("callId").GetString() == clickCallId).ToList();
         Assert.That(screenshots.Select(e => e.GetProperty("phase").GetString()), Is.EqualTo(new[] { "before", "action", "after" }));
@@ -151,14 +159,16 @@ public class TracingTests
     }
 
     [UpstreamTest("TR-007 should collect aria snapshots")]
-    public async Task ShouldCollectAriaSnapshots(IBrowserContext context, IPage page, Server server, TestInfo testInfo)
+    public async Task ShouldCollectAriaSnapshots()
     {
+        var context = await ContextFixture();
+        var page = await PageFixture();
         await context.Tracing.StartAsync(new() { AriaSnapshots = true });
-        await page.GotoAsync(server.Prefix + "/input/button.html");
+        await page.GotoAsync(Server.Prefix + "/input/button.html");
         await page.ClickAsync("button");
-        await context.Tracing.StopAsync(new() { Path = testInfo.OutputPath("trace.zip") });
+        await context.Tracing.StopAsync(new() { Path = Info.OutputPath("trace.zip") });
 
-        var (events, resources, _, _, _) = await ParseTraceRaw(testInfo.OutputPath("trace.zip"));
+        var (events, resources, _, _, _) = await ParseTraceRaw(Info.OutputPath("trace.zip"));
         var clickCallId = events.First(e => e.GetProperty("type").GetString() == "before" && e.GetProperty("method").GetString() == "click").GetProperty("callId").GetString();
         var ariaSnapshots = events.Where(e => e.GetProperty("type").GetString() == "aria-snapshot" && e.GetProperty("callId").GetString() == clickCallId).ToList();
         Assert.That(ariaSnapshots.Select(e => e.GetProperty("phase").GetString()), Is.EqualTo(new[] { "before", "action", "after" }));
@@ -172,23 +182,25 @@ public class TracingTests
     }
 
     [UpstreamTest("TR-008 can call tracing.group/groupEnd at any time and auto-close")]
-    public async Task CanCallTracingGroupGroupEndAtAnyTimeAndAutoClose(IBrowserContext context, IPage page, Server server, TestInfo testInfo)
+    public async Task CanCallTracingGroupGroupEndAtAnyTimeAndAutoClose()
     {
+        var context = await ContextFixture();
+        var page = await PageFixture();
         await context.Tracing.GroupAsync("ignored");
         await context.Tracing.GroupEndAsync();
         await context.Tracing.GroupAsync("ignored2");
 
         await context.Tracing.StartAsync();
         await context.Tracing.GroupAsync("actual");
-        await page.GotoAsync(server.EmptyPage);
-        await context.Tracing.StopChunkAsync(new() { Path = testInfo.OutputPath("trace.zip") });
+        await page.GotoAsync(Server.EmptyPage);
+        await context.Tracing.StopChunkAsync(new() { Path = Info.OutputPath("trace.zip") });
 
         await context.Tracing.GroupAsync("ignored3");
         await context.Tracing.GroupEndAsync();
         await context.Tracing.GroupEndAsync();
         await context.Tracing.GroupEndAsync();
 
-        var (events, _, _, _, _) = await ParseTraceRaw(testInfo.OutputPath("trace.zip"));
+        var (events, _, _, _, _) = await ParseTraceRaw(Info.OutputPath("trace.zip"));
         var groups = events.Where(e => e.TryGetProperty("method", out var method) && method.GetString() == "tracingGroup").ToList();
         Assert.That(groups, Has.Count.EqualTo(1));
         Assert.That(groups[0].GetProperty("title").GetString(), Is.EqualTo("actual"));
@@ -196,13 +208,15 @@ public class TracingTests
     }
 
     [UpstreamTest("TR-009 should not include buffers in the trace")]
-    public async Task ShouldNotIncludeBuffersInTheTrace(IBrowserContext context, IPage page, Server server, TestInfo testInfo)
+    public async Task ShouldNotIncludeBuffersInTheTrace()
     {
+        var context = await ContextFixture();
+        var page = await PageFixture();
         await context.Tracing.StartAsync(new() { Snapshots = true });
-        await page.GotoAsync(server.Prefix + "/empty.html");
+        await page.GotoAsync(Server.Prefix + "/empty.html");
         await page.ScreenshotAsync();
-        await context.Tracing.StopAsync(new() { Path = testInfo.OutputPath("trace.zip") });
-        var (events, _, _, actionObjects, _) = await ParseTraceRaw(testInfo.OutputPath("trace.zip"));
+        await context.Tracing.StopAsync(new() { Path = Info.OutputPath("trace.zip") });
+        var (events, _, _, actionObjects, _) = await ParseTraceRaw(Info.OutputPath("trace.zip"));
         var screenshotEvent = actionObjects.Find(a => a["method"].GetString() == "screenshot");
         var phases = events.Where(e => e.GetProperty("type").GetString() == "frame-snapshot" && e.GetProperty("snapshot").GetProperty("callId").GetString() == screenshotEvent["callId"].GetString()).Select(e => e.GetProperty("snapshot").GetProperty("phase").GetString()).ToList();
         Assert.That(phases, Does.Contain("before"));
@@ -214,16 +228,18 @@ public class TracingTests
     }
 
     [UpstreamTest("TR-010 should exclude internal pages")]
-    public async Task ShouldExcludeInternalPages(string browserName, IBrowserContext context, IPage page, Server server, TestInfo testInfo)
+    public async Task ShouldExcludeInternalPages()
     {
-        await page.GotoAsync(server.EmptyPage);
+        var context = await ContextFixture();
+        var page = await PageFixture();
+        await page.GotoAsync(Server.EmptyPage);
 
         await context.Tracing.StartAsync();
         await context.StorageStateAsync();
         await page.CloseAsync();
-        await context.Tracing.StopAsync(new() { Path = testInfo.OutputPath("trace.zip") });
+        await context.Tracing.StopAsync(new() { Path = Info.OutputPath("trace.zip") });
 
-        var trace = await ParseTraceRaw(testInfo.OutputPath("trace.zip"));
+        var trace = await ParseTraceRaw(Info.OutputPath("trace.zip"));
         var pageIds = new HashSet<string>();
         trace.Events.ForEach(e =>
         {
@@ -237,29 +253,31 @@ public class TracingTests
     }
 
     [UpstreamTest("TR-011 should record context API request trace independently")]
-    public async Task ShouldRecordContextAPIRequestTraceIndependently(IBrowserContext context, IPage page, Server server, TestInfo testInfo)
+    public async Task ShouldRecordContextAPIRequestTraceIndependently()
     {
-        var browserTracePath = testInfo.OutputPath("browser-trace.zip");
-        var apiTracePath = testInfo.OutputPath("api-trace.zip");
-        var apiURL = server.Prefix + "/simple.json";
+        var context = await ContextFixture();
+        var page = await PageFixture();
+        var browserTracePath = Info.OutputPath("browser-trace.zip");
+        var apiTracePath = Info.OutputPath("api-trace.zip");
+        var apiURL = Server.Prefix + "/simple.json";
         Assert.That(context.APIRequest.Tracing, Is.Not.SameAs(context.Tracing));
 
         await context.Tracing.StartAsync(new() { Snapshots = true });
         await context.APIRequest.Tracing.StartAsync(new() { Snapshots = true });
-        await page.GotoAsync(server.Prefix + "/one-style.html");
+        await page.GotoAsync(Server.Prefix + "/one-style.html");
         await page.APIRequest.PostAsync(apiURL, new() { DataObject = new { foo = "bar" } });
         await context.Tracing.StopAsync(new() { Path = browserTracePath });
         await context.APIRequest.Tracing.StopAsync(new() { Path = apiTracePath });
 
         var browserTrace = await ParseTraceRaw(browserTracePath);
-        Assert.That(browserTrace.Actions, Does.Contain($"Navigate {server.Host}/one-style.html"));
-        Assert.That(browserTrace.Actions, Does.Not.Contain($"POST {server.Host}/simple.json"));
+        Assert.That(browserTrace.Actions, Does.Contain($"Navigate {Server.Host}/one-style.html"));
+        Assert.That(browserTrace.Actions, Does.Not.Contain($"POST {Server.Host}/simple.json"));
         Assert.That(browserTrace.Events.Any(@event => @event.GetProperty("type").GetString() == "resource-snapshot" && @event.GetProperty("snapshot").GetProperty("request").GetProperty("url").GetString().EndsWith("/simple.json", StringComparison.Ordinal)), Is.EqualTo(false));
         Assert.That(browserTrace.Events.Any(@event => @event.GetProperty("type").GetString() == "resource-snapshot" && @event.GetProperty("snapshot").GetProperty("request").GetProperty("url").GetString().EndsWith("/one-style.html", StringComparison.Ordinal)), Is.EqualTo(true));
 
         var apiTrace = await ParseTraceRaw(apiTracePath);
-        Assert.That(apiTrace.Actions, Does.Contain($"POST {server.Host}/simple.json"));
-        Assert.That(apiTrace.Actions, Does.Not.Contain($"Navigate {server.Host}/one-style.html"));
+        Assert.That(apiTrace.Actions, Does.Contain($"POST {Server.Host}/simple.json"));
+        Assert.That(apiTrace.Actions, Does.Not.Contain($"Navigate {Server.Host}/one-style.html"));
         var apiAction = apiTrace.ActionObjects.Find(action => action["class"].GetString() == "APIRequestContext" && action["method"].GetString() == "fetch");
         // .NET: ['tracing.spec.ts'], the test is in this C# file
         Assert.That(RelativeStack(apiAction, apiTrace.Stacks), Is.EqualTo(new[] { "TracingTests.cs" }));
@@ -268,32 +286,34 @@ public class TracingTests
     }
 
     [UpstreamTest("TR-012 should collect two traces")]
-    public async Task ShouldCollectTwoTraces(IBrowserContext context, IPage page, Server server, TestInfo testInfo)
+    public async Task ShouldCollectTwoTraces()
     {
+        var context = await ContextFixture();
+        var page = await PageFixture();
         await context.Tracing.StartAsync(new() { Screenshots = true, Snapshots = true });
-        await page.GotoAsync(server.EmptyPage);
+        await page.GotoAsync(Server.EmptyPage);
         await page.SetContentAsync("<button>Click</button>");
         await page.ClickAsync("\"Click\"");
-        await context.Tracing.StopAsync(new() { Path = testInfo.OutputPath("trace1.zip") });
+        await context.Tracing.StopAsync(new() { Path = Info.OutputPath("trace1.zip") });
 
         await context.Tracing.StartAsync(new() { Screenshots = true, Snapshots = true });
         await page.DblClickAsync("\"Click\"");
         await page.CloseAsync();
-        await context.Tracing.StopAsync(new() { Path = testInfo.OutputPath("trace2.zip") });
+        await context.Tracing.StopAsync(new() { Path = Info.OutputPath("trace2.zip") });
 
         {
-            var (events, _, actions, _, _) = await ParseTraceRaw(testInfo.OutputPath("trace1.zip"));
+            var (events, _, actions, _, _) = await ParseTraceRaw(Info.OutputPath("trace1.zip"));
             Assert.That(events[0].GetProperty("type").GetString(), Is.EqualTo("context-options"));
             Assert.That(actions, Is.EqualTo(new[]
             {
-                $"Navigate {server.Host}/empty.html",
+                $"Navigate {Server.Host}/empty.html",
                 "Set content",
                 "Click locator('text=\"Click\"')",
             }));
         }
 
         {
-            var (events, _, actions, _, _) = await ParseTraceRaw(testInfo.OutputPath("trace2.zip"));
+            var (events, _, actions, _, _) = await ParseTraceRaw(Info.OutputPath("trace2.zip"));
             Assert.That(events[0].GetProperty("type").GetString(), Is.EqualTo("context-options"));
             Assert.That(actions, Is.EqualTo(new[]
             {
@@ -304,22 +324,22 @@ public class TracingTests
     }
 
     [UpstreamTest("TR-013 should respect tracesDir and name")]
-    public async Task ShouldRespectTracesDirAndName(IBrowserType browserType, Server server, string mode, TestInfo testInfo, BrowserTypeLaunchOptions launchOptions, BrowserNewContextOptions contextOptions)
+    public async Task ShouldRespectTracesDirAndName()
     {
-        var tracesDir = testInfo.OutputPath("traces");
-        var browser = await browserType.LaunchAsync(new(launchOptions) { TracesDir = tracesDir });
-        var context = await browser.NewContextAsync(contextOptions);
+        var tracesDir = Info.OutputPath("traces");
+        var browser = await BrowserType.LaunchAsync(new(LaunchOptions()) { TracesDir = tracesDir });
+        var context = await browser.NewContextAsync(ContextOptions());
         var page = await context.NewPageAsync();
 
         await context.Tracing.StartAsync(new() { Name = "name1", Snapshots = true });
-        await page.GotoAsync(server.Prefix + "/one-style.html");
-        await context.Tracing.StopChunkAsync(new() { Path = testInfo.OutputPath("trace1.zip") });
+        await page.GotoAsync(Server.Prefix + "/one-style.html");
+        await context.Tracing.StopChunkAsync(new() { Path = Info.OutputPath("trace1.zip") });
         Assert.That(File.Exists(Path.Combine(tracesDir, "name1.trace")), Is.EqualTo(true));
         Assert.That(File.Exists(Path.Combine(tracesDir, "name1.network")), Is.EqualTo(true));
 
         await context.Tracing.StartChunkAsync(new() { Name = "name2" });
-        await page.GotoAsync(server.Prefix + "/har.html");
-        await context.Tracing.StopAsync(new() { Path = testInfo.OutputPath("trace2.zip") });
+        await page.GotoAsync(Server.Prefix + "/har.html");
+        await context.Tracing.StopAsync(new() { Path = Info.OutputPath("trace2.zip") });
         Assert.That(File.Exists(Path.Combine(tracesDir, "name2.trace")), Is.EqualTo(true));
         Assert.That(File.Exists(Path.Combine(tracesDir, "name2.network")), Is.EqualTo(true));
 
@@ -334,8 +354,8 @@ public class TracingTests
         }
 
         {
-            var (_, resources, actions, _, _) = await ParseTraceRaw(testInfo.OutputPath("trace1.zip"));
-            Assert.That(actions, Is.EqualTo(new[] { $"Navigate {server.Host}/one-style.html" }));
+            var (_, resources, actions, _, _) = await ParseTraceRaw(Info.OutputPath("trace1.zip"));
+            Assert.That(actions, Is.EqualTo(new[] { $"Navigate {Server.Host}/one-style.html" }));
             Assert.That(resourceNames(resources), Is.EqualTo(new[]
             {
                 "resources/XXX.css",
@@ -347,8 +367,8 @@ public class TracingTests
         }
 
         {
-            var (_, resources, actions, _, _) = await ParseTraceRaw(testInfo.OutputPath("trace2.zip"));
-            Assert.That(actions, Is.EqualTo(new[] { $"Navigate {server.Host}/har.html" }));
+            var (_, resources, actions, _, _) = await ParseTraceRaw(Info.OutputPath("trace2.zip"));
+            Assert.That(actions, Is.EqualTo(new[] { $"Navigate {Server.Host}/har.html" }));
             Assert.That(resourceNames(resources), Is.EqualTo(new[]
             {
                 "resources/XXX.css",
@@ -362,12 +382,14 @@ public class TracingTests
     }
 
     [UpstreamTest("TR-014 should not include trace resources from the previous chunks")]
-    public async Task ShouldNotIncludeTraceResourcesFromThePreviousChunks(IBrowserContext context, IPage page, Server server, string browserName, string mode, TestInfo testInfo)
+    public async Task ShouldNotIncludeTraceResourcesFromThePreviousChunks()
     {
+        var context = await ContextFixture();
+        var page = await PageFixture();
         await context.Tracing.StartAsync(new() { Screenshots = true, Snapshots = true, Sources = true });
 
         await context.Tracing.StartChunkAsync();
-        await page.GotoAsync(server.EmptyPage);
+        await page.GotoAsync(Server.EmptyPage);
         await page.SetContentAsync(@"
     <style>
       @keyframes move {
@@ -384,14 +406,14 @@ public class TracingTests
         await page.ClickAsync("\"Click\"", new() { Force = true });
         // Give it enough time for both screenshots to get into the trace.
         await Task.Delay(3000);
-        await context.Tracing.StopChunkAsync(new() { Path = testInfo.OutputPath("trace1.zip") });
+        await context.Tracing.StopChunkAsync(new() { Path = Info.OutputPath("trace1.zip") });
 
         await context.Tracing.StartChunkAsync();
-        await context.Tracing.StopChunkAsync(new() { Path = testInfo.OutputPath("trace2.zip") });
+        await context.Tracing.StopChunkAsync(new() { Path = Info.OutputPath("trace2.zip") });
 
         string[] jpegs = [];
         {
-            var (_, resources, _, _, _) = await ParseTraceRaw(testInfo.OutputPath("trace1.zip"));
+            var (_, resources, _, _, _) = await ParseTraceRaw(Info.OutputPath("trace1.zip"));
             var names = resources.Keys.ToArray();
             Assert.That(names.Count(n => n.EndsWith(".html", StringComparison.Ordinal)), Is.EqualTo(1));
             jpegs = names.Where(n => n.EndsWith(".jpeg", StringComparison.Ordinal)).ToArray();
@@ -400,7 +422,7 @@ public class TracingTests
         }
 
         {
-            var (_, resources, _, _, _) = await ParseTraceRaw(testInfo.OutputPath("trace2.zip"));
+            var (_, resources, _, _, _) = await ParseTraceRaw(Info.OutputPath("trace2.zip"));
             var names = resources.Keys.ToArray();
             // 1 network resource should be preserved.
             Assert.That(names.Count(n => n.EndsWith(".html", StringComparison.Ordinal)), Is.EqualTo(1));
@@ -412,13 +434,15 @@ public class TracingTests
     }
 
     [UpstreamTest("TR-015 should overwrite existing file")]
-    public async Task ShouldOverwriteExistingFile(IBrowserContext context, IPage page, Server server, TestInfo testInfo)
+    public async Task ShouldOverwriteExistingFile()
     {
+        var context = await ContextFixture();
+        var page = await PageFixture();
         await context.Tracing.StartAsync(new() { Screenshots = true, Snapshots = true, Sources = true });
-        await page.GotoAsync(server.EmptyPage);
+        await page.GotoAsync(Server.EmptyPage);
         await page.SetContentAsync("<button>Click</button>");
         await page.ClickAsync("\"Click\"");
-        var path = testInfo.OutputPath("trace1.zip");
+        var path = Info.OutputPath("trace1.zip");
         await context.Tracing.StopAsync(new() { Path = path });
         {
             var (_, resources, _, _, _) = await ParseTraceRaw(path);
@@ -437,15 +461,17 @@ public class TracingTests
     }
 
     [UpstreamTest("TR-016 should collect sources")]
-    public async Task ShouldCollectSources(IBrowserContext context, IPage page, Server server, TestInfo testInfo)
+    public async Task ShouldCollectSources()
     {
+        var context = await ContextFixture();
+        var page = await PageFixture();
         await context.Tracing.StartAsync(new() { Sources = true });
-        await page.GotoAsync(server.EmptyPage);
+        await page.GotoAsync(Server.EmptyPage);
         await page.SetContentAsync("<button>Click</button>");
         await page.ClickAsync("\"Click\"");
-        await context.Tracing.StopAsync(new() { Path = testInfo.OutputPath("trace1.zip") });
+        await context.Tracing.StopAsync(new() { Path = Info.OutputPath("trace1.zip") });
 
-        var (_, resources, _, _, _) = await ParseTraceRaw(testInfo.OutputPath("trace1.zip"));
+        var (_, resources, _, _, _) = await ParseTraceRaw(Info.OutputPath("trace1.zip"));
         var sourceNames = resources.Keys.Where(k => k.StartsWith("src/", StringComparison.Ordinal)).ToArray();
         Assert.That(sourceNames.Length, Is.EqualTo(1));
         // .NET: /^src\/[0-9a-f]{40}\.ts$/, the source of this test is a C# file
@@ -457,14 +483,16 @@ public class TracingTests
     }
 
     [UpstreamTest("TR-017 should record network failures")]
-    public async Task ShouldRecordNetworkFailures(IBrowserContext context, IPage page, Server server, TestInfo testInfo)
+    public async Task ShouldRecordNetworkFailures()
     {
+        var context = await ContextFixture();
+        var page = await PageFixture();
         await context.Tracing.StartAsync(new() { Snapshots = true });
         await page.RouteAsync("**/*", route => route.AbortAsync("connectionaborted"));
-        await Catch(() => page.GotoAsync(server.EmptyPage));
-        await context.Tracing.StopAsync(new() { Path = testInfo.OutputPath("trace1.zip") });
+        await Catch(() => page.GotoAsync(Server.EmptyPage));
+        await context.Tracing.StopAsync(new() { Path = Info.OutputPath("trace1.zip") });
 
-        var (events, _, _, _, _) = await ParseTraceRaw(testInfo.OutputPath("trace1.zip"));
+        var (events, _, _, _, _) = await ParseTraceRaw(Info.OutputPath("trace1.zip"));
         var requestEvent = events.FirstOrDefault(e => e.GetProperty("type").GetString() == "resource-snapshot" && e.GetProperty("snapshot").GetProperty("response").TryGetProperty("_failureText", out var failureText) && !string.IsNullOrEmpty(failureText.GetString()));
         Assert.That(requestEvent.ValueKind, Is.Not.EqualTo(JsonValueKind.Undefined));
         Assert.That(requestEvent.GetProperty("snapshot").GetProperty("_monotonicTime").GetDouble(), Is.GreaterThan(0));
@@ -472,42 +500,46 @@ public class TracingTests
     }
 
     [UpstreamTest("TR-018 should recover tracing after a failed stop")]
-    public async Task ShouldRecoverTracingAfterAFailedStop(IBrowserContext context, IPage page, Server server, TestInfo testInfo)
+    public async Task ShouldRecoverTracingAfterAFailedStop()
     {
+        var context = await ContextFixture();
+        var page = await PageFixture();
         await context.Tracing.StartAsync();
         // Saving fails: a parent of the destination is a file, not a directory.
-        var blocker = testInfo.OutputPath("blocker");
+        var blocker = Info.OutputPath("blocker");
         await File.WriteAllTextAsync(blocker, string.Empty);
         var error = await ThrowsAsync<PlaywrightException>(() => context.Tracing.StopAsync(new() { Path = Path.Combine(blocker, "trace1.zip") }));
         Assert.That(error.Message, Does.Match("ENOTDIR|ENOENT|EEXIST"));
 
         // The failed stop must not wedge tracing for the rest of the context lifetime.
         await context.Tracing.StartAsync();
-        await page.GotoAsync(server.Prefix + "/input/button.html");
+        await page.GotoAsync(Server.Prefix + "/input/button.html");
         await page.ClickAsync("button");
-        await context.Tracing.StopAsync(new() { Path = testInfo.OutputPath("trace2.zip") });
+        await context.Tracing.StopAsync(new() { Path = Info.OutputPath("trace2.zip") });
 
-        var (events, _, actions, _, _) = await ParseTraceRaw(testInfo.OutputPath("trace2.zip"));
+        var (events, _, actions, _, _) = await ParseTraceRaw(Info.OutputPath("trace2.zip"));
         Assert.That(events[0].GetProperty("type").GetString(), Is.EqualTo("context-options"));
         Assert.That(actions, Does.Contain("Click locator('button')"));
     }
 
     [UpstreamTest("TR-020 should not crash when browser closes mid-trace")]
-    public async Task ShouldNotCrashWhenBrowserClosesMidTrace(IBrowserType browserType, Server server, TestInfo testInfo, BrowserTypeLaunchOptions launchOptions, BrowserNewPageOptions newPageOptions)
+    public async Task ShouldNotCrashWhenBrowserClosesMidTrace()
     {
-        var browser = await browserType.LaunchAsync(launchOptions);
-        var page = await browser.NewPageAsync(newPageOptions);
+        var browser = await BrowserType.LaunchAsync(LaunchOptions());
+        var page = await browser.NewPageAsync(NewPageOptions());
         await page.Context.Tracing.StartAsync(new() { Snapshots = true, Screenshots = true });
-        await page.GotoAsync(server.EmptyPage);
+        await page.GotoAsync(Server.EmptyPage);
         await browser.CloseAsync();
         await Task.Delay(1000);  // Give it some time to throw errors
     }
 
     [UpstreamTest("TR-022 should not stall on dialogs")]
-    public async Task ShouldNotStallOnDialogs(IPage page, IBrowserContext context, Server server)
+    public async Task ShouldNotStallOnDialogs()
     {
+        var page = await PageFixture();
+        var context = await ContextFixture();
         await context.Tracing.StartAsync(new() { Screenshots = true, Snapshots = true });
-        await page.GotoAsync(server.EmptyPage);
+        await page.GotoAsync(Server.EmptyPage);
 
         page.Dialog += async (_, dialog) =>
         {
@@ -521,23 +553,23 @@ public class TracingTests
     }
 
     [UpstreamTest("TR-023 should produce screencast frames ${params.id}")]
-    [Case("fit", 500, 500)]
+    [TestCase("fit", 500, 500)]
     // Less than 450 to test firefox
-    [Case("crop", 400, 800)]
-    [Case("scale", 1024, 768)]
-    public async Task ShouldProduceScreencastFrames(string id, int width, int height, string video, ContextFactory contextFactory, string browserName, string platform, bool headless, bool isHeadlessShell, TestInfo testInfo)
+    [TestCase("crop", 400, 800)]
+    [TestCase("scale", 1024, 768)]
+    public async Task ShouldProduceScreencastFrames(string id, int width, int height)
     {
-        Info.Skip(video == "on", "Same screencast resolution conflicts");
-        Info.Fixme(browserName == "chromium" && !isHeadlessShell, "Chromium (but not headless-shell) screencast has a min width issue");
-        Info.Fixme(id == "fit" && browserName == "chromium" && platform == "darwin", "High DPI maxes image at 600x600");
-        Info.Fixme(id == "fit" && browserName == "webkit" && platform == "linux", "Image size is flaky");
-        Info.Fixme(browserName == "firefox" && !headless, "Image size is different");
+        Info.Skip(Video == "on", "Same screencast resolution conflicts");
+        Info.Fixme(BrowserName == "chromium" && !IsHeadlessShell, "Chromium (but not headless-shell) screencast has a min width issue");
+        Info.Fixme(id == "fit" && BrowserName == "chromium" && Platform == "darwin", "High DPI maxes image at 600x600");
+        Info.Fixme(id == "fit" && BrowserName == "webkit" && Platform == "linux", "Image size is flaky");
+        Info.Fixme(BrowserName == "firefox" && !Headless, "Image size is different");
 
         var scale = Math.Min(Math.Min(800d / width, 800d / height), 1);
         var previewWidth = width * scale;
         var previewHeight = height * scale;
 
-        var context = await contextFactory(new() { ViewportSize = new() { Width = width, Height = height } });
+        var context = await ContextFactory(new() { ViewportSize = new() { Width = width, Height = height } });
         await context.Tracing.StartAsync(new() { Screenshots = true, Snapshots = true });
         var page = await context.NewPageAsync();
         // Make sure we have a chance to paint.
@@ -551,9 +583,9 @@ public class TracingTests
         {
             await Rafraf(page);
         }
-        await context.Tracing.StopAsync(new() { Path = testInfo.OutputPath("trace.zip") });
+        await context.Tracing.StopAsync(new() { Path = Info.OutputPath("trace.zip") });
 
-        var (events, resources, _, _, _) = await ParseTraceRaw(testInfo.OutputPath("trace.zip"));
+        var (events, resources, _, _, _) = await ParseTraceRaw(Info.OutputPath("trace.zip"));
         var frames = events.Where(e => e.GetProperty("type").GetString() == "screencast-frame").ToList();
 
         // Check all frame sizes.
@@ -582,83 +614,94 @@ public class TracingTests
     }
 
     [UpstreamTest("TR-024 should include interrupted actions")]
-    public async Task ShouldIncludeInterruptedActions(IBrowserContext context, IPage page, Server server, TestInfo testInfo)
+    public async Task ShouldIncludeInterruptedActions()
     {
+        var context = await ContextFixture();
+        var page = await PageFixture();
         await context.Tracing.StartAsync(new() { Screenshots = true, Snapshots = true });
-        await page.GotoAsync(server.EmptyPage);
+        await page.GotoAsync(Server.EmptyPage);
         await page.SetContentAsync("<button>Click</button>");
         IgnoreErrors(page.ClickAsync("\"ClickNoButton\""));
-        await context.Tracing.StopAsync(new() { Path = testInfo.OutputPath("trace.zip") });
+        await context.Tracing.StopAsync(new() { Path = Info.OutputPath("trace.zip") });
         await context.CloseAsync();
 
-        var (_, _, actions, _, _) = await ParseTraceRaw(testInfo.OutputPath("trace.zip"));
+        var (_, _, actions, _, _) = await ParseTraceRaw(Info.OutputPath("trace.zip"));
         Assert.That(actions, Does.Contain("Click locator('text=\"ClickNoButton\"')"));
     }
 
     [UpstreamTest("TR-025 should throw when starting with different options")]
-    public async Task ShouldThrowWhenStartingWithDifferentOptions(IBrowserContext context)
+    public async Task ShouldThrowWhenStartingWithDifferentOptions()
     {
+        var context = await ContextFixture();
         await context.Tracing.StartAsync(new() { Screenshots = true, Snapshots = true });
         var error = await Catch(() => context.Tracing.StartAsync(new() { Screenshots = false, Snapshots = false }));
         Assert.That(error.Message, Does.Contain("Tracing has been already started"));
     }
 
     [UpstreamTest("TR-026 should throw when stopping without start")]
-    public async Task ShouldThrowWhenStoppingWithoutStart(IBrowserContext context, TestInfo testInfo)
+    public async Task ShouldThrowWhenStoppingWithoutStart()
     {
-        var error = await Catch(() => context.Tracing.StopAsync(new() { Path = testInfo.OutputPath("trace.zip") }));
+        var context = await ContextFixture();
+        var error = await Catch(() => context.Tracing.StopAsync(new() { Path = Info.OutputPath("trace.zip") }));
         Assert.That(error.Message, Does.Contain("Must start tracing before stopping"));
     }
 
     [UpstreamTest("TR-027 should not throw when stopping without start but not exporting")]
-    public async Task ShouldNotThrowWhenStoppingWithoutStartButNotExporting(IBrowserContext context, TestInfo testInfo)
+    public async Task ShouldNotThrowWhenStoppingWithoutStartButNotExporting()
     {
+        var context = await ContextFixture();
         await context.Tracing.StopAsync();
     }
 
     [UpstreamTest("TR-028 start should return a disposable that discards the trace")]
-    public async Task StartShouldReturnADisposableThatDiscardsTheTrace(IBrowserContext context, IPage page, Server server, TestInfo testInfo)
+    public async Task StartShouldReturnADisposableThatDiscardsTheTrace()
     {
+        var context = await ContextFixture();
+        var page = await PageFixture();
         var disposable = await context.Tracing.StartAsync();
-        await page.GotoAsync(server.EmptyPage);
+        await page.GotoAsync(Server.EmptyPage);
         await disposable.DisposeAsync();
-        var error = await Catch(() => context.Tracing.StopAsync(new() { Path = testInfo.OutputPath("trace.zip") }));
+        var error = await Catch(() => context.Tracing.StopAsync(new() { Path = Info.OutputPath("trace.zip") }));
         Assert.That(error.Message, Does.Contain("Must start tracing before stopping"));
     }
 
     [UpstreamTest("TR-029 startChunk should return a disposable that discards the chunk")]
-    public async Task StartChunkShouldReturnADisposableThatDiscardsTheChunk(IBrowserContext context, IPage page, Server server, TestInfo testInfo)
+    public async Task StartChunkShouldReturnADisposableThatDiscardsTheChunk()
     {
+        var context = await ContextFixture();
+        var page = await PageFixture();
         await context.Tracing.StartAsync();
         var disposable = await context.Tracing.StartChunkAsync();
-        await page.GotoAsync(server.EmptyPage);
+        await page.GotoAsync(Server.EmptyPage);
         await disposable.DisposeAsync();
-        var error = await Catch(() => context.Tracing.StopChunkAsync(new() { Path = testInfo.OutputPath("trace.zip") }));
+        var error = await Catch(() => context.Tracing.StopChunkAsync(new() { Path = Info.OutputPath("trace.zip") }));
         Assert.That(error.Message, Does.Contain("Must start tracing before stopping"));
     }
 
     [UpstreamTest("TR-030 should work with multiple chunks")]
-    public async Task ShouldWorkWithMultipleChunks(IBrowserContext context, IPage page, Server server, TestInfo testInfo)
+    public async Task ShouldWorkWithMultipleChunks()
     {
+        var context = await ContextFixture();
+        var page = await PageFixture();
         await context.Tracing.StartAsync(new() { Screenshots = true, Snapshots = true });
-        await page.GotoAsync(server.Prefix + "/frames/frame.html");
+        await page.GotoAsync(Server.Prefix + "/frames/frame.html");
 
         await context.Tracing.StartChunkAsync();
         await page.SetContentAsync("<button>Click</button>");
         await page.ClickAsync("\"Click\"");
         IgnoreErrors(page.ClickAsync("\"ClickNoButton\"", new() { Timeout = 0 }));
         await page.EvaluateAsync("() => {}");
-        await context.Tracing.StopChunkAsync(new() { Path = testInfo.OutputPath("trace.zip") });
+        await context.Tracing.StopChunkAsync(new() { Path = Info.OutputPath("trace.zip") });
 
         await context.Tracing.StartChunkAsync();
         await page.HoverAsync("\"Click\"");
-        await context.Tracing.StopChunkAsync(new() { Path = testInfo.OutputPath("trace2.zip") });
+        await context.Tracing.StopChunkAsync(new() { Path = Info.OutputPath("trace2.zip") });
 
         await context.Tracing.StartChunkAsync();
         await page.ClickAsync("\"Click\"");
         await context.Tracing.StopChunkAsync();  // Should stop without a path.
 
-        var trace1 = await ParseTraceRaw(testInfo.OutputPath("trace.zip"));
+        var trace1 = await ParseTraceRaw(Info.OutputPath("trace.zip"));
         Assert.That(trace1.Events[0].GetProperty("type").GetString(), Is.EqualTo("context-options"));
         Assert.That(trace1.Actions, Is.EqualTo(new[]
         {
@@ -670,7 +713,7 @@ public class TracingTests
         Assert.That(trace1.Events.Any(e => e.GetProperty("type").GetString() == "frame-snapshot"), Is.True);
         Assert.That(trace1.Events.Any(e => e.GetProperty("type").GetString() == "resource-snapshot" && e.GetProperty("snapshot").GetProperty("request").GetProperty("url").GetString().EndsWith("style.css", StringComparison.Ordinal)), Is.True);
 
-        var trace2 = await ParseTraceRaw(testInfo.OutputPath("trace2.zip"));
+        var trace2 = await ParseTraceRaw(Info.OutputPath("trace2.zip"));
         Assert.That(trace2.Events[0].GetProperty("type").GetString(), Is.EqualTo("context-options"));
         Assert.That(trace2.Actions, Is.EqualTo(new[]
         {
@@ -681,26 +724,30 @@ public class TracingTests
     }
 
     [UpstreamTest("TR-031 should export trace concurrently to second navigation")]
-    public async Task ShouldExportTraceConcurrentlyToSecondNavigation(IBrowserContext context, IPage page, Server server, TestInfo testInfo)
+    public async Task ShouldExportTraceConcurrentlyToSecondNavigation()
     {
+        var context = await ContextFixture();
+        var page = await PageFixture();
         for (var timeout = 0; timeout < 200; timeout += 20)
         {
             await context.Tracing.StartAsync(new() { Screenshots = true, Snapshots = true });
-            await page.GotoAsync(server.Prefix + "/grid.html");
+            await page.GotoAsync(Server.Prefix + "/grid.html");
 
             // Navigate to the same page to produce the same trace resources
             // that might be concurrently exported.
-            var promise = page.GotoAsync(server.Prefix + "/grid.html");
+            var promise = page.GotoAsync(Server.Prefix + "/grid.html");
             await page.WaitForTimeoutAsync(timeout);
             await PromiseAll(
                 promise,
-                context.Tracing.StopAsync(new() { Path = testInfo.OutputPath("trace.zip") }));
+                context.Tracing.StopAsync(new() { Path = Info.OutputPath("trace.zip") }));
         }
     }
 
     [UpstreamTest("TR-032 should not hang for clicks that open dialogs")]
-    public async Task ShouldNotHangForClicksThatOpenDialogs(IBrowserContext context, IPage page)
+    public async Task ShouldNotHangForClicksThatOpenDialogs()
     {
+        var context = await ContextFixture();
+        var page = await PageFixture();
         await context.Tracing.StartAsync(new() { Screenshots = true, Snapshots = true });
         var dialogPromise = Once<IDialog>(h => page.Dialog += h, h => page.Dialog -= h);
         await page.SetContentAsync("<div onclick='window.alert(123)'>Click me</div>");
@@ -711,9 +758,11 @@ public class TracingTests
     }
 
     [UpstreamTest("TR-033 should ignore iframes in head")]
-    public async Task ShouldIgnoreIframesInHead(IBrowserContext context, IPage page, Server server, TestInfo testInfo)
+    public async Task ShouldIgnoreIframesInHead()
     {
-        await page.GotoAsync(server.Prefix + "/input/button.html");
+        var context = await ContextFixture();
+        var page = await PageFixture();
+        await page.GotoAsync(Server.Prefix + "/input/button.html");
         await page.EvaluateAsync(@"() => {
     document.head.appendChild(document.createElement('iframe'));
     // Add iframe in a shadow tree.
@@ -725,17 +774,19 @@ public class TracingTests
 
         await context.Tracing.StartAsync(new() { Screenshots = true, Snapshots = true });
         await page.ClickAsync("button");
-        await context.Tracing.StopChunkAsync(new() { Path = testInfo.OutputPath("trace.zip") });
+        await context.Tracing.StopChunkAsync(new() { Path = Info.OutputPath("trace.zip") });
 
-        var trace = await ParseTraceRaw(testInfo.OutputPath("trace.zip"));
+        var trace = await ParseTraceRaw(Info.OutputPath("trace.zip"));
         Assert.That(trace.Actions, Is.EqualTo(new[] { "Click locator('button')" }));
         Assert.That(trace.Events.Any(e => e.GetProperty("type").GetString() == "frame-snapshot"), Is.True);
         Assert.That(trace.Events.Any(e => e.GetProperty("type").GetString() == "frame-snapshot" && JsonStringify(e.GetProperty("snapshot").GetProperty("html")).Contains("IFRAME", StringComparison.Ordinal)), Is.False);
     }
 
     [UpstreamTest("TR-034 should hide internal stack frames")]
-    public async Task ShouldHideInternalStackFrames(IBrowserContext context, IPage page, TestInfo testInfo)
+    public async Task ShouldHideInternalStackFrames()
     {
+        var context = await ContextFixture();
+        var page = await PageFixture();
         await context.Tracing.StartAsync(new() { Screenshots = true, Snapshots = true });
         Task evalPromise = null;
         page.Dialog += (_, dialog) =>
@@ -746,7 +797,7 @@ public class TracingTests
         await page.SetContentAsync("<div onclick='window.alert(123)'>Click me</div>");
         await page.ClickAsync("div");
         await evalPromise;
-        var tracePath = testInfo.OutputPath("trace.zip");
+        var tracePath = Info.OutputPath("trace.zip");
         await context.Tracing.StopAsync(new() { Path = tracePath });
 
         var trace = await ParseTraceRaw(tracePath);
@@ -760,8 +811,10 @@ public class TracingTests
     }
 
     [UpstreamTest("TR-035 should hide internal stack frames in expect")]
-    public async Task ShouldHideInternalStackFramesInExpect(IBrowserContext context, IPage page, TestInfo testInfo)
+    public async Task ShouldHideInternalStackFramesInExpect()
     {
+        var context = await ContextFixture();
+        var page = await PageFixture();
         await context.Tracing.StartAsync(new() { Screenshots = true, Snapshots = true });
         Task expectPromise = null;
         page.Dialog += (_, dialog) =>
@@ -773,7 +826,7 @@ public class TracingTests
         await page.ClickAsync("div");
         await Expect(page.Locator("div")).ToBeVisibleAsync();
         await expectPromise;
-        var tracePath = testInfo.OutputPath("trace.zip");
+        var tracePath = Info.OutputPath("trace.zip");
         await context.Tracing.StopAsync(new() { Path = tracePath });
 
         var trace = await ParseTraceRaw(tracePath);
@@ -787,12 +840,14 @@ public class TracingTests
     }
 
     [UpstreamTest("TR-036 should record global request trace")]
-    public async Task ShouldRecordGlobalRequestTrace(IAPIRequestContext request, IBrowserContext context, Server server, TestInfo testInfo)
+    public async Task ShouldRecordGlobalRequestTrace()
     {
+        var request = await RequestFixture();
+        var context = await ContextFixture();
         await request.Tracing.StartAsync(new() { Snapshots = true });
-        var url = server.Prefix + "/simple.json";
+        var url = Server.Prefix + "/simple.json";
         await request.GetAsync(url);
-        var tracePath = testInfo.OutputPath("trace.zip");
+        var tracePath = Info.OutputPath("trace.zip");
         await request.Tracing.StopAsync(new() { Path = tracePath });
 
         var trace = await ParseTraceRaw(tracePath);
@@ -819,18 +874,19 @@ public class TracingTests
     }
 
     [UpstreamTest("TR-037 should store global request traces separately")]
-    public async Task ShouldStoreGlobalRequestTracesSeparately(IAPIRequestContext request, Server server, IPlaywright playwright, string browserName, string mode, TestInfo testInfo)
+    public async Task ShouldStoreGlobalRequestTracesSeparately()
     {
-        var request2 = await playwright.APIRequest.NewContextAsync();
+        var request = await RequestFixture();
+        var request2 = await Playwright.APIRequest.NewContextAsync();
         await PromiseAll(
             request.Tracing.StartAsync(new() { Snapshots = true }),
             request2.Tracing.StartAsync(new() { Snapshots = true }));
-        var url = server.Prefix + "/simple.json";
+        var url = Server.Prefix + "/simple.json";
         await PromiseAll(
             request.GetAsync(url),
             request2.PostAsync(url));
-        var tracePath = testInfo.OutputPath("trace.zip");
-        var trace2Path = testInfo.OutputPath("trace2.zip");
+        var tracePath = Info.OutputPath("trace.zip");
+        var trace2Path = Info.OutputPath("trace2.zip");
         await PromiseAll(
             request.Tracing.StopAsync(new() { Path = tracePath }),
             request2.Tracing.StopAsync(new() { Path = trace2Path }));
@@ -857,15 +913,16 @@ public class TracingTests
     }
 
     [UpstreamTest("TR-038 should store postData for global request")]
-    public async Task ShouldStorePostDataForGlobalRequest(IAPIRequestContext request, Server server, TestInfo testInfo)
+    public async Task ShouldStorePostDataForGlobalRequest()
     {
+        var request = await RequestFixture();
         await request.Tracing.StartAsync(new() { Snapshots = true });
-        var url = server.Prefix + "/simple.json";
+        var url = Server.Prefix + "/simple.json";
         await request.PostAsync(url, new()
         {
             Data = "test",
         });
-        var tracePath = testInfo.OutputPath("trace.zip");
+        var tracePath = Info.OutputPath("trace.zip");
         await request.Tracing.StopAsync(new() { Path = tracePath });
 
         var trace = await ParseTraceRaw(tracePath);
@@ -881,8 +938,10 @@ public class TracingTests
     }
 
     [UpstreamTest("TR-039 should not flush console events")]
-    public async Task ShouldNotFlushConsoleEvents(IBrowserContext context, IPage page, string mode, TestInfo testInfo)
+    public async Task ShouldNotFlushConsoleEvents()
     {
+        var context = await ContextFixture();
+        var page = await PageFixture();
         var testId = Info.TestId;
         await context.Tracing.StartAsync(new() { Name = testId });
         var promise = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
@@ -907,7 +966,7 @@ public class TracingTests
 
         await promise.Task;
 
-        var dir = Path.Combine(testInfo.Project.OutputDir, ArtifactsFolderName(testInfo.WorkerIndex), "traces");
+        var dir = Path.Combine(Info.Project.OutputDir, ArtifactsFolderName(Info.WorkerIndex), "traces");
 
         string content = null;
         await Expect(async () =>
@@ -931,8 +990,10 @@ public class TracingTests
     }
 
     [UpstreamTest("TR-040 should flush console events on tracing stop")]
-    public async Task ShouldFlushConsoleEventsOnTracingStop(IBrowserContext context, IPage page, TestInfo testInfo)
+    public async Task ShouldFlushConsoleEventsOnTracingStop()
     {
+        var context = await ContextFixture();
+        var page = await PageFixture();
         await context.Tracing.StartAsync();
         var promise = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
         {
@@ -952,7 +1013,7 @@ public class TracingTests
     });
   }");
         await promise.Task;
-        var tracePath = testInfo.OutputPath("trace.zip");
+        var tracePath = Info.OutputPath("trace.zip");
         await context.Tracing.StopAsync(new() { Path = tracePath });
         var trace = await ParseTraceRaw(tracePath);
         var events = trace.Events.Where(e => e.GetProperty("type").GetString() == "console").ToList();
@@ -961,24 +1022,24 @@ public class TracingTests
 
     [UpstreamTest("TR-041 should not emit after w/o before")]
     [LocalFixme("dotnet: Page.WaitForConsoleMessageAsync names its wait 'page.WaitForEventAsync(\"Microsoft.Playwright.IConsoleMessage\")' (Page.InnerWaitForEventAsync), so the title in the trace is 'Wait for event \"page.WaitForEventAsync(\"Microsoft.Playwright.IConsoleMessage\")\"', upstream expects 'Wait for event \"console\"'")]
-    public async Task ShouldNotEmitAfterWOBefore(IBrowserType browserType, string mode, TestInfo testInfo, BrowserTypeLaunchOptions launchOptions, BrowserNewContextOptions contextOptions)
+    public async Task ShouldNotEmitAfterWOBefore()
     {
-        var tracesDir = testInfo.OutputPath("traces");
-        var browser = await browserType.LaunchAsync(new(launchOptions) { TracesDir = tracesDir });
-        var context = await browser.NewContextAsync(contextOptions);
+        var tracesDir = Info.OutputPath("traces");
+        var browser = await BrowserType.LaunchAsync(new(LaunchOptions()) { TracesDir = tracesDir });
+        var context = await browser.NewContextAsync(ContextOptions());
         var page = await context.NewPageAsync();
 
         await context.Tracing.StartAsync(new() { Name = "name1", Snapshots = true });
         // The wait spans the chunks: its "before" is in the first chunk, and its "after" must not get into the second one.
         var consolePromise = page.WaitForConsoleMessageAsync();
         await page.EvaluateAsync("() => 1");
-        await context.Tracing.StopChunkAsync(new() { Path = testInfo.OutputPath("trace1.zip") });
+        await context.Tracing.StopChunkAsync(new() { Path = Info.OutputPath("trace1.zip") });
         Assert.That(File.Exists(Path.Combine(tracesDir, "name1.trace")), Is.EqualTo(true));
 
         await context.Tracing.StartChunkAsync(new() { Name = "name2" });
         await page.EvaluateAsync("() => console.log('started')");
         await consolePromise;
-        await context.Tracing.StopAsync(new() { Path = testInfo.OutputPath("trace2.zip") });
+        await context.Tracing.StopAsync(new() { Path = Info.OutputPath("trace2.zip") });
         Assert.That(File.Exists(Path.Combine(tracesDir, "name2.trace")), Is.EqualTo(true));
 
         await browser.CloseAsync();
@@ -1000,7 +1061,7 @@ public class TracingTests
 
         int call1;
         {
-            var (events, _, _, _, _) = await ParseTraceRaw(testInfo.OutputPath("trace1.zip"));
+            var (events, _, _, _, _) = await ParseTraceRaw(Info.OutputPath("trace1.zip"));
             var sanitized = events.Select(sanitize).Where(e => e != null).ToList();
             ExpectToEqual(sanitized, new object[]
             {
@@ -1029,7 +1090,7 @@ public class TracingTests
         int call2before;
         int call2after;
         {
-            var (events, _, _, _, _) = await ParseTraceRaw(testInfo.OutputPath("trace2.zip"));
+            var (events, _, _, _, _) = await ParseTraceRaw(Info.OutputPath("trace2.zip"));
             var sanitized = events.Select(sanitize).Where(e => e != null).ToList();
             ExpectToEqual(sanitized, new object[]
             {
@@ -1052,10 +1113,12 @@ public class TracingTests
     }
 
     [UpstreamTest("TR-042 should save trace while a WebSocket keeps streaming frames")]
-    public async Task ShouldSaveTraceWhileAWebSocketKeepsStreamingFrames(IBrowserContext context, IPage page, Server server, TestInfo testInfo)
+    public async Task ShouldSaveTraceWhileAWebSocketKeepsStreamingFrames()
     {
+        var context = await ContextFixture();
+        var page = await PageFixture();
         var streaming = true;
-        server.OnceWebSocketConnection(ws =>
+        Server.OnceWebSocketConnection(ws =>
         {
             var timer = SetInterval(
                 () =>
@@ -1074,19 +1137,19 @@ public class TracingTests
         await context.Tracing.StartAsync(new() { Snapshots = true });
 
         await context.Tracing.StartChunkAsync();
-        await page.GotoAsync(server.EmptyPage);
+        await page.GotoAsync(Server.EmptyPage);
         await page.EvaluateAsync(@"url => {
     window.ws = new WebSocket(url);
     return new Promise(resolve => window.ws.addEventListener('open', () => resolve()));
-  }", $"ws://{server.Host}/ws");
+  }", $"ws://{Server.Host}/ws");
         await page.WaitForTimeoutAsync(100);
-        var tracePath1 = testInfo.OutputPath("trace1.zip");
+        var tracePath1 = Info.OutputPath("trace1.zip");
         await context.Tracing.StopChunkAsync(new() { Path = tracePath1 });
 
         streaming = false;
         await context.Tracing.StartChunkAsync();
         await page.WaitForTimeoutAsync(100);
-        var tracePath2 = testInfo.OutputPath("trace2.zip");
+        var tracePath2 = Info.OutputPath("trace2.zip");
         await context.Tracing.StopChunkAsync(new() { Path = tracePath2 });
 
         await page.EvaluateAsync(@"() => new Promise(resolve => {

@@ -24,12 +24,12 @@ using static Microsoft.Playwright.Tests.Fixtures.Utils;
 namespace Microsoft.Playwright.Tests.Library;
 
 /// <summary>Port of tests/library/browsercontext-route.spec.ts.</summary>
-public class BrowsercontextRouteTests
+public class BrowsercontextRouteTests : UpstreamBrowserTest
 {
     [UpstreamTest("RO-165 should intercept")]
-    public async Task ShouldIntercept(IBrowser browser, Server server, BrowserNewContextOptions contextOptions)
+    public async Task ShouldIntercept()
     {
-        var context = await browser.NewContextAsync(contextOptions);
+        var context = await Browser.NewContextAsync(ContextOptions());
         var intercepted = false;
         // .NET: a lambda can not use a local that is declared after it.
         IPage page = null;
@@ -48,16 +48,16 @@ public class BrowsercontextRouteTests
             IgnoreErrors(route.ContinueAsync());
         });
         page = await context.NewPageAsync();
-        var response = await page.GotoAsync(server.EmptyPage);
+        var response = await page.GotoAsync(Server.EmptyPage);
         Assert.That(response.Ok, Is.EqualTo(true));
         Assert.That(intercepted, Is.EqualTo(true));
         await context.CloseAsync();
     }
 
     [UpstreamTest("RO-166 should unroute")]
-    public async Task ShouldUnroute(IBrowser browser, Server server, BrowserNewContextOptions contextOptions)
+    public async Task ShouldUnroute()
     {
-        var context = await browser.NewContextAsync(contextOptions);
+        var context = await Browser.NewContextAsync(ContextOptions());
         var page = await context.NewPageAsync();
 
         var intercepted = new List<int>();
@@ -82,26 +82,26 @@ public class BrowsercontextRouteTests
             IgnoreErrors(route.FallbackAsync());
         };
         await context.RouteAsync(new Regex("empty.html"), handler4);
-        await page.GotoAsync(server.EmptyPage);
+        await page.GotoAsync(Server.EmptyPage);
         Assert.That(intercepted, Is.EqualTo(new[] { 4, 3, 2, 1 }));
 
         intercepted = new List<int>();
         await context.UnrouteAsync(new Regex("empty.html"), handler4);
-        await page.GotoAsync(server.EmptyPage);
+        await page.GotoAsync(Server.EmptyPage);
         Assert.That(intercepted, Is.EqualTo(new[] { 3, 2, 1 }));
 
         intercepted = new List<int>();
         await context.UnrouteAsync("**/empty.html");
-        await page.GotoAsync(server.EmptyPage);
+        await page.GotoAsync(Server.EmptyPage);
         Assert.That(intercepted, Is.EqualTo(new[] { 1 }));
 
         await context.CloseAsync();
     }
 
     [UpstreamTest("RO-167 should yield to page.route")]
-    public async Task ShouldYieldToPageRoute(IBrowser browser, Server server, BrowserNewContextOptions contextOptions)
+    public async Task ShouldYieldToPageRoute()
     {
-        var context = await browser.NewContextAsync(contextOptions);
+        var context = await Browser.NewContextAsync(ContextOptions());
         await context.RouteAsync("**/empty.html", route =>
         {
             IgnoreErrors(route.FulfillAsync(new() { Status = 200, Body = "context" }));
@@ -111,16 +111,16 @@ public class BrowsercontextRouteTests
         {
             IgnoreErrors(route.FulfillAsync(new() { Status = 200, Body = "page" }));
         });
-        var response = await page.GotoAsync(server.EmptyPage);
+        var response = await page.GotoAsync(Server.EmptyPage);
         Assert.That(response.Ok, Is.EqualTo(true));
         Assert.That(await response.TextAsync(), Is.EqualTo("page"));
         await context.CloseAsync();
     }
 
     [UpstreamTest("RO-168 should fall back to context.route")]
-    public async Task ShouldFallBackToContextRoute(IBrowser browser, Server server, BrowserNewContextOptions contextOptions)
+    public async Task ShouldFallBackToContextRoute()
     {
-        var context = await browser.NewContextAsync(contextOptions);
+        var context = await Browser.NewContextAsync(ContextOptions());
         await context.RouteAsync("**/empty.html", route =>
         {
             IgnoreErrors(route.FulfillAsync(new() { Status = 200, Body = "context" }));
@@ -130,16 +130,16 @@ public class BrowsercontextRouteTests
         {
             IgnoreErrors(route.FulfillAsync(new() { Status = 200, Body = "page" }));
         });
-        var response = await page.GotoAsync(server.EmptyPage);
+        var response = await page.GotoAsync(Server.EmptyPage);
         Assert.That(response.Ok, Is.EqualTo(true));
         Assert.That(await response.TextAsync(), Is.EqualTo("context"));
         await context.CloseAsync();
     }
 
     [UpstreamTest("RO-169 should support Set-Cookie header")]
-    public async Task ShouldSupportSetCookieHeader(ContextFactory contextFactory, string defaultSameSiteCookieValue)
+    public async Task ShouldSupportSetCookieHeader()
     {
-        var context = await contextFactory();
+        var context = await ContextFactory();
         var page = await context.NewPageAsync();
         await page.RouteAsync("https://example.com/", route =>
         {
@@ -158,7 +158,7 @@ public class BrowsercontextRouteTests
         {
             new
             {
-                sameSite = defaultSameSiteCookieValue,
+                sameSite = DefaultSameSiteCookieValue,
                 name = "name",
                 value = "value",
                 domain = ".example.com",
@@ -171,11 +171,11 @@ public class BrowsercontextRouteTests
     }
 
     [UpstreamTest("RO-170 should ignore secure Set-Cookie header for insecure requests")]
-    public async Task ShouldIgnoreSecureSetCookieHeaderForInsecureRequests(ContextFactory contextFactory, Server server, string browserName, bool isMac)
+    public async Task ShouldIgnoreSecureSetCookieHeaderForInsecureRequests()
     {
-        Info.Fixme(browserName == "webkit" && !isMac);
+        Info.Fixme(BrowserName == "webkit" && !IsMac);
 
-        var context = await contextFactory();
+        var context = await ContextFactory();
         var page = await context.NewPageAsync();
         await page.RouteAsync("http://example.com/", route =>
         {
@@ -194,12 +194,12 @@ public class BrowsercontextRouteTests
     }
 
     [UpstreamTest("RO-171 should use Set-Cookie header in future requests")]
-    public async Task ShouldUseSetCookieHeaderInFutureRequests(ContextFactory contextFactory, Server server, string defaultSameSiteCookieValue)
+    public async Task ShouldUseSetCookieHeaderInFutureRequests()
     {
-        var context = await contextFactory();
+        var context = await ContextFactory();
         var page = await context.NewPageAsync();
 
-        await page.RouteAsync(server.EmptyPage, route =>
+        await page.RouteAsync(Server.EmptyPage, route =>
         {
             IgnoreErrors(route.FulfillAsync(new()
             {
@@ -211,15 +211,15 @@ public class BrowsercontextRouteTests
                 Body = "done",
             }));
         });
-        await page.GotoAsync(server.EmptyPage);
+        await page.GotoAsync(Server.EmptyPage);
         ExpectToEqual(await context.CookiesAsync(), new[]
         {
             new
             {
-                sameSite = defaultSameSiteCookieValue,
+                sameSite = DefaultSameSiteCookieValue,
                 name = "name",
                 value = "value",
-                domain = server.Hostname,
+                domain = Server.Hostname,
                 path = "/",
                 expires = -1,
                 httpOnly = false,
@@ -228,45 +228,49 @@ public class BrowsercontextRouteTests
         });
 
         var cookie = "";
-        server.SetRoute("/foo.html", (req, res) =>
+        Server.SetRoute("/foo.html", (req, res) =>
         {
             cookie = req.Headers["cookie"];
             res.End();
         });
-        await page.GotoAsync(server.Prefix + "/foo.html");
+        await page.GotoAsync(Server.Prefix + "/foo.html");
         Assert.That(cookie, Is.EqualTo("name=value"));
     }
 
     [UpstreamTest("RO-172 should work with ignoreHTTPSErrors")]
-    public async Task ShouldWorkWithIgnoreHTTPSErrors(IBrowser browser, Server httpsServer, BrowserNewContextOptions contextOptions)
+    public async Task ShouldWorkWithIgnoreHTTPSErrors()
     {
-        var context = await browser.NewContextAsync(new(contextOptions) { IgnoreHTTPSErrors = true });
+        var context = await Browser.NewContextAsync(new(ContextOptions()) { IgnoreHTTPSErrors = true });
         var page = await context.NewPageAsync();
 
         await page.RouteAsync("**/*", route => route.ContinueAsync());
-        var response = await page.GotoAsync(httpsServer.EmptyPage);
+        var response = await page.GotoAsync(HttpsServer.EmptyPage);
         Assert.That(response.Status, Is.EqualTo(200));
         await context.CloseAsync();
     }
 
     [UpstreamTest("RO-173 should support the times parameter with route matching")]
-    public async Task ShouldSupportTheTimesParameterWithRouteMatching(IBrowserContext context, IPage page, Server server)
+    public async Task ShouldSupportTheTimesParameterWithRouteMatching()
     {
+        var context = await ContextFixture();
+        var page = await PageFixture();
         var intercepted = new List<int>();
         await context.RouteAsync("**/empty.html", route =>
         {
             intercepted.Add(1);
             IgnoreErrors(route.ContinueAsync());
         }, new() { Times = 1 });
-        await page.GotoAsync(server.EmptyPage);
-        await page.GotoAsync(server.EmptyPage);
-        await page.GotoAsync(server.EmptyPage);
+        await page.GotoAsync(Server.EmptyPage);
+        await page.GotoAsync(Server.EmptyPage);
+        await page.GotoAsync(Server.EmptyPage);
         Assert.That(intercepted, Has.Count.EqualTo(1));
     }
 
     [UpstreamTest("RO-174 should work if handler with times parameter was removed from another handler")]
-    public async Task ShouldWorkIfHandlerWithTimesParameterWasRemovedFromAnotherHandler(IBrowserContext context, IPage page, Server server)
+    public async Task ShouldWorkIfHandlerWithTimesParameterWasRemovedFromAnotherHandler()
     {
+        var context = await ContextFixture();
+        var page = await PageFixture();
         var intercepted = new List<string>();
         Func<IRoute, Task> handler = async route =>
         {
@@ -280,16 +284,18 @@ public class BrowsercontextRouteTests
             await context.UnrouteAsync("**/*", handler);
             await route.FallbackAsync();
         });
-        await page.GotoAsync(server.EmptyPage);
+        await page.GotoAsync(Server.EmptyPage);
         Assert.That(intercepted, Is.EqualTo(new[] { "second" }));
         intercepted.Clear();
-        await page.GotoAsync(server.EmptyPage);
+        await page.GotoAsync(Server.EmptyPage);
         Assert.That(intercepted, Is.EqualTo(new[] { "second" }));
     }
 
     [UpstreamTest("RO-175 should support async handler w/ times")]
-    public async Task ShouldSupportAsyncHandlerWTimes(IBrowserContext context, IPage page, Server server)
+    public async Task ShouldSupportAsyncHandlerWTimes()
     {
+        var context = await ContextFixture();
+        var page = await PageFixture();
         await context.RouteAsync("**/empty.html", async route =>
         {
             await Task.Delay(100);
@@ -299,15 +305,17 @@ public class BrowsercontextRouteTests
                 ContentType = "text/html",
             }));
         }, new() { Times = 1 });
-        await page.GotoAsync(server.EmptyPage);
+        await page.GotoAsync(Server.EmptyPage);
         await Expect(page.Locator("body")).ToHaveTextAsync("intercepted");
-        await page.GotoAsync(server.EmptyPage);
+        await page.GotoAsync(Server.EmptyPage);
         await Expect(page.Locator("body")).Not.ToHaveTextAsync("intercepted");
     }
 
     [UpstreamTest("RO-176 should overwrite post body with empty string")]
-    public async Task ShouldOverwritePostBodyWithEmptyString(IBrowserContext context, Server server, IPage page, string browserName)
+    public async Task ShouldOverwritePostBodyWithEmptyString()
     {
+        var context = await ContextFixture();
+        var page = await PageFixture();
         await context.RouteAsync("**/empty.html", route =>
         {
             IgnoreErrors(route.ContinueAsync(new()
@@ -317,11 +325,11 @@ public class BrowsercontextRouteTests
         });
 
         var req = await PromiseAll(
-            server.WaitForRequest("/empty.html"),
+            Server.WaitForRequest("/empty.html"),
             page.SetContentAsync($@"
       <script>
         (async () => {{
-            await fetch('{server.EmptyPage}', {{
+            await fetch('{Server.EmptyPage}', {{
               method: 'POST',
               body: 'original',
             }});
@@ -334,8 +342,10 @@ public class BrowsercontextRouteTests
     }
 
     [UpstreamTest("RO-177 should chain fallback")]
-    public async Task ShouldChainFallback(IBrowserContext context, IPage page, Server server)
+    public async Task ShouldChainFallback()
     {
+        var context = await ContextFixture();
+        var page = await PageFixture();
         var intercepted = new List<int>();
         await context.RouteAsync("**/empty.html", route =>
         {
@@ -352,18 +362,20 @@ public class BrowsercontextRouteTests
             intercepted.Add(3);
             IgnoreErrors(route.FallbackAsync());
         });
-        await page.GotoAsync(server.EmptyPage);
+        await page.GotoAsync(Server.EmptyPage);
         Assert.That(intercepted, Is.EqualTo(new[] { 3, 2, 1 }));
     }
 
     [UpstreamTest("RO-178 should chain fallback w/ dynamic URL")]
-    public async Task ShouldChainFallbackWDynamicURL(IBrowserContext context, IPage page, Server server)
+    public async Task ShouldChainFallbackWDynamicURL()
     {
+        var context = await ContextFixture();
+        var page = await PageFixture();
         var intercepted = new List<int>();
         await context.RouteAsync("**/bar", route =>
         {
             intercepted.Add(1);
-            IgnoreErrors(route.FallbackAsync(new() { Url = server.EmptyPage }));
+            IgnoreErrors(route.FallbackAsync(new() { Url = Server.EmptyPage }));
         });
         await context.RouteAsync("**/foo", route =>
         {
@@ -377,13 +389,15 @@ public class BrowsercontextRouteTests
             IgnoreErrors(route.FallbackAsync(new() { Url = "http://localhost/foo" }));
         });
 
-        await page.GotoAsync(server.EmptyPage);
+        await page.GotoAsync(Server.EmptyPage);
         Assert.That(intercepted, Is.EqualTo(new[] { 3, 2, 1 }));
     }
 
     [UpstreamTest("RO-179 should not chain fulfill")]
-    public async Task ShouldNotChainFulfill(IBrowserContext context, IPage page, Server server)
+    public async Task ShouldNotChainFulfill()
     {
+        var context = await ContextFixture();
+        var page = await PageFixture();
         var failed = false;
         await context.RouteAsync("**/empty.html", route =>
         {
@@ -397,15 +411,17 @@ public class BrowsercontextRouteTests
         {
             IgnoreErrors(route.FallbackAsync());
         });
-        var response = await page.GotoAsync(server.EmptyPage);
+        var response = await page.GotoAsync(Server.EmptyPage);
         var body = await response.BodyAsync();
         Assert.That(Encoding.UTF8.GetString(body), Is.EqualTo("fulfilled"));
         Assert.That(failed, Is.False);
     }
 
     [UpstreamTest("RO-180 should not chain abort")]
-    public async Task ShouldNotChainAbort(IBrowserContext context, IPage page, Server server)
+    public async Task ShouldNotChainAbort()
     {
+        var context = await ContextFixture();
+        var page = await PageFixture();
         var failed = false;
         await context.RouteAsync("**/empty.html", route =>
         {
@@ -419,14 +435,16 @@ public class BrowsercontextRouteTests
         {
             IgnoreErrors(route.FallbackAsync());
         });
-        var e = await Catch(() => page.GotoAsync(server.EmptyPage));
+        var e = await Catch(() => page.GotoAsync(Server.EmptyPage));
         Assert.That(e, Is.Not.Null);
         Assert.That(failed, Is.False);
     }
 
     [UpstreamTest("RO-181 should chain fallback into page")]
-    public async Task ShouldChainFallbackIntoPage(IBrowserContext context, IPage page, Server server)
+    public async Task ShouldChainFallbackIntoPage()
     {
+        var context = await ContextFixture();
+        var page = await PageFixture();
         var intercepted = new List<int>();
         await context.RouteAsync("**/empty.html", route =>
         {
@@ -458,13 +476,15 @@ public class BrowsercontextRouteTests
             intercepted.Add(6);
             IgnoreErrors(route.FallbackAsync());
         });
-        await page.GotoAsync(server.EmptyPage);
+        await page.GotoAsync(Server.EmptyPage);
         Assert.That(intercepted, Is.EqualTo(new[] { 6, 5, 4, 3, 2, 1 }));
     }
 
     [UpstreamTest("RO-182 should fall back async")]
-    public async Task ShouldFallBackAsync(IPage page, IBrowserContext context, Server server)
+    public async Task ShouldFallBackAsync()
     {
+        var page = await PageFixture();
+        var context = await ContextFixture();
         var intercepted = new List<int>();
         await context.RouteAsync("**/empty.html", async route =>
         {
@@ -484,18 +504,19 @@ public class BrowsercontextRouteTests
             await Task.Delay(100);
             IgnoreErrors(route.FallbackAsync());
         });
-        await page.GotoAsync(server.EmptyPage);
+        await page.GotoAsync(Server.EmptyPage);
         Assert.That(intercepted, Is.EqualTo(new[] { 3, 2, 1 }));
     }
 
     [UpstreamTest("RO-183 should bypass disk cache when context interception is enabled")]
-    public async Task ShouldBypassDiskCacheWhenContextInterceptionIsEnabled(IPage page, Server server)
+    public async Task ShouldBypassDiskCacheWhenContextInterceptionIsEnabled()
     {
+        var page = await PageFixture();
         await page.Context.RouteAsync("**/api*", route => route.ContinueAsync());
-        await page.GotoAsync(server.Prefix + "/frames/one-frame.html");
+        await page.GotoAsync(Server.Prefix + "/frames/one-frame.html");
         {
             var requests = new List<ServerRequest>();
-            server.SetRoute("/api", (req, res) =>
+            Server.SetRoute("/api", (req, res) =>
             {
                 requests.Add(req);
                 res.StatusCode = 200;
@@ -521,17 +542,18 @@ public class BrowsercontextRouteTests
     }
 
     [UpstreamTest("RO-184 should fulfill popup main request using alias")]
-    public async Task ShouldFulfillPopupMainRequestUsingAlias(IPage page, Server server, bool isElectron, int electronMajorVersion, bool isAndroid)
+    public async Task ShouldFulfillPopupMainRequestUsingAlias()
     {
-        Info.Skip(isElectron && electronMajorVersion < 30, "error: Browser context management is not supported.");
-        Info.Skip(isAndroid, "The internal Android localhost (10.0.0.2) != the localhost on the host");
+        var page = await PageFixture();
+        Info.Skip(IsElectron && ElectronMajorVersion < 30, "error: Browser context management is not supported.");
+        Info.Skip(IsAndroid, "The internal Android localhost (10.0.0.2) != the localhost on the host");
 
         await page.Context.RouteAsync("**/*", async route =>
         {
             var response = await route.FetchAsync();
             await route.FulfillAsync(new() { Response = response, Body = "hello" });
         });
-        await page.SetContentAsync($"<a target=_blank href=\"{server.EmptyPage}\">click me</a>");
+        await page.SetContentAsync($"<a target=_blank href=\"{Server.EmptyPage}\">click me</a>");
         var popup = await PromiseAll(
             page.WaitForPopupAsync(),
             page.GetByText("click me").ClickAsync());

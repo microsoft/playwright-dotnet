@@ -22,12 +22,12 @@ using static Microsoft.Playwright.Tests.Fixtures.Utils;
 namespace Microsoft.Playwright.Tests.Page;
 
 /// <summary>Port of tests/page/selectors-role.spec.ts.</summary>
-public class SelectorsRoleTests
+public class SelectorsRoleTests : UpstreamPageTest
 {
     [UpstreamTest("SE-050 should detect roles")]
-    public async Task ShouldDetectRoles(IPage page)
+    public async Task ShouldDetectRoles()
     {
-        await page.SetContentAsync(@"
+        await Page.SetContentAsync(@"
     <button>Hello</button>
     <select multiple="""" size=""2""></select>
     <select></select>
@@ -35,42 +35,42 @@ public class SelectorsRoleTests
     <details><summary>Hello</summary></details>
     <div role=""dialog"">I am a dialog</div>
   ");
-        Assert.That(await page.Locator("role=button").EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"), Is.EqualTo(new[]
+        Assert.That(await Page.Locator("role=button").EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"), Is.EqualTo(new[]
         {
             "<button>Hello</button>",
         }));
-        Assert.That(await page.Locator("role=listbox").EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"), Is.EqualTo(new[]
+        Assert.That(await Page.Locator("role=listbox").EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"), Is.EqualTo(new[]
         {
             "<select multiple=\"\" size=\"2\"></select>",
         }));
-        Assert.That(await page.Locator("role=combobox").EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"), Is.EqualTo(new[]
+        Assert.That(await Page.Locator("role=combobox").EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"), Is.EqualTo(new[]
         {
             "<select></select>",
         }));
-        Assert.That(await page.Locator("role=heading").EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"), Is.EqualTo(new[]
+        Assert.That(await Page.Locator("role=heading").EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"), Is.EqualTo(new[]
         {
             "<h3>Heading</h3>",
         }));
-        Assert.That(await page.Locator("role=group").EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"), Is.EqualTo(new[]
+        Assert.That(await Page.Locator("role=group").EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"), Is.EqualTo(new[]
         {
             "<details><summary>Hello</summary></details>",
         }));
-        Assert.That(await page.Locator("role=dialog").EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"), Is.EqualTo(new[]
+        Assert.That(await Page.Locator("role=dialog").EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"), Is.EqualTo(new[]
         {
             "<div role=\"dialog\">I am a dialog</div>",
         }));
-        Assert.That(await page.Locator("role=menuitem").EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"), Is.EqualTo(new string[]
+        Assert.That(await Page.Locator("role=menuitem").EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"), Is.EqualTo(new string[]
         {
         }));
-        Assert.That(await page.GetByRole(AriaRole.Menuitem).EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"), Is.EqualTo(new string[]
+        Assert.That(await Page.GetByRole(AriaRole.Menuitem).EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"), Is.EqualTo(new string[]
         {
         }));
     }
 
     [UpstreamTest("SE-051 should support selected")]
-    public async Task ShouldSupportSelected(IPage page)
+    public async Task ShouldSupportSelected()
     {
-        await page.SetContentAsync(@"
+        await Page.SetContentAsync(@"
     <select>
       <option>Hi</option>
       <option selected>Hello</option>
@@ -80,29 +80,29 @@ public class SelectorsRoleTests
       <div role=""option"" aria-selected=""false"">Hello</div>
     </div>
   ");
-        Assert.That(await page.Locator("role=option[selected]").EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"), Is.EqualTo(new[]
+        Assert.That(await Page.Locator("role=option[selected]").EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"), Is.EqualTo(new[]
         {
             "<option selected=\"\">Hello</option>",
             "<div role=\"option\" aria-selected=\"true\">Hi</div>",
         }));
 
-        Assert.That(await page.Locator("role=option[selected=true]").EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"), Is.EqualTo(new[]
+        Assert.That(await Page.Locator("role=option[selected=true]").EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"), Is.EqualTo(new[]
         {
             "<option selected=\"\">Hello</option>",
             "<div role=\"option\" aria-selected=\"true\">Hi</div>",
         }));
-        Assert.That(await page.GetByRole(AriaRole.Option, new() { Selected = true }).EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"), Is.EqualTo(new[]
+        Assert.That(await Page.GetByRole(AriaRole.Option, new() { Selected = true }).EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"), Is.EqualTo(new[]
         {
             "<option selected=\"\">Hello</option>",
             "<div role=\"option\" aria-selected=\"true\">Hi</div>",
         }));
 
-        Assert.That(await page.Locator("role=option[selected=false]").EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"), Is.EqualTo(new[]
+        Assert.That(await Page.Locator("role=option[selected=false]").EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"), Is.EqualTo(new[]
         {
             "<option>Hi</option>",
             "<div role=\"option\" aria-selected=\"false\">Hello</div>",
         }));
-        Assert.That(await page.GetByRole(AriaRole.Option, new() { Selected = false }).EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"), Is.EqualTo(new[]
+        Assert.That(await Page.GetByRole(AriaRole.Option, new() { Selected = false }).EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"), Is.EqualTo(new[]
         {
             "<option>Hi</option>",
             "<div role=\"option\" aria-selected=\"false\">Hello</div>",
@@ -110,9 +110,9 @@ public class SelectorsRoleTests
     }
 
     [UpstreamTest("SE-052 should support checked")]
-    public async Task ShouldSupportChecked(IPage page)
+    public async Task ShouldSupportChecked()
     {
-        await page.SetContentAsync(@"
+        await Page.SetContentAsync(@"
     <input type=checkbox>
     <input type=checkbox checked>
     <input type=checkbox indeterminate>
@@ -120,42 +120,42 @@ public class SelectorsRoleTests
     <div role=checkbox aria-checked=""false"">Hello</div>
     <div role=checkbox>Unknown</div>
   ");
-        await page.EvalOnSelectorAsync("[indeterminate]", "input => input.indeterminate = true");
+        await Page.EvalOnSelectorAsync("[indeterminate]", "input => input.indeterminate = true");
 
-        Assert.That(await page.Locator("role=checkbox[checked]").EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"), Is.EqualTo(new[]
+        Assert.That(await Page.Locator("role=checkbox[checked]").EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"), Is.EqualTo(new[]
         {
             "<input type=\"checkbox\" checked=\"\">",
             "<div role=\"checkbox\" aria-checked=\"true\">Hi</div>",
         }));
-        Assert.That(await page.Locator("role=checkbox[checked=true]").EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"), Is.EqualTo(new[]
+        Assert.That(await Page.Locator("role=checkbox[checked=true]").EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"), Is.EqualTo(new[]
         {
             "<input type=\"checkbox\" checked=\"\">",
             "<div role=\"checkbox\" aria-checked=\"true\">Hi</div>",
         }));
-        Assert.That(await page.GetByRole(AriaRole.Checkbox, new() { Checked = true }).EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"), Is.EqualTo(new[]
+        Assert.That(await Page.GetByRole(AriaRole.Checkbox, new() { Checked = true }).EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"), Is.EqualTo(new[]
         {
             "<input type=\"checkbox\" checked=\"\">",
             "<div role=\"checkbox\" aria-checked=\"true\">Hi</div>",
         }));
 
-        Assert.That(await page.Locator("role=checkbox[checked=false]").EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"), Is.EqualTo(new[]
+        Assert.That(await Page.Locator("role=checkbox[checked=false]").EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"), Is.EqualTo(new[]
         {
             "<input type=\"checkbox\">",
             "<div role=\"checkbox\" aria-checked=\"false\">Hello</div>",
             "<div role=\"checkbox\">Unknown</div>",
         }));
-        Assert.That(await page.GetByRole(AriaRole.Checkbox, new() { Checked = false }).EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"), Is.EqualTo(new[]
+        Assert.That(await Page.GetByRole(AriaRole.Checkbox, new() { Checked = false }).EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"), Is.EqualTo(new[]
         {
             "<input type=\"checkbox\">",
             "<div role=\"checkbox\" aria-checked=\"false\">Hello</div>",
             "<div role=\"checkbox\">Unknown</div>",
         }));
 
-        Assert.That(await page.Locator("role=checkbox[checked=\"mixed\"]").EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"), Is.EqualTo(new[]
+        Assert.That(await Page.Locator("role=checkbox[checked=\"mixed\"]").EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"), Is.EqualTo(new[]
         {
             "<input type=\"checkbox\" indeterminate=\"\">",
         }));
-        Assert.That(await page.Locator("role=checkbox").EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"), Is.EqualTo(new[]
+        Assert.That(await Page.Locator("role=checkbox").EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"), Is.EqualTo(new[]
         {
             "<input type=\"checkbox\">",
             "<input type=\"checkbox\" checked=\"\">",
@@ -165,21 +165,21 @@ public class SelectorsRoleTests
             "<div role=\"checkbox\">Unknown</div>",
         }));
 
-        await page.SetContentAsync(@"
+        await Page.SetContentAsync(@"
     <div role=""checkbox"" aria-checked=""True"" aria-readonly=""True""
       onclick=""this.setAttribute('aria-checked', String(this.getAttribute('aria-checked').toLowerCase() !== 'true'))"">Remember me</div>
     <button aria-pressed=""True"">Bold</button>
     <button aria-expanded=""True"">Menu</button>
     <div role=""Button"" tabindex=""0"">Save</div>
   ");
-        var checkbox = page.GetByRole(AriaRole.Checkbox);
-        Assert.That(await page.GetByRole(AriaRole.Checkbox, new() { Checked = true }).CountAsync(), Is.EqualTo(1));
-        Assert.That(await page.GetByRole(AriaRole.Button, new() { Pressed = true }).CountAsync(), Is.EqualTo(1));
-        Assert.That(await page.GetByRole(AriaRole.Button, new() { Expanded = true }).CountAsync(), Is.EqualTo(1));
-        Assert.That(await page.GetByRole(AriaRole.Button, new() { Name = "Save" }).CountAsync(), Is.EqualTo(1));
+        var checkbox = Page.GetByRole(AriaRole.Checkbox);
+        Assert.That(await Page.GetByRole(AriaRole.Checkbox, new() { Checked = true }).CountAsync(), Is.EqualTo(1));
+        Assert.That(await Page.GetByRole(AriaRole.Button, new() { Pressed = true }).CountAsync(), Is.EqualTo(1));
+        Assert.That(await Page.GetByRole(AriaRole.Button, new() { Expanded = true }).CountAsync(), Is.EqualTo(1));
+        Assert.That(await Page.GetByRole(AriaRole.Button, new() { Name = "Save" }).CountAsync(), Is.EqualTo(1));
         await Expect(checkbox).ToBeCheckedAsync();
         await Expect(checkbox).Not.ToBeEditableAsync();
-        await Expect(page.Locator("body")).ToMatchAriaSnapshotAsync(@"
+        await Expect(Page.Locator("body")).ToMatchAriaSnapshotAsync(@"
     - checkbox ""Remember me"" [checked]
     - button ""Bold"" [pressed]
     - button ""Menu"" [expanded]
@@ -189,47 +189,47 @@ public class SelectorsRoleTests
         await Expect(checkbox).ToHaveAttributeAsync("aria-checked", "True");
 
         await checkbox.EvaluateAsync("element => element.setAttribute('aria-checked', 'Mixed')");
-        await page.GetByRole(AriaRole.Button, new() { Name = "Bold" }).EvaluateAsync("element => element.setAttribute('aria-pressed', 'Mixed')");
-        Assert.That(await page.Locator("role=checkbox[checked=mixed]").CountAsync(), Is.EqualTo(1));
-        Assert.That(await page.Locator("role=button[pressed=mixed]").CountAsync(), Is.EqualTo(1));
+        await Page.GetByRole(AriaRole.Button, new() { Name = "Bold" }).EvaluateAsync("element => element.setAttribute('aria-pressed', 'Mixed')");
+        Assert.That(await Page.Locator("role=checkbox[checked=mixed]").CountAsync(), Is.EqualTo(1));
+        Assert.That(await Page.Locator("role=button[pressed=mixed]").CountAsync(), Is.EqualTo(1));
     }
 
     [UpstreamTest("SE-053 should support pressed")]
-    public async Task ShouldSupportPressed(IPage page)
+    public async Task ShouldSupportPressed()
     {
-        await page.SetContentAsync(@"
+        await Page.SetContentAsync(@"
     <button>Hi</button>
     <button aria-pressed=""true"">Hello</button>
     <button aria-pressed=""false"">Bye</button>
     <button aria-pressed=""mixed"">Mixed</button>
   ");
-        Assert.That(await page.Locator("role=button[pressed]").EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"), Is.EqualTo(new[]
+        Assert.That(await Page.Locator("role=button[pressed]").EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"), Is.EqualTo(new[]
         {
             "<button aria-pressed=\"true\">Hello</button>",
         }));
-        Assert.That(await page.Locator("role=button[pressed=true]").EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"), Is.EqualTo(new[]
+        Assert.That(await Page.Locator("role=button[pressed=true]").EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"), Is.EqualTo(new[]
         {
             "<button aria-pressed=\"true\">Hello</button>",
         }));
-        Assert.That(await page.GetByRole(AriaRole.Button, new() { Pressed = true }).EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"), Is.EqualTo(new[]
+        Assert.That(await Page.GetByRole(AriaRole.Button, new() { Pressed = true }).EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"), Is.EqualTo(new[]
         {
             "<button aria-pressed=\"true\">Hello</button>",
         }));
-        Assert.That(await page.Locator("role=button[pressed=false]").EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"), Is.EqualTo(new[]
+        Assert.That(await Page.Locator("role=button[pressed=false]").EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"), Is.EqualTo(new[]
         {
             "<button>Hi</button>",
             "<button aria-pressed=\"false\">Bye</button>",
         }));
-        Assert.That(await page.GetByRole(AriaRole.Button, new() { Pressed = false }).EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"), Is.EqualTo(new[]
+        Assert.That(await Page.GetByRole(AriaRole.Button, new() { Pressed = false }).EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"), Is.EqualTo(new[]
         {
             "<button>Hi</button>",
             "<button aria-pressed=\"false\">Bye</button>",
         }));
-        Assert.That(await page.Locator("role=button[pressed=\"mixed\"]").EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"), Is.EqualTo(new[]
+        Assert.That(await Page.Locator("role=button[pressed=\"mixed\"]").EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"), Is.EqualTo(new[]
         {
             "<button aria-pressed=\"mixed\">Mixed</button>",
         }));
-        Assert.That(await page.Locator("role=button").EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"), Is.EqualTo(new[]
+        Assert.That(await Page.Locator("role=button").EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"), Is.EqualTo(new[]
         {
             "<button>Hi</button>",
             "<button aria-pressed=\"true\">Hello</button>",
@@ -239,60 +239,60 @@ public class SelectorsRoleTests
     }
 
     [UpstreamTest("SE-054 should support expanded")]
-    public async Task ShouldSupportExpanded(IPage page)
+    public async Task ShouldSupportExpanded()
     {
-        await page.SetContentAsync(@"
+        await Page.SetContentAsync(@"
     <div role=""treeitem"">Hi</div>
     <div role=""treeitem"" aria-expanded=""true"">Hello</div>
     <div role=""treeitem"" aria-expanded=""false"">Bye</div>
   ");
 
-        Assert.That(await page.Locator("role=treeitem").EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"), Is.EqualTo(new[]
+        Assert.That(await Page.Locator("role=treeitem").EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"), Is.EqualTo(new[]
         {
             "<div role=\"treeitem\">Hi</div>",
             "<div role=\"treeitem\" aria-expanded=\"true\">Hello</div>",
             "<div role=\"treeitem\" aria-expanded=\"false\">Bye</div>",
         }));
-        Assert.That(await page.GetByRole(AriaRole.Treeitem).EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"), Is.EqualTo(new[]
+        Assert.That(await Page.GetByRole(AriaRole.Treeitem).EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"), Is.EqualTo(new[]
         {
             "<div role=\"treeitem\">Hi</div>",
             "<div role=\"treeitem\" aria-expanded=\"true\">Hello</div>",
             "<div role=\"treeitem\" aria-expanded=\"false\">Bye</div>",
         }));
 
-        Assert.That(await page.Locator("role=treeitem[expanded]").EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"), Is.EqualTo(new[]
+        Assert.That(await Page.Locator("role=treeitem[expanded]").EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"), Is.EqualTo(new[]
         {
             "<div role=\"treeitem\" aria-expanded=\"true\">Hello</div>",
         }));
-        Assert.That(await page.Locator("role=treeitem[expanded=true]").EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"), Is.EqualTo(new[]
+        Assert.That(await Page.Locator("role=treeitem[expanded=true]").EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"), Is.EqualTo(new[]
         {
             "<div role=\"treeitem\" aria-expanded=\"true\">Hello</div>",
         }));
-        Assert.That(await page.GetByRole(AriaRole.Treeitem, new() { Expanded = true }).EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"), Is.EqualTo(new[]
+        Assert.That(await Page.GetByRole(AriaRole.Treeitem, new() { Expanded = true }).EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"), Is.EqualTo(new[]
         {
             "<div role=\"treeitem\" aria-expanded=\"true\">Hello</div>",
         }));
 
-        Assert.That(await page.Locator("role=treeitem[expanded=false]").EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"), Is.EqualTo(new[]
+        Assert.That(await Page.Locator("role=treeitem[expanded=false]").EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"), Is.EqualTo(new[]
         {
             "<div role=\"treeitem\" aria-expanded=\"false\">Bye</div>",
         }));
-        Assert.That(await page.GetByRole(AriaRole.Treeitem, new() { Expanded = false }).EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"), Is.EqualTo(new[]
+        Assert.That(await Page.GetByRole(AriaRole.Treeitem, new() { Expanded = false }).EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"), Is.EqualTo(new[]
         {
             "<div role=\"treeitem\" aria-expanded=\"false\">Bye</div>",
         }));
 
         // Workaround for expanded="none".
-        Assert.That(await page.Locator("[role=treeitem]:not([aria-expanded])").EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"), Is.EqualTo(new[]
+        Assert.That(await Page.Locator("[role=treeitem]:not([aria-expanded])").EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"), Is.EqualTo(new[]
         {
             "<div role=\"treeitem\">Hi</div>",
         }));
     }
 
     [UpstreamTest("SE-055 should support disabled")]
-    public async Task ShouldSupportDisabled(IPage page)
+    public async Task ShouldSupportDisabled()
     {
-        await page.SetContentAsync(@"
+        await Page.SetContentAsync(@"
     <button>Hi</button>
     <button disabled>Bye</button>
     <button aria-disabled=""true"">Hello</button>
@@ -310,44 +310,44 @@ public class SelectorsRoleTests
       <option disabled>three</option>
     </select>
   ");
-        Assert.That(await page.Locator("role=button[disabled]").EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"), Is.EqualTo(new[]
+        Assert.That(await Page.Locator("role=button[disabled]").EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"), Is.EqualTo(new[]
         {
             "<button disabled=\"\">Bye</button>",
             "<button aria-disabled=\"true\">Hello</button>",
             "<button>Yay</button>",
         }));
-        Assert.That(await page.Locator("role=button[disabled=true]").EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"), Is.EqualTo(new[]
+        Assert.That(await Page.Locator("role=button[disabled=true]").EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"), Is.EqualTo(new[]
         {
             "<button disabled=\"\">Bye</button>",
             "<button aria-disabled=\"true\">Hello</button>",
             "<button>Yay</button>",
         }));
-        Assert.That(await page.GetByRole(AriaRole.Button, new() { Disabled = true }).EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"), Is.EqualTo(new[]
+        Assert.That(await Page.GetByRole(AriaRole.Button, new() { Disabled = true }).EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"), Is.EqualTo(new[]
         {
             "<button disabled=\"\">Bye</button>",
             "<button aria-disabled=\"true\">Hello</button>",
             "<button>Yay</button>",
         }));
-        Assert.That(await page.Locator("role=button[disabled=false]").EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"), Is.EqualTo(new[]
+        Assert.That(await Page.Locator("role=button[disabled=false]").EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"), Is.EqualTo(new[]
         {
             "<button>Hi</button>",
             "<button aria-disabled=\"false\">Oh</button>",
         }));
-        Assert.That(await page.GetByRole(AriaRole.Button, new() { Disabled = false }).EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"), Is.EqualTo(new[]
+        Assert.That(await Page.GetByRole(AriaRole.Button, new() { Disabled = false }).EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"), Is.EqualTo(new[]
         {
             "<button>Hi</button>",
             "<button aria-disabled=\"false\">Oh</button>",
         }));
-        Assert.That(await page.GetByRole(AriaRole.Option, new() { Disabled = true }).EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"), Is.EqualTo(new[]
+        Assert.That(await Page.GetByRole(AriaRole.Option, new() { Disabled = true }).EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"), Is.EqualTo(new[]
         {
             "<option>one</option>",
             "<option disabled=\"\">three</option>",
         }));
-        Assert.That(await page.GetByRole(AriaRole.Option, new() { Disabled = false }).EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"), Is.EqualTo(new[]
+        Assert.That(await Page.GetByRole(AriaRole.Option, new() { Disabled = false }).EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"), Is.EqualTo(new[]
         {
             "<option>two</option>",
         }));
-        Assert.That(await page.GetByRole(AriaRole.Option).EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"), Is.EqualTo(new[]
+        Assert.That(await Page.GetByRole(AriaRole.Option).EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"), Is.EqualTo(new[]
         {
             "<option>one</option>",
             "<option>two</option>",
@@ -356,27 +356,27 @@ public class SelectorsRoleTests
     }
 
     [UpstreamTest("SE-056 should inherit disabled from the ancestor")]
-    public async Task ShouldInheritDisabledFromTheAncestor(IPage page)
+    public async Task ShouldInheritDisabledFromTheAncestor()
     {
-        await page.SetContentAsync(@"
+        await Page.SetContentAsync(@"
     <span aria-disabled=""true"">
       <button>Click me!</button>
     </span>
   ");
-        await Expect(page.Locator("button")).ToBeDisabledAsync();
+        await Expect(Page.Locator("button")).ToBeDisabledAsync();
 
-        await page.SetContentAsync(@"
+        await Page.SetContentAsync(@"
     <span aria-disabled=""true"">
       <h1>Heading</h1>
     </span>
   ");
-        await Expect(page.Locator("h1")).Not.ToBeDisabledAsync();
+        await Expect(Page.Locator("h1")).Not.ToBeDisabledAsync();
     }
 
     [UpstreamTest("SE-057 should support disabled fieldset")]
-    public async Task ShouldSupportDisabledFieldset(IPage page)
+    public async Task ShouldSupportDisabledFieldset()
     {
-        await page.SetContentAsync(@"
+        await Page.SetContentAsync(@"
     <fieldset disabled>
       <input></input>
       <button data-testid=""inside-fieldset-element"">x</button>
@@ -410,47 +410,47 @@ public class SelectorsRoleTests
     </fieldset>
   ");
 
-        await Expect(page.GetByTestId("inside-legend-element")).ToBeEnabledAsync();
-        await Expect(page.GetByTestId("nested-inside-legend-element")).ToBeEnabledAsync();
-        await Expect(page.GetByTestId("first-legend-element")).ToBeEnabledAsync();
-        await Expect(page.GetByTestId("second-legend-element")).ToBeDisabledAsync();
-        await Expect(page.GetByTestId("deep-button")).ToBeDisabledAsync();
+        await Expect(Page.GetByTestId("inside-legend-element")).ToBeEnabledAsync();
+        await Expect(Page.GetByTestId("nested-inside-legend-element")).ToBeEnabledAsync();
+        await Expect(Page.GetByTestId("first-legend-element")).ToBeEnabledAsync();
+        await Expect(Page.GetByTestId("second-legend-element")).ToBeDisabledAsync();
+        await Expect(Page.GetByTestId("deep-button")).ToBeDisabledAsync();
     }
 
     [UpstreamTest("SE-058 should support level")]
-    public async Task ShouldSupportLevel(IPage page)
+    public async Task ShouldSupportLevel()
     {
-        await page.SetContentAsync(@"
+        await Page.SetContentAsync(@"
     <h1>Hello</h1>
     <h3>Hi</h3>
     <div role=""heading"" aria-level=""5"">Bye</div>
   ");
-        Assert.That(await page.Locator("role=heading[level=1]").EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"), Is.EqualTo(new[]
+        Assert.That(await Page.Locator("role=heading[level=1]").EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"), Is.EqualTo(new[]
         {
             "<h1>Hello</h1>",
         }));
-        Assert.That(await page.GetByRole(AriaRole.Heading, new() { Level = 1 }).EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"), Is.EqualTo(new[]
+        Assert.That(await Page.GetByRole(AriaRole.Heading, new() { Level = 1 }).EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"), Is.EqualTo(new[]
         {
             "<h1>Hello</h1>",
         }));
-        Assert.That(await page.Locator("role=heading[level=3]").EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"), Is.EqualTo(new[]
+        Assert.That(await Page.Locator("role=heading[level=3]").EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"), Is.EqualTo(new[]
         {
             "<h3>Hi</h3>",
         }));
-        Assert.That(await page.GetByRole(AriaRole.Heading, new() { Level = 3 }).EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"), Is.EqualTo(new[]
+        Assert.That(await Page.GetByRole(AriaRole.Heading, new() { Level = 3 }).EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"), Is.EqualTo(new[]
         {
             "<h3>Hi</h3>",
         }));
-        Assert.That(await page.Locator("role=heading[level=5]").EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"), Is.EqualTo(new[]
+        Assert.That(await Page.Locator("role=heading[level=5]").EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"), Is.EqualTo(new[]
         {
             "<div role=\"heading\" aria-level=\"5\">Bye</div>",
         }));
     }
 
     [UpstreamTest("SE-059 should filter hidden, unless explicitly asked for")]
-    public async Task ShouldFilterHiddenUnlessExplicitlyAskedFor(IPage page)
+    public async Task ShouldFilterHiddenUnlessExplicitlyAskedFor()
     {
-        await page.SetContentAsync(@"
+        await Page.SetContentAsync(@"
     <button>Hi</button>
     <button hidden>Hello</button>
     <button aria-hidden=""true"">Yay</button>
@@ -492,27 +492,14 @@ public class SelectorsRoleTests
       addButton(document.getElementById('host2'), 'Shadow2');
     </script>
   ");
-        Assert.That(await page.Locator("role=button").EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"), Is.EqualTo(new[]
+        Assert.That(await Page.Locator("role=button").EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"), Is.EqualTo(new[]
         {
             "<button>Hi</button>",
             "<button aria-hidden=\"false\">Nay</button>",
             "<button style=\"visibility:visible\">Still here</button>",
             "<button>Shadow1</button>",
         }));
-        Assert.That(await page.Locator("role=button[include-hidden]").EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"), Is.EqualTo(new[]
-        {
-            "<button>Hi</button>",
-            "<button hidden=\"\">Hello</button>",
-            "<button aria-hidden=\"true\">Yay</button>",
-            "<button aria-hidden=\"false\">Nay</button>",
-            "<button style=\"visibility:hidden\">Bye</button>",
-            "<button>Oh</button>",
-            "<button style=\"visibility:visible\">Still here</button>",
-            "<button style=\"display:none\">Never</button>",
-            "<button>Shadow1</button>",
-            "<button>Shadow2</button>",
-        }));
-        Assert.That(await page.Locator("role=button[include-hidden=true]").EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"), Is.EqualTo(new[]
+        Assert.That(await Page.Locator("role=button[include-hidden]").EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"), Is.EqualTo(new[]
         {
             "<button>Hi</button>",
             "<button hidden=\"\">Hello</button>",
@@ -525,18 +512,31 @@ public class SelectorsRoleTests
             "<button>Shadow1</button>",
             "<button>Shadow2</button>",
         }));
-        Assert.That(await page.Locator("role=button[include-hidden=false]").EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"), Is.EqualTo(new[]
+        Assert.That(await Page.Locator("role=button[include-hidden=true]").EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"), Is.EqualTo(new[]
+        {
+            "<button>Hi</button>",
+            "<button hidden=\"\">Hello</button>",
+            "<button aria-hidden=\"true\">Yay</button>",
+            "<button aria-hidden=\"false\">Nay</button>",
+            "<button style=\"visibility:hidden\">Bye</button>",
+            "<button>Oh</button>",
+            "<button style=\"visibility:visible\">Still here</button>",
+            "<button style=\"display:none\">Never</button>",
+            "<button>Shadow1</button>",
+            "<button>Shadow2</button>",
+        }));
+        Assert.That(await Page.Locator("role=button[include-hidden=false]").EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"), Is.EqualTo(new[]
         {
             "<button>Hi</button>",
             "<button aria-hidden=\"false\">Nay</button>",
             "<button style=\"visibility:visible\">Still here</button>",
             "<button>Shadow1</button>",
         }));
-        Assert.That(await page.Locator("role=textbox").EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"), Is.EqualTo(new[]
+        Assert.That(await Page.Locator("role=textbox").EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"), Is.EqualTo(new[]
         {
             "<input name=\"one\">",
         }));
-        Assert.That(await page.Locator("role=option").EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"), Is.EqualTo(new[]
+        Assert.That(await Page.Locator("role=option").EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"), Is.EqualTo(new[]
         {
             "<option style=\"visibility:hidden\">One</option>",
             "<option>Three</option>",
@@ -544,9 +544,9 @@ public class SelectorsRoleTests
     }
 
     [UpstreamTest("SE-060 should support name")]
-    public async Task ShouldSupportName(IPage page, string browserName, int browserMajorVersion)
+    public async Task ShouldSupportName()
     {
-        await page.SetContentAsync(@"
+        await Page.SetContentAsync(@"
     <div role=""button"" aria-label="" Hello ""></div>
     <div role=""button"" aria-label=""Hallo""></div>
     <div role=""button"" aria-label=""Hello"" aria-hidden=""true""></div>
@@ -557,86 +557,86 @@ public class SelectorsRoleTests
     <div role=""group"" aria-labelledby=""title""></div>
   ");
 
-        var group = page.GetByRole(AriaRole.Group);
+        var group = Page.GetByRole(AriaRole.Group);
         await Expect(group).ToHaveAccessibleNameAsync("Chosen name");
 
-        Assert.That(await page.Locator("role=button[name=\"Hello\"]").EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"), Is.EqualTo(new[]
+        Assert.That(await Page.Locator("role=button[name=\"Hello\"]").EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"), Is.EqualTo(new[]
         {
             "<div role=\"button\" aria-label=\" Hello \"></div>",
         }));
-        Assert.That(await page.Locator("role=button[name=\" \n Hello \"]").EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"), Is.EqualTo(new[]
+        Assert.That(await Page.Locator("role=button[name=\" \n Hello \"]").EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"), Is.EqualTo(new[]
         {
             "<div role=\"button\" aria-label=\" Hello \"></div>",
         }));
-        Assert.That(await page.GetByRole(AriaRole.Button, new() { Name = "Hello" }).EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"), Is.EqualTo(new[]
+        Assert.That(await Page.GetByRole(AriaRole.Button, new() { Name = "Hello" }).EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"), Is.EqualTo(new[]
         {
             "<div role=\"button\" aria-label=\" Hello \"></div>",
         }));
 
-        Assert.That(await page.Locator("role=button[name*=\"all\"]").EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"), Is.EqualTo(new[]
+        Assert.That(await Page.Locator("role=button[name*=\"all\"]").EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"), Is.EqualTo(new[]
         {
             "<div role=\"button\" aria-label=\"Hallo\"></div>",
         }));
 
-        Assert.That(await page.Locator("role=button[name=/^H[ae]llo$/]").EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"), Is.EqualTo(new[]
+        Assert.That(await Page.Locator("role=button[name=/^H[ae]llo$/]").EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"), Is.EqualTo(new[]
         {
             "<div role=\"button\" aria-label=\" Hello \"></div>",
             "<div role=\"button\" aria-label=\"Hallo\"></div>",
         }));
-        Assert.That(await page.GetByRole(AriaRole.Button, new() { NameRegex = new Regex("^H[ae]llo$") }).EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"), Is.EqualTo(new[]
-        {
-            "<div role=\"button\" aria-label=\" Hello \"></div>",
-            "<div role=\"button\" aria-label=\"Hallo\"></div>",
-        }));
-
-        Assert.That(await page.Locator("role=button[name=/h.*o/i]").EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"), Is.EqualTo(new[]
-        {
-            "<div role=\"button\" aria-label=\" Hello \"></div>",
-            "<div role=\"button\" aria-label=\"Hallo\"></div>",
-        }));
-        Assert.That(await page.GetByRole(AriaRole.Button, new() { NameRegex = new Regex("h.*o", RegexOptions.IgnoreCase) }).EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"), Is.EqualTo(new[]
+        Assert.That(await Page.GetByRole(AriaRole.Button, new() { NameRegex = new Regex("^H[ae]llo$") }).EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"), Is.EqualTo(new[]
         {
             "<div role=\"button\" aria-label=\" Hello \"></div>",
             "<div role=\"button\" aria-label=\"Hallo\"></div>",
         }));
 
-        Assert.That(await page.Locator("role=button[name=\"Hello\"][include-hidden]").EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"), Is.EqualTo(new[]
+        Assert.That(await Page.Locator("role=button[name=/h.*o/i]").EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"), Is.EqualTo(new[]
+        {
+            "<div role=\"button\" aria-label=\" Hello \"></div>",
+            "<div role=\"button\" aria-label=\"Hallo\"></div>",
+        }));
+        Assert.That(await Page.GetByRole(AriaRole.Button, new() { NameRegex = new Regex("h.*o", RegexOptions.IgnoreCase) }).EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"), Is.EqualTo(new[]
+        {
+            "<div role=\"button\" aria-label=\" Hello \"></div>",
+            "<div role=\"button\" aria-label=\"Hallo\"></div>",
+        }));
+
+        Assert.That(await Page.Locator("role=button[name=\"Hello\"][include-hidden]").EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"), Is.EqualTo(new[]
         {
             "<div role=\"button\" aria-label=\" Hello \"></div>",
             "<div role=\"button\" aria-label=\"Hello\" aria-hidden=\"true\"></div>",
         }));
-        Assert.That(await page.GetByRole(AriaRole.Button, new() { Name = "Hello", IncludeHidden = true }).EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"), Is.EqualTo(new[]
+        Assert.That(await Page.GetByRole(AriaRole.Button, new() { Name = "Hello", IncludeHidden = true }).EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"), Is.EqualTo(new[]
         {
             "<div role=\"button\" aria-label=\" Hello \"></div>",
             "<div role=\"button\" aria-label=\"Hello\" aria-hidden=\"true\"></div>",
         }));
-        Assert.That(await page.GetByRole(AriaRole.Button, new() { Name = "hello", IncludeHidden = true }).EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"), Is.EqualTo(new[]
+        Assert.That(await Page.GetByRole(AriaRole.Button, new() { Name = "hello", IncludeHidden = true }).EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"), Is.EqualTo(new[]
         {
             "<div role=\"button\" aria-label=\" Hello \"></div>",
             "<div role=\"button\" aria-label=\"Hello\" aria-hidden=\"true\"></div>",
         }));
 
-        Assert.That(await page.Locator("role=button[name=Hello]").EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"), Is.EqualTo(new[]
+        Assert.That(await Page.Locator("role=button[name=Hello]").EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"), Is.EqualTo(new[]
         {
             "<div role=\"button\" aria-label=\" Hello \"></div>",
         }));
-        Assert.That(await page.Locator("role=button[name=123][include-hidden]").EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"), Is.EqualTo(new[]
+        Assert.That(await Page.Locator("role=button[name=123][include-hidden]").EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"), Is.EqualTo(new[]
         {
             "<div role=\"button\" aria-label=\"123\" aria-hidden=\"true\"></div>",
         }));
-        Assert.That(await page.GetByRole(AriaRole.Button, new() { Name = "123", IncludeHidden = true }).EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"), Is.EqualTo(new[]
+        Assert.That(await Page.GetByRole(AriaRole.Button, new() { Name = "123", IncludeHidden = true }).EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"), Is.EqualTo(new[]
         {
             "<div role=\"button\" aria-label=\"123\" aria-hidden=\"true\"></div>",
         }));
 
         // Old electron/android do not have this API.
-        var isMissingAriaLabelledByElements = browserName == "chromium" && browserMajorVersion < 135;
+        var isMissingAriaLabelledByElements = BrowserName == "chromium" && BrowserMajorVersion < 135;
         if (!isMissingAriaLabelledByElements)
         {
             await group.EvaluateAsync(@"element => {
       element.ariaLabelledByElements = [document.querySelector('#title')];
     }");
-            Assert.That(await page.GetByRole(AriaRole.Group, new() { Name = "Chosen name", Exact = true }).EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"), Is.EqualTo(new[]
+            Assert.That(await Page.GetByRole(AriaRole.Group, new() { Name = "Chosen name", Exact = true }).EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"), Is.EqualTo(new[]
             {
                 "<div role=\"group\" aria-labelledby=\"\"></div>",
             }));
@@ -644,51 +644,51 @@ public class SelectorsRoleTests
     }
 
     [UpstreamTest("SE-061 should support option name with html whitespace")]
-    public async Task ShouldSupportOptionNameWithHtmlWhitespace(IPage page)
+    public async Task ShouldSupportOptionNameWithHtmlWhitespace()
     {
-        await page.SetContentAsync(@"
+        await Page.SetContentAsync(@"
     <select>
       <option value=""html"">&nbsp;HTML</option>
     </select>
   ");
-        await Expect(page.GetByRole(AriaRole.Option, new() { Name = "HTML" })).ToHaveCountAsync(1);
+        await Expect(Page.GetByRole(AriaRole.Option, new() { Name = "HTML" })).ToHaveCountAsync(1);
     }
 
     [UpstreamTest("SE-062 errors")]
-    public async Task Errors(IPage page)
+    public async Task Errors()
     {
-        var e0 = await Catch(() => page.QuerySelectorAsync("role=[bar]"));
+        var e0 = await Catch(() => Page.QuerySelectorAsync("role=[bar]"));
         Assert.That(e0.Message, Does.Contain("Role must not be empty"));
 
-        var e1 = await Catch(() => page.QuerySelectorAsync("role=foo[sElected]"));
+        var e1 = await Catch(() => Page.QuerySelectorAsync("role=foo[sElected]"));
         Assert.That(e1.Message, Does.Contain("Unknown attribute \"sElected\", must be one of \"checked\", \"description\", \"disabled\", \"expanded\", \"include-hidden\", \"level\", \"name\", \"pressed\", \"selected\""));
 
-        var e2 = await Catch(() => page.QuerySelectorAsync("role=foo[bar . qux=true]"));
+        var e2 = await Catch(() => Page.QuerySelectorAsync("role=foo[bar . qux=true]"));
         Assert.That(e2.Message, Does.Contain("Unknown attribute \"bar.qux\""));
 
-        var e3 = await Catch(() => page.QuerySelectorAsync("role=heading[level=\"bar\"]"));
+        var e3 = await Catch(() => Page.QuerySelectorAsync("role=heading[level=\"bar\"]"));
         Assert.That(e3.Message, Does.Contain("\"level\" attribute must be compared to a number"));
 
-        var e4 = await Catch(() => page.QuerySelectorAsync("role=checkbox[checked=\"bar\"]"));
+        var e4 = await Catch(() => Page.QuerySelectorAsync("role=checkbox[checked=\"bar\"]"));
         Assert.That(e4.Message, Does.Contain("\"checked\" must be one of true, false, \"mixed\""));
 
-        var e5 = await Catch(() => page.QuerySelectorAsync("role=checkbox[checked~=true]"));
+        var e5 = await Catch(() => Page.QuerySelectorAsync("role=checkbox[checked~=true]"));
         Assert.That(e5.Message, Does.Contain("cannot use ~= in attribute with non-string matching value"));
 
-        var e6 = await Catch(() => page.QuerySelectorAsync("role=button[level=3]"));
+        var e6 = await Catch(() => Page.QuerySelectorAsync("role=button[level=3]"));
         Assert.That(e6.Message, Does.Contain("\"level\" attribute is only supported for roles: \"heading\", \"listitem\", \"row\", \"treeitem\""));
 
-        var e7 = await Catch(() => page.QuerySelectorAsync("role=button[name]"));
+        var e7 = await Catch(() => Page.QuerySelectorAsync("role=button[name]"));
         Assert.That(e7.Message, Does.Contain("\"name\" attribute must have a value"));
 
-        var e8 = await Catch(() => page.QuerySelectorAsync("role=treeitem[expanded=\"none\"]"));
+        var e8 = await Catch(() => Page.QuerySelectorAsync("role=treeitem[expanded=\"none\"]"));
         Assert.That(e8.Message, Does.Contain("\"expanded\" must be one of true, false"));
     }
 
     [UpstreamTest("SE-063 hidden with shadow dom slots")]
-    public async Task HiddenWithShadowDomSlots(IPage page)
+    public async Task HiddenWithShadowDomSlots()
     {
-        await page.SetContentAsync(@"
+        await Page.SetContentAsync(@"
     <div make-hidden>
       <button>hidden1</button>
     </div>
@@ -708,12 +708,12 @@ public class SelectorsRoleTests
       }
     </script>
   ");
-        Assert.That(await page.Locator("role=button").EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"), Is.EqualTo(new[]
+        Assert.That(await Page.Locator("role=button").EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"), Is.EqualTo(new[]
         {
             "<button>visible1</button>",
             "<button>visible2</button>",
         }));
-        Assert.That(await page.Locator("role=button[include-hidden]").EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"), Is.EqualTo(new[]
+        Assert.That(await Page.Locator("role=button[include-hidden]").EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"), Is.EqualTo(new[]
         {
             "<button>hidden1</button>",
             "<button>hidden2</button>",
@@ -723,16 +723,16 @@ public class SelectorsRoleTests
     }
 
     [UpstreamTest("SE-064 should support output accessible name")]
-    public async Task ShouldSupportOutputAccessibleName(IPage page)
+    public async Task ShouldSupportOutputAccessibleName()
     {
-        await page.SetContentAsync("<label>Output1<output>output</output></label>");
-        await Expect(page.GetByRole(AriaRole.Status, new() { Name = "Output1" })).ToBeVisibleAsync();
+        await Page.SetContentAsync("<label>Output1<output>output</output></label>");
+        await Expect(Page.GetByRole(AriaRole.Status, new() { Name = "Output1" })).ToBeVisibleAsync();
     }
 
     [UpstreamTest("SE-065 should not match scope by default")]
-    public async Task ShouldNotMatchScopeByDefault(IPage page)
+    public async Task ShouldNotMatchScopeByDefault()
     {
-        await page.SetContentAsync(@"
+        await Page.SetContentAsync(@"
     <ul>
       <li aria-label=""Parent list"">
         Parent list
@@ -743,7 +743,7 @@ public class SelectorsRoleTests
       </li>
     </ul>
   ");
-        var children = page.GetByRole(AriaRole.Listitem, new() { Name = "Parent list" }).GetByRole(AriaRole.Listitem);
+        var children = Page.GetByRole(AriaRole.Listitem, new() { Name = "Parent list" }).GetByRole(AriaRole.Listitem);
         await Expect(children).ToHaveCountAsync(2);
         await Expect(children).ToHaveTextAsync(new[] { "child 1", "child 2" });
     }

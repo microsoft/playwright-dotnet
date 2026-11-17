@@ -21,37 +21,37 @@ using static Microsoft.Playwright.Tests.Fixtures.Utils;
 namespace Microsoft.Playwright.Tests.Page;
 
 /// <summary>Port of tests/page/elementhandle-query-selector.spec.ts.</summary>
-public class ElementhandleQuerySelectorTests
+public class ElementhandleQuerySelectorTests : UpstreamPageTest
 {
     [UpstreamTest("EH-067 should query existing element")]
-    public async Task ShouldQueryExistingElement(IPage page, Server server)
+    public async Task ShouldQueryExistingElement()
     {
-        await page.GotoAsync(server.Prefix + "/playground.html");
-        await page.SetContentAsync("<html><body><div class=\"second\"><div class=\"inner\">A</div></div></body></html>");
-        var html = await page.QuerySelectorAsync("html");
+        await Page.GotoAsync(Server.Prefix + "/playground.html");
+        await Page.SetContentAsync("<html><body><div class=\"second\"><div class=\"inner\">A</div></div></body></html>");
+        var html = await Page.QuerySelectorAsync("html");
         var second = await html.QuerySelectorAsync(".second");
         var inner = await second.QuerySelectorAsync(".inner");
-        var content = await page.EvaluateAsync<string>("e => e.textContent", inner);
+        var content = await Page.EvaluateAsync<string>("e => e.textContent", inner);
         Assert.That(content, Is.EqualTo("A"));
     }
 
     [UpstreamTest("EH-068 should return null for non-existing element")]
-    public async Task ShouldReturnNullForNonExistingElement(IPage page, Server server)
+    public async Task ShouldReturnNullForNonExistingElement()
     {
-        await page.SetContentAsync("<html><body><div class=\"second\"><div class=\"inner\">B</div></div></body></html>");
-        var html = await page.QuerySelectorAsync("html");
+        await Page.SetContentAsync("<html><body><div class=\"second\"><div class=\"inner\">B</div></div></body></html>");
+        var html = await Page.QuerySelectorAsync("html");
         var second = await html.QuerySelectorAsync(".third");
         Assert.That(second, Is.Null);
     }
 
     [UpstreamTest("EH-069 should work for adopted elements")]
-    public async Task ShouldWorkForAdoptedElements(IPage page, Server server)
+    public async Task ShouldWorkForAdoptedElements()
     {
-        await page.GotoAsync(server.EmptyPage);
+        await Page.GotoAsync(Server.EmptyPage);
         var (popup, _) = await PromiseAll(
-            page.WaitForPopupAsync(),
-            page.EvaluateAsync("url => window['__popup'] = window.open(url)", server.EmptyPage));
-        var divHandle = (IElementHandle)await page.EvaluateHandleAsync(@"() => {
+            Page.WaitForPopupAsync(),
+            Page.EvaluateAsync("url => window['__popup'] = window.open(url)", Server.EmptyPage));
+        var divHandle = (IElementHandle)await Page.EvaluateHandleAsync(@"() => {
     const div = document.createElement('div');
     document.body.appendChild(div);
     const span = document.createElement('span');
@@ -63,7 +63,7 @@ public class ElementhandleQuerySelectorTests
         Assert.That(await divHandle.EvalOnSelectorAsync<string>("span", "e => e.textContent"), Is.EqualTo("hello"));
 
         await popup.WaitForLoadStateAsync(LoadState.DOMContentLoaded);
-        await page.EvaluateAsync(@"() => {
+        await Page.EvaluateAsync(@"() => {
     const div = document.querySelector('div');
     window['__popup'].document.body.appendChild(div);
   }");
@@ -72,42 +72,42 @@ public class ElementhandleQuerySelectorTests
     }
 
     [UpstreamTest("EH-070 should query existing elements")]
-    public async Task ShouldQueryExistingElements(IPage page, Server server)
+    public async Task ShouldQueryExistingElements()
     {
-        await page.SetContentAsync("<html><body><div>A</div><br/><div>B</div></body></html>");
-        var html = await page.QuerySelectorAsync("html");
+        await Page.SetContentAsync("<html><body><div>A</div><br/><div>B</div></body></html>");
+        var html = await Page.QuerySelectorAsync("html");
         var elements = await html.QuerySelectorAllAsync("div");
         Assert.That(elements.Count, Is.EqualTo(2));
-        var promises = elements.Select(element => page.EvaluateAsync<string>("e => e.textContent", element));
+        var promises = elements.Select(element => Page.EvaluateAsync<string>("e => e.textContent", element));
         Assert.That(await PromiseAll(promises), Is.EqualTo(new[] { "A", "B" }));
     }
 
     [UpstreamTest("EH-071 should return empty array for non-existing elements")]
-    public async Task ShouldReturnEmptyArrayForNonExistingElements(IPage page, Server server)
+    public async Task ShouldReturnEmptyArrayForNonExistingElements()
     {
-        await page.SetContentAsync("<html><body><span>A</span><br/><span>B</span></body></html>");
-        var html = await page.QuerySelectorAsync("html");
+        await Page.SetContentAsync("<html><body><span>A</span><br/><span>B</span></body></html>");
+        var html = await Page.QuerySelectorAsync("html");
         var elements = await html.QuerySelectorAllAsync("div");
         Assert.That(elements.Count, Is.EqualTo(0));
     }
 
     [UpstreamTest("EH-072 xpath should query existing element")]
-    public async Task XpathShouldQueryExistingElement(IPage page, Server server)
+    public async Task XpathShouldQueryExistingElement()
     {
-        await page.GotoAsync(server.Prefix + "/playground.html");
-        await page.SetContentAsync("<html><body><div class=\"second\"><div class=\"inner\">A</div></div></body></html>");
-        var html = await page.QuerySelectorAsync("html");
+        await Page.GotoAsync(Server.Prefix + "/playground.html");
+        await Page.SetContentAsync("<html><body><div class=\"second\"><div class=\"inner\">A</div></div></body></html>");
+        var html = await Page.QuerySelectorAsync("html");
         var second = await html.QuerySelectorAllAsync("xpath=./body/div[contains(@class, 'second')]");
         var inner = await second[0].QuerySelectorAllAsync("xpath=./div[contains(@class, 'inner')]");
-        var content = await page.EvaluateAsync<string>("e => e.textContent", inner[0]);
+        var content = await Page.EvaluateAsync<string>("e => e.textContent", inner[0]);
         Assert.That(content, Is.EqualTo("A"));
     }
 
     [UpstreamTest("EH-073 xpath should return null for non-existing element")]
-    public async Task XpathShouldReturnNullForNonExistingElement(IPage page, Server server)
+    public async Task XpathShouldReturnNullForNonExistingElement()
     {
-        await page.SetContentAsync("<html><body><div class=\"second\"><div class=\"inner\">B</div></div></body></html>");
-        var html = await page.QuerySelectorAsync("html");
+        await Page.SetContentAsync("<html><body><div class=\"second\"><div class=\"inner\">B</div></div></body></html>");
+        var html = await Page.QuerySelectorAsync("html");
         var second = await html.QuerySelectorAllAsync("xpath=/div[contains(@class, 'third')]");
         Assert.That(second, Is.EqualTo(Array.Empty<IElementHandle>()));
     }

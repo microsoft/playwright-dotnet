@@ -22,33 +22,33 @@ using static Microsoft.Playwright.Tests.Fixtures.Utils;
 namespace Microsoft.Playwright.Tests.Page;
 
 /// <summary>Port of tests/page/retarget.spec.ts.</summary>
-public class RetargetTests
+public class RetargetTests : UpstreamPageTest
 {
     private static Task GiveItAChanceToResolve(IPage page) => Rafraf(page, 5);
 
     [UpstreamTest("RE-001 element state checks should work as expected for label with zero-sized input")]
-    public async Task ElementStateChecksShouldWorkAsExpectedForLabelWithZeroSizedInput(IPage page, Server server)
+    public async Task ElementStateChecksShouldWorkAsExpectedForLabelWithZeroSizedInput()
     {
-        await page.SetContentAsync(@"
+        await Page.SetContentAsync(@"
     <label>
       Click me
       <input disabled style=""width:0;height:0;padding:0;margin:0;border:0;"">
     </label>
   ");
         // Visible checks the label.
-        Assert.That(await page.IsVisibleAsync("text=Click me"), Is.EqualTo(true));
-        Assert.That(await page.IsHiddenAsync("text=Click me"), Is.EqualTo(false));
+        Assert.That(await Page.IsVisibleAsync("text=Click me"), Is.EqualTo(true));
+        Assert.That(await Page.IsHiddenAsync("text=Click me"), Is.EqualTo(false));
 
         // Enabled checks the input.
-        Assert.That(await page.IsEnabledAsync("text=Click me"), Is.EqualTo(false));
-        Assert.That(await page.IsDisabledAsync("text=Click me"), Is.EqualTo(true));
+        Assert.That(await Page.IsEnabledAsync("text=Click me"), Is.EqualTo(false));
+        Assert.That(await Page.IsDisabledAsync("text=Click me"), Is.EqualTo(true));
     }
 
     [UpstreamTest("RE-002 should wait for enclosing disabled button")]
-    public async Task ShouldWaitForEnclosingDisabledButton(IPage page)
+    public async Task ShouldWaitForEnclosingDisabledButton()
     {
-        await page.SetContentAsync("<button><span>Target</span></button>");
-        var span = await page.QuerySelectorAsync("text=Target");
+        await Page.SetContentAsync("<button><span>Target</span></button>");
+        var span = await Page.QuerySelectorAsync("text=Target");
         var done = false;
         // .NET: const promise = span.waitForElementState('disabled').then(() => done = true);
         async Task Promise()
@@ -57,17 +57,17 @@ public class RetargetTests
             done = true;
         }
         var promise = Promise();
-        await GiveItAChanceToResolve(page);
+        await GiveItAChanceToResolve(Page);
         Assert.That(done, Is.EqualTo(false));
         await span.EvaluateAsync("span => span.parentElement.disabled = true");
         await promise;
     }
 
     [UpstreamTest("RE-003 should wait for enclosing button with a disabled fieldset")]
-    public async Task ShouldWaitForEnclosingButtonWithADisabledFieldset(IPage page)
+    public async Task ShouldWaitForEnclosingButtonWithADisabledFieldset()
     {
-        await page.SetContentAsync("<fieldset disabled=true><button><span>Target</span></button></div>");
-        var span = await page.QuerySelectorAsync("text=Target");
+        await Page.SetContentAsync("<fieldset disabled=true><button><span>Target</span></button></div>");
+        var span = await Page.QuerySelectorAsync("text=Target");
         var done = false;
         // .NET: const promise = span.waitForElementState('enabled').then(() => done = true);
         async Task Promise()
@@ -76,17 +76,17 @@ public class RetargetTests
             done = true;
         }
         var promise = Promise();
-        await GiveItAChanceToResolve(page);
+        await GiveItAChanceToResolve(Page);
         Assert.That(done, Is.EqualTo(false));
         await span.EvaluateAsync("span => span.parentElement.parentElement.disabled = false");
         await promise;
     }
 
     [UpstreamTest("RE-004 should wait for enclosing enabled button")]
-    public async Task ShouldWaitForEnclosingEnabledButton(IPage page, Server server)
+    public async Task ShouldWaitForEnclosingEnabledButton()
     {
-        await page.SetContentAsync("<button disabled><span>Target</span></button>");
-        var span = await page.QuerySelectorAsync("text=Target");
+        await Page.SetContentAsync("<button disabled><span>Target</span></button>");
+        var span = await Page.QuerySelectorAsync("text=Target");
         var done = false;
         // .NET: const promise = span.waitForElementState('enabled').then(() => done = true);
         async Task Promise()
@@ -95,17 +95,17 @@ public class RetargetTests
             done = true;
         }
         var promise = Promise();
-        await GiveItAChanceToResolve(page);
+        await GiveItAChanceToResolve(Page);
         Assert.That(done, Is.EqualTo(false));
         await span.EvaluateAsync("span => span.parentElement.disabled = false");
         await promise;
     }
 
     [UpstreamTest("RE-005 should check the box outside shadow dom label")]
-    public async Task ShouldCheckTheBoxOutsideShadowDomLabel(IPage page)
+    public async Task ShouldCheckTheBoxOutsideShadowDomLabel()
     {
-        await page.SetContentAsync("<div></div>");
-        await page.EvalOnSelectorAsync("div", @"div => {
+        await Page.SetContentAsync("<div></div>");
+        await Page.EvalOnSelectorAsync("div", @"div => {
     const root = div.attachShadow({ mode: 'open' });
     const label = document.createElement('label');
     label.setAttribute('for', 'target');
@@ -116,17 +116,17 @@ public class RetargetTests
     input.setAttribute('id', 'target');
     root.appendChild(input);
   }");
-        await page.CheckAsync("label");
-        Assert.That(await page.EvalOnSelectorAsync<bool>("input", "input => input.checked"), Is.EqualTo(true));
+        await Page.CheckAsync("label");
+        Assert.That(await Page.EvalOnSelectorAsync<bool>("input", "input => input.checked"), Is.EqualTo(true));
     }
 
     [UpstreamTest("RE-006 setInputFiles should work with label")]
-    public async Task SetInputFilesShouldWorkWithLabel(IPage page, Func<string, string> asset)
+    public async Task SetInputFilesShouldWorkWithLabel()
     {
-        await page.SetContentAsync("<label for=target>Choose a file</label><input id=target type=file>");
-        await page.SetInputFilesAsync("text=Choose a file", asset("file-to-upload.txt"));
-        Assert.That(await page.EvalOnSelectorAsync<int>("input", "input => input.files.length"), Is.EqualTo(1));
-        Assert.That(await page.EvalOnSelectorAsync<string>("input", "input => input.files?.[0].name"), Is.EqualTo("file-to-upload.txt"));
+        await Page.SetContentAsync("<label for=target>Choose a file</label><input id=target type=file>");
+        await Page.SetInputFilesAsync("text=Choose a file", Asset("file-to-upload.txt"));
+        Assert.That(await Page.EvalOnSelectorAsync<int>("input", "input => input.files.length"), Is.EqualTo(1));
+        Assert.That(await Page.EvalOnSelectorAsync<string>("input", "input => input.files?.[0].name"), Is.EqualTo("file-to-upload.txt"));
     }
 
     private sealed class Options
@@ -151,7 +151,7 @@ public class RetargetTests
     private static string DomInLink(string dom, Options options = null) => $"<button {OptionsToAttributes(options)}>Button {dom}</button>";
 
     [UpstreamTest("RE-007 enabled/disabled retargeting")]
-    public async Task EnabledDisabledRetargeting(IPage page, Func<string, string> asset)
+    public async Task EnabledDisabledRetargeting()
     {
         var cases = new[]
         {
@@ -177,9 +177,9 @@ public class RetargetTests
         {
             await Info.Step($"\"{locator}\" in \"{dom}\" should be enabled={(enabled ? "true" : "false")}", async () =>
             {
-                await page.SetContentAsync(dom);
-                var target = page.Locator(locator);
-                var handle = await page.QuerySelectorAsync(locator);
+                await Page.SetContentAsync(dom);
+                var target = Page.Locator(locator);
+                var handle = await Page.QuerySelectorAsync(locator);
                 Assert.That(await target.IsEnabledAsync(), Is.EqualTo(enabled));
                 Assert.That(await target.IsDisabledAsync(), Is.EqualTo(!enabled));
                 if (enabled)
@@ -199,7 +199,7 @@ public class RetargetTests
     }
 
     [UpstreamTest("RE-008 visible/hidden retargeting")]
-    public async Task VisibleHiddenRetargeting(IPage page, Func<string, string> asset)
+    public async Task VisibleHiddenRetargeting()
     {
         var cases = new[]
         {
@@ -223,9 +223,9 @@ public class RetargetTests
         {
             await Info.Step($"\"{locator}\" in \"{dom}\" should be visible={(visible ? "true" : "false")}", async () =>
             {
-                await page.SetContentAsync(dom);
-                var target = page.Locator(locator);
-                var handle = await page.QuerySelectorAsync(locator);
+                await Page.SetContentAsync(dom);
+                var target = Page.Locator(locator);
+                var handle = await Page.QuerySelectorAsync(locator);
                 Assert.That(await target.IsVisibleAsync(), Is.EqualTo(visible));
                 Assert.That(await target.IsHiddenAsync(), Is.EqualTo(!visible));
                 if (visible)
@@ -245,7 +245,7 @@ public class RetargetTests
     }
 
     [UpstreamTest("RE-009 editable retargeting")]
-    public async Task EditableRetargeting(IPage page, Func<string, string> asset)
+    public async Task EditableRetargeting()
     {
         var cases = new[]
         {
@@ -267,9 +267,9 @@ public class RetargetTests
         {
             await Info.Step($"\"{locator}\" in \"{dom}\" should be editable={(editable ? "true" : "false")}", async () =>
             {
-                await page.SetContentAsync(dom);
-                var target = page.Locator(locator);
-                var handle = await page.QuerySelectorAsync(locator);
+                await Page.SetContentAsync(dom);
+                var target = Page.Locator(locator);
+                var handle = await Page.QuerySelectorAsync(locator);
                 Assert.That(await target.IsEditableAsync(), Is.EqualTo(editable));
                 if (editable)
                 {
@@ -286,7 +286,7 @@ public class RetargetTests
 
     [UpstreamTest("RE-010 input value retargeting")]
     [LocalFixme("dotnet: Locator.WithElementAsync makes a negative timeout from the default timeout 0, and the call passes only when it ends before the timer of the driver")]
-    public async Task InputValueRetargeting(IPage page, string browserName)
+    public async Task InputValueRetargeting()
     {
         var cases = new[]
         {
@@ -301,9 +301,9 @@ public class RetargetTests
         {
             await Info.Step($"\"{locator}\" in \"{dom}\" input value", async () =>
             {
-                await page.SetContentAsync(dom);
-                var target = page.Locator(locator);
-                var handle = await page.QuerySelectorAsync(locator);
+                await Page.SetContentAsync(dom);
+                var target = Page.Locator(locator);
+                var handle = await Page.QuerySelectorAsync(locator);
 
                 Assert.That(await target.InputValueAsync(), Is.EqualTo(""));
                 Assert.That(await handle.InputValueAsync(), Is.EqualTo(""));
@@ -314,20 +314,20 @@ public class RetargetTests
                 Assert.That(await handle.InputValueAsync(), Is.EqualTo("foo"));
                 await Expect(target).ToHaveValueAsync("foo");
 
-                await page.EvalOnSelectorAsync("#target", "input => input.value = 'bar'");
+                await Page.EvalOnSelectorAsync("#target", "input => input.value = 'bar'");
                 Assert.That(await target.InputValueAsync(), Is.EqualTo("bar"));
                 Assert.That(await handle.InputValueAsync(), Is.EqualTo("bar"));
                 await Expect(target).ToHaveValueAsync("bar");
 
                 await target.SelectTextAsync();
-                Assert.That(await page.EvaluateAsync<string>("() => window.getSelection().toString()"), Is.EqualTo("bar"));
+                Assert.That(await Page.EvaluateAsync<string>("() => window.getSelection().toString()"), Is.EqualTo("bar"));
             });
         }
     }
 
     [UpstreamTest("RE-011 selection retargeting")]
     [LocalFixme("dotnet: Locator.WithElementAsync makes a negative timeout from the default timeout 0, and the call passes only when it ends before the timer of the driver")]
-    public async Task SelectionRetargeting(IPage page, string browserName)
+    public async Task SelectionRetargeting()
     {
         var cases = new[]
         {
@@ -340,25 +340,25 @@ public class RetargetTests
         {
             await Info.Step($"\"{locator}\" in \"{dom}\" text selection", async () =>
             {
-                await page.SetContentAsync(dom);
-                var target = page.Locator(locator);
-                var handle = await page.QuerySelectorAsync(locator);
+                await Page.SetContentAsync(dom);
+                var target = Page.Locator(locator);
+                var handle = await Page.QuerySelectorAsync(locator);
 
                 Assert.That(await target.IsEditableAsync(), Is.EqualTo(true));
                 Assert.That(await handle.IsEditableAsync(), Is.EqualTo(true));
-                await Expect(page.Locator("#target")).ToHaveTextAsync("content");
+                await Expect(Page.Locator("#target")).ToHaveTextAsync("content");
 
                 await target.FillAsync("foo");
-                await Expect(page.Locator("#target")).ToHaveTextAsync("foo");
+                await Expect(Page.Locator("#target")).ToHaveTextAsync("foo");
 
                 await target.SelectTextAsync();
-                Assert.That(await page.EvaluateAsync<string>("() => window.getSelection().toString()"), Is.EqualTo("foo"));
+                Assert.That(await Page.EvaluateAsync<string>("() => window.getSelection().toString()"), Is.EqualTo("foo"));
             });
         }
     }
 
     [UpstreamTest("RE-012 select options retargeting")]
-    public async Task SelectOptionsRetargeting(IPage page)
+    public async Task SelectOptionsRetargeting()
     {
         var cases = new[]
         {
@@ -373,9 +373,9 @@ public class RetargetTests
         {
             await Info.Step($"\"{locator}\" in \"{dom}\" select option", async () =>
             {
-                await page.SetContentAsync(dom);
-                var target = page.Locator(locator);
-                var handle = await page.QuerySelectorAsync(locator);
+                await Page.SetContentAsync(dom);
+                var target = Page.Locator(locator);
+                var handle = await Page.QuerySelectorAsync(locator);
 
                 Assert.That(await target.InputValueAsync(), Is.EqualTo("dog"));
                 Assert.That(await handle.InputValueAsync(), Is.EqualTo("dog"));
@@ -392,7 +392,7 @@ public class RetargetTests
     }
 
     [UpstreamTest("RE-013 direct actions retargeting")]
-    public async Task DirectActionsRetargeting(IPage page)
+    public async Task DirectActionsRetargeting()
     {
         var cases = new[]
         {
@@ -407,8 +407,8 @@ public class RetargetTests
         {
             await Info.Step($"\"{locator}\" in \"{dom}\" direct actions", async () =>
             {
-                await page.SetContentAsync(dom);
-                var target = page.Locator(locator);
+                await Page.SetContentAsync(dom);
+                var target = Page.Locator(locator);
 
                 Assert.That(await target.InnerTextAsync(), Is.EqualTo("content"));
                 Assert.That(await target.TextContentAsync(), Is.EqualTo("content"));
@@ -417,13 +417,13 @@ public class RetargetTests
                 await Expect(target).Not.ToBeFocusedAsync();
                 await Expect(target).ToHaveCountAsync(1);
 
-                await page.EvalOnSelectorAsync("div", "div => div.foo = 'bar'");
+                await Page.EvalOnSelectorAsync("div", "div => div.foo = 'bar'");
                 await Expect(target).ToHaveJSPropertyAsync("foo", "bar");
 
-                await page.EvalOnSelectorAsync("div", "div => div.classList.add('cls')");
+                await Page.EvalOnSelectorAsync("div", "div => div.classList.add('cls')");
                 await Expect(target).ToHaveClassAsync("cls");
 
-                await page.EvalOnSelectorAsync("div", "div => div.id = 'myid'");
+                await Page.EvalOnSelectorAsync("div", "div => div.id = 'myid'");
                 await Expect(target).ToHaveIdAsync("myid");
                 await Expect(target).ToHaveAttributeAsync("id", "myid");
                 Assert.That(await target.GetAttributeAsync("id"), Is.EqualTo("myid"));
@@ -432,7 +432,7 @@ public class RetargetTests
     }
 
     [UpstreamTest("RE-014 check retargeting")]
-    public async Task CheckRetargeting(IPage page, Func<string, string> asset)
+    public async Task CheckRetargeting()
     {
         var cases = new[]
         {
@@ -447,43 +447,43 @@ public class RetargetTests
         {
             await Info.Step($"\"{locator}\" in \"{dom}\" check", async () =>
             {
-                await page.SetContentAsync(dom);
-                var target = page.Locator(locator);
+                await Page.SetContentAsync(dom);
+                var target = Page.Locator(locator);
                 Assert.That(await target.IsCheckedAsync(), Is.EqualTo(false));
                 await Expect(target).Not.ToBeCheckedAsync();
                 await Expect(target).ToBeCheckedAsync(new() { Checked = false });
 
-                await page.EvalOnSelectorAsync("input", "input => input.checked = true");
+                await Page.EvalOnSelectorAsync("input", "input => input.checked = true");
                 Assert.That(await target.IsCheckedAsync(), Is.EqualTo(true));
                 await Expect(target).ToBeCheckedAsync();
                 await Expect(target).ToBeCheckedAsync(new() { Checked = true });
 
                 await target.UncheckAsync();
-                Assert.That(await page.EvalOnSelectorAsync<bool>("input", "input => input.checked"), Is.EqualTo(false));
+                Assert.That(await Page.EvalOnSelectorAsync<bool>("input", "input => input.checked"), Is.EqualTo(false));
 
                 await target.CheckAsync();
-                Assert.That(await page.EvalOnSelectorAsync<bool>("input", "input => input.checked"), Is.EqualTo(true));
+                Assert.That(await Page.EvalOnSelectorAsync<bool>("input", "input => input.checked"), Is.EqualTo(true));
 
                 await target.SetCheckedAsync(false);
-                Assert.That(await page.EvalOnSelectorAsync<bool>("input", "input => input.checked"), Is.EqualTo(false));
+                Assert.That(await Page.EvalOnSelectorAsync<bool>("input", "input => input.checked"), Is.EqualTo(false));
             });
         }
     }
 
     [UpstreamTest("RE-015 should not retarget anchor into parent label")]
-    public async Task ShouldNotRetargetAnchorIntoParentLabel(IPage page)
+    public async Task ShouldNotRetargetAnchorIntoParentLabel()
     {
-        await page.SetContentAsync(@"
+        await Page.SetContentAsync(@"
     <label disabled>Text<a href='#' onclick='window.__clicked=1'>Target</a></label>
   ");
-        await page.Locator("a").ClickAsync();
-        Assert.That(await page.EvaluateAsync<int>("window.__clicked"), Is.EqualTo(1));
+        await Page.Locator("a").ClickAsync();
+        Assert.That(await Page.EvaluateAsync<int>("window.__clicked"), Is.EqualTo(1));
 
-        await page.SetContentAsync(@"
+        await Page.SetContentAsync(@"
     <input type=""radio"" id=""input-id"" checked disabled />
     <label for=""input-id"">Text<a href='#' onclick='window.__clicked=2'>Target</a></label>
   ");
-        await page.Locator("a").ClickAsync();
-        Assert.That(await page.EvaluateAsync<int>("window.__clicked"), Is.EqualTo(2));
+        await Page.Locator("a").ClickAsync();
+        Assert.That(await Page.EvaluateAsync<int>("window.__clicked"), Is.EqualTo(2));
     }
 }

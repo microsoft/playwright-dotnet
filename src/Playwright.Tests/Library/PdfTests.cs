@@ -19,31 +19,31 @@ using Microsoft.Playwright.Tests.Fixtures;
 namespace Microsoft.Playwright.Tests.Library;
 
 /// <summary>Port of tests/library/pdf.spec.ts.</summary>
-public class PdfTests
+public class PdfTests : UpstreamBrowserTest
 {
     [UpstreamTest("PD-001 should be able to save file")]
-    public async Task ShouldBeAbleToSaveFile(ContextFactory contextFactory, string browserName, TestInfo testInfo)
+    public async Task ShouldBeAbleToSaveFile()
     {
-        Info.Skip(browserName != "chromium", "Printing to pdf is currently only supported in chromium.");
-        var context = await contextFactory();
+        Info.Skip(BrowserName != "chromium", "Printing to pdf is currently only supported in chromium.");
+        var context = await ContextFactory();
         var page = await context.NewPageAsync();
-        var outputFile = testInfo.OutputPath("output.pdf");
+        var outputFile = Info.OutputPath("output.pdf");
         await page.PdfAsync(new() { Path = outputFile });
         Assert.That(File.ReadAllBytes(outputFile).Length, Is.GreaterThan(0));
     }
 
     [UpstreamTest("PD-002 should be able to generate outline")]
-    public async Task ShouldBeAbleToGenerateOutline(ContextFactory contextFactory, Server server, string browserName, TestInfo testInfo)
+    public async Task ShouldBeAbleToGenerateOutline()
     {
-        Info.Skip(browserName != "chromium", "Printing to pdf is currently only supported in chromium.");
-        var context = await contextFactory(new()
+        Info.Skip(BrowserName != "chromium", "Printing to pdf is currently only supported in chromium.");
+        var context = await ContextFactory(new()
         {
-            BaseURL = server.Prefix,
+            BaseURL = Server.Prefix,
         });
         var page = await context.NewPageAsync();
         await page.GotoAsync("/headings.html");
-        var outputFileNoOutline = testInfo.OutputPath("outputNoOutline.pdf");
-        var outputFileOutline = testInfo.OutputPath("outputOutline.pdf");
+        var outputFileNoOutline = Info.OutputPath("outputNoOutline.pdf");
+        var outputFileOutline = Info.OutputPath("outputOutline.pdf");
         await page.PdfAsync(new() { Path = outputFileNoOutline });
         await page.PdfAsync(new() { Path = outputFileOutline, Tagged = true, Outline = true });
         Assert.That(File.ReadAllBytes(outputFileOutline).Length, Is.GreaterThan(File.ReadAllBytes(outputFileNoOutline).Length));

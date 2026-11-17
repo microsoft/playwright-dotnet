@@ -22,43 +22,43 @@ using static Microsoft.Playwright.Tests.Fixtures.Utils;
 namespace Microsoft.Playwright.Tests.Library;
 
 /// <summary>Port of tests/library/browser-server.spec.ts.</summary>
-public class BrowserServerTests
+public class BrowserServerTests : UpstreamBrowserTest
 {
-    [BeforeEach]
-    public static void Skip(string mode) => Info.Skip(mode != "default");
+    [SetUp]
+    public void Skip() => Info.Skip(Mode != "default");
 
-    [BeforeEach]
-    public void BeforeEach(TestInfo testInfo, string serverRegistry)
+    [SetUp]
+    public void BeforeEach()
     {
         // .NET: process.env.PWTEST_SERVER_REGISTRY = testInfo.outputPath('registry') is the serverRegistry fixture: the driver is another process, which got the directory at its start.
     }
 
     [UpstreamTest("BR-008 should start and stop pipe server")]
-    public async Task ShouldStartAndStopPipeServer(IBrowserType browserType, IBrowser browser, BrowserNewPageOptions newPageOptions)
+    public async Task ShouldStartAndStopPipeServer()
     {
-        var serverInfo = await browser.BindAsync("default", new());
+        var serverInfo = await Browser.BindAsync("default", new());
         ExpectToEqual(serverInfo, ObjectContaining(new
         {
             endpoint = StringMatching(new Regex("browser-")),
         }));
 
-        var browser2 = await browserType.ConnectAsync(serverInfo.Endpoint);
-        var page = await browser2.NewPageAsync(newPageOptions);
+        var browser2 = await BrowserType.ConnectAsync(serverInfo.Endpoint);
+        var page = await browser2.NewPageAsync(NewPageOptions());
         await page.GotoAsync("data:text/html,<h1>Hello via pipe</h1>");
         Assert.That(await page.Locator("h1").TextContentAsync(), Is.EqualTo("Hello via pipe"));
         await page.CloseAsync();
         await browser2.CloseAsync();
-        await browser.UnbindAsync();
+        await Browser.UnbindAsync();
     }
 
     [UpstreamTest("BR-009 should write descriptor on start and remove on stop")]
-    public async Task ShouldWriteDescriptorOnStartAndRemoveOnStop(IBrowser browser, string serverRegistry)
+    public async Task ShouldWriteDescriptorOnStartAndRemoveOnStop()
     {
         // .NET: { wsPath: 'test' } as any is not an option of BindAsync.
-        var serverInfo = await browser.BindAsync("my-title", new());
+        var serverInfo = await Browser.BindAsync("my-title", new());
 
         // .NET: it.info().outputPath('registry') is the directory of the serverRegistry fixture.
-        var registryDir = serverRegistry;
+        var registryDir = ServerRegistry;
         var fileName = Path.GetFileName(Directory.GetFileSystemEntries(registryDir)[0]);
         var file = Path.Combine(registryDir, fileName);
 
@@ -74,7 +74,7 @@ public class BrowserServerTests
             Assert.That(File.Exists(serverInfo.Endpoint), Is.EqualTo(true));
         }
 
-        await browser.UnbindAsync();
+        await Browser.UnbindAsync();
         Assert.That(File.Exists(file), Is.EqualTo(false));
         if (!OperatingSystem.IsWindows())
         {
@@ -83,17 +83,17 @@ public class BrowserServerTests
     }
 
     [UpstreamTest("BR-010 should start ws server with host/port and produce well-formed endpoint")]
-    public async Task ShouldStartWsServerWithHostPortAndProduceWellFormedEndpoint(IBrowserType browserType, IBrowser browser, BrowserNewPageOptions newPageOptions)
+    public async Task ShouldStartWsServerWithHostPortAndProduceWellFormedEndpoint()
     {
-        var serverInfo = await browser.BindAsync("default", new() { Host = "localhost", Port = 0 });
+        var serverInfo = await Browser.BindAsync("default", new() { Host = "localhost", Port = 0 });
         Assert.That(serverInfo.Endpoint, Does.Match(@"^ws:\/\/(127\.0\.0\.1|\[::1\]):\d+\/[a-f0-9]+$"));
 
-        var browser2 = await browserType.ConnectAsync(serverInfo.Endpoint);
-        var page = await browser2.NewPageAsync(newPageOptions);
+        var browser2 = await BrowserType.ConnectAsync(serverInfo.Endpoint);
+        var page = await browser2.NewPageAsync(NewPageOptions());
         await page.GotoAsync("data:text/html,<h1>Hello via ws</h1>");
         Assert.That(await page.Locator("h1").TextContentAsync(), Is.EqualTo("Hello via ws"));
         await page.CloseAsync();
         await browser2.CloseAsync();
-        await browser.UnbindAsync();
+        await Browser.UnbindAsync();
     }
 }

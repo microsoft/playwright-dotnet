@@ -22,26 +22,26 @@ using static Microsoft.Playwright.Tests.Fixtures.Utils;
 namespace Microsoft.Playwright.Tests.Page;
 
 /// <summary>Port of tests/page/locator-misc-2.spec.ts.</summary>
-public class LocatorMisc2Tests
+public class LocatorMisc2Tests : UpstreamPageTest
 {
     [UpstreamTest("LO-140 should press @smoke")]
-    public async Task ShouldPress(IPage page)
+    public async Task ShouldPress()
     {
-        await page.SetContentAsync("<input type='text' />");
-        await page.Locator("input").PressAsync("h");
-        Assert.That(await page.EvalOnSelectorAsync<string>("input", "input => input.value"), Is.EqualTo("h"));
+        await Page.SetContentAsync("<input type='text' />");
+        await Page.Locator("input").PressAsync("h");
+        Assert.That(await Page.EvalOnSelectorAsync<string>("input", "input => input.value"), Is.EqualTo("h"));
     }
 
     [UpstreamTest("LO-141 should scroll into view")]
     [LocalFixme("dotnet: Locator.WithElementAsync makes a negative timeout from the default timeout 0, and the call passes only when it ends before the timer of the driver")]
-    public async Task ShouldScrollIntoView(IPage page, Server server, bool isAndroid)
+    public async Task ShouldScrollIntoView()
     {
-        Info.Fixme(isAndroid);
+        Info.Fixme(IsAndroid);
 
-        await page.GotoAsync(server.Prefix + "/offscreenbuttons.html");
+        await Page.GotoAsync(Server.Prefix + "/offscreenbuttons.html");
         for (var i = 0; i < 11; ++i)
         {
-            var button = page.Locator("#btn" + i);
+            var button = Page.Locator("#btn" + i);
             var before = await button.EvaluateAsync<int>(@"button => {
       return button.getBoundingClientRect().right - window.innerWidth;
     }");
@@ -51,17 +51,17 @@ public class LocatorMisc2Tests
       return button.getBoundingClientRect().right - window.innerWidth;
     }");
             Assert.That(after <= 0, Is.EqualTo(true));
-            await page.EvaluateAsync("() => window.scrollTo(0, 0)");
+            await Page.EvaluateAsync("() => window.scrollTo(0, 0)");
         }
     }
 
     [UpstreamTest("LO-142 should scroll zero-sized element into view")]
     [LocalFixme("dotnet: Locator.WithElementAsync makes a negative timeout from the default timeout 0, and the call passes only when it ends before the timer of the driver")]
-    public async Task ShouldScrollZeroSizedElementIntoView(IPage page, bool isAndroid, bool isElectron)
+    public async Task ShouldScrollZeroSizedElementIntoView()
     {
-        Info.Fixme(isAndroid || isElectron);
+        Info.Fixme(IsAndroid || IsElectron);
 
-        await page.SetContentAsync(@"
+        await Page.SetContentAsync(@"
     <style>
       html,body { margin: 0; padding: 0; }
       ::-webkit-scrollbar { display: none; }
@@ -83,90 +83,90 @@ public class LocatorMisc2Tests
       observer.observe(lazyLoadElement);
     </script>
   ");
-        ExpectToEqual(await page.Locator("#lazyload").BoundingBoxAsync(), new { x = 0, y = 2020, width = 1280, height = 0 });
-        await page.Locator("#lazyload").ScrollIntoViewIfNeededAsync();
-        await Expect(page.Locator("#lazyload")).ToHaveTextAsync("LAZY LOADED CONTENT");
-        ExpectToEqual(await page.Locator("#lazyload").BoundingBoxAsync(), new { x = 0, y = 720, width = 1280, height = 20 });
+        ExpectToEqual(await Page.Locator("#lazyload").BoundingBoxAsync(), new { x = 0, y = 2020, width = 1280, height = 0 });
+        await Page.Locator("#lazyload").ScrollIntoViewIfNeededAsync();
+        await Expect(Page.Locator("#lazyload")).ToHaveTextAsync("LAZY LOADED CONTENT");
+        ExpectToEqual(await Page.Locator("#lazyload").BoundingBoxAsync(), new { x = 0, y = 720, width = 1280, height = 20 });
     }
 
     [UpstreamTest("LO-143 should select textarea")]
     [LocalFixme("dotnet: Locator.WithElementAsync makes a negative timeout from the default timeout 0, and the call passes only when it ends before the timer of the driver")]
-    public async Task ShouldSelectTextarea(IPage page, Server server, string browserName)
+    public async Task ShouldSelectTextarea()
     {
-        await page.GotoAsync(server.Prefix + "/input/textarea.html");
-        var textarea = page.Locator("textarea");
+        await Page.GotoAsync(Server.Prefix + "/input/textarea.html");
+        var textarea = Page.Locator("textarea");
         await textarea.EvaluateAsync("textarea => textarea.value = 'some value'");
         await textarea.SelectTextAsync();
-        Assert.That(await page.EvaluateAsync<string>("() => window.getSelection().toString()"), Is.EqualTo("some value"));
+        Assert.That(await Page.EvaluateAsync<string>("() => window.getSelection().toString()"), Is.EqualTo("some value"));
     }
 
     [UpstreamTest("LO-144 should type")]
-    public async Task ShouldType(IPage page)
+    public async Task ShouldType()
     {
-        await page.SetContentAsync("<input type='text' />");
-        await page.Locator("input").TypeAsync("hello");
-        Assert.That(await page.EvalOnSelectorAsync<string>("input", "input => input.value"), Is.EqualTo("hello"));
+        await Page.SetContentAsync("<input type='text' />");
+        await Page.Locator("input").TypeAsync("hello");
+        Assert.That(await Page.EvalOnSelectorAsync<string>("input", "input => input.value"), Is.EqualTo("hello"));
     }
 
     [UpstreamTest("LO-145 should pressSequentially")]
-    public async Task ShouldPressSequentially(IPage page)
+    public async Task ShouldPressSequentially()
     {
-        await page.SetContentAsync("<input type='text' />");
-        await page.Locator("input").PressSequentiallyAsync("hello");
-        Assert.That(await page.EvalOnSelectorAsync<string>("input", "input => input.value"), Is.EqualTo("hello"));
+        await Page.SetContentAsync("<input type='text' />");
+        await Page.Locator("input").PressSequentiallyAsync("hello");
+        Assert.That(await Page.EvalOnSelectorAsync<string>("input", "input => input.value"), Is.EqualTo("hello"));
     }
 
     [UpstreamTest("LO-146 should take screenshot")]
     [LocalFixme("dotnet: Locator.WithElementAsync makes a negative timeout from the default timeout 0, and the call passes only when it ends before the timer of the driver")]
-    public async Task ShouldTakeScreenshot(IPage page, Server server, string browserName, bool headless, bool isAndroid, string mode)
+    public async Task ShouldTakeScreenshot()
     {
-        Info.Skip(browserName == "firefox" && !headless);
-        Info.Skip(isAndroid, "Different dpr. Remove after using 1x scale for screenshots.");
-        await page.SetViewportSizeAsync(500, 500);
-        await page.GotoAsync(server.Prefix + "/grid.html");
-        await page.EvaluateAsync("() => window.scrollBy(50, 100)");
-        var element = page.Locator(".box:nth-of-type(3)");
+        Info.Skip(BrowserName == "firefox" && !Headless);
+        Info.Skip(IsAndroid, "Different dpr. Remove after using 1x scale for screenshots.");
+        await Page.SetViewportSizeAsync(500, 500);
+        await Page.GotoAsync(Server.Prefix + "/grid.html");
+        await Page.EvaluateAsync("() => window.scrollBy(50, 100)");
+        var element = Page.Locator(".box:nth-of-type(3)");
         var screenshot = await element.ScreenshotAsync();
         ExpectToMatchSnapshot(screenshot, "screenshot-element-bounding-box.png");
     }
 
     [UpstreamTest("LO-147 should return bounding box")]
-    public async Task ShouldReturnBoundingBox(IPage page, Server server, string browserName, bool headless, bool isAndroid, bool isLinux)
+    public async Task ShouldReturnBoundingBox()
     {
-        Info.Skip(isAndroid);
+        Info.Skip(IsAndroid);
 
-        await page.SetViewportSizeAsync(500, 500);
-        await page.GotoAsync(server.Prefix + "/grid.html");
-        var element = page.Locator(".box:nth-of-type(13)");
+        await Page.SetViewportSizeAsync(500, 500);
+        await Page.GotoAsync(Server.Prefix + "/grid.html");
+        var element = Page.Locator(".box:nth-of-type(13)");
         var box = await element.BoundingBoxAsync();
         ExpectToEqual(box, new { x = 100, y = 50, width = 50, height = 50 });
     }
 
     [UpstreamTest("LO-148 should waitFor")]
-    public async Task ShouldWaitFor(IPage page)
+    public async Task ShouldWaitFor()
     {
-        await page.SetContentAsync("<div></div>");
-        var locator = page.Locator("span");
+        await Page.SetContentAsync("<div></div>");
+        var locator = Page.Locator("span");
         var promise = locator.WaitForAsync();
-        await page.EvalOnSelectorAsync("div", "div => div.innerHTML = '<span>target</span>'");
+        await Page.EvalOnSelectorAsync("div", "div => div.innerHTML = '<span>target</span>'");
         await promise;
         await Expect(locator).ToHaveTextAsync("target");
     }
 
     [UpstreamTest("LO-149 should waitFor hidden")]
-    public async Task ShouldWaitForHidden(IPage page)
+    public async Task ShouldWaitForHidden()
     {
-        await page.SetContentAsync("<div><span>target</span></div>");
-        var locator = page.Locator("span");
+        await Page.SetContentAsync("<div><span>target</span></div>");
+        var locator = Page.Locator("span");
         var promise = locator.WaitForAsync(new() { State = WaitForSelectorState.Hidden });
-        await page.EvalOnSelectorAsync("div", "div => div.innerHTML = ''");
+        await Page.EvalOnSelectorAsync("div", "div => div.innerHTML = ''");
         await promise;
     }
 
     [UpstreamTest("LO-150 should combine visible with other selectors")]
-    public async Task ShouldCombineVisibleWithOtherSelectors(IPage page)
+    public async Task ShouldCombineVisibleWithOtherSelectors()
     {
-        await page.SetContentAsync(@"<div>
+        await Page.SetContentAsync(@"<div>
   <div class=""item"" style=""display: none"">Hidden data0</div>
   <div class=""item"">visible data1</div>
   <div class=""item"" style=""display: none"">Hidden data1</div>
@@ -174,15 +174,15 @@ public class LocatorMisc2Tests
   <div class=""item"" style=""display: none"">Hidden data1</div>
   <div class=""item"">visible data3</div>
   </div>");
-        var locator = page.Locator(".item >> visible=true").Nth(1);
+        var locator = Page.Locator(".item >> visible=true").Nth(1);
         await Expect(locator).ToHaveTextAsync("visible data2");
-        await Expect(page.Locator(".item >> visible=true >> text=data3")).ToHaveTextAsync("visible data3");
+        await Expect(Page.Locator(".item >> visible=true >> text=data3")).ToHaveTextAsync("visible data3");
     }
 
     [UpstreamTest("LO-151 should support filter(visible)")]
-    public async Task ShouldSupportFilterVisible(IPage page)
+    public async Task ShouldSupportFilterVisible()
     {
-        await page.SetContentAsync(@"<div>
+        await Page.SetContentAsync(@"<div>
     <div class=""item"" style=""display: none"">Hidden data0</div>
     <div class=""item"">visible data1</div>
     <div class=""item"" style=""display: none"">Hidden data1</div>
@@ -191,16 +191,16 @@ public class LocatorMisc2Tests
     <div class=""item"">visible data3</div>
     </div>
   ");
-        var locator = page.Locator(".item").Filter(new() { Visible = true }).Nth(1);
+        var locator = Page.Locator(".item").Filter(new() { Visible = true }).Nth(1);
         await Expect(locator).ToHaveTextAsync("visible data2");
-        await Expect(page.Locator(".item").Filter(new() { Visible = true }).GetByText("data3")).ToHaveTextAsync("visible data3");
-        await Expect(page.Locator(".item").Filter(new() { Visible = false }).GetByText("data1")).ToHaveTextAsync("Hidden data1");
+        await Expect(Page.Locator(".item").Filter(new() { Visible = true }).GetByText("data3")).ToHaveTextAsync("visible data3");
+        await Expect(Page.Locator(".item").Filter(new() { Visible = false }).GetByText("data1")).ToHaveTextAsync("Hidden data1");
     }
 
     [UpstreamTest("LO-152 should support visible()")]
-    public async Task ShouldSupportVisible(IPage page)
+    public async Task ShouldSupportVisible()
     {
-        await page.SetContentAsync(@"<div>
+        await Page.SetContentAsync(@"<div>
     <div class=""item"" style=""display: none"">Hidden data0</div>
     <div class=""item"">visible data1</div>
     <div class=""item"" style=""display: none"">Hidden data1</div>
@@ -209,43 +209,43 @@ public class LocatorMisc2Tests
     <div class=""item"">visible data3</div>
     </div>
   ");
-        var locator = page.Locator(".item").Visible.Nth(1);
+        var locator = Page.Locator(".item").Visible.Nth(1);
         await Expect(locator).ToHaveTextAsync("visible data2");
-        await Expect(page.Locator(".item").Visible.GetByText("data3")).ToHaveTextAsync("visible data3");
-        await Expect(page.Locator(".item").Visible).ToHaveCountAsync(3);
+        await Expect(Page.Locator(".item").Visible.GetByText("data3")).ToHaveTextAsync("visible data3");
+        await Expect(Page.Locator(".item").Visible).ToHaveCountAsync(3);
     }
 
     [UpstreamTest("LO-153 locator.count should work with deleted Map in main world")]
-    public async Task LocatorCountShouldWorkWithDeletedMapInMainWorld(IPage page)
+    public async Task LocatorCountShouldWorkWithDeletedMapInMainWorld()
     {
-        await page.EvaluateAsync("Map = 1");
-        await page.Locator("#searchResultTableDiv .x-grid3-row").CountAsync();
-        await Expect(page.Locator("#searchResultTableDiv .x-grid3-row")).ToHaveCountAsync(0);
+        await Page.EvaluateAsync("Map = 1");
+        await Page.Locator("#searchResultTableDiv .x-grid3-row").CountAsync();
+        await Expect(Page.Locator("#searchResultTableDiv .x-grid3-row")).ToHaveCountAsync(0);
     }
 
     [UpstreamTest("LO-154 Locator.locator() and FrameLocator.locator() should accept locator")]
-    public async Task LocatorLocatorAndFrameLocatorLocatorShouldAcceptLocator(IPage page)
+    public async Task LocatorLocatorAndFrameLocatorLocatorShouldAcceptLocator()
     {
-        await page.SetContentAsync(@"
+        await Page.SetContentAsync(@"
     <div><input value=outer></div>
     <iframe srcdoc=""<div><input value=inner></div>""></iframe>
   ");
 
-        var inputLocator = page.Locator("input");
+        var inputLocator = Page.Locator("input");
         Assert.That(await inputLocator.InputValueAsync(), Is.EqualTo("outer"));
-        Assert.That(await page.Locator("div").Locator(inputLocator).InputValueAsync(), Is.EqualTo("outer"));
-        Assert.That(await page.FrameLocator("iframe").Locator(inputLocator).InputValueAsync(), Is.EqualTo("inner"));
-        Assert.That(await page.FrameLocator("iframe").Locator("div").Locator(inputLocator).InputValueAsync(), Is.EqualTo("inner"));
+        Assert.That(await Page.Locator("div").Locator(inputLocator).InputValueAsync(), Is.EqualTo("outer"));
+        Assert.That(await Page.FrameLocator("iframe").Locator(inputLocator).InputValueAsync(), Is.EqualTo("inner"));
+        Assert.That(await Page.FrameLocator("iframe").Locator("div").Locator(inputLocator).InputValueAsync(), Is.EqualTo("inner"));
 
-        var divLocator = page.Locator("div");
+        var divLocator = Page.Locator("div");
         Assert.That(await divLocator.Locator("input").InputValueAsync(), Is.EqualTo("outer"));
-        Assert.That(await page.FrameLocator("iframe").Locator(divLocator).Locator("input").InputValueAsync(), Is.EqualTo("inner"));
+        Assert.That(await Page.FrameLocator("iframe").Locator(divLocator).Locator("input").InputValueAsync(), Is.EqualTo("inner"));
     }
 
     [UpstreamTest("LO-155 should fill programmatically enabled textarea")]
-    public async Task ShouldFillProgrammaticallyEnabledTextarea(IPage page)
+    public async Task ShouldFillProgrammaticallyEnabledTextarea()
     {
-        await page.SetContentAsync(@"
+        await Page.SetContentAsync(@"
     <button>Enable</button>
     <form>
       <textarea id=""text"" disabled></textarea>
@@ -256,16 +256,16 @@ public class LocatorMisc2Tests
       });
     </script>
   ");
-        await page.Locator("button").ClickAsync();
-        await page.Locator("#text").FillAsync("Hello");
-        await Expect(page.Locator("#text")).ToHaveValueAsync("Hello");
+        await Page.Locator("button").ClickAsync();
+        await Page.Locator("#text").FillAsync("Hello");
+        await Expect(Page.Locator("#text")).ToHaveValueAsync("Hello");
     }
 
     [UpstreamTest("LO-156 press should throw on unknown keys")]
-    public async Task PressShouldThrowOnUnknownKeys(IPage page, Server server)
+    public async Task PressShouldThrowOnUnknownKeys()
     {
-        await page.SetContentAsync("<input type='text' value='hello' />");
-        var locator = page.GetByRole(AriaRole.Textbox);
+        await Page.SetContentAsync("<input type='text' value='hello' />");
+        var locator = Page.GetByRole(AriaRole.Textbox);
         var error = await ThrowsAsync<PlaywrightException>(() => locator.PressAsync("NotARealKey"));
         Assert.That(error.Message, Does.Match("Unknown key: \"NotARealKey\""));
         var error2 = await ThrowsAsync<PlaywrightException>(() => locator.PressAsync("ё"));

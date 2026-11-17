@@ -25,27 +25,26 @@ using static Microsoft.Playwright.Tests.Fixtures.Utils;
 namespace Microsoft.Playwright.Tests.Page;
 
 /// <summary>Port of tests/page/page-request-fulfill.spec.ts.</summary>
-public class PageRequestFulfillTests
+public class PageRequestFulfillTests : UpstreamPageTest
 {
     // We access test servers at 10.0.2.2 from inside the browser on Android,
     // which is actually forwarded to the desktop localhost.
     // To use request such an url with apiRequestContext on the desktop, we need to change it back to localhost.
-    [Fixture]
-    public static Func<string, string> RewriteAndroidLoopbackURL(bool isAndroid) => givenURL =>
+    private string RewriteAndroidLoopbackURL(string givenURL)
     {
-        if (!isAndroid)
+        if (!IsAndroid)
         {
             return givenURL;
         }
         var requestURL = new UriBuilder(givenURL);
         requestURL.Host = "localhost";
         return requestURL.Uri.ToString();
-    };
+    }
 
     [UpstreamTest("RO-096 should work")]
-    public async Task ShouldWork(IPage page, Server server)
+    public async Task ShouldWork()
     {
-        await page.RouteAsync("**/*", route =>
+        await Page.RouteAsync("**/*", route =>
         {
             IgnoreErrors(route.FulfillAsync(new()
             {
@@ -58,16 +57,16 @@ public class PageRequestFulfillTests
                 Body = "Yo, page!",
             }));
         });
-        var response = await page.GotoAsync(server.EmptyPage);
+        var response = await Page.GotoAsync(Server.EmptyPage);
         Assert.That(response.Status, Is.EqualTo(201));
         Assert.That(response.Headers["foo"], Is.EqualTo("bar"));
-        Assert.That(await page.EvaluateAsync<string>("() => document.body.textContent"), Is.EqualTo("Yo, page!"));
+        Assert.That(await Page.EvaluateAsync<string>("() => document.body.textContent"), Is.EqualTo("Yo, page!"));
     }
 
     [UpstreamTest("RO-097 should work with buffer as body")]
-    public async Task ShouldWorkWithBufferAsBody(IPage page, Server server, string browserName, bool isLinux)
+    public async Task ShouldWorkWithBufferAsBody()
     {
-        await page.RouteAsync("**/*", route =>
+        await Page.RouteAsync("**/*", route =>
         {
             IgnoreErrors(route.FulfillAsync(new()
             {
@@ -76,15 +75,15 @@ public class PageRequestFulfillTests
                 BodyBytes = Encoding.UTF8.GetBytes("Yo, page!"),
             }));
         });
-        var response = await page.GotoAsync(server.EmptyPage);
+        var response = await Page.GotoAsync(Server.EmptyPage);
         Assert.That(response.Status, Is.EqualTo(200));
-        Assert.That(await page.EvaluateAsync<string>("() => document.body.textContent"), Is.EqualTo("Yo, page!"));
+        Assert.That(await Page.EvaluateAsync<string>("() => document.body.textContent"), Is.EqualTo("Yo, page!"));
     }
 
     [UpstreamTest("RO-098 should work with status code 422")]
-    public async Task ShouldWorkWithStatusCode422(IPage page, Server server)
+    public async Task ShouldWorkWithStatusCode422()
     {
-        await page.RouteAsync("**/*", route =>
+        await Page.RouteAsync("**/*", route =>
         {
             IgnoreErrors(route.FulfillAsync(new()
             {
@@ -92,18 +91,18 @@ public class PageRequestFulfillTests
                 Body = "Yo, page!",
             }));
         });
-        var response = await page.GotoAsync(server.EmptyPage);
+        var response = await Page.GotoAsync(Server.EmptyPage);
         Assert.That(response.Status, Is.EqualTo(422));
         Assert.That(response.StatusText, Is.EqualTo("Unprocessable Entity"));
-        Assert.That(await page.EvaluateAsync<string>("() => document.body.textContent"), Is.EqualTo("Yo, page!"));
+        Assert.That(await Page.EvaluateAsync<string>("() => document.body.textContent"), Is.EqualTo("Yo, page!"));
     }
 
     [UpstreamTest("RO-099 should fulfill with unuassigned status codes")]
-    public async Task ShouldFulfillWithUnuassignedStatusCodes(IPage page, Server server, string browserName)
+    public async Task ShouldFulfillWithUnuassignedStatusCodes()
     {
         // .NET: a promise that is resolved with a promise is a task of a task.
         var fulfillPromise = new TaskCompletionSource<Task<Exception>>(TaskCreationOptions.RunContinuationsAsynchronously);
-        await page.RouteAsync("**/data.json", route =>
+        await Page.RouteAsync("**/data.json", route =>
         {
             fulfillPromise.SetResult(Catch(() => route.FulfillAsync(new()
             {
@@ -111,11 +110,11 @@ public class PageRequestFulfillTests
                 Body = "Yo, page!",
             })));
         });
-        await page.GotoAsync(server.EmptyPage);
-        var response = await page.EvaluateAsync<JsonElement>(@"async url => {
+        await Page.GotoAsync(Server.EmptyPage);
+        var response = await Page.EvaluateAsync<JsonElement>(@"async url => {
     const { status, statusText } = await fetch(url);
     return { status, statusText };
-  }", server.Prefix + "/data.json");
+  }", Server.Prefix + "/data.json");
         var error = await await fulfillPromise.Task;
         Assert.That(error, Is.Null);
         Assert.That(response.GetProperty("status").GetInt32(), Is.EqualTo(430));
@@ -123,18 +122,18 @@ public class PageRequestFulfillTests
     }
 
     [UpstreamTest("RO-100 should not throw if request was cancelled by the page")]
-    public async Task ShouldNotThrowIfRequestWasCancelledByThePage(IPage page, Server server)
+    public async Task ShouldNotThrowIfRequestWasCancelledByThePage()
     {
         var interceptPromise = new TaskCompletionSource<IRoute>(TaskCreationOptions.RunContinuationsAsynchronously);
-        await page.RouteAsync("**/data.json", route => interceptPromise.SetResult(route));
-        await page.GotoAsync(server.EmptyPage);
-        await page.EvaluateAsync(@"url => {
+        await Page.RouteAsync("**/data.json", route => interceptPromise.SetResult(route));
+        await Page.GotoAsync(Server.EmptyPage);
+        await Page.EvaluateAsync(@"url => {
     globalThis.controller = new AbortController();
     fetch(url, { signal: globalThis.controller.signal }).catch(() => {});
-  }", server.Prefix + "/data.json");
+  }", Server.Prefix + "/data.json");
         var route = await interceptPromise.Task;
-        var failurePromise = Once<IRequest>(h => page.RequestFailed += h, h => page.RequestFailed -= h);
-        await page.EvaluateAsync("() => globalThis.controller.abort()");
+        var failurePromise = Once<IRequest>(h => Page.RequestFailed += h, h => Page.RequestFailed -= h);
+        await Page.EvaluateAsync("() => globalThis.controller.abort()");
         var cancelledRequest = await failurePromise;
         // .NET: request.Failure is the error text.
         Assert.That(cancelledRequest.Failure, Is.Not.Null);
@@ -143,38 +142,38 @@ public class PageRequestFulfillTests
     }
 
     [UpstreamTest("RO-101 should allow mocking binary responses")]
-    public async Task ShouldAllowMockingBinaryResponses(IPage page, Server server, string browserName, bool headless, Func<string, string> asset, bool isAndroid, string mode)
+    public async Task ShouldAllowMockingBinaryResponses()
     {
-        Info.Skip(browserName == "firefox" && !headless, "Firefox headed produces a different image.");
-        Info.Skip(isAndroid);
+        Info.Skip(BrowserName == "firefox" && !Headless, "Firefox headed produces a different image.");
+        Info.Skip(IsAndroid);
 
-        await page.RouteAsync("**/*", route =>
+        await Page.RouteAsync("**/*", route =>
         {
-            var imageBuffer = File.ReadAllBytes(asset("pptr.png"));
+            var imageBuffer = File.ReadAllBytes(Asset("pptr.png"));
             IgnoreErrors(route.FulfillAsync(new()
             {
                 ContentType = "image/png",
                 BodyBytes = imageBuffer,
             }));
         });
-        await page.EvaluateAsync(@"PREFIX => {
+        await Page.EvaluateAsync(@"PREFIX => {
     const img = document.createElement('img');
     img.src = PREFIX + '/does-not-exist.png';
     document.body.appendChild(img);
     return new Promise(fulfill => img.onload = fulfill);
-  }", server.Prefix);
-        var img = await page.QuerySelectorAsync("img");
+  }", Server.Prefix);
+        var img = await Page.QuerySelectorAsync("img");
         ExpectToMatchSnapshot(await img.ScreenshotAsync(), "mock-binary-response.png");
     }
 
     [UpstreamTest("RO-102 should allow mocking svg with charset")]
-    public async Task ShouldAllowMockingSvgWithCharset(IPage page, Server server, string browserName, bool headless, bool isAndroid, bool isElectron, int electronMajorVersion)
+    public async Task ShouldAllowMockingSvgWithCharset()
     {
-        Info.Skip(browserName == "firefox" && !headless, "Firefox headed produces a different image.");
-        Info.Skip(isAndroid);
-        Info.Skip(isElectron && electronMajorVersion < 30, "Protocol error (Storage.getCookies): Browser context management is not supported");
+        Info.Skip(BrowserName == "firefox" && !Headless, "Firefox headed produces a different image.");
+        Info.Skip(IsAndroid);
+        Info.Skip(IsElectron && ElectronMajorVersion < 30, "Protocol error (Storage.getCookies): Browser context management is not supported");
 
-        await page.RouteAsync("**/*", route =>
+        await Page.RouteAsync("**/*", route =>
         {
             IgnoreErrors(route.FulfillAsync(new()
             {
@@ -182,36 +181,36 @@ public class PageRequestFulfillTests
                 Body = "<svg width=\"50\" height=\"50\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"10\" y=\"10\" width=\"30\" height=\"30\" stroke=\"black\" fill=\"transparent\" stroke-width=\"5\"/></svg>",
             }));
         });
-        await page.EvaluateAsync(@"PREFIX => {
+        await Page.EvaluateAsync(@"PREFIX => {
     const img = document.createElement('img');
     img.src = PREFIX + '/does-not-exist.svg';
     document.body.appendChild(img);
     return new Promise((f, r) => { img.onload = f; img.onerror = r; });
-  }", server.Prefix);
-        var img = await page.QuerySelectorAsync("img");
+  }", Server.Prefix);
+        var img = await Page.QuerySelectorAsync("img");
         ExpectToMatchSnapshot(await img.ScreenshotAsync(), "mock-svg.png");
     }
 
     [UpstreamTest("RO-103 should work with file path")]
-    public async Task ShouldWorkWithFilePath(IPage page, Server server, Func<string, string> asset, string mode, bool isAndroid)
+    public async Task ShouldWorkWithFilePath()
     {
-        Info.Skip(isAndroid);
+        Info.Skip(IsAndroid);
 
-        await page.RouteAsync("**/*", route => route.FulfillAsync(new() { ContentType = "shouldBeIgnored", Path = asset("pptr.png") }));
-        await page.EvaluateAsync(@"PREFIX => {
+        await Page.RouteAsync("**/*", route => route.FulfillAsync(new() { ContentType = "shouldBeIgnored", Path = Asset("pptr.png") }));
+        await Page.EvaluateAsync(@"PREFIX => {
     const img = document.createElement('img');
     img.src = PREFIX + '/does-not-exist.png';
     document.body.appendChild(img);
     return new Promise(fulfill => img.onload = fulfill);
-  }", server.Prefix);
-        var img = await page.QuerySelectorAsync("img");
+  }", Server.Prefix);
+        var img = await Page.QuerySelectorAsync("img");
         ExpectToMatchSnapshot(await img.ScreenshotAsync(), "mock-binary-response.png");
     }
 
     [UpstreamTest("RO-104 should stringify intercepted request response headers")]
-    public async Task ShouldStringifyInterceptedRequestResponseHeaders(IPage page, Server server)
+    public async Task ShouldStringifyInterceptedRequestResponseHeaders()
     {
-        await page.RouteAsync("**/*", route =>
+        await Page.RouteAsync("**/*", route =>
         {
             IgnoreErrors(route.FulfillAsync(new()
             {
@@ -223,36 +222,36 @@ public class PageRequestFulfillTests
                 Body = "Yo, page!",
             }));
         });
-        var response = await page.GotoAsync(server.EmptyPage);
+        var response = await Page.GotoAsync(Server.EmptyPage);
         Assert.That(response.Status, Is.EqualTo(200));
         var headers = response.Headers;
         Assert.That(headers["foo"], Is.EqualTo("true"));
-        Assert.That(await page.EvaluateAsync<string>("() => document.body.textContent"), Is.EqualTo("Yo, page!"));
+        Assert.That(await Page.EvaluateAsync<string>("() => document.body.textContent"), Is.EqualTo("Yo, page!"));
     }
 
     [UpstreamTest("RO-105 should not modify the headers sent to the server")]
-    public async Task ShouldNotModifyTheHeadersSentToTheServer(IPage page, Server server)
+    public async Task ShouldNotModifyTheHeadersSentToTheServer()
     {
-        await page.GotoAsync(server.Prefix + "/empty.html");
+        await Page.GotoAsync(Server.Prefix + "/empty.html");
         var interceptedRequests = new List<ServerRequest>();
 
         // this is just to enable request interception, which disables caching in chromium
-        await page.RouteAsync(server.Prefix + "/unused", route => { });
+        await Page.RouteAsync(Server.Prefix + "/unused", route => { });
 
-        server.SetRoute("/something", (request, response) =>
+        Server.SetRoute("/something", (request, response) =>
         {
             interceptedRequests.Add(request);
             response.WriteHead(200, new() { ["Access-Control-Allow-Origin"] = "*" });
             response.End("done");
         });
 
-        var text = await page.EvaluateAsync<string>(@"async url => {
+        var text = await Page.EvaluateAsync<string>(@"async url => {
     const data = await fetch(url);
     return data.text();
-  }", server.CrossProcessPrefix + "/something");
+  }", Server.CrossProcessPrefix + "/something");
         Assert.That(text, Is.EqualTo("done"));
 
-        await page.RouteAsync(server.CrossProcessPrefix + "/something", route =>
+        await Page.RouteAsync(Server.CrossProcessPrefix + "/something", route =>
         {
             IgnoreErrors(route.ContinueAsync(new()
             {
@@ -260,10 +259,10 @@ public class PageRequestFulfillTests
             }));
         });
 
-        var textAfterRoute = await page.EvaluateAsync<string>(@"async url => {
+        var textAfterRoute = await Page.EvaluateAsync<string>(@"async url => {
     const data = await fetch(url);
     return data.text();
-  }", server.CrossProcessPrefix + "/something");
+  }", Server.CrossProcessPrefix + "/something");
         Assert.That(textAfterRoute, Is.EqualTo("done"));
 
         Assert.That(interceptedRequests.Count, Is.EqualTo(2));
@@ -271,13 +270,13 @@ public class PageRequestFulfillTests
     }
 
     [UpstreamTest("RO-106 should include the origin header")]
-    public async Task ShouldIncludeTheOriginHeader(IPage page, Server server, bool isAndroid)
+    public async Task ShouldIncludeTheOriginHeader()
     {
-        Info.Skip(isAndroid, "No cross-process on Android");
+        Info.Skip(IsAndroid, "No cross-process on Android");
 
-        await page.GotoAsync(server.Prefix + "/empty.html");
+        await Page.GotoAsync(Server.Prefix + "/empty.html");
         IRequest interceptedRequest = null;
-        await page.RouteAsync(server.CrossProcessPrefix + "/something", route =>
+        await Page.RouteAsync(Server.CrossProcessPrefix + "/something", route =>
         {
             interceptedRequest = route.Request;
             IgnoreErrors(route.FulfillAsync(new()
@@ -291,50 +290,50 @@ public class PageRequestFulfillTests
             }));
         });
 
-        var text = await page.EvaluateAsync<string>(@"async url => {
+        var text = await Page.EvaluateAsync<string>(@"async url => {
     const data = await fetch(url);
     return data.text();
-  }", server.CrossProcessPrefix + "/something");
+  }", Server.CrossProcessPrefix + "/something");
         Assert.That(text, Is.EqualTo("done"));
-        Assert.That(interceptedRequest.Headers["origin"], Is.EqualTo(server.Prefix));
+        Assert.That(interceptedRequest.Headers["origin"], Is.EqualTo(Server.Prefix));
     }
 
     [UpstreamTest("RO-107 should fulfill with global fetch result")]
-    public async Task ShouldFulfillWithGlobalFetchResult(IPlaywright playwright, IPage page, Server server, bool isElectron, int electronMajorVersion, Func<string, string> rewriteAndroidLoopbackURL)
+    public async Task ShouldFulfillWithGlobalFetchResult()
     {
-        Info.Skip(isElectron && electronMajorVersion < 30, "error: Browser context management is not supported.");
-        await page.RouteAsync("**/*", async route =>
+        Info.Skip(IsElectron && ElectronMajorVersion < 30, "error: Browser context management is not supported.");
+        await Page.RouteAsync("**/*", async route =>
         {
-            var request = await playwright.APIRequest.NewContextAsync();
-            var response = await request.GetAsync(rewriteAndroidLoopbackURL(server.Prefix + "/simple.json"));
+            var request = await Playwright.APIRequest.NewContextAsync();
+            var response = await request.GetAsync(RewriteAndroidLoopbackURL(Server.Prefix + "/simple.json"));
             IgnoreErrors(route.FulfillAsync(new() { Response = response }));
         });
-        var response = await page.GotoAsync(server.EmptyPage);
+        var response = await Page.GotoAsync(Server.EmptyPage);
         Assert.That(response.Status, Is.EqualTo(200));
         ExpectToEqual(await response.JsonAsync(), new { foo = "bar" });
     }
 
     [UpstreamTest("RO-108 should fulfill with fetch result")]
-    public async Task ShouldFulfillWithFetchResult(IPage page, Server server, bool isElectron, int electronMajorVersion, Func<string, string> rewriteAndroidLoopbackURL)
+    public async Task ShouldFulfillWithFetchResult()
     {
-        Info.Skip(isElectron && electronMajorVersion < 30, "error: Browser context management is not supported.");
-        await page.RouteAsync("**/*", async route =>
+        Info.Skip(IsElectron && ElectronMajorVersion < 30, "error: Browser context management is not supported.");
+        await Page.RouteAsync("**/*", async route =>
         {
-            var response = await page.APIRequest.GetAsync(rewriteAndroidLoopbackURL(server.Prefix + "/simple.json"));
+            var response = await Page.APIRequest.GetAsync(RewriteAndroidLoopbackURL(Server.Prefix + "/simple.json"));
             IgnoreErrors(route.FulfillAsync(new() { Response = response }));
         });
-        var response = await page.GotoAsync(server.EmptyPage);
+        var response = await Page.GotoAsync(Server.EmptyPage);
         Assert.That(response.Status, Is.EqualTo(200));
         ExpectToEqual(await response.JsonAsync(), new { foo = "bar" });
     }
 
     [UpstreamTest("RO-109 should fulfill with fetch result and overrides")]
-    public async Task ShouldFulfillWithFetchResultAndOverrides(IPage page, Server server, bool isElectron, int electronMajorVersion, Func<string, string> rewriteAndroidLoopbackURL)
+    public async Task ShouldFulfillWithFetchResultAndOverrides()
     {
-        Info.Skip(isElectron && electronMajorVersion < 30, "error: Browser context management is not supported.");
-        await page.RouteAsync("**/*", async route =>
+        Info.Skip(IsElectron && ElectronMajorVersion < 30, "error: Browser context management is not supported.");
+        await Page.RouteAsync("**/*", async route =>
         {
-            var response = await page.APIRequest.GetAsync(rewriteAndroidLoopbackURL(server.Prefix + "/simple.json"));
+            var response = await Page.APIRequest.GetAsync(RewriteAndroidLoopbackURL(Server.Prefix + "/simple.json"));
             IgnoreErrors(route.FulfillAsync(new()
             {
                 Response = response,
@@ -346,38 +345,38 @@ public class PageRequestFulfillTests
                 },
             }));
         });
-        var response = await page.GotoAsync(server.EmptyPage);
+        var response = await Page.GotoAsync(Server.EmptyPage);
         Assert.That(response.Status, Is.EqualTo(201));
         Assert.That((await response.AllHeadersAsync())["foo"], Is.EqualTo("bar"));
         ExpectToEqual(await response.JsonAsync(), new { foo = "bar" });
     }
 
     [UpstreamTest("RO-110 should fetch original request and fulfill")]
-    public async Task ShouldFetchOriginalRequestAndFulfill(IPage page, Server server, bool isElectron, int electronMajorVersion, bool isAndroid)
+    public async Task ShouldFetchOriginalRequestAndFulfill()
     {
-        Info.Skip(isElectron && electronMajorVersion < 30, "error: Browser context management is not supported.");
-        Info.Skip(isAndroid, "The internal Android localhost (10.0.0.2) != the localhost on the host");
-        await page.RouteAsync("**/*", async route =>
+        Info.Skip(IsElectron && ElectronMajorVersion < 30, "error: Browser context management is not supported.");
+        Info.Skip(IsAndroid, "The internal Android localhost (10.0.0.2) != the localhost on the host");
+        await Page.RouteAsync("**/*", async route =>
         {
-            var response = await page.APIRequest.FetchAsync(route.Request);
+            var response = await Page.APIRequest.FetchAsync(route.Request);
             IgnoreErrors(route.FulfillAsync(new()
             {
                 Response = response,
             }));
         });
-        var response = await page.GotoAsync(server.Prefix + "/title.html");
+        var response = await Page.GotoAsync(Server.Prefix + "/title.html");
         Assert.That(response.Status, Is.EqualTo(200));
-        Assert.That(await page.TitleAsync(), Is.EqualTo("Woof-Woof"));
+        Assert.That(await Page.TitleAsync(), Is.EqualTo("Woof-Woof"));
     }
 
     [UpstreamTest("RO-111 should fulfill with multiple set-cookie")]
-    public async Task ShouldFulfillWithMultipleSetCookie(IPage page, Server server, bool isElectron, int electronMajorVersion, bool isAndroid)
+    public async Task ShouldFulfillWithMultipleSetCookie()
     {
-        Info.Skip(isElectron && electronMajorVersion < 14, "Electron 14+ is required");
-        Info.Skip(isAndroid, "Android does not have an isolated context per test, so we get cookies from other tests");
+        Info.Skip(IsElectron && ElectronMajorVersion < 14, "Electron 14+ is required");
+        Info.Skip(IsAndroid, "Android does not have an isolated context per test, so we get cookies from other tests");
 
         var cookies = new[] { "a=b", "c=d" };
-        await page.RouteAsync("**/multiple-set-cookie.html", route =>
+        await Page.RouteAsync("**/multiple-set-cookie.html", route =>
         {
             IgnoreErrors(route.FulfillAsync(new()
             {
@@ -391,39 +390,39 @@ public class PageRequestFulfillTests
                 Body = "",
             }));
         });
-        var response = await page.GotoAsync(server.Prefix + "/multiple-set-cookie.html");
-        Assert.That((await page.EvaluateAsync<string>("() => document.cookie")).Split(';').Select(s => s.Trim()).Order(StringComparer.Ordinal), Is.EqualTo(cookies));
+        var response = await Page.GotoAsync(Server.Prefix + "/multiple-set-cookie.html");
+        Assert.That((await Page.EvaluateAsync<string>("() => document.cookie")).Split(';').Select(s => s.Trim()).Order(StringComparer.Ordinal), Is.EqualTo(cookies));
         Assert.That(await response.HeaderValueAsync("X-Header-1"), Is.EqualTo("v1"));
         Assert.That(await response.HeaderValueAsync("X-Header-2"), Is.EqualTo("v2"));
     }
 
     [UpstreamTest("RO-112 should fulfill with fetch response that has multiple set-cookie")]
-    public async Task ShouldFulfillWithFetchResponseThatHasMultipleSetCookie(IPlaywright playwright, IPage page, Server server, bool isAndroid)
+    public async Task ShouldFulfillWithFetchResponseThatHasMultipleSetCookie()
     {
-        Info.Fixme(isAndroid);
-        server.SetRoute("/empty.html", (req, res) =>
+        Info.Fixme(IsAndroid);
+        Server.SetRoute("/empty.html", (req, res) =>
         {
             res.SetHeader("Set-Cookie", new[] { "a=b", "c=d" });
             res.SetHeader("Content-Type", "text/html");
             res.End();
         });
-        await page.RouteAsync("**/empty.html", async route =>
+        await Page.RouteAsync("**/empty.html", async route =>
         {
-            var request = await playwright.APIRequest.NewContextAsync();
+            var request = await Playwright.APIRequest.NewContextAsync();
             var response = await request.FetchAsync(route.Request);
             IgnoreErrors(route.FulfillAsync(new() { Response = response }));
         });
-        await page.GotoAsync(server.EmptyPage);
-        var cookie = await page.EvaluateAsync<string>("() => document.cookie");
+        await Page.GotoAsync(Server.EmptyPage);
+        var cookie = await Page.EvaluateAsync<string>("() => document.cookie");
         Assert.That(cookie.Split(';').Select(s => s.Trim()).Order(StringComparer.Ordinal), Is.EqualTo(new[] { "a=b", "c=d" }));
     }
 
     [UpstreamTest("RO-113 headerValue should return set-cookie from intercepted response")]
-    public async Task HeaderValueShouldReturnSetCookieFromInterceptedResponse(IPage page, Server server, string browserName)
+    public async Task HeaderValueShouldReturnSetCookieFromInterceptedResponse()
     {
-        Info.Fixme(browserName == "chromium", "Set-Cookie is missing in response after interception");
-        Info.Skip(browserName == "webkit", "Set-Cookie with \n in intercepted response does not pass validation in WebCore, see also https://github.com/microsoft/playwright/pull/9273");
-        await page.RouteAsync("**/empty.html", route =>
+        Info.Fixme(BrowserName == "chromium", "Set-Cookie is missing in response after interception");
+        Info.Skip(BrowserName == "webkit", "Set-Cookie with \n in intercepted response does not pass validation in WebCore, see also https://github.com/microsoft/playwright/pull/9273");
+        await Page.RouteAsync("**/empty.html", route =>
         {
             IgnoreErrors(route.FulfillAsync(new()
             {
@@ -435,16 +434,16 @@ public class PageRequestFulfillTests
                 Body = "",
             }));
         });
-        var response = await page.GotoAsync(server.EmptyPage);
+        var response = await Page.GotoAsync(Server.EmptyPage);
         Assert.That(await response.HeaderValueAsync("Set-Cookie"), Is.EqualTo("a=b"));
     }
 
     [UpstreamTest("RO-114 should fulfill with har response")]
-    public async Task ShouldFulfillWithHarResponse(IPage page, Func<string, string> asset)
+    public async Task ShouldFulfillWithHarResponse()
     {
-        var harPath = asset("har-fulfill.har");
+        var harPath = Asset("har-fulfill.har");
         var har = JsonNode.Parse(await File.ReadAllTextAsync(harPath));
-        await page.RouteAsync("**/*", async route =>
+        await Page.RouteAsync("**/*", async route =>
         {
             var response = FindResponse(har, route.Request.Url);
             var headers = new Dictionary<string, string>();
@@ -462,11 +461,11 @@ public class PageRequestFulfillTests
                     : Encoding.UTF8.GetBytes((string)response["content"]["text"] ?? ""),
             });
         });
-        await page.GotoAsync("http://no.playwright/");
+        await Page.GotoAsync("http://no.playwright/");
         // HAR contains a redirect for the script.
-        Assert.That(await page.EvaluateAsync<string>("window.value"), Is.EqualTo("foo"));
+        Assert.That(await Page.EvaluateAsync<string>("window.value"), Is.EqualTo("foo"));
         // HAR contains a POST for the css file but we match ignoring the method, so the file should be served.
-        await Expect(page.Locator("body")).ToHaveCSSAsync("background-color", "rgb(0, 255, 255)");
+        await Expect(Page.Locator("body")).ToHaveCSSAsync("background-color", "rgb(0, 255, 255)");
     }
 
     private static JsonNode FindResponse(JsonNode har, string url)
@@ -483,10 +482,10 @@ public class PageRequestFulfillTests
     }
 
     [UpstreamTest("RO-115 should fulfill preload link requests")]
-    public async Task ShouldFulfillPreloadLinkRequests(IPage page, Server server, string browserName)
+    public async Task ShouldFulfillPreloadLinkRequests()
     {
         var intercepted = false;
-        await page.RouteAsync("**/one-style.css", route =>
+        await Page.RouteAsync("**/one-style.css", route =>
         {
             intercepted = true;
             IgnoreErrors(route.FulfillAsync(new()
@@ -502,20 +501,20 @@ public class PageRequestFulfillTests
             }));
         });
         var (response, _) = await PromiseAll(
-            page.WaitForResponseAsync("**/one-style.css"),
-            page.GotoAsync(server.Prefix + "/preload.html"));
+            Page.WaitForResponseAsync("**/one-style.css"),
+            Page.GotoAsync(Server.Prefix + "/preload.html"));
         Assert.That(await response.HeaderValueAsync("custom"), Is.EqualTo("value"));
-        await page.WaitForFunctionAsync("() => window.preloadedStyles");
+        await Page.WaitForFunctionAsync("() => window.preloadedStyles");
         Assert.That(intercepted, Is.EqualTo(true));
-        var color = await page.EvaluateAsync<string>("() => window.getComputedStyle(document.body).backgroundColor");
+        var color = await Page.EvaluateAsync<string>("() => window.getComputedStyle(document.body).backgroundColor");
         Assert.That(color, Is.EqualTo("rgb(0, 128, 0)"));
     }
 
     [UpstreamTest("RO-116 should fulfill json")]
-    public async Task ShouldFulfillJson(IPage page, Server server)
+    public async Task ShouldFulfillJson()
     {
-        await page.GotoAsync(server.EmptyPage);
-        await page.RouteAsync("**/data.json", route =>
+        await Page.GotoAsync(Server.EmptyPage);
+        await Page.RouteAsync("**/data.json", route =>
         {
             IgnoreErrors(route.FulfillAsync(new()
             {
@@ -528,36 +527,36 @@ public class PageRequestFulfillTests
             }));
         });
         var (response, body) = await PromiseAll(
-            page.WaitForResponseAsync("**/*"),
-            page.EvaluateAsync<string>("() => fetch('./data.json').then(r => r.text())"));
+            Page.WaitForResponseAsync("**/*"),
+            Page.EvaluateAsync<string>("() => fetch('./data.json').then(r => r.text())"));
         Assert.That(response.Status, Is.EqualTo(201));
         Assert.That(response.Headers["content-type"], Is.EqualTo("application/json"));
         Assert.That(body, Is.EqualTo(JsonSerializer.Serialize(new { bar = "baz" })));
     }
 
     [UpstreamTest("RO-117 should fulfill with gzip and readback")]
-    public async Task ShouldFulfillWithGzipAndReadback(IPage page, Server server, bool isAndroid, bool isElectron, int electronMajorVersion)
+    public async Task ShouldFulfillWithGzipAndReadback()
     {
-        Info.Skip(isAndroid, "The internal Android localhost (10.0.0.2) != the localhost on the host");
-        Info.Skip(isElectron && electronMajorVersion < 30, "error: Browser context management is not supported.");
-        server.EnableGzip("/one-style.html");
-        await page.RouteAsync("**/one-style.html", async route =>
+        Info.Skip(IsAndroid, "The internal Android localhost (10.0.0.2) != the localhost on the host");
+        Info.Skip(IsElectron && ElectronMajorVersion < 30, "error: Browser context management is not supported.");
+        Server.EnableGzip("/one-style.html");
+        await Page.RouteAsync("**/one-style.html", async route =>
         {
             var response = await route.FetchAsync();
             Assert.That(response.Headers["content-encoding"], Is.EqualTo("gzip"));
             await route.FulfillAsync(new() { Response = response });
         });
 
-        var response = await page.GotoAsync(server.Prefix + "/one-style.html");
-        await Expect(page.Locator("div")).ToHaveTextAsync("hello, world!");
-        await Expect(page.Locator("body")).ToHaveCSSAsync("background-color", "rgb(255, 192, 203)");
+        var response = await Page.GotoAsync(Server.Prefix + "/one-style.html");
+        await Expect(Page.Locator("div")).ToHaveTextAsync("hello, world!");
+        await Expect(Page.Locator("body")).ToHaveCSSAsync("background-color", "rgb(255, 192, 203)");
         Assert.That(await response.TextAsync(), Does.Contain("<div>hello, world!</div>"));
     }
 
     [UpstreamTest("RO-118 should not go to the network for fulfilled requests body")]
-    public async Task ShouldNotGoToTheNetworkForFulfilledRequestsBody(IPage page, Server server)
+    public async Task ShouldNotGoToTheNetworkForFulfilledRequestsBody()
     {
-        await page.RouteAsync("**/one-style.css", async route =>
+        await Page.RouteAsync("**/one-style.css", async route =>
         {
             await route.FulfillAsync(new()
             {
@@ -568,15 +567,15 @@ public class PageRequestFulfillTests
         });
 
         var serverHit = false;
-        server.SetRoute("/one-style.css", (req, res) =>
+        Server.SetRoute("/one-style.css", (req, res) =>
         {
             serverHit = true;
             res.SetHeader("Content-Type", "text/css");
             res.End("body { background-color: green; }");
         });
 
-        var responsePromise = page.WaitForResponseAsync("**/one-style.css");
-        await page.GotoAsync(server.Prefix + "/one-style.html");
+        var responsePromise = Page.WaitForResponseAsync("**/one-style.css");
+        await Page.GotoAsync(Server.Prefix + "/one-style.html");
         var response = await responsePromise;
         var body = await response.BodyAsync();
         Assert.That(Encoding.UTF8.GetString(body), Is.EqualTo("Not Found! (mocked)"));
@@ -584,14 +583,14 @@ public class PageRequestFulfillTests
     }
 
     [UpstreamTest("RO-119 should return body for fulfilled responses")]
-    public async Task ShouldReturnBodyForFulfilledResponses(IPage page, Server server)
+    public async Task ShouldReturnBodyForFulfilledResponses()
     {
         foreach (var status in new[] { 100, 200, 404, 500 })
         {
             await Info.Step($"status {status}", async () =>
             {
                 var bodyOverride = $"Custom body {status}";
-                await page.RouteAsync("**/one-style.css", async route =>
+                await Page.RouteAsync("**/one-style.css", async route =>
                 {
                     await route.FulfillAsync(new()
                     {
@@ -601,13 +600,13 @@ public class PageRequestFulfillTests
                     });
                 });
 
-                var responsePromise = page.WaitForResponseAsync("**/one-style.css");
-                await page.GotoAsync(server.Prefix + "/one-style.html");
+                var responsePromise = Page.WaitForResponseAsync("**/one-style.css");
+                await Page.GotoAsync(Server.Prefix + "/one-style.html");
                 var response = await responsePromise;
                 var body = await response.BodyAsync();
                 Assert.That(Encoding.UTF8.GetString(body), Is.EqualTo(bodyOverride));
             });
-            await page.UnrouteAllAsync();
+            await Page.UnrouteAllAsync();
         }
     }
 }

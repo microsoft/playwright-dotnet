@@ -21,44 +21,44 @@ using static Microsoft.Playwright.Tests.Fixtures.Utils;
 namespace Microsoft.Playwright.Tests.Page;
 
 /// <summary>Port of tests/page/page-click-react.spec.ts.</summary>
-public class PageClickReactTests
+public class PageClickReactTests : UpstreamPageTest
 {
     [UpstreamTest("CL-106 should timeout when click opens alert")]
     [LocalFixme("dotnet: the message is 'Timeout 3000ms exceeded.', without the 'page.click: ' prefix of the call")]
-    public async Task ShouldTimeoutWhenClickOpensAlert(IPage page, Server server)
+    public async Task ShouldTimeoutWhenClickOpensAlert()
     {
-        var dialogPromise = Once<IDialog>(h => page.Dialog += h, h => page.Dialog -= h);
-        await page.SetContentAsync("<div onclick='window.alert(123)'>Click me</div>");
-        var error = await Catch(() => page.ClickAsync("div", new() { Timeout = 3000 }));
+        var dialogPromise = Once<IDialog>(h => Page.Dialog += h, h => Page.Dialog -= h);
+        await Page.SetContentAsync("<div onclick='window.alert(123)'>Click me</div>");
+        var error = await Catch(() => Page.ClickAsync("div", new() { Timeout = 3000 }));
         Assert.That(error.Message, Does.Contain("page.click: Timeout 3000ms exceeded."));
         var dialog = await dialogPromise;
         await dialog.DismissAsync();
     }
 
     [UpstreamTest("CL-107 should not retarget when element changes on hover")]
-    public async Task ShouldNotRetargetWhenElementChangesOnHover(IPage page, Server server)
+    public async Task ShouldNotRetargetWhenElementChangesOnHover()
     {
-        await page.GotoAsync(server.Prefix + "/react.html");
-        await page.EvaluateAsync(@"() => {
+        await Page.GotoAsync(Server.Prefix + "/react.html");
+        await Page.EvaluateAsync(@"() => {
     renderComponent(e('div', {}, [e(MyButton, { name: 'button1', renameOnHover: true }), e(MyButton, { name: 'button2' })]));
   }");
-        await page.ClickAsync("text=button1");
-        Assert.That(await page.EvaluateAsync<bool>("window.button1"), Is.EqualTo(true));
-        Assert.That(await page.EvaluateAsync<object>("window.button2"), Is.Null);
+        await Page.ClickAsync("text=button1");
+        Assert.That(await Page.EvaluateAsync<bool>("window.button1"), Is.EqualTo(true));
+        Assert.That(await Page.EvaluateAsync<object>("window.button2"), Is.Null);
     }
 
     [UpstreamTest("CL-108 should not retarget when element is recycled on hover")]
-    public async Task ShouldNotRetargetWhenElementIsRecycledOnHover(IPage page, Server server)
+    public async Task ShouldNotRetargetWhenElementIsRecycledOnHover()
     {
-        await page.GotoAsync(server.Prefix + "/react.html");
-        await page.EvaluateAsync(@"() => {
+        await Page.GotoAsync(Server.Prefix + "/react.html");
+        await Page.EvaluateAsync(@"() => {
     function shuffle() {
       renderComponent(e('div', {}, [e(MyButton, { name: 'button2' }), e(MyButton, { name: 'button1' })]));
     }
     renderComponent(e('div', {}, [e(MyButton, { name: 'button1', onHover: shuffle }), e(MyButton, { name: 'button2' })]));
   }");
-        await page.ClickAsync("text=button1");
-        Assert.That(await page.EvaluateAsync<object>("window.button1"), Is.Null);
-        Assert.That(await page.EvaluateAsync<bool>("window.button2"), Is.EqualTo(true));
+        await Page.ClickAsync("text=button1");
+        Assert.That(await Page.EvaluateAsync<object>("window.button1"), Is.Null);
+        Assert.That(await Page.EvaluateAsync<bool>("window.button2"), Is.EqualTo(true));
     }
 }

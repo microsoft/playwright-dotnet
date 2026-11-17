@@ -20,17 +20,17 @@ using static Microsoft.Playwright.Tests.Fixtures.Utils;
 namespace Microsoft.Playwright.Tests.Library;
 
 /// <summary>Port of tests/library/downloads-path.spec.ts.</summary>
-public class DownloadsPathTests
+public class DownloadsPathTests : UpstreamBrowserTest
 {
-    public class DownloadsPath
+    public class DownloadsPath : UpstreamBrowserTest
     {
-        [BeforeEach]
-        public static void Skip(string mode) => Info.Skip(mode != "default", "download.path() is not available in remote mode");
+        [SetUp]
+        public void Skip() => Info.Skip(Mode != "default", "download.path() is not available in remote mode");
 
-        [BeforeEach]
-        public void BeforeEach(Server server)
+        [SetUp]
+        public void BeforeEach()
         {
-            server.SetRoute("/download", (req, res) =>
+            Server.SetRoute("/download", (req, res) =>
             {
                 res.SetHeader("Content-Type", "application/octet-stream");
                 res.SetHeader("Content-Disposition", "attachment; filename=file.txt");
@@ -39,28 +39,28 @@ public class DownloadsPathTests
         }
 
         [UpstreamTest("DO-039 should keep downloadsPath folder")]
-        public async Task ShouldKeepDownloadsPathFolder(IBrowserType browserType, Server server, TestInfo testInfo, BrowserTypeLaunchOptions launchOptions, BrowserNewPageOptions newPageOptions)
+        public async Task ShouldKeepDownloadsPathFolder()
         {
-            var downloadsBrowser = await browserType.LaunchAsync(new(launchOptions) { DownloadsPath = testInfo.OutputPath("") });
-            var page = await downloadsBrowser.NewPageAsync(newPageOptions);
-            await page.SetContentAsync($"<a href=\"{server.Prefix}/download\">download</a>");
+            var downloadsBrowser = await BrowserType.LaunchAsync(new(LaunchOptions()) { DownloadsPath = Info.OutputPath("") });
+            var page = await downloadsBrowser.NewPageAsync(NewPageOptions());
+            await page.SetContentAsync($"<a href=\"{Server.Prefix}/download\">download</a>");
             var download = await PromiseAll(
                 page.WaitForDownloadAsync(),
                 page.ClickAsync("a"));
-            Assert.That(download.Url, Is.EqualTo($"{server.Prefix}/download"));
+            Assert.That(download.Url, Is.EqualTo($"{Server.Prefix}/download"));
             Assert.That(download.SuggestedFilename, Is.EqualTo("file.txt"));
             await Catch(() => download.PathAsync());
             await page.CloseAsync();
             await downloadsBrowser.CloseAsync();
-            Assert.That(Directory.Exists(testInfo.OutputPath("")), Is.True);
+            Assert.That(Directory.Exists(Info.OutputPath("")), Is.True);
         }
 
         [UpstreamTest("DO-040 should delete downloads when context closes")]
-        public async Task ShouldDeleteDownloadsWhenContextCloses(IBrowserType browserType, Server server, TestInfo testInfo, BrowserTypeLaunchOptions launchOptions, BrowserNewPageOptions newPageOptions)
+        public async Task ShouldDeleteDownloadsWhenContextCloses()
         {
-            var downloadsBrowser = await browserType.LaunchAsync(new(launchOptions) { DownloadsPath = testInfo.OutputPath("") });
-            var page = await downloadsBrowser.NewPageAsync(newPageOptions);
-            await page.SetContentAsync($"<a href=\"{server.Prefix}/download\">download</a>");
+            var downloadsBrowser = await BrowserType.LaunchAsync(new(LaunchOptions()) { DownloadsPath = Info.OutputPath("") });
+            var page = await downloadsBrowser.NewPageAsync(NewPageOptions());
+            await page.SetContentAsync($"<a href=\"{Server.Prefix}/download\">download</a>");
             var download = await PromiseAll(
                 page.WaitForDownloadAsync(),
                 page.ClickAsync("a"));
@@ -72,55 +72,55 @@ public class DownloadsPathTests
         }
 
         [UpstreamTest("DO-041 should report downloads in downloadsPath folder")]
-        public async Task ShouldReportDownloadsInDownloadsPathFolder(IBrowserType browserType, Server server, TestInfo testInfo, BrowserTypeLaunchOptions launchOptions, BrowserNewPageOptions newPageOptions)
+        public async Task ShouldReportDownloadsInDownloadsPathFolder()
         {
-            var downloadsBrowser = await browserType.LaunchAsync(new(launchOptions) { DownloadsPath = testInfo.OutputPath("") });
-            var page = await downloadsBrowser.NewPageAsync(newPageOptions);
-            await page.SetContentAsync($"<a href=\"{server.Prefix}/download\">download</a>");
+            var downloadsBrowser = await BrowserType.LaunchAsync(new(LaunchOptions()) { DownloadsPath = Info.OutputPath("") });
+            var page = await downloadsBrowser.NewPageAsync(NewPageOptions());
+            await page.SetContentAsync($"<a href=\"{Server.Prefix}/download\">download</a>");
             var download = await PromiseAll(
                 page.WaitForDownloadAsync(),
                 page.ClickAsync("a"));
             var path = await download.PathAsync();
-            Assert.That(path.StartsWith(testInfo.OutputPath(""), StringComparison.Ordinal), Is.True);
+            Assert.That(path.StartsWith(Info.OutputPath(""), StringComparison.Ordinal), Is.True);
             await page.CloseAsync();
             await downloadsBrowser.CloseAsync();
         }
 
         [UpstreamTest("DO-042 should report downloads in downloadsPath folder with a relative path")]
-        public async Task ShouldReportDownloadsInDownloadsPathFolderWithARelativePath(IBrowserType browserType, Server server, TestInfo testInfo, BrowserTypeLaunchOptions launchOptions, BrowserNewPageOptions newPageOptions)
+        public async Task ShouldReportDownloadsInDownloadsPathFolderWithARelativePath()
         {
-            var downloadsBrowser = await browserType.LaunchAsync(new(launchOptions) { DownloadsPath = Path.GetRelativePath(Directory.GetCurrentDirectory(), testInfo.OutputPath("")) });
-            var page = await downloadsBrowser.NewPageAsync(newPageOptions);
-            await page.SetContentAsync($"<a href=\"{server.Prefix}/download\">download</a>");
+            var downloadsBrowser = await BrowserType.LaunchAsync(new(LaunchOptions()) { DownloadsPath = Path.GetRelativePath(Directory.GetCurrentDirectory(), Info.OutputPath("")) });
+            var page = await downloadsBrowser.NewPageAsync(NewPageOptions());
+            await page.SetContentAsync($"<a href=\"{Server.Prefix}/download\">download</a>");
             var download = await PromiseAll(
                 page.WaitForDownloadAsync(),
                 page.ClickAsync("a"));
             var downloadPath = await download.PathAsync();
-            Assert.That(downloadPath.StartsWith(testInfo.OutputPath(""), StringComparison.Ordinal), Is.True);
+            Assert.That(downloadPath.StartsWith(Info.OutputPath(""), StringComparison.Ordinal), Is.True);
             await page.CloseAsync();
             await downloadsBrowser.CloseAsync();
         }
 
         [UpstreamTest("DO-043 should accept downloads in persistent context")]
-        public async Task ShouldAcceptDownloadsInPersistentContext(LaunchPersistent launchPersistent, Server server, TestInfo testInfo)
+        public async Task ShouldAcceptDownloadsInPersistentContext()
         {
-            var (context, page) = await launchPersistent(new() { DownloadsPath = testInfo.OutputPath("") });
-            await page.SetContentAsync($"<a href=\"{server.Prefix}/download\">download</a>");
+            var (context, page) = await LaunchPersistent(new() { DownloadsPath = Info.OutputPath("") });
+            await page.SetContentAsync($"<a href=\"{Server.Prefix}/download\">download</a>");
             var download = await PromiseAll(
                 page.WaitForDownloadAsync(),
                 page.ClickAsync("a"));
-            Assert.That(download.Url, Is.EqualTo($"{server.Prefix}/download"));
+            Assert.That(download.Url, Is.EqualTo($"{Server.Prefix}/download"));
             Assert.That(download.SuggestedFilename, Is.EqualTo("file.txt"));
             var path = await download.PathAsync();
-            Assert.That(path.StartsWith(testInfo.OutputPath(""), StringComparison.Ordinal), Is.True);
+            Assert.That(path.StartsWith(Info.OutputPath(""), StringComparison.Ordinal), Is.True);
             await context.CloseAsync();
         }
 
         [UpstreamTest("DO-044 should delete downloads when persistent context closes")]
-        public async Task ShouldDeleteDownloadsWhenPersistentContextCloses(LaunchPersistent launchPersistent, Server server, TestInfo testInfo)
+        public async Task ShouldDeleteDownloadsWhenPersistentContextCloses()
         {
-            var (context, page) = await launchPersistent(new() { DownloadsPath = testInfo.OutputPath("") });
-            await page.SetContentAsync($"<a href=\"{server.Prefix}/download\">download</a>");
+            var (context, page) = await LaunchPersistent(new() { DownloadsPath = Info.OutputPath("") });
+            await page.SetContentAsync($"<a href=\"{Server.Prefix}/download\">download</a>");
             var download = await PromiseAll(
                 page.WaitForDownloadAsync(),
                 page.ClickAsync("a"));

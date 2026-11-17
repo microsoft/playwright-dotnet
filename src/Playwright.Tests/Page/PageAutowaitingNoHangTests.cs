@@ -22,78 +22,78 @@ using static Microsoft.Playwright.Tests.Fixtures.Utils;
 namespace Microsoft.Playwright.Tests.Page;
 
 /// <summary>Port of tests/page/page-autowaiting-no-hang.spec.ts.</summary>
-public class PageAutowaitingNoHangTests
+public class PageAutowaitingNoHangTests : UpstreamPageTest
 {
     [UpstreamTest("AW-013 clicking on links which do not commit navigation")]
-    public async Task ClickingOnLinksWhichDoNotCommitNavigation(IPage page, Server server, Server httpsServer)
+    public async Task ClickingOnLinksWhichDoNotCommitNavigation()
     {
-        await page.GotoAsync(server.EmptyPage);
-        await page.SetContentAsync($"<a href='{httpsServer.EmptyPage}'>foobar</a>");
-        await page.ClickAsync("a");
+        await Page.GotoAsync(Server.EmptyPage);
+        await Page.SetContentAsync($"<a href='{HttpsServer.EmptyPage}'>foobar</a>");
+        await Page.ClickAsync("a");
     }
 
     [UpstreamTest("AW-014 calling window.stop async")]
-    public async Task CallingWindowStopAsync(IPage page, Server server)
+    public async Task CallingWindowStopAsync()
     {
-        server.SetRoute("/empty.html", (req, res) => { });
-        await page.EvaluateAsync(@"url => {
+        Server.SetRoute("/empty.html", (req, res) => { });
+        await Page.EvaluateAsync(@"url => {
     window.location.href = url;
     setTimeout(() => window.stop(), 100);
-  }", server.EmptyPage);
+  }", Server.EmptyPage);
     }
 
     [UpstreamTest("AW-015 calling window.stop sync")]
-    public async Task CallingWindowStopSync(IPage page, Server server, string browserName)
+    public async Task CallingWindowStopSync()
     {
-        await page.EvaluateAsync(@"url => {
+        await Page.EvaluateAsync(@"url => {
     window.location.href = url;
     window.stop();
-  }", server.EmptyPage);
+  }", Server.EmptyPage);
     }
 
     [UpstreamTest("AW-016 assigning location to about:blank")]
-    public async Task AssigningLocationToAboutBlank(IPage page, Server server)
+    public async Task AssigningLocationToAboutBlank()
     {
-        await page.GotoAsync(server.EmptyPage);
-        await page.EvaluateAsync("window.location.href = \"about:blank\";");
+        await Page.GotoAsync(Server.EmptyPage);
+        await Page.EvaluateAsync("window.location.href = \"about:blank\";");
     }
 
     [UpstreamTest("AW-017 assigning location to about:blank after non-about:blank")]
-    public async Task AssigningLocationToAboutBlankAfterNonAboutBlank(IPage page, Server server)
+    public async Task AssigningLocationToAboutBlankAfterNonAboutBlank()
     {
-        server.SetRoute("/empty.html", (req, res) => { });
-        await page.EvaluateAsync($@"
-      window.location.href = ""{server.EmptyPage}"";
+        Server.SetRoute("/empty.html", (req, res) => { });
+        await Page.EvaluateAsync($@"
+      window.location.href = ""{Server.EmptyPage}"";
       window.location.href = ""about:blank"";");
     }
 
     [UpstreamTest("AW-018 calling window.open and window.close")]
-    public async Task CallingWindowOpenAndWindowClose(IPage page, Server server)
+    public async Task CallingWindowOpenAndWindowClose()
     {
-        await page.GotoAsync(server.EmptyPage);
-        await page.EvaluateAsync(@"() => {
+        await Page.GotoAsync(Server.EmptyPage);
+        await Page.EvaluateAsync(@"() => {
     const popup = window.open(window.location.href);
     popup.close();
   }");
     }
 
     [UpstreamTest("AW-019 opening a popup")]
-    public async Task OpeningAPopup(IPage page, Server server)
+    public async Task OpeningAPopup()
     {
-        await page.GotoAsync(server.EmptyPage);
+        await Page.GotoAsync(Server.EmptyPage);
         await PromiseAll(
-            page.WaitForPopupAsync(),
-            page.EvaluateAsync("() => window.open(window.location.href) && 1"));
+            Page.WaitForPopupAsync(),
+            Page.EvaluateAsync("() => window.open(window.location.href) && 1"));
     }
 
     [UpstreamTest("AW-020 clicking in the middle of navigation that aborts")]
-    public async Task ClickingInTheMiddleOfNavigationThatAborts(IPage page, Server server)
+    public async Task ClickingInTheMiddleOfNavigationThatAborts()
     {
         var abortPromise = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
 
         var stallPromise = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
 
-        server.SetRoute("/stall.html", async (req, res) =>
+        Server.SetRoute("/stall.html", async (req, res) =>
         {
             // .NET: a second stallCallback(), for a request that the browser sends again, does nothing.
             stallPromise.TrySetResult();
@@ -101,25 +101,25 @@ public class PageAutowaitingNoHangTests
             req.Socket.Destroy();
         });
 
-        await page.GotoAsync(server.Prefix + "/one-style.html");
-        IgnoreErrors(page.GotoAsync(server.Prefix + "/stall.html"));
+        await Page.GotoAsync(Server.Prefix + "/one-style.html");
+        IgnoreErrors(Page.GotoAsync(Server.Prefix + "/stall.html"));
         await stallPromise.Task;
 
-        var clickPromise = page.ClickAsync("body");
-        await page.WaitForTimeoutAsync(1000);
+        var clickPromise = Page.ClickAsync("body");
+        await Page.WaitForTimeoutAsync(1000);
         abortPromise.SetResult();
 
         await clickPromise;
     }
 
     [UpstreamTest("AW-021 clicking in the middle of navigation that commits")]
-    public async Task ClickingInTheMiddleOfNavigationThatCommits(IPage page, Server server)
+    public async Task ClickingInTheMiddleOfNavigationThatCommits()
     {
         var abortPromise = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
 
         var stallPromise = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
 
-        server.SetRoute("/stall.html", async (req, res) =>
+        Server.SetRoute("/stall.html", async (req, res) =>
         {
             // .NET: a second stallCallback(), for a request that the browser sends again, does nothing.
             stallPromise.TrySetResult();
@@ -128,22 +128,22 @@ public class PageAutowaitingNoHangTests
             res.End("hello world");
         });
 
-        await page.GotoAsync(server.Prefix + "/one-style.html");
-        IgnoreErrors(page.GotoAsync(server.Prefix + "/stall.html"));
+        await Page.GotoAsync(Server.Prefix + "/one-style.html");
+        IgnoreErrors(Page.GotoAsync(Server.Prefix + "/stall.html"));
         await stallPromise.Task;
 
-        var clickPromise = page.ClickAsync("body");
-        await page.WaitForTimeoutAsync(1000);
+        var clickPromise = Page.ClickAsync("body");
+        await Page.WaitForTimeoutAsync(1000);
         abortPromise.SetResult();
 
         await clickPromise;
-        await Expect(page.Locator("body")).ToContainTextAsync("hello world");
+        await Expect(Page.Locator("body")).ToContainTextAsync("hello world");
     }
 
     [UpstreamTest("AW-022 clicking a link intercepted by the Navigation API same-document")]
-    public async Task ClickingALinkInterceptedByTheNavigationAPISameDocument(IPage page, Server server)
+    public async Task ClickingALinkInterceptedByTheNavigationAPISameDocument()
     {
-        server.SetRoute("/intercept.html", (req, res) =>
+        Server.SetRoute("/intercept.html", (req, res) =>
         {
             res.WriteHead(200, new() { ["Content-Type"] = "text/html" });
             res.End(@"
@@ -164,24 +164,24 @@ public class PageAutowaitingNoHangTests
     ");
         });
 
-        await page.GotoAsync(server.Prefix + "/intercept.html");
-        await Expect(page.Locator("#status")).ToHaveTextAsync("initial");
+        await Page.GotoAsync(Server.Prefix + "/intercept.html");
+        await Expect(Page.Locator("#status")).ToHaveTextAsync("initial");
 
         // Should not hang waiting for the same-document navigation to commit.
-        await page.Locator("#go").ClickAsync();
+        await Page.Locator("#go").ClickAsync();
 
-        await Expect(page.Locator("#status")).ToHaveTextAsync("intercepted:/other");
-        Assert.That(new Uri(page.Url).AbsolutePath, Is.EqualTo("/other"));
+        await Expect(Page.Locator("#status")).ToHaveTextAsync("intercepted:/other");
+        Assert.That(new Uri(Page.Url).AbsolutePath, Is.EqualTo("/other"));
     }
 
     [UpstreamTest("AW-023 goBack in the middle of navigation that commits")]
-    public async Task GoBackInTheMiddleOfNavigationThatCommits(IPage page, Server server)
+    public async Task GoBackInTheMiddleOfNavigationThatCommits()
     {
         var abortPromise = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
 
         var stallPromise = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
 
-        server.SetRoute("/stall.html", async (req, res) =>
+        Server.SetRoute("/stall.html", async (req, res) =>
         {
             // .NET: a second stallCallback(), for a request that the browser sends again, does nothing.
             stallPromise.TrySetResult();
@@ -190,12 +190,12 @@ public class PageAutowaitingNoHangTests
             res.End("hello world");
         });
 
-        await page.GotoAsync(server.Prefix + "/one-style.html");
-        IgnoreErrors(page.GotoAsync(server.Prefix + "/stall.html"));
+        await Page.GotoAsync(Server.Prefix + "/one-style.html");
+        IgnoreErrors(Page.GotoAsync(Server.Prefix + "/stall.html"));
         await stallPromise.Task;
 
-        var goBackPromise = Catch(() => page.GoBackAsync());
-        await page.WaitForTimeoutAsync(1000);
+        var goBackPromise = Catch(() => Page.GoBackAsync());
+        await Page.WaitForTimeoutAsync(1000);
         abortPromise.SetResult();
 
         await goBackPromise;

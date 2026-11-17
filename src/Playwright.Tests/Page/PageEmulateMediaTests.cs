@@ -21,7 +21,7 @@ using static Microsoft.Playwright.Tests.Fixtures.Utils;
 namespace Microsoft.Playwright.Tests.Page;
 
 /// <summary>Port of tests/page/page-emulate-media.spec.ts.</summary>
-public class PageEmulateMediaTests
+public class PageEmulateMediaTests : UpstreamPageTest
 {
     // .NET: the toMatchMedia matcher of baseExpect.extend() is a helper; `not` is expect(page).not.toMatchMedia().
     private static async Task ExpectToMatchMedia(IPage page, string mediaQuery, bool not = false)
@@ -46,66 +46,66 @@ public class PageEmulateMediaTests
     }
 
     [UpstreamTest("EM-001 should emulate type @smoke")]
-    public async Task ShouldEmulateType(IPage page)
+    public async Task ShouldEmulateType()
     {
-        Assert.That(await page.EvaluateAsync<bool>("() => matchMedia('screen').matches"), Is.EqualTo(true));
-        Assert.That(await page.EvaluateAsync<bool>("() => matchMedia('print').matches"), Is.EqualTo(false));
-        await page.EmulateMediaAsync(new() { Media = Media.Print });
-        Assert.That(await page.EvaluateAsync<bool>("() => matchMedia('screen').matches"), Is.EqualTo(false));
-        Assert.That(await page.EvaluateAsync<bool>("() => matchMedia('print').matches"), Is.EqualTo(true));
-        await page.EmulateMediaAsync(new());
-        Assert.That(await page.EvaluateAsync<bool>("() => matchMedia('screen').matches"), Is.EqualTo(false));
-        Assert.That(await page.EvaluateAsync<bool>("() => matchMedia('print').matches"), Is.EqualTo(true));
-        await page.EmulateMediaAsync(new() { Media = Media.Null });
-        Assert.That(await page.EvaluateAsync<bool>("() => matchMedia('screen').matches"), Is.EqualTo(true));
-        Assert.That(await page.EvaluateAsync<bool>("() => matchMedia('print').matches"), Is.EqualTo(false));
+        Assert.That(await Page.EvaluateAsync<bool>("() => matchMedia('screen').matches"), Is.EqualTo(true));
+        Assert.That(await Page.EvaluateAsync<bool>("() => matchMedia('print').matches"), Is.EqualTo(false));
+        await Page.EmulateMediaAsync(new() { Media = Media.Print });
+        Assert.That(await Page.EvaluateAsync<bool>("() => matchMedia('screen').matches"), Is.EqualTo(false));
+        Assert.That(await Page.EvaluateAsync<bool>("() => matchMedia('print').matches"), Is.EqualTo(true));
+        await Page.EmulateMediaAsync(new());
+        Assert.That(await Page.EvaluateAsync<bool>("() => matchMedia('screen').matches"), Is.EqualTo(false));
+        Assert.That(await Page.EvaluateAsync<bool>("() => matchMedia('print').matches"), Is.EqualTo(true));
+        await Page.EmulateMediaAsync(new() { Media = Media.Null });
+        Assert.That(await Page.EvaluateAsync<bool>("() => matchMedia('screen').matches"), Is.EqualTo(true));
+        Assert.That(await Page.EvaluateAsync<bool>("() => matchMedia('print').matches"), Is.EqualTo(false));
     }
 
     [UpstreamTest("EM-003 should emulate colorScheme should work @smoke")]
-    public async Task ShouldEmulateColorSchemeShouldWork(IPage page)
+    public async Task ShouldEmulateColorSchemeShouldWork()
     {
-        await page.EmulateMediaAsync(new() { ColorScheme = ColorScheme.Light });
-        Assert.That(await page.EvaluateAsync<bool>("() => matchMedia('(prefers-color-scheme: light)').matches"), Is.EqualTo(true));
-        Assert.That(await page.EvaluateAsync<bool>("() => matchMedia('(prefers-color-scheme: dark)').matches"), Is.EqualTo(false));
-        await page.EmulateMediaAsync(new() { ColorScheme = ColorScheme.Dark });
-        Assert.That(await page.EvaluateAsync<bool>("() => matchMedia('(prefers-color-scheme: dark)').matches"), Is.EqualTo(true));
-        Assert.That(await page.EvaluateAsync<bool>("() => matchMedia('(prefers-color-scheme: light)').matches"), Is.EqualTo(false));
+        await Page.EmulateMediaAsync(new() { ColorScheme = ColorScheme.Light });
+        Assert.That(await Page.EvaluateAsync<bool>("() => matchMedia('(prefers-color-scheme: light)').matches"), Is.EqualTo(true));
+        Assert.That(await Page.EvaluateAsync<bool>("() => matchMedia('(prefers-color-scheme: dark)').matches"), Is.EqualTo(false));
+        await Page.EmulateMediaAsync(new() { ColorScheme = ColorScheme.Dark });
+        Assert.That(await Page.EvaluateAsync<bool>("() => matchMedia('(prefers-color-scheme: dark)').matches"), Is.EqualTo(true));
+        Assert.That(await Page.EvaluateAsync<bool>("() => matchMedia('(prefers-color-scheme: light)').matches"), Is.EqualTo(false));
     }
 
     [UpstreamTest("EM-004 should default to light")]
-    public async Task ShouldDefaultToLight(IPage page)
+    public async Task ShouldDefaultToLight()
     {
-        Assert.That(await page.EvaluateAsync<bool>("() => matchMedia('(prefers-color-scheme: light)').matches"), Is.EqualTo(true));
-        Assert.That(await page.EvaluateAsync<bool>("() => matchMedia('(prefers-color-scheme: dark)').matches"), Is.EqualTo(false));
+        Assert.That(await Page.EvaluateAsync<bool>("() => matchMedia('(prefers-color-scheme: light)').matches"), Is.EqualTo(true));
+        Assert.That(await Page.EvaluateAsync<bool>("() => matchMedia('(prefers-color-scheme: dark)').matches"), Is.EqualTo(false));
 
-        await page.EmulateMediaAsync(new() { ColorScheme = ColorScheme.Dark });
-        Assert.That(await page.EvaluateAsync<bool>("() => matchMedia('(prefers-color-scheme: dark)').matches"), Is.EqualTo(true));
-        Assert.That(await page.EvaluateAsync<bool>("() => matchMedia('(prefers-color-scheme: light)').matches"), Is.EqualTo(false));
+        await Page.EmulateMediaAsync(new() { ColorScheme = ColorScheme.Dark });
+        Assert.That(await Page.EvaluateAsync<bool>("() => matchMedia('(prefers-color-scheme: dark)').matches"), Is.EqualTo(true));
+        Assert.That(await Page.EvaluateAsync<bool>("() => matchMedia('(prefers-color-scheme: light)').matches"), Is.EqualTo(false));
 
-        await page.EmulateMediaAsync(new() { ColorScheme = ColorScheme.Null });
-        Assert.That(await page.EvaluateAsync<bool>("() => matchMedia('(prefers-color-scheme: dark)').matches"), Is.EqualTo(false));
-        Assert.That(await page.EvaluateAsync<bool>("() => matchMedia('(prefers-color-scheme: light)').matches"), Is.EqualTo(true));
+        await Page.EmulateMediaAsync(new() { ColorScheme = ColorScheme.Null });
+        Assert.That(await Page.EvaluateAsync<bool>("() => matchMedia('(prefers-color-scheme: dark)').matches"), Is.EqualTo(false));
+        Assert.That(await Page.EvaluateAsync<bool>("() => matchMedia('(prefers-color-scheme: light)').matches"), Is.EqualTo(true));
     }
 
     [UpstreamTest("EM-006 should work during navigation")]
-    public async Task ShouldWorkDuringNavigation(IPage page, Server server)
+    public async Task ShouldWorkDuringNavigation()
     {
-        await page.EmulateMediaAsync(new() { ColorScheme = ColorScheme.Light });
-        var navigated = page.GotoAsync(server.EmptyPage);
+        await Page.EmulateMediaAsync(new() { ColorScheme = ColorScheme.Light });
+        var navigated = Page.GotoAsync(Server.EmptyPage);
         for (var i = 0; i < 9; i++)
         {
             await PromiseAll(
-                page.EmulateMediaAsync(new() { ColorScheme = new[] { ColorScheme.Dark, ColorScheme.Light }[i & 1] }),
+                Page.EmulateMediaAsync(new() { ColorScheme = new[] { ColorScheme.Dark, ColorScheme.Light }[i & 1] }),
                 Task.Delay(1));
         }
         await navigated;
-        Assert.That(await page.EvaluateAsync<bool>("() => matchMedia('(prefers-color-scheme: dark)').matches"), Is.EqualTo(true));
+        Assert.That(await Page.EvaluateAsync<bool>("() => matchMedia('(prefers-color-scheme: dark)').matches"), Is.EqualTo(true));
     }
 
     [UpstreamTest("EM-007 should change the actual colors in css")]
-    public async Task ShouldChangeTheActualColorsInCss(IPage page)
+    public async Task ShouldChangeTheActualColorsInCss()
     {
-        await page.SetContentAsync(@"
+        await Page.SetContentAsync(@"
     <style>
       @media (prefers-color-scheme: dark) {
         div {
@@ -125,46 +125,46 @@ public class PageEmulateMediaTests
   ");
         Task<string> getBackgroundColor()
         {
-            return page.EvalOnSelectorAsync<string>("div", "div => window.getComputedStyle(div).backgroundColor");
+            return Page.EvalOnSelectorAsync<string>("div", "div => window.getComputedStyle(div).backgroundColor");
         }
 
-        await page.EmulateMediaAsync(new() { ColorScheme = ColorScheme.Light });
+        await Page.EmulateMediaAsync(new() { ColorScheme = ColorScheme.Light });
         Assert.That(await getBackgroundColor(), Is.EqualTo("rgb(255, 255, 255)"));
 
-        await page.EmulateMediaAsync(new() { ColorScheme = ColorScheme.Dark });
+        await Page.EmulateMediaAsync(new() { ColorScheme = ColorScheme.Dark });
         Assert.That(await getBackgroundColor(), Is.EqualTo("rgb(0, 0, 0)"));
 
-        await page.EmulateMediaAsync(new() { ColorScheme = ColorScheme.Light });
+        await Page.EmulateMediaAsync(new() { ColorScheme = ColorScheme.Light });
         Assert.That(await getBackgroundColor(), Is.EqualTo("rgb(255, 255, 255)"));
     }
 
     [UpstreamTest("EM-008 should emulate reduced motion")]
-    public async Task ShouldEmulateReducedMotion(IPage page)
+    public async Task ShouldEmulateReducedMotion()
     {
-        Assert.That(await page.EvaluateAsync<bool>("() => matchMedia('(prefers-reduced-motion: no-preference)').matches"), Is.EqualTo(true));
-        await page.EmulateMediaAsync(new() { ReducedMotion = ReducedMotion.Reduce });
-        Assert.That(await page.EvaluateAsync<bool>("() => matchMedia('(prefers-reduced-motion: reduce)').matches"), Is.EqualTo(true));
-        Assert.That(await page.EvaluateAsync<bool>("() => matchMedia('(prefers-reduced-motion: no-preference)').matches"), Is.EqualTo(false));
-        await page.EmulateMediaAsync(new() { ReducedMotion = ReducedMotion.NoPreference });
-        Assert.That(await page.EvaluateAsync<bool>("() => matchMedia('(prefers-reduced-motion: reduce)').matches"), Is.EqualTo(false));
-        Assert.That(await page.EvaluateAsync<bool>("() => matchMedia('(prefers-reduced-motion: no-preference)').matches"), Is.EqualTo(true));
-        await page.EmulateMediaAsync(new() { ReducedMotion = ReducedMotion.Null });
+        Assert.That(await Page.EvaluateAsync<bool>("() => matchMedia('(prefers-reduced-motion: no-preference)').matches"), Is.EqualTo(true));
+        await Page.EmulateMediaAsync(new() { ReducedMotion = ReducedMotion.Reduce });
+        Assert.That(await Page.EvaluateAsync<bool>("() => matchMedia('(prefers-reduced-motion: reduce)').matches"), Is.EqualTo(true));
+        Assert.That(await Page.EvaluateAsync<bool>("() => matchMedia('(prefers-reduced-motion: no-preference)').matches"), Is.EqualTo(false));
+        await Page.EmulateMediaAsync(new() { ReducedMotion = ReducedMotion.NoPreference });
+        Assert.That(await Page.EvaluateAsync<bool>("() => matchMedia('(prefers-reduced-motion: reduce)').matches"), Is.EqualTo(false));
+        Assert.That(await Page.EvaluateAsync<bool>("() => matchMedia('(prefers-reduced-motion: no-preference)').matches"), Is.EqualTo(true));
+        await Page.EmulateMediaAsync(new() { ReducedMotion = ReducedMotion.Null });
     }
 
     [UpstreamTest("EM-009 should keep reduced motion and color emulation after reload")]
-    public async Task ShouldKeepReducedMotionAndColorEmulationAfterReload(IPage page, Server server)
+    public async Task ShouldKeepReducedMotionAndColorEmulationAfterReload()
     {
         // Pre-conditions
-        Assert.That(await page.EvaluateAsync<bool>("() => matchMedia('(prefers-reduced-motion: reduce)').matches"), Is.EqualTo(false));
-        Assert.That(await page.EvaluateAsync<bool>("() => matchMedia('(forced-colors: active)').matches"), Is.EqualTo(false));
+        Assert.That(await Page.EvaluateAsync<bool>("() => matchMedia('(prefers-reduced-motion: reduce)').matches"), Is.EqualTo(false));
+        Assert.That(await Page.EvaluateAsync<bool>("() => matchMedia('(forced-colors: active)').matches"), Is.EqualTo(false));
 
         // Emulation
-        await page.EmulateMediaAsync(new() { ForcedColors = ForcedColors.Active, ReducedMotion = ReducedMotion.Reduce });
-        Assert.That(await page.EvaluateAsync<bool>("() => matchMedia('(prefers-reduced-motion: reduce)').matches"), Is.EqualTo(true));
-        Assert.That(await page.EvaluateAsync<bool>("() => matchMedia('(forced-colors: active)').matches"), Is.EqualTo(true));
+        await Page.EmulateMediaAsync(new() { ForcedColors = ForcedColors.Active, ReducedMotion = ReducedMotion.Reduce });
+        Assert.That(await Page.EvaluateAsync<bool>("() => matchMedia('(prefers-reduced-motion: reduce)').matches"), Is.EqualTo(true));
+        Assert.That(await Page.EvaluateAsync<bool>("() => matchMedia('(forced-colors: active)').matches"), Is.EqualTo(true));
 
         // Force CanonicalBrowsingContext replacement in Firefox.
-        server.SetRoute("/empty.html", (req, res) =>
+        Server.SetRoute("/empty.html", (req, res) =>
         {
             res.SetHeader("Cross-Origin-Opener-Policy", "same-origin");
             // Note: without 'onload', Firefox sometimes does not fire the load event
@@ -174,46 +174,46 @@ public class PageEmulateMediaTests
       <script>window.onload = () => console.log('onload')</script>
     ");
         });
-        await page.GotoAsync(server.EmptyPage);
+        await Page.GotoAsync(Server.EmptyPage);
 
-        Assert.That(await page.EvaluateAsync<bool>("() => matchMedia('(prefers-reduced-motion: reduce)').matches"), Is.EqualTo(true));
-        Assert.That(await page.EvaluateAsync<bool>("() => matchMedia('(forced-colors: active)').matches"), Is.EqualTo(true));
+        Assert.That(await Page.EvaluateAsync<bool>("() => matchMedia('(prefers-reduced-motion: reduce)').matches"), Is.EqualTo(true));
+        Assert.That(await Page.EvaluateAsync<bool>("() => matchMedia('(forced-colors: active)').matches"), Is.EqualTo(true));
     }
 
     [UpstreamTest("EM-010 should emulate forcedColors ")]
-    public async Task ShouldEmulateForcedColors(IPage page, string browserName)
+    public async Task ShouldEmulateForcedColors()
     {
-        Assert.That(await page.EvaluateAsync<bool>("() => matchMedia('(forced-colors: none)').matches"), Is.EqualTo(true));
-        await page.EmulateMediaAsync(new() { ForcedColors = ForcedColors.None });
-        Assert.That(await page.EvaluateAsync<bool>("() => matchMedia('(forced-colors: none)').matches"), Is.EqualTo(true));
-        Assert.That(await page.EvaluateAsync<bool>("() => matchMedia('(forced-colors: active)').matches"), Is.EqualTo(false));
-        await page.EmulateMediaAsync(new() { ForcedColors = ForcedColors.Active });
-        Assert.That(await page.EvaluateAsync<bool>("() => matchMedia('(forced-colors: none)').matches"), Is.EqualTo(false));
-        Assert.That(await page.EvaluateAsync<bool>("() => matchMedia('(forced-colors: active)').matches"), Is.EqualTo(true));
-        await page.EmulateMediaAsync(new() { ForcedColors = ForcedColors.Null });
-        Assert.That(await page.EvaluateAsync<bool>("() => matchMedia('(forced-colors: none)').matches"), Is.EqualTo(true));
+        Assert.That(await Page.EvaluateAsync<bool>("() => matchMedia('(forced-colors: none)').matches"), Is.EqualTo(true));
+        await Page.EmulateMediaAsync(new() { ForcedColors = ForcedColors.None });
+        Assert.That(await Page.EvaluateAsync<bool>("() => matchMedia('(forced-colors: none)').matches"), Is.EqualTo(true));
+        Assert.That(await Page.EvaluateAsync<bool>("() => matchMedia('(forced-colors: active)').matches"), Is.EqualTo(false));
+        await Page.EmulateMediaAsync(new() { ForcedColors = ForcedColors.Active });
+        Assert.That(await Page.EvaluateAsync<bool>("() => matchMedia('(forced-colors: none)').matches"), Is.EqualTo(false));
+        Assert.That(await Page.EvaluateAsync<bool>("() => matchMedia('(forced-colors: active)').matches"), Is.EqualTo(true));
+        await Page.EmulateMediaAsync(new() { ForcedColors = ForcedColors.Null });
+        Assert.That(await Page.EvaluateAsync<bool>("() => matchMedia('(forced-colors: none)').matches"), Is.EqualTo(true));
     }
 
     [UpstreamTest("EM-011 should emulate contrast ")]
-    public async Task ShouldEmulateContrast(IPage page)
+    public async Task ShouldEmulateContrast()
     {
-        await ExpectToMatchMedia(page, "(prefers-contrast: no-preference)");
-        await page.EmulateMediaAsync(new() { Contrast = Contrast.NoPreference });
-        await ExpectToMatchMedia(page, "(prefers-contrast: no-preference)");
-        await ExpectToMatchMedia(page, "(prefers-contrast: more)", not: true);
-        await page.EmulateMediaAsync(new() { Contrast = Contrast.More });
-        await ExpectToMatchMedia(page, "(prefers-contrast: no-preference)", not: true);
-        await ExpectToMatchMedia(page, "(prefers-contrast: more)");
-        await page.EmulateMediaAsync(new() { Contrast = Contrast.Null });
-        await ExpectToMatchMedia(page, "(prefers-contrast: no-preference)");
+        await ExpectToMatchMedia(Page, "(prefers-contrast: no-preference)");
+        await Page.EmulateMediaAsync(new() { Contrast = Contrast.NoPreference });
+        await ExpectToMatchMedia(Page, "(prefers-contrast: no-preference)");
+        await ExpectToMatchMedia(Page, "(prefers-contrast: more)", not: true);
+        await Page.EmulateMediaAsync(new() { Contrast = Contrast.More });
+        await ExpectToMatchMedia(Page, "(prefers-contrast: no-preference)", not: true);
+        await ExpectToMatchMedia(Page, "(prefers-contrast: more)");
+        await Page.EmulateMediaAsync(new() { Contrast = Contrast.Null });
+        await ExpectToMatchMedia(Page, "(prefers-contrast: no-preference)");
     }
 
     [UpstreamTest("EM-012 should report hover and fine pointer for desktop")]
-    public async Task ShouldReportHoverAndFinePointerForDesktop(IPage page, bool isAndroid)
+    public async Task ShouldReportHoverAndFinePointerForDesktop()
     {
-        Info.Skip(isAndroid);
+        Info.Skip(IsAndroid);
 
-        await ExpectToMatchMedia(page, "(hover: hover)");
-        await ExpectToMatchMedia(page, "(pointer: fine)");
+        await ExpectToMatchMedia(Page, "(hover: hover)");
+        await ExpectToMatchMedia(Page, "(pointer: fine)");
     }
 }

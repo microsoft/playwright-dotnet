@@ -21,32 +21,32 @@ using static Microsoft.Playwright.Tests.Fixtures.Utils;
 namespace Microsoft.Playwright.Tests.Library;
 
 /// <summary>Port of tests/library/browsercontext-device.spec.ts.</summary>
-public class BrowsercontextDeviceTests
+public class BrowsercontextDeviceTests : UpstreamBrowserTest
 {
-    public class Device
+    public class Device : UpstreamBrowserTest
     {
-        [BeforeEach]
-        public static void Skip(string browserName, bool isBidi) => Info.Skip(browserName == "firefox" && !isBidi);
+        [SetUp]
+        public void Skip() => Info.Skip(BrowserName == "firefox" && !IsBidi);
 
         [UpstreamTest("DV-001 should work @smoke")]
-        public async Task ShouldWork(IPlaywright playwright, IBrowser browser, Server server, BrowserNewContextOptions contextOptions)
+        public async Task ShouldWork()
         {
-            var iPhone = playwright.Devices["iPhone 6"];
-            var context = await browser.NewContextAsync(MergeOptions(new BrowserNewContextOptions(iPhone), contextOptions));
+            var iPhone = Playwright.Devices["iPhone 6"];
+            var context = await Browser.NewContextAsync(MergeOptions(new BrowserNewContextOptions(iPhone), ContextOptions()));
             var page = await context.NewPageAsync();
-            await page.GotoAsync(server.Prefix + "/mobile.html");
+            await page.GotoAsync(Server.Prefix + "/mobile.html");
             Assert.That(await page.EvaluateAsync<int>("() => window.innerWidth"), Is.EqualTo(375));
             Assert.That(await page.EvaluateAsync<string>("() => navigator.userAgent"), Does.Contain("iPhone"));
             await context.CloseAsync();
         }
 
         [UpstreamTest("DV-002 should support clicking")]
-        public async Task ShouldSupportClicking(IPlaywright playwright, IBrowser browser, Server server, BrowserNewContextOptions contextOptions)
+        public async Task ShouldSupportClicking()
         {
-            var iPhone = playwright.Devices["iPhone 6"];
-            var context = await browser.NewContextAsync(MergeOptions(new BrowserNewContextOptions(iPhone), contextOptions));
+            var iPhone = Playwright.Devices["iPhone 6"];
+            var context = await Browser.NewContextAsync(MergeOptions(new BrowserNewContextOptions(iPhone), ContextOptions()));
             var page = await context.NewPageAsync();
-            await page.GotoAsync(server.Prefix + "/input/button.html");
+            await page.GotoAsync(Server.Prefix + "/input/button.html");
             var button = await page.QuerySelectorAsync("button");
             await page.EvaluateAsync("button => button.style.marginTop = '200px'", button);
             await button.ClickAsync();
@@ -55,9 +55,9 @@ public class BrowsercontextDeviceTests
         }
 
         [UpstreamTest("DV-003 should scroll to click")]
-        public async Task ShouldScrollToClick(IBrowser browser, Server server, BrowserNewContextOptions contextOptions)
+        public async Task ShouldScrollToClick()
         {
-            var context = await browser.NewContextAsync(new(contextOptions)
+            var context = await Browser.NewContextAsync(new(ContextOptions())
             {
                 ViewportSize = new()
                 {
@@ -68,7 +68,7 @@ public class BrowsercontextDeviceTests
                 IsMobile = true
             });
             var page = await context.NewPageAsync();
-            await page.GotoAsync(server.Prefix + "/input/scrollable.html");
+            await page.GotoAsync(Server.Prefix + "/input/scrollable.html");
             var element = await page.QuerySelectorAsync("#button-91");
             await element.ClickAsync();
             Assert.That(await element.TextContentAsync(), Is.EqualTo("clicked"));
@@ -76,10 +76,10 @@ public class BrowsercontextDeviceTests
         }
 
         [UpstreamTest("DV-004 should scroll twice when emulated")]
-        public async Task ShouldScrollTwiceWhenEmulated(ContextFactory contextFactory, IPlaywright playwright)
+        public async Task ShouldScrollTwiceWhenEmulated()
         {
-            var device = playwright.Devices["iPhone 6"];
-            var context = await contextFactory(device);
+            var device = Playwright.Devices["iPhone 6"];
+            var context = await ContextFactory(device);
             var page = await context.NewPageAsync();
             await page.SetContentAsync(@"
           <meta name=""viewport"" content=""width=device-width, user-scalable=no"" />
@@ -96,30 +96,30 @@ public class BrowsercontextDeviceTests
         }
 
         [UpstreamTest("DV-005 should reset scroll top after a navigation")]
-        public async Task ShouldResetScrollTopAfterANavigation(Server server, ContextFactory contextFactory, IPlaywright playwright, string browserName)
+        public async Task ShouldResetScrollTopAfterANavigation()
         {
-            Info.Skip(browserName == "webkit");
+            Info.Skip(BrowserName == "webkit");
 
-            var device = playwright.Devices["iPhone 6"];
-            var context = await contextFactory(device);
+            var device = Playwright.Devices["iPhone 6"];
+            var context = await ContextFactory(device);
             var page = await context.NewPageAsync();
-            await page.GotoAsync(server.Prefix + "/input/scrollable.html");
+            await page.GotoAsync(Server.Prefix + "/input/scrollable.html");
             await page.EvaluateAsync("() => window.scroll(0, 100)");
 
-            await page.GotoAsync(server.Prefix + "/input/scrollable2.html");
+            await page.GotoAsync(Server.Prefix + "/input/scrollable2.html");
             Assert.That(await page.EvaluateAsync<int>("() => window.scrollY"), Is.EqualTo(0));
             await context.CloseAsync();
         }
 
         [UpstreamTest("DV-006 should scroll to a precise position with mobile scale")]
-        public async Task ShouldScrollToAPrecisePositionWithMobileScale(Server server, ContextFactory contextFactory, IPlaywright playwright, string browserName)
+        public async Task ShouldScrollToAPrecisePositionWithMobileScale()
         {
-            Info.Skip(browserName == "webkit");
+            Info.Skip(BrowserName == "webkit");
 
-            var device = playwright.Devices["iPhone 6"];
-            var context = await contextFactory(device);
+            var device = Playwright.Devices["iPhone 6"];
+            var context = await ContextFactory(device);
             var page = await context.NewPageAsync();
-            await page.GotoAsync(server.Prefix + "/input/scrollable.html");
+            await page.GotoAsync(Server.Prefix + "/input/scrollable.html");
             Assert.That(await page.EvaluateAsync<int>("() => document.body.scrollHeight"), Is.GreaterThan(1000));
             await page.EvaluateAsync("() => window.scroll(0, 100)");
             Assert.That(await page.EvaluateAsync<int>("() => window.scrollY"), Is.EqualTo(100));
@@ -127,10 +127,10 @@ public class BrowsercontextDeviceTests
         }
 
         [UpstreamTest("DV-007 should emulate viewport and screen size")]
-        public async Task ShouldEmulateViewportAndScreenSize(ContextFactory contextFactory, IPlaywright playwright)
+        public async Task ShouldEmulateViewportAndScreenSize()
         {
-            var device = playwright.Devices["iPhone 12"];
-            var context = await contextFactory(device);
+            var device = Playwright.Devices["iPhone 12"];
+            var context = await ContextFactory(device);
             var page = await context.NewPageAsync();
             await page.SetContentAsync("<meta name=\"viewport\" content=\"width=device-width, user-scalable=no\" />");
 
@@ -148,10 +148,10 @@ public class BrowsercontextDeviceTests
         }
 
         [UpstreamTest("DV-008 should emulate viewport without screen size")]
-        public async Task ShouldEmulateViewportWithoutScreenSize(ContextFactory contextFactory, IPlaywright playwright)
+        public async Task ShouldEmulateViewportWithoutScreenSize()
         {
-            var device = playwright.Devices["iPhone 6"];
-            var context = await contextFactory(device);
+            var device = Playwright.Devices["iPhone 6"];
+            var context = await ContextFactory(device);
             var page = await context.NewPageAsync();
             await page.SetContentAsync("<meta name=\"viewport\" content=\"width=device-width, user-scalable=no\" />");
 

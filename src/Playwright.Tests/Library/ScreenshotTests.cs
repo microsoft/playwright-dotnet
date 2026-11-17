@@ -22,22 +22,22 @@ using static Microsoft.Playwright.Tests.Fixtures.Utils;
 namespace Microsoft.Playwright.Tests.Library;
 
 /// <summary>Port of tests/library/screenshot.spec.ts.</summary>
-public class ScreenshotTests
+public class ScreenshotTests : UpstreamBrowserTest
 {
-    public class PageScreenshot
+    public class PageScreenshot : UpstreamBrowserTest
     {
-        [BeforeEach]
-        public static void Skip(string browserName, bool headless) => Info.Skip(browserName == "firefox" && !headless, "Firefox headed produces a different image.");
+        [SetUp]
+        public void Skip() => Info.Skip(BrowserName == "firefox" && !Headless, "Firefox headed produces a different image.");
 
         [UpstreamTest("SS-068 should run in parallel in multiple pages")]
-        public async Task ShouldRunInParallelInMultiplePages(Server server, ContextFactory contextFactory)
+        public async Task ShouldRunInParallelInMultiplePages()
         {
-            var context = await contextFactory();
+            var context = await ContextFactory();
             const int N = 5;
             var pages = await PromiseAll(Enumerable.Repeat(0, N).Select(async _ =>
             {
                 var page = await context.NewPageAsync();
-                await page.GotoAsync(server.Prefix + "/grid.html");
+                await page.GotoAsync(Server.Prefix + "/grid.html");
                 return page;
             }));
             var promises = new List<Task<byte[]>>();
@@ -54,83 +54,83 @@ public class ScreenshotTests
         }
 
         [UpstreamTest("SS-069 should work with a mobile viewport")]
-        public async Task ShouldWorkWithAMobileViewport(IBrowser browser, Server server, string browserName, BrowserNewContextOptions contextOptions)
+        public async Task ShouldWorkWithAMobileViewport()
         {
-            Info.Skip(browserName == "firefox");
+            Info.Skip(BrowserName == "firefox");
 
-            var context = await browser.NewContextAsync(new(contextOptions) { ViewportSize = new() { Width = 320, Height = 480 }, IsMobile = true });
+            var context = await Browser.NewContextAsync(new(ContextOptions()) { ViewportSize = new() { Width = 320, Height = 480 }, IsMobile = true });
             var page = await context.NewPageAsync();
-            await page.GotoAsync(server.Prefix + "/overflow.html");
+            await page.GotoAsync(Server.Prefix + "/overflow.html");
             var screenshot = await page.ScreenshotAsync();
             ExpectToMatchSnapshot(screenshot, "screenshot-mobile.png");
             await context.CloseAsync();
         }
 
         [UpstreamTest("SS-070 should work with a mobile viewport and clip")]
-        public async Task ShouldWorkWithAMobileViewportAndClip(IBrowser browser, Server server, string browserName, BrowserNewContextOptions contextOptions)
+        public async Task ShouldWorkWithAMobileViewportAndClip()
         {
-            Info.Skip(browserName == "firefox");
+            Info.Skip(BrowserName == "firefox");
 
-            var context = await browser.NewContextAsync(new(contextOptions) { ViewportSize = new() { Width = 320, Height = 480 }, IsMobile = true });
+            var context = await Browser.NewContextAsync(new(ContextOptions()) { ViewportSize = new() { Width = 320, Height = 480 }, IsMobile = true });
             var page = await context.NewPageAsync();
-            await page.GotoAsync(server.Prefix + "/overflow.html");
+            await page.GotoAsync(Server.Prefix + "/overflow.html");
             var screenshot = await page.ScreenshotAsync(new() { Clip = new() { X = 10, Y = 10, Width = 100, Height = 150 } });
             ExpectToMatchSnapshot(screenshot, "screenshot-mobile-clip.png");
             await context.CloseAsync();
         }
 
         [UpstreamTest("SS-071 should work with a mobile viewport and fullPage")]
-        public async Task ShouldWorkWithAMobileViewportAndFullPage(IBrowser browser, Server server, string browserName, BrowserNewContextOptions contextOptions)
+        public async Task ShouldWorkWithAMobileViewportAndFullPage()
         {
-            Info.Skip(browserName == "firefox");
+            Info.Skip(BrowserName == "firefox");
 
-            var context = await browser.NewContextAsync(new(contextOptions) { ViewportSize = new() { Width = 320, Height = 480 }, IsMobile = true });
+            var context = await Browser.NewContextAsync(new(ContextOptions()) { ViewportSize = new() { Width = 320, Height = 480 }, IsMobile = true });
             var page = await context.NewPageAsync();
-            await page.GotoAsync(server.Prefix + "/overflow-large.html");
+            await page.GotoAsync(Server.Prefix + "/overflow-large.html");
             var screenshot = await page.ScreenshotAsync(new() { FullPage = true });
             ExpectToMatchSnapshot(screenshot, "screenshot-mobile-fullpage.png");
             await context.CloseAsync();
         }
 
         [UpstreamTest("SS-072 should work with device scale factor")]
-        public async Task ShouldWorkWithDeviceScaleFactor(IBrowser browser, Server server, bool isMac, string browserName, BrowserNewContextOptions contextOptions)
+        public async Task ShouldWorkWithDeviceScaleFactor()
         {
-            var context = await browser.NewContextAsync(new(contextOptions) { ViewportSize = new() { Width = 320, Height = 480 }, DeviceScaleFactor = 2 });
+            var context = await Browser.NewContextAsync(new(ContextOptions()) { ViewportSize = new() { Width = 320, Height = 480 }, DeviceScaleFactor = 2 });
             var page = await context.NewPageAsync();
-            await page.GotoAsync(server.Prefix + "/grid.html");
+            await page.GotoAsync(Server.Prefix + "/grid.html");
             var screenshot = await page.ScreenshotAsync();
             ExpectToMatchSnapshot(screenshot, "screenshot-device-scale-factor.png");
             await context.CloseAsync();
         }
 
         [UpstreamTest("SS-073 should work with device scale factor and clip")]
-        public async Task ShouldWorkWithDeviceScaleFactorAndClip(IBrowser browser, Server server, BrowserNewContextOptions contextOptions)
+        public async Task ShouldWorkWithDeviceScaleFactorAndClip()
         {
-            var context = await browser.NewContextAsync(new(contextOptions) { ViewportSize = new() { Width = 500, Height = 500 }, DeviceScaleFactor = 3 });
+            var context = await Browser.NewContextAsync(new(ContextOptions()) { ViewportSize = new() { Width = 500, Height = 500 }, DeviceScaleFactor = 3 });
             var page = await context.NewPageAsync();
-            await page.GotoAsync(server.Prefix + "/grid.html");
+            await page.GotoAsync(Server.Prefix + "/grid.html");
             var screenshot = await page.ScreenshotAsync(new() { Clip = new() { X = 50, Y = 100, Width = 150, Height = 100 } });
             ExpectToMatchSnapshot(screenshot, "screenshot-device-scale-factor-clip.png");
             await context.CloseAsync();
         }
 
         [UpstreamTest("SS-074 should work with device scale factor and scale:css")]
-        public async Task ShouldWorkWithDeviceScaleFactorAndScaleCss(IBrowser browser, Server server, BrowserNewContextOptions contextOptions)
+        public async Task ShouldWorkWithDeviceScaleFactorAndScaleCss()
         {
-            var context = await browser.NewContextAsync(new(contextOptions) { ViewportSize = new() { Width = 320, Height = 480 }, DeviceScaleFactor = 2 });
+            var context = await Browser.NewContextAsync(new(ContextOptions()) { ViewportSize = new() { Width = 320, Height = 480 }, DeviceScaleFactor = 2 });
             var page = await context.NewPageAsync();
-            await page.GotoAsync(server.Prefix + "/grid.html");
+            await page.GotoAsync(Server.Prefix + "/grid.html");
             var screenshot = await page.ScreenshotAsync(new() { Scale = ScreenshotScale.Css });
             ExpectToMatchSnapshot(screenshot, "screenshot-device-scale-factor-css-size.png");
             await context.CloseAsync();
         }
 
         [UpstreamTest("SS-075 should produce screenshot of correct size with scale:css and null viewport")]
-        public async Task ShouldProduceScreenshotOfCorrectSizeWithScaleCssAndNullViewport(IBrowser browser, Server server, BrowserNewContextOptions contextOptions)
+        public async Task ShouldProduceScreenshotOfCorrectSizeWithScaleCssAndNullViewport()
         {
-            var context = await browser.NewContextAsync(new(contextOptions) { ViewportSize = ViewportSize.NoViewport });
+            var context = await Browser.NewContextAsync(new(ContextOptions()) { ViewportSize = ViewportSize.NoViewport });
             var page = await context.NewPageAsync();
-            await page.GotoAsync(server.Prefix + "/grid.html");
+            await page.GotoAsync(Server.Prefix + "/grid.html");
             // .NET: const [innerWidth, innerHeight] = await page.evaluate(...)
             var sizes = await page.EvaluateAsync<int[]>("() => [window.innerWidth, window.innerHeight]");
             var innerWidth = sizes[0];
@@ -144,20 +144,20 @@ public class ScreenshotTests
         }
 
         [UpstreamTest("SS-076 should work with device scale factor, clip and scale:css")]
-        public async Task ShouldWorkWithDeviceScaleFactorClipAndScaleCss(IBrowser browser, Server server, BrowserNewContextOptions contextOptions)
+        public async Task ShouldWorkWithDeviceScaleFactorClipAndScaleCss()
         {
-            var context = await browser.NewContextAsync(new(contextOptions) { ViewportSize = new() { Width = 500, Height = 500 }, DeviceScaleFactor = 3 });
+            var context = await Browser.NewContextAsync(new(ContextOptions()) { ViewportSize = new() { Width = 500, Height = 500 }, DeviceScaleFactor = 3 });
             var page = await context.NewPageAsync();
-            await page.GotoAsync(server.Prefix + "/grid.html");
+            await page.GotoAsync(Server.Prefix + "/grid.html");
             var screenshot = await page.ScreenshotAsync(new() { Clip = new() { X = 50, Y = 100, Width = 150, Height = 100 }, Scale = ScreenshotScale.Css });
             ExpectToMatchSnapshot(screenshot, "screenshot-device-scale-factor-clip-css-size.png");
             await context.CloseAsync();
         }
 
         [UpstreamTest("SS-077 should throw if screenshot size is too large with device scale factor")]
-        public async Task ShouldThrowIfScreenshotSizeIsTooLargeWithDeviceScaleFactor(IBrowser browser, string browserName, bool isMac, bool isBidi, BrowserNewContextOptions contextOptions)
+        public async Task ShouldThrowIfScreenshotSizeIsTooLargeWithDeviceScaleFactor()
         {
-            var context = await browser.NewContextAsync(new(contextOptions) { ViewportSize = new() { Width = 500, Height = 500 }, DeviceScaleFactor = 2 });
+            var context = await Browser.NewContextAsync(new(ContextOptions()) { ViewportSize = new() { Width = 500, Height = 500 }, DeviceScaleFactor = 2 });
             var page = await context.NewPageAsync();
             {
                 await page.SetContentAsync("<style>body {margin: 0; padding: 0;}</style><div style='min-height: 16383px; background: red;'></div>");
@@ -167,7 +167,7 @@ public class ScreenshotTests
             {
                 await page.SetContentAsync("<style>body {margin: 0; padding: 0;}</style><div style='min-height: 16384px; background: red;'></div>");
                 var exception = await Catch(() => page.ScreenshotAsync(new() { FullPage = true }));
-                if ((browserName == "firefox" && !isBidi) || (browserName == "webkit" && !isMac))
+                if ((BrowserName == "firefox" && !IsBidi) || (BrowserName == "webkit" && !IsMac))
                 {
                     Assert.That(exception.Message, Does.Contain("Cannot take screenshot larger than 32767"));
                 }
@@ -179,12 +179,12 @@ public class ScreenshotTests
         }
 
         [UpstreamTest("SS-078 should work with large size")]
-        public async Task ShouldWorkWithLargeSize(string browserName, bool headless, string platform, ContextFactory contextFactory, string channel)
+        public async Task ShouldWorkWithLargeSize()
         {
-            Info.Fixme(browserName == "chromium" && !headless && platform == "linux", "Chromium has gpu problems on linux with large screenshots");
+            Info.Fixme(BrowserName == "chromium" && !Headless && Platform == "linux", "Chromium has gpu problems on linux with large screenshots");
             Info.Slow(true, "Large screenshot is slow");
 
-            var context = await contextFactory();
+            var context = await ContextFactory();
             var page = await context.NewPageAsync();
 
             await page.SetViewportSizeAsync(1280, 800);
@@ -217,9 +217,9 @@ public class ScreenshotTests
         }
 
         [UpstreamTest("SS-079 should handle vh units ")]
-        public async Task ShouldHandleVhUnits(ContextFactory contextFactory)
+        public async Task ShouldHandleVhUnits()
         {
-            var context = await contextFactory();
+            var context = await ContextFactory();
             var page = await context.NewPageAsync();
 
             await page.SetViewportSizeAsync(800, 500);
@@ -252,19 +252,19 @@ public class ScreenshotTests
         }
     }
 
-    public class ElementScreenshot
+    public class ElementScreenshot : UpstreamBrowserTest
     {
-        [BeforeEach]
-        public static void Skip(string browserName, bool headless) => Info.Skip(browserName == "firefox" && !headless);
+        [SetUp]
+        public void Skip() => Info.Skip(BrowserName == "firefox" && !Headless);
 
         [UpstreamTest("SS-081 element screenshot should work with a mobile viewport")]
-        public async Task ElementScreenshotShouldWorkWithAMobileViewport(IBrowser browser, Server server, string browserName, bool isBidi, BrowserNewContextOptions contextOptions)
+        public async Task ElementScreenshotShouldWorkWithAMobileViewport()
         {
-            Info.Skip(browserName == "firefox" && !isBidi);
+            Info.Skip(BrowserName == "firefox" && !IsBidi);
 
-            var context = await browser.NewContextAsync(new(contextOptions) { ViewportSize = new() { Width = 320, Height = 480 }, IsMobile = true });
+            var context = await Browser.NewContextAsync(new(ContextOptions()) { ViewportSize = new() { Width = 320, Height = 480 }, IsMobile = true });
             var page = await context.NewPageAsync();
-            await page.GotoAsync(server.Prefix + "/grid.html");
+            await page.GotoAsync(Server.Prefix + "/grid.html");
             await page.EvaluateAsync("() => window.scrollBy(50, 100)");
             var elementHandle = await page.QuerySelectorAsync(".box:nth-of-type(3)");
             var screenshot = await elementHandle.ScreenshotAsync();
@@ -273,13 +273,13 @@ public class ScreenshotTests
         }
 
         [UpstreamTest("SS-082 element screenshot should work with device scale factor")]
-        public async Task ElementScreenshotShouldWorkWithDeviceScaleFactor(IBrowser browser, Server server, string browserName, bool isBidi, BrowserNewContextOptions contextOptions)
+        public async Task ElementScreenshotShouldWorkWithDeviceScaleFactor()
         {
-            Info.Skip(browserName == "firefox" && !isBidi);
+            Info.Skip(BrowserName == "firefox" && !IsBidi);
 
-            var context = await browser.NewContextAsync(new(contextOptions) { ViewportSize = new() { Width = 320, Height = 480 }, DeviceScaleFactor = 2 });
+            var context = await Browser.NewContextAsync(new(ContextOptions()) { ViewportSize = new() { Width = 320, Height = 480 }, DeviceScaleFactor = 2 });
             var page = await context.NewPageAsync();
-            await page.GotoAsync(server.Prefix + "/grid.html");
+            await page.GotoAsync(Server.Prefix + "/grid.html");
             await page.EvaluateAsync("() => window.scrollBy(50, 100)");
             var elementHandle = await page.QuerySelectorAsync(".box:nth-of-type(3)");
             var screenshot = await elementHandle.ScreenshotAsync();
@@ -288,9 +288,9 @@ public class ScreenshotTests
         }
 
         [UpstreamTest("SS-083 should take screenshots when default viewport is null")]
-        public async Task ShouldTakeScreenshotsWhenDefaultViewportIsNull(Server server, IBrowser browser, BrowserNewContextOptions contextOptions)
+        public async Task ShouldTakeScreenshotsWhenDefaultViewportIsNull()
         {
-            var context = await browser.NewContextAsync(new(contextOptions) { ViewportSize = ViewportSize.NoViewport });
+            var context = await Browser.NewContextAsync(new(ContextOptions()) { ViewportSize = ViewportSize.NoViewport });
             var page = await context.NewPageAsync();
             await page.SetContentAsync("<div style='height: 10000px; background: red'></div>");
             var windowSize = await page.EvaluateAsync<JsonElement>("() => ({ width: window.innerWidth * window.devicePixelRatio, height: window.innerHeight * window.devicePixelRatio })");
@@ -310,11 +310,11 @@ public class ScreenshotTests
         }
 
         [UpstreamTest("SS-084 should take fullPage screenshots when default viewport is null")]
-        public async Task ShouldTakeFullPageScreenshotsWhenDefaultViewportIsNull(Server server, IBrowser browser, BrowserNewContextOptions contextOptions)
+        public async Task ShouldTakeFullPageScreenshotsWhenDefaultViewportIsNull()
         {
-            var context = await browser.NewContextAsync(new(contextOptions) { ViewportSize = ViewportSize.NoViewport });
+            var context = await Browser.NewContextAsync(new(ContextOptions()) { ViewportSize = ViewportSize.NoViewport });
             var page = await context.NewPageAsync();
-            await page.GotoAsync(server.Prefix + "/grid.html");
+            await page.GotoAsync(Server.Prefix + "/grid.html");
             var sizeBefore = await page.EvaluateAsync<JsonElement>("() => ({ width: document.body.offsetWidth, height: document.body.offsetHeight })");
             var screenshot = await page.ScreenshotAsync(new()
             {
@@ -329,9 +329,9 @@ public class ScreenshotTests
         }
 
         [UpstreamTest("SS-085 should restore default viewport after fullPage screenshot")]
-        public async Task ShouldRestoreDefaultViewportAfterFullPageScreenshot(IBrowser browser, BrowserNewContextOptions contextOptions)
+        public async Task ShouldRestoreDefaultViewportAfterFullPageScreenshot()
         {
-            var context = await browser.NewContextAsync(new(contextOptions) { ViewportSize = new() { Width = 456, Height = 789 } });
+            var context = await Browser.NewContextAsync(new(ContextOptions()) { ViewportSize = new() { Width = 456, Height = 789 } });
             var page = await context.NewPageAsync();
             await VerifyViewport(page, 456, 789);
             var screenshot = await page.ScreenshotAsync(new() { FullPage = true });
@@ -341,9 +341,9 @@ public class ScreenshotTests
         }
 
         [UpstreamTest("SS-088 should take element screenshot when default viewport is null and restore back")]
-        public async Task ShouldTakeElementScreenshotWhenDefaultViewportIsNullAndRestoreBack(Server server, IBrowser browser, BrowserNewContextOptions contextOptions)
+        public async Task ShouldTakeElementScreenshotWhenDefaultViewportIsNullAndRestoreBack()
         {
-            var context = await browser.NewContextAsync(new(contextOptions) { ViewportSize = ViewportSize.NoViewport });
+            var context = await Browser.NewContextAsync(new(ContextOptions()) { ViewportSize = ViewportSize.NoViewport });
             var page = await context.NewPageAsync();
             await page.SetContentAsync(@"
       <div style=""height: 14px"">oooo</div>
@@ -373,9 +373,9 @@ public class ScreenshotTests
         }
 
         [UpstreamTest("SS-090 element screenshots should handle vh units ")]
-        public async Task ElementScreenshotsShouldHandleVhUnits(ContextFactory contextFactory)
+        public async Task ElementScreenshotsShouldHandleVhUnits()
         {
-            var context = await contextFactory();
+            var context = await ContextFactory();
             var page = await context.NewPageAsync();
 
             await page.SetViewportSizeAsync(800, 500);
@@ -405,13 +405,13 @@ public class ScreenshotTests
         }
 
         [UpstreamTest("SS-091 should work if the main resource hangs")]
-        public async Task ShouldWorkIfTheMainResourceHangs(IBrowser browser, string browserName, string mode, Server server, BrowserNewPageOptions newPageOptions)
+        public async Task ShouldWorkIfTheMainResourceHangs()
         {
-            Info.Skip(mode != "default");
-            Info.Skip(browserName == "chromium", "https://github.com/microsoft/playwright/issues/9757");
+            Info.Skip(Mode != "default");
+            Info.Skip(BrowserName == "chromium", "https://github.com/microsoft/playwright/issues/9757");
 
-            var page = await browser.NewPageAsync(newPageOptions);
-            server.SetRoute("/slow", (req, res) =>
+            var page = await Browser.NewPageAsync(NewPageOptions());
+            Server.SetRoute("/slow", (req, res) =>
             {
                 res.WriteHead(200, new()
                 {
@@ -421,7 +421,7 @@ public class ScreenshotTests
             });
             try
             {
-                await Catch(() => page.GotoAsync(server.Prefix + "/slow", new() { Timeout = 1000 }));
+                await Catch(() => page.GotoAsync(Server.Prefix + "/slow", new() { Timeout = 1000 }));
                 var screenshot = await page.ScreenshotAsync();
                 ExpectToMatchSnapshot(screenshot, "hanging-main-resource.png");
             }
@@ -433,9 +433,9 @@ public class ScreenshotTests
 
         [UpstreamTest("SS-092 should capture full element when larger than viewport with device scale factor")]
         [LocalFixme("dotnet: Locator.WithElementAsync makes a negative timeout from the default timeout 0, and the call passes only when it ends before the timer of the driver")]
-        public async Task ShouldCaptureFullElementWhenLargerThanViewportWithDeviceScaleFactor(IBrowser browser, BrowserNewContextOptions contextOptions)
+        public async Task ShouldCaptureFullElementWhenLargerThanViewportWithDeviceScaleFactor()
         {
-            var context = await browser.NewContextAsync(new(contextOptions) { ViewportSize = new() { Width = 501, Height = 501 }, DeviceScaleFactor = 2.5f });
+            var context = await Browser.NewContextAsync(new(ContextOptions()) { ViewportSize = new() { Width = 501, Height = 501 }, DeviceScaleFactor = 2.5f });
             var page = await context.NewPageAsync();
             await page.SetContentAsync(@"
       <div style=""height: 14px"">oooo</div>
@@ -460,9 +460,9 @@ public class ScreenshotTests
         }
 
         [UpstreamTest("SS-093 should capture full element when larger than viewport with device scale factor and scale:css")]
-        public async Task ShouldCaptureFullElementWhenLargerThanViewportWithDeviceScaleFactorAndScaleCss(IBrowser browser, BrowserNewContextOptions contextOptions)
+        public async Task ShouldCaptureFullElementWhenLargerThanViewportWithDeviceScaleFactorAndScaleCss()
         {
-            var context = await browser.NewContextAsync(new(contextOptions) { ViewportSize = new() { Width = 501, Height = 501 }, DeviceScaleFactor = 2.5f });
+            var context = await Browser.NewContextAsync(new(ContextOptions()) { ViewportSize = new() { Width = 501, Height = 501 }, DeviceScaleFactor = 2.5f });
             var page = await context.NewPageAsync();
             await page.SetContentAsync(@"
       <div style=""height: 14px"">oooo</div>

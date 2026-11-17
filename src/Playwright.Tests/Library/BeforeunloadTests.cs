@@ -22,14 +22,14 @@ using static Microsoft.Playwright.Tests.Fixtures.Utils;
 namespace Microsoft.Playwright.Tests.Library;
 
 /// <summary>Port of tests/library/beforeunload.spec.ts.</summary>
-public class BeforeunloadTests
+public class BeforeunloadTests : UpstreamBrowserTest
 {
     [UpstreamTest("BU-001 should close browser with beforeunload page")]
-    public async Task ShouldCloseBrowserWithBeforeunloadPage(Server server, IBrowserType browserType, BrowserTypeLaunchOptions launchOptions, BrowserNewPageOptions newPageOptions)
+    public async Task ShouldCloseBrowserWithBeforeunloadPage()
     {
-        var browser = await browserType.LaunchAsync(launchOptions);
-        var page = await browser.NewPageAsync(newPageOptions);
-        await page.GotoAsync(server.Prefix + "/beforeunload.html");
+        var browser = await BrowserType.LaunchAsync(LaunchOptions());
+        var page = await browser.NewPageAsync(NewPageOptions());
+        await page.GotoAsync(Server.Prefix + "/beforeunload.html");
         // We have to interact with a page so that 'beforeunload' handlers
         // fire.
         await page.ClickAsync("body");
@@ -37,9 +37,11 @@ public class BeforeunloadTests
     }
 
     [UpstreamTest("BU-002 should close browsercontext with beforeunload page")]
-    public async Task ShouldCloseBrowsercontextWithBeforeunloadPage(Server server, IPage page, IBrowserContext context)
+    public async Task ShouldCloseBrowsercontextWithBeforeunloadPage()
     {
-        await page.GotoAsync(server.Prefix + "/beforeunload.html");
+        var page = await PageFixture();
+        var context = await ContextFixture();
+        await page.GotoAsync(Server.Prefix + "/beforeunload.html");
         // We have to interact with a page so that 'beforeunload' handlers
         // fire.
         await page.ClickAsync("body");
@@ -47,20 +49,23 @@ public class BeforeunloadTests
     }
 
     [UpstreamTest("BU-003 should be able to navigate away from page with beforeunload")]
-    public async Task ShouldBeAbleToNavigateAwayFromPageWithBeforeunload(Server server, IPage page, IBrowserContext context)
+    public async Task ShouldBeAbleToNavigateAwayFromPageWithBeforeunload()
     {
-        await page.GotoAsync(server.Prefix + "/beforeunload.html");
+        var page = await PageFixture();
+        var context = await ContextFixture();
+        await page.GotoAsync(Server.Prefix + "/beforeunload.html");
         // We have to interact with a page so that 'beforeunload' handlers
         // fire.
         await page.ClickAsync("body");
-        await page.GotoAsync(server.EmptyPage);
+        await page.GotoAsync(Server.EmptyPage);
     }
 
     [UpstreamTest("BU-004 should close page with beforeunload listener")]
-    public async Task ShouldClosePageWithBeforeunloadListener(IBrowserContext context, Server server)
+    public async Task ShouldClosePageWithBeforeunloadListener()
     {
+        var context = await ContextFixture();
         var newPage = await context.NewPageAsync();
-        await newPage.GotoAsync(server.Prefix + "/beforeunload.html");
+        await newPage.GotoAsync(Server.Prefix + "/beforeunload.html");
         // We have to interact with a page so that 'beforeunload' handlers
         // fire.
         await newPage.ClickAsync("body");
@@ -68,10 +73,11 @@ public class BeforeunloadTests
     }
 
     [UpstreamTest("BU-005 should run beforeunload if asked for @smoke")]
-    public async Task ShouldRunBeforeunloadIfAskedFor(IBrowserContext context, Server server, string browserName)
+    public async Task ShouldRunBeforeunloadIfAskedFor()
     {
+        var context = await ContextFixture();
         var newPage = await context.NewPageAsync();
-        await newPage.GotoAsync(server.Prefix + "/beforeunload.html");
+        await newPage.GotoAsync(Server.Prefix + "/beforeunload.html");
         // We have to interact with a page so that 'beforeunload' handlers
         // fire.
         await newPage.ClickAsync("body");
@@ -80,11 +86,11 @@ public class BeforeunloadTests
             newPage.CloseAsync(new() { RunBeforeUnload = true }));
         Assert.That(dialog.Type, Is.EqualTo("beforeunload"));
         Assert.That(dialog.DefaultValue, Is.EqualTo(""));
-        if (browserName == "chromium")
+        if (BrowserName == "chromium")
         {
             Assert.That(dialog.Message, Is.EqualTo(""));
         }
-        else if (browserName == "webkit")
+        else if (BrowserName == "webkit")
         {
             Assert.That(dialog.Message, Is.EqualTo("Leave?"));
         }
@@ -98,9 +104,10 @@ public class BeforeunloadTests
     }
 
     [UpstreamTest("BU-006 should access page after beforeunload")]
-    public async Task ShouldAccessPageAfterBeforeunload(IPage page, Server server)
+    public async Task ShouldAccessPageAfterBeforeunload()
     {
-        await page.GotoAsync(server.Prefix + "/beforeunload.html");
+        var page = await PageFixture();
+        await page.GotoAsync(Server.Prefix + "/beforeunload.html");
         // We have to interact with a page so that 'beforeunload' handlers
         // fire.
         await page.ClickAsync("body");
@@ -112,9 +119,10 @@ public class BeforeunloadTests
     }
 
     [UpstreamTest("BU-007 should not stall on evaluate when dismissing beforeunload")]
-    public async Task ShouldNotStallOnEvaluateWhenDismissingBeforeunload(IPage page, Server server)
+    public async Task ShouldNotStallOnEvaluateWhenDismissingBeforeunload()
     {
-        await page.GotoAsync(server.Prefix + "/beforeunload.html");
+        var page = await PageFixture();
+        await page.GotoAsync(Server.Prefix + "/beforeunload.html");
         // We have to interact with a page so that 'beforeunload' handlers fire.
         await page.ClickAsync("body");
 
@@ -131,10 +139,11 @@ public class BeforeunloadTests
     }
 
     [UpstreamTest("BU-008 should not stall on click when dismissing beforeunload")]
-    public async Task ShouldNotStallOnClickWhenDismissingBeforeunload(IPage page, Server server)
+    public async Task ShouldNotStallOnClickWhenDismissingBeforeunload()
     {
-        await page.GotoAsync(server.EmptyPage);
-        await page.SetContentAsync($"<a href=\"{server.Prefix}/frames/one-frame.html\">click me</a>");
+        var page = await PageFixture();
+        await page.GotoAsync(Server.EmptyPage);
+        await page.SetContentAsync($"<a href=\"{Server.Prefix}/frames/one-frame.html\">click me</a>");
 
         await page.EvaluateAsync(@"() => {
     window.onbeforeunload = () => false;
@@ -151,13 +160,14 @@ public class BeforeunloadTests
 
         // This line should not timeout.
         await page.GetByRole(AriaRole.Link).ClickAsync(new() { Timeout = 5000 });
-        await Expect(page).ToHaveURLAsync(server.Prefix + "/frames/one-frame.html");
+        await Expect(page).ToHaveURLAsync(Server.Prefix + "/frames/one-frame.html");
     }
 
     [UpstreamTest("BU-009 should support dismissing the dialog multiple times")]
-    public async Task ShouldSupportDismissingTheDialogMultipleTimes(IPage page, Server server)
+    public async Task ShouldSupportDismissingTheDialogMultipleTimes()
     {
-        await page.GotoAsync(server.Prefix + "/beforeunload.html");
+        var page = await PageFixture();
+        await page.GotoAsync(Server.Prefix + "/beforeunload.html");
 
         // We have to interact with a page so that 'beforeunload' handlers
         // fire (in Firefox).
@@ -177,9 +187,10 @@ public class BeforeunloadTests
     }
 
     [UpstreamTest("BU-010 should support closing the page after a previous dismiss")]
-    public async Task ShouldSupportClosingThePageAfterAPreviousDismiss(IPage page, Server server)
+    public async Task ShouldSupportClosingThePageAfterAPreviousDismiss()
     {
-        await page.GotoAsync(server.Prefix + "/beforeunload.html");
+        var page = await PageFixture();
+        await page.GotoAsync(Server.Prefix + "/beforeunload.html");
 
         // We have to interact with a page so that 'beforeunload' handlers
         // fire (in Firefox).
@@ -196,9 +207,10 @@ public class BeforeunloadTests
     }
 
     [UpstreamTest("BU-011 should support closing the page via a subsequent onbeforeunload dialog")]
-    public async Task ShouldSupportClosingThePageViaASubsequentOnbeforeunloadDialog(IPage page, Server server)
+    public async Task ShouldSupportClosingThePageViaASubsequentOnbeforeunloadDialog()
     {
-        await page.GotoAsync(server.Prefix + "/beforeunload.html");
+        var page = await PageFixture();
+        await page.GotoAsync(Server.Prefix + "/beforeunload.html");
 
         // We have to interact with a page so that 'beforeunload' handlers
         // fire (in Firefox).
@@ -216,9 +228,10 @@ public class BeforeunloadTests
 
     [UpstreamTest("BU-012 does not get stalled by beforeUnload")]
     [LocalFixme("dotnet: Page.CloseAsync sets CloseWasCalled also with RunBeforeUnload (the Node.js client does not), so the routes of the page that stays open are not handled any more and the second fetch never ends")]
-    public async Task DoesNotGetStalledByBeforeUnload(IPage page, Server server)
+    public async Task DoesNotGetStalledByBeforeUnload()
     {
-        await page.GotoAsync(server.HelloWorld);
+        var page = await PageFixture();
+        await page.GotoAsync(Server.HelloWorld);
 
         await page.EvaluateAsync(@"() => {
     window.addEventListener('beforeunload', event => {

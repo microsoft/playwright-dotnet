@@ -20,10 +20,10 @@ using static Microsoft.Playwright.Assertions;
 namespace Microsoft.Playwright.Tests.Library;
 
 /// <summary>Port of tests/library/screencast-overlay.spec.ts.</summary>
-public class ScreencastOverlayTests
+public class ScreencastOverlayTests : UpstreamBrowserTest
 {
-    [BeforeEach]
-    public static void Skip(string mode) => Info.Skip(mode != "default", "Overlay uses an open shadow root only in default mode");
+    [SetUp]
+    public void Skip() => Info.Skip(Mode != "default", "Overlay uses an open shadow root only in default mode");
 
     private static int[] Pixel(byte[] screenshot, int x, int y)
     {
@@ -34,11 +34,11 @@ public class ScreencastOverlayTests
     }
 
     [UpstreamTest("SC-028 should add and remove overlay")]
-    public async Task ShouldAddAndRemoveOverlay(IBrowser browser, Server server, BrowserNewContextOptions contextOptions)
+    public async Task ShouldAddAndRemoveOverlay()
     {
-        var context = await browser.NewContextAsync(contextOptions);
+        var context = await Browser.NewContextAsync(ContextOptions());
         var page = await context.NewPageAsync();
-        await page.GotoAsync(server.EmptyPage);
+        await page.GotoAsync(Server.EmptyPage);
 
         var disposable = await page.Screencast.ShowOverlayAsync("<div id=\"my-overlay\">Hello Overlay</div>");
         await Expect(page.Locator("x-pw-user-overlays")).ToBeVisibleAsync();
@@ -52,11 +52,11 @@ public class ScreencastOverlayTests
     }
 
     [UpstreamTest("SC-029 should add multiple overlays")]
-    public async Task ShouldAddMultipleOverlays(IBrowser browser, Server server, BrowserNewContextOptions contextOptions)
+    public async Task ShouldAddMultipleOverlays()
     {
-        var context = await browser.NewContextAsync(contextOptions);
+        var context = await Browser.NewContextAsync(ContextOptions());
         var page = await context.NewPageAsync();
-        await page.GotoAsync(server.EmptyPage);
+        await page.GotoAsync(Server.EmptyPage);
 
         var d1 = await page.Screencast.ShowOverlayAsync("<div id=\"overlay-1\">First</div>");
         var d2 = await page.Screencast.ShowOverlayAsync("<div id=\"overlay-2\">Second</div>");
@@ -75,11 +75,11 @@ public class ScreencastOverlayTests
     }
 
     [UpstreamTest("SC-030 should hide and show overlays")]
-    public async Task ShouldHideAndShowOverlays(IBrowser browser, Server server, BrowserNewContextOptions contextOptions)
+    public async Task ShouldHideAndShowOverlays()
     {
-        var context = await browser.NewContextAsync(contextOptions);
+        var context = await Browser.NewContextAsync(ContextOptions());
         var page = await context.NewPageAsync();
-        await page.GotoAsync(server.EmptyPage);
+        await page.GotoAsync(Server.EmptyPage);
 
         await page.Screencast.ShowOverlayAsync("<div id=\"my-overlay\">Visible</div>");
         await Expect(page.Locator("x-pw-user-overlays")).ToBeVisibleAsync();
@@ -95,16 +95,16 @@ public class ScreencastOverlayTests
     }
 
     [UpstreamTest("SC-031 should survive navigation")]
-    public async Task ShouldSurviveNavigation(IBrowser browser, Server server, BrowserNewContextOptions contextOptions)
+    public async Task ShouldSurviveNavigation()
     {
-        var context = await browser.NewContextAsync(contextOptions);
+        var context = await Browser.NewContextAsync(ContextOptions());
         var page = await context.NewPageAsync();
-        await page.GotoAsync(server.EmptyPage);
+        await page.GotoAsync(Server.EmptyPage);
 
         await page.Screencast.ShowOverlayAsync("<div id=\"persistent\">Survives Reload</div>");
         await Expect(page.Locator("#persistent")).ToHaveTextAsync("Survives Reload");
 
-        await page.GotoAsync(server.EmptyPage);
+        await page.GotoAsync(Server.EmptyPage);
         await Expect(page.Locator("#persistent")).ToHaveTextAsync("Survives Reload");
 
         await page.ReloadAsync();
@@ -114,11 +114,11 @@ public class ScreencastOverlayTests
     }
 
     [UpstreamTest("SC-032 should remove overlay and not restore after navigation")]
-    public async Task ShouldRemoveOverlayAndNotRestoreAfterNavigation(IBrowser browser, Server server, BrowserNewContextOptions contextOptions)
+    public async Task ShouldRemoveOverlayAndNotRestoreAfterNavigation()
     {
-        var context = await browser.NewContextAsync(contextOptions);
+        var context = await Browser.NewContextAsync(ContextOptions());
         var page = await context.NewPageAsync();
-        await page.GotoAsync(server.EmptyPage);
+        await page.GotoAsync(Server.EmptyPage);
 
         var disposable = await page.Screencast.ShowOverlayAsync("<div id=\"temp\">Temporary</div>");
         await Expect(page.Locator("#temp")).ToHaveTextAsync("Temporary");
@@ -133,11 +133,11 @@ public class ScreencastOverlayTests
     }
 
     [UpstreamTest("SC-033 should sanitize scripts from overlay html")]
-    public async Task ShouldSanitizeScriptsFromOverlayHtml(IBrowser browser, Server server, BrowserNewContextOptions contextOptions)
+    public async Task ShouldSanitizeScriptsFromOverlayHtml()
     {
-        var context = await browser.NewContextAsync(contextOptions);
+        var context = await Browser.NewContextAsync(ContextOptions());
         var page = await context.NewPageAsync();
-        await page.GotoAsync(server.EmptyPage);
+        await page.GotoAsync(Server.EmptyPage);
 
         await page.Screencast.ShowOverlayAsync("<div id=\"safe\">Safe</div><script>window.__injected = true</script>");
         await Expect(page.Locator("#safe")).ToHaveTextAsync("Safe");
@@ -147,11 +147,11 @@ public class ScreencastOverlayTests
     }
 
     [UpstreamTest("SC-034 should strip event handlers from overlay html")]
-    public async Task ShouldStripEventHandlersFromOverlayHtml(IBrowser browser, Server server, BrowserNewContextOptions contextOptions)
+    public async Task ShouldStripEventHandlersFromOverlayHtml()
     {
-        var context = await browser.NewContextAsync(contextOptions);
+        var context = await Browser.NewContextAsync(ContextOptions());
         var page = await context.NewPageAsync();
-        await page.GotoAsync(server.EmptyPage);
+        await page.GotoAsync(Server.EmptyPage);
 
         await page.Screencast.ShowOverlayAsync("<div id=\"clean\" onclick=\"window.__clicked=true\">Click me</div>");
         await Expect(page.Locator("#clean")).ToHaveTextAsync("Click me");
@@ -162,11 +162,11 @@ public class ScreencastOverlayTests
     }
 
     [UpstreamTest("SC-035 should auto-remove overlay after timeout")]
-    public async Task ShouldAutoRemoveOverlayAfterTimeout(IBrowser browser, Server server, BrowserNewContextOptions contextOptions)
+    public async Task ShouldAutoRemoveOverlayAfterTimeout()
     {
-        var context = await browser.NewContextAsync(contextOptions);
+        var context = await Browser.NewContextAsync(ContextOptions());
         var page = await context.NewPageAsync();
-        await page.GotoAsync(server.EmptyPage);
+        await page.GotoAsync(Server.EmptyPage);
 
         await page.Screencast.ShowOverlayAsync("<div id=\"timed\">Temporary</div>", new() { Duration = 1 });
         await Expect(page.Locator(".x-pw-user-overlay")).ToHaveCountAsync(0);
@@ -175,11 +175,11 @@ public class ScreencastOverlayTests
     }
 
     [UpstreamTest("SC-036 should allow styles in overlay html")]
-    public async Task ShouldAllowStylesInOverlayHtml(IBrowser browser, Server server, BrowserNewContextOptions contextOptions)
+    public async Task ShouldAllowStylesInOverlayHtml()
     {
-        var context = await browser.NewContextAsync(contextOptions);
+        var context = await Browser.NewContextAsync(ContextOptions());
         var page = await context.NewPageAsync();
-        await page.GotoAsync(server.EmptyPage);
+        await page.GotoAsync(Server.EmptyPage);
 
         await page.Screencast.ShowOverlayAsync("<div id=\"styled\" style=\"color: red; font-size: 20px;\">Styled</div>");
         await Expect(page.Locator("#styled")).ToHaveTextAsync("Styled");
@@ -207,10 +207,10 @@ public class ScreencastOverlayTests
     private static IEnumerable<object[]> TopLayerPages() => topLayerPages.Select(entry => new object[] { entry.Key, entry.Value });
 
     [UpstreamTest("SC-037 should show overlay above ${kind} opened before it")]
-    [CaseSource(nameof(TopLayerPages))]
-    public async Task ShouldShowOverlayAboveOpenedBeforeIt(string kind, string content, IBrowser browser, BrowserNewContextOptions contextOptions)
+    [TestCaseSource(nameof(TopLayerPages))]
+    public async Task ShouldShowOverlayAboveOpenedBeforeIt(string kind, string content)
     {
-        var context = await browser.NewContextAsync(contextOptions);
+        var context = await Browser.NewContextAsync(ContextOptions());
         var page = await context.NewPageAsync();
         await page.SetContentAsync(content);
         var disposable = await page.Screencast.ShowOverlayAsync("<div></div>");
@@ -226,10 +226,10 @@ public class ScreencastOverlayTests
     }
 
     [UpstreamTest("SC-038 should keep overlay above ${kind} opened after it")]
-    [CaseSource(nameof(TopLayerPages))]
-    public async Task ShouldKeepOverlayAboveOpenedAfterIt(string kind, string content, IBrowser browser, BrowserNewContextOptions contextOptions)
+    [TestCaseSource(nameof(TopLayerPages))]
+    public async Task ShouldKeepOverlayAboveOpenedAfterIt(string kind, string content)
     {
-        var context = await browser.NewContextAsync(contextOptions);
+        var context = await Browser.NewContextAsync(ContextOptions());
         var page = await context.NewPageAsync();
         await page.SetContentAsync(content);
         await page.Screencast.ShowOverlayAsync(redOverlay);

@@ -20,46 +20,49 @@ using static Microsoft.Playwright.Tests.Fixtures.Utils;
 
 namespace Microsoft.Playwright.Tests.Page;
 
-/// <summary>Port of tests/page/page-drag.spec.ts.</summary>
-public class PageDragTests
+public abstract class PageDragTestsBase : UpstreamPageTest
 {
-    [BeforeEach]
-    public static void Skip(string browserName, int browserMajorVersion) => Info.Skip(browserName == "chromium" && browserMajorVersion < 91);
+    [SetUp]
+    public void Skip() => Info.Skip(BrowserName == "chromium" && BrowserMajorVersion < 91);
 
-    [BeforeEach]
-    public static void Skip2(bool isAndroid) => Info.Skip(isAndroid, "No drag&drop on Android.");
+    [SetUp]
+    public void Skip2() => Info.Skip(IsAndroid, "No drag&drop on Android.");
 
-    [BeforeEach]
-    public static void Skip3(bool headless) => Info.Skip(!headless, "Stray mouse events mess up the tests.");
+    [SetUp]
+    public void Skip3() => Info.Skip(!Headless, "Stray mouse events mess up the tests.");
+}
 
-    public class DragAndDrop
+/// <summary>Port of tests/page/page-drag.spec.ts.</summary>
+public class PageDragTests : PageDragTestsBase
+{
+    public class DragAndDrop : PageDragTestsBase
     {
         [UpstreamTest("DD-001 should work @smoke")]
-        public async Task ShouldWork(IPage page, Server server)
+        public async Task ShouldWork()
         {
-            await page.GotoAsync(server.Prefix + "/drag-n-drop.html");
-            await page.HoverAsync("#source");
-            await page.Mouse.DownAsync();
-            await page.HoverAsync("#target");
-            await page.Mouse.UpAsync();
-            Assert.That(await page.EvalOnSelectorAsync<bool>("#target", "target => target.contains(document.querySelector('#source'))"), Is.EqualTo(true)); // could not find source in target
+            await Page.GotoAsync(Server.Prefix + "/drag-n-drop.html");
+            await Page.HoverAsync("#source");
+            await Page.Mouse.DownAsync();
+            await Page.HoverAsync("#target");
+            await Page.Mouse.UpAsync();
+            Assert.That(await Page.EvalOnSelectorAsync<bool>("#target", "target => target.contains(document.querySelector('#source'))"), Is.EqualTo(true)); // could not find source in target
         }
 
         [UpstreamTest("DD-002 should send the right events")]
-        public async Task ShouldSendTheRightEvents(Server server, IPage page, string browserName)
+        public async Task ShouldSendTheRightEvents()
         {
-            await page.GotoAsync(server.Prefix + "/drag-n-drop.html");
-            var events = await TrackEvents(await page.QuerySelectorAsync("body"));
-            await page.HoverAsync("#source");
-            await page.Mouse.DownAsync();
-            await page.HoverAsync("#target");
-            await page.Mouse.UpAsync();
+            await Page.GotoAsync(Server.Prefix + "/drag-n-drop.html");
+            var events = await TrackEvents(await Page.QuerySelectorAsync("body"));
+            await Page.HoverAsync("#source");
+            await Page.Mouse.DownAsync();
+            await Page.HoverAsync("#target");
+            await Page.Mouse.UpAsync();
             Assert.That(await events.JsonValueAsync<string[]>(), Is.EqualTo(new[]
             {
                 "mousemove at 120;86",
                 "mousedown at 120;86",
-                browserName == "firefox" ? "dragstart at 120;86" : "mousemove at 240;350",
-                browserName == "firefox" ? "mousemove at 240;350" : "dragstart at 120;86",
+                BrowserName == "firefox" ? "dragstart at 120;86" : "mousemove at 240;350",
+                BrowserName == "firefox" ? "mousemove at 240;350" : "dragstart at 120;86",
                 "dragenter at 240;350",
                 "dragover at 240;350",
                 "drop at 240;350",
@@ -68,49 +71,49 @@ public class PageDragTests
         }
 
         [UpstreamTest("DD-003 should not send dragover on the first mousemove")]
-        public async Task ShouldNotSendDragoverOnTheFirstMousemove(Server server, IPage page, string browserName)
+        public async Task ShouldNotSendDragoverOnTheFirstMousemove()
         {
-            Info.Fixme(browserName != "chromium");
+            Info.Fixme(BrowserName != "chromium");
 
-            await page.GotoAsync(server.Prefix + "/drag-n-drop.html");
-            var events = await TrackEvents(await page.QuerySelectorAsync("body"));
-            await page.HoverAsync("#source");
-            await page.Mouse.DownAsync();
-            await page.HoverAsync("#target");
+            await Page.GotoAsync(Server.Prefix + "/drag-n-drop.html");
+            var events = await TrackEvents(await Page.QuerySelectorAsync("body"));
+            await Page.HoverAsync("#source");
+            await Page.Mouse.DownAsync();
+            await Page.HoverAsync("#target");
             Assert.That(await events.JsonValueAsync<string[]>(), Is.EqualTo(new[]
             {
                 "mousemove at 120;86",
                 "mousedown at 120;86",
-                browserName == "firefox" ? "dragstart at 120;86" : "mousemove at 240;350",
-                browserName == "firefox" ? "mousemove at 240;350" : "dragstart at 120;86",
+                BrowserName == "firefox" ? "dragstart at 120;86" : "mousemove at 240;350",
+                BrowserName == "firefox" ? "mousemove at 240;350" : "dragstart at 120;86",
                 "dragenter at 240;350",
             }));
         }
 
         [UpstreamTest("DD-004 should work inside iframe")]
-        public async Task ShouldWorkInsideIframe(IPage page, Server server, string browserName, bool isElectron, bool isWindows)
+        public async Task ShouldWorkInsideIframe()
         {
-            await page.GotoAsync(server.EmptyPage);
-            var frame = await AttachFrame(page, "myframe", server.Prefix + "/drag-n-drop.html");
-            await page.EvalOnSelectorAsync("iframe", @"iframe => {
+            await Page.GotoAsync(Server.EmptyPage);
+            var frame = await AttachFrame(Page, "myframe", Server.Prefix + "/drag-n-drop.html");
+            await Page.EvalOnSelectorAsync("iframe", @"iframe => {
       iframe.style.width = '500px';
       iframe.style.height = '600px';
       iframe.style.marginLeft = '80px';
       iframe.style.marginTop = '60px';
     }");
-            var pageEvents = await TrackEvents(await page.QuerySelectorAsync("body"));
+            var pageEvents = await TrackEvents(await Page.QuerySelectorAsync("body"));
             var frameEvents = await TrackEvents(await frame.QuerySelectorAsync("body"));
             await frame.HoverAsync("#source");
-            await page.Mouse.DownAsync();
+            await Page.Mouse.DownAsync();
             await frame.HoverAsync("#target");
-            await page.Mouse.UpAsync();
+            await Page.Mouse.UpAsync();
             Assert.That(await frame.EvalOnSelectorAsync<bool>("#target", "target => target.contains(document.querySelector('#source'))"), Is.EqualTo(true)); // could not find source in target
             Assert.That(await frameEvents.JsonValueAsync<string[]>(), Is.EqualTo(new[]
             {
                 "mousemove at 120;86",
                 "mousedown at 120;86",
-                browserName == "firefox" ? "dragstart at 120;86" : "mousemove at 240;350",
-                browserName == "firefox" ? "mousemove at 240;350" : "dragstart at 120;86",
+                BrowserName == "firefox" ? "dragstart at 120;86" : "mousemove at 240;350",
+                BrowserName == "firefox" ? "mousemove at 240;350" : "dragstart at 120;86",
                 "dragenter at 240;350",
                 "dragover at 240;350",
                 "drop at 240;350",
@@ -120,58 +123,58 @@ public class PageDragTests
         }
 
         [UpstreamTest("DD-005 should cancel on escape")]
-        public async Task ShouldCancelOnEscape(Server server, IPage page, string browserName)
+        public async Task ShouldCancelOnEscape()
         {
-            await page.GotoAsync(server.Prefix + "/drag-n-drop.html");
-            var events = await TrackEvents(await page.QuerySelectorAsync("body"));
-            await page.HoverAsync("#source");
-            await page.Mouse.DownAsync();
-            await page.HoverAsync("#target");
-            await page.Keyboard.PressAsync("Escape");
-            await page.Mouse.UpAsync();
-            Assert.That(await page.EvalOnSelectorAsync<bool>("#target", "target => target.contains(document.querySelector('#source'))"), Is.EqualTo(false)); // found source in target
+            await Page.GotoAsync(Server.Prefix + "/drag-n-drop.html");
+            var events = await TrackEvents(await Page.QuerySelectorAsync("body"));
+            await Page.HoverAsync("#source");
+            await Page.Mouse.DownAsync();
+            await Page.HoverAsync("#target");
+            await Page.Keyboard.PressAsync("Escape");
+            await Page.Mouse.UpAsync();
+            Assert.That(await Page.EvalOnSelectorAsync<bool>("#target", "target => target.contains(document.querySelector('#source'))"), Is.EqualTo(false)); // found source in target
             Assert.That(await events.JsonValueAsync<string[]>(), Is.EqualTo(new[]
             {
                 "mousemove at 120;86",
                 "mousedown at 120;86",
-                browserName == "firefox" ? "dragstart at 120;86" : "mousemove at 240;350",
-                browserName == "firefox" ? "mousemove at 240;350" : "dragstart at 120;86",
+                BrowserName == "firefox" ? "dragstart at 120;86" : "mousemove at 240;350",
+                BrowserName == "firefox" ? "mousemove at 240;350" : "dragstart at 120;86",
                 "dragenter at 240;350",
-                browserName == "chromium" ? null : "dragover at 240;350",
+                BrowserName == "chromium" ? null : "dragover at 240;350",
                 "dragend",
                 "mouseup at 240;350",
             }.Where(e => !string.IsNullOrEmpty(e))));
         }
 
-        public class Iframe
+        public class Iframe : PageDragTestsBase
         {
-            [BeforeEach]
-            public static void Fixme() => Info.Fixme(true, "implement dragging with iframes");
+            [SetUp]
+            public void Fixme() => Info.Fixme(true, "implement dragging with iframes");
 
             [UpstreamTest("DD-006 should drag into an iframe")]
-            public async Task ShouldDragIntoAnIframe(Server server, IPage page, string browserName)
+            public async Task ShouldDragIntoAnIframe()
             {
-                await page.GotoAsync(server.Prefix + "/drag-n-drop.html");
-                var frame = await AttachFrame(page, "oopif", server.Prefix + "/drag-n-drop.html");
-                await page.EvalOnSelectorAsync("iframe", @"iframe => {
+                await Page.GotoAsync(Server.Prefix + "/drag-n-drop.html");
+                var frame = await AttachFrame(Page, "oopif", Server.Prefix + "/drag-n-drop.html");
+                await Page.EvalOnSelectorAsync("iframe", @"iframe => {
         iframe.style.width = '500px';
         iframe.style.height = '600px';
         iframe.style.marginLeft = '500px';
         iframe.style.marginTop = '60px';
       }");
-                var pageEvents = await TrackEvents(await page.QuerySelectorAsync("body"));
+                var pageEvents = await TrackEvents(await Page.QuerySelectorAsync("body"));
                 var frameEvents = await TrackEvents(await frame.QuerySelectorAsync("body"));
-                await page.HoverAsync("#source");
-                await page.Mouse.DownAsync();
+                await Page.HoverAsync("#source");
+                await Page.Mouse.DownAsync();
                 await frame.HoverAsync("#target");
-                await page.Mouse.UpAsync();
+                await Page.Mouse.UpAsync();
                 Assert.That(await frame.EvalOnSelectorAsync<bool>("#target", "target => target.contains(document.querySelector('#source'))"), Is.EqualTo(true)); // could not find source in target
                 Assert.That(await pageEvents.JsonValueAsync<string[]>(), Is.EqualTo(new[]
                 {
                     "mousemove",
                     "mousedown",
-                    browserName == "firefox" ? "dragstart" : "mousemove",
-                    browserName == "firefox" ? "mousemove" : "dragstart",
+                    BrowserName == "firefox" ? "dragstart" : "mousemove",
+                    BrowserName == "firefox" ? "mousemove" : "dragstart",
                 }));
                 Assert.That(await frameEvents.JsonValueAsync<string[]>(), Is.EqualTo(new[]
                 {
@@ -182,17 +185,17 @@ public class PageDragTests
             }
 
             [UpstreamTest("DD-007 should drag out of an iframe")]
-            public async Task ShouldDragOutOfAnIframe(Server server, IPage page)
+            public async Task ShouldDragOutOfAnIframe()
             {
-                await page.GotoAsync(server.Prefix + "/drag-n-drop.html");
-                var frame = await AttachFrame(page, "oopif", server.Prefix + "/drag-n-drop.html");
-                var pageEvents = await TrackEvents(await page.QuerySelectorAsync("body"));
+                await Page.GotoAsync(Server.Prefix + "/drag-n-drop.html");
+                var frame = await AttachFrame(Page, "oopif", Server.Prefix + "/drag-n-drop.html");
+                var pageEvents = await TrackEvents(await Page.QuerySelectorAsync("body"));
                 var frameEvents = await TrackEvents(await frame.QuerySelectorAsync("body"));
                 await frame.HoverAsync("#source");
-                await page.Mouse.DownAsync();
-                await page.HoverAsync("#target");
-                await page.Mouse.UpAsync();
-                Assert.That(await page.EvalOnSelectorAsync<bool>("#target", "target => target.contains(document.querySelector('#source'))"), Is.EqualTo(true)); // could not find source in target
+                await Page.Mouse.DownAsync();
+                await Page.HoverAsync("#target");
+                await Page.Mouse.UpAsync();
+                Assert.That(await Page.EvalOnSelectorAsync<bool>("#target", "target => target.contains(document.querySelector('#source'))"), Is.EqualTo(true)); // could not find source in target
                 Assert.That(await frameEvents.JsonValueAsync<string[]>(), Is.EqualTo(new[]
                 {
                     "mousemove",
@@ -210,11 +213,11 @@ public class PageDragTests
         }
 
         [UpstreamTest("DD-008 should respect the drop effect")]
-        public async Task ShouldRespectTheDropEffect(IPage page, string browserName, bool isLinux, bool isMac, bool headless, string trace)
+        public async Task ShouldRespectTheDropEffect()
         {
-            Info.Fixme(browserName == "webkit" && isLinux && !headless, "https://github.com/microsoft/playwright/issues/21646");
-            Info.Fixme(browserName == "chromium" && !isMac && !headless, "https://github.com/microsoft/playwright/issues/21646");
-            Info.Slow(trace == "on");
+            Info.Fixme(BrowserName == "webkit" && IsLinux && !Headless, "https://github.com/microsoft/playwright/issues/21646");
+            Info.Fixme(BrowserName == "chromium" && !IsMac && !Headless, "https://github.com/microsoft/playwright/issues/21646");
+            Info.Slow(Trace == "on");
 
             Assert.That(await testIfDropped("copy", "copy"), Is.EqualTo(true));
             Assert.That(await testIfDropped("copy", "move"), Is.EqualTo(false));
@@ -237,11 +240,11 @@ public class PageDragTests
 
             async Task<bool> testIfDropped(string effectAllowed, string dropEffect)
             {
-                await page.SetContentAsync(@"
+                await Page.SetContentAsync(@"
         <div draggable=""true"">drag target</div>
         <drop-target>this is the drop target</drop-target>
       ");
-                await page.EvaluateAsync(@"({ effectAllowed, dropEffect }) => {
+                await Page.EvaluateAsync(@"({ effectAllowed, dropEffect }) => {
         window['dropped'] = false;
 
         document.querySelector('div').addEventListener('dragstart', event => {
@@ -258,24 +261,24 @@ public class PageDragTests
           window['dropped'] = true;
         });
       }", new { effectAllowed, dropEffect });
-                await page.HoverAsync("div");
-                await page.Mouse.DownAsync();
-                await page.HoverAsync("drop-target");
-                await page.Mouse.UpAsync();
-                return await page.EvaluateAsync<bool>("dropped");
+                await Page.HoverAsync("div");
+                await Page.Mouse.DownAsync();
+                await Page.HoverAsync("drop-target");
+                await Page.Mouse.UpAsync();
+                return await Page.EvaluateAsync<bool>("dropped");
             }
         }
 
         [UpstreamTest("DD-028 should report the default drop effect from effectAllowed")]
-        public async Task ShouldReportTheDefaultDropEffectFromEffectAllowed(IPage page, string browserName, bool isLinux, bool headless)
+        public async Task ShouldReportTheDefaultDropEffectFromEffectAllowed()
         {
-            Info.Fixme(browserName == "webkit" && isLinux && !headless, "https://github.com/microsoft/playwright/issues/21646");
+            Info.Fixme(BrowserName == "webkit" && IsLinux && !Headless, "https://github.com/microsoft/playwright/issues/21646");
 
-            await page.SetContentAsync(@"
+            await Page.SetContentAsync(@"
       <div draggable=""true"">drag target</div>
       <drop-target>this is the drop target</drop-target>
     ");
-            await page.EvaluateAsync(@"() => {
+            await Page.EvaluateAsync(@"() => {
       window['dropEffect'] = 'none';
 
       document.querySelector('div').addEventListener('dragstart', event => {
@@ -291,83 +294,83 @@ public class PageDragTests
         event.preventDefault();
       });
     }");
-            await page.HoverAsync("div");
-            await page.Mouse.DownAsync();
-            await page.HoverAsync("drop-target");
-            await page.Mouse.UpAsync();
-            Assert.That(await page.EvaluateAsync<string>("dropEffect"), Is.EqualTo("move"));
+            await Page.HoverAsync("div");
+            await Page.Mouse.DownAsync();
+            await Page.HoverAsync("drop-target");
+            await Page.Mouse.UpAsync();
+            Assert.That(await Page.EvaluateAsync<string>("dropEffect"), Is.EqualTo("move"));
         }
 
         [UpstreamTest("DD-009 should work if the drag is canceled")]
-        public async Task ShouldWorkIfTheDragIsCanceled(IPage page, Server server)
+        public async Task ShouldWorkIfTheDragIsCanceled()
         {
-            await page.GotoAsync(server.Prefix + "/drag-n-drop.html");
-            await page.EvaluateAsync(@"() => {
+            await Page.GotoAsync(Server.Prefix + "/drag-n-drop.html");
+            await Page.EvaluateAsync(@"() => {
       document.body.addEventListener('dragstart', event => {
         event.preventDefault();
       }, false);
     }");
-            await page.HoverAsync("#source");
-            await page.Mouse.DownAsync();
-            await page.HoverAsync("#target");
-            await page.Mouse.UpAsync();
-            Assert.That(await page.EvalOnSelectorAsync<bool>("#target", "target => target.contains(document.querySelector('#source'))"), Is.EqualTo(false));
+            await Page.HoverAsync("#source");
+            await Page.Mouse.DownAsync();
+            await Page.HoverAsync("#target");
+            await Page.Mouse.UpAsync();
+            Assert.That(await Page.EvalOnSelectorAsync<bool>("#target", "target => target.contains(document.querySelector('#source'))"), Is.EqualTo(false));
         }
 
         [UpstreamTest("DD-010 should work if the drag event is captured but not canceled")]
-        public async Task ShouldWorkIfTheDragEventIsCapturedButNotCanceled(IPage page, Server server)
+        public async Task ShouldWorkIfTheDragEventIsCapturedButNotCanceled()
         {
-            await page.GotoAsync(server.Prefix + "/drag-n-drop.html");
-            await page.EvaluateAsync(@"() => {
+            await Page.GotoAsync(Server.Prefix + "/drag-n-drop.html");
+            await Page.EvaluateAsync(@"() => {
       document.body.addEventListener('dragstart', event => {
         event.stopImmediatePropagation();
       }, false);
     }");
-            await page.HoverAsync("#source");
-            await page.Mouse.DownAsync();
-            await page.HoverAsync("#target");
-            await page.Mouse.UpAsync();
-            Assert.That(await page.EvalOnSelectorAsync<bool>("#target", "target => target.contains(document.querySelector('#source'))"), Is.EqualTo(true));
+            await Page.HoverAsync("#source");
+            await Page.Mouse.DownAsync();
+            await Page.HoverAsync("#target");
+            await Page.Mouse.UpAsync();
+            Assert.That(await Page.EvalOnSelectorAsync<bool>("#target", "target => target.contains(document.querySelector('#source'))"), Is.EqualTo(true));
         }
 
         [UpstreamTest("DD-011 should be able to drag the mouse in a frame")]
-        public async Task ShouldBeAbleToDragTheMouseInAFrame(IPage page, Server server)
+        public async Task ShouldBeAbleToDragTheMouseInAFrame()
         {
-            await page.GotoAsync(server.Prefix + "/frames/one-frame.html");
-            var eventsHandle = await TrackEvents(await page.Frames[1].QuerySelectorAsync("html"));
-            await page.Mouse.MoveAsync(30, 30);
-            await page.Mouse.DownAsync();
-            await page.Mouse.MoveAsync(60, 60);
-            await page.Mouse.UpAsync();
+            await Page.GotoAsync(Server.Prefix + "/frames/one-frame.html");
+            var eventsHandle = await TrackEvents(await Page.Frames[1].QuerySelectorAsync("html"));
+            await Page.Mouse.MoveAsync(30, 30);
+            await Page.Mouse.DownAsync();
+            await Page.Mouse.MoveAsync(60, 60);
+            await Page.Mouse.UpAsync();
             Assert.That(await eventsHandle.JsonValueAsync<string[]>(), Is.EqualTo(new[] { "mousemove at 20;20", "mousedown at 20;20", "mousemove at 50;50", "mouseup at 50;50" }));
         }
 
         // .NET: upstream also takes the toImpl fixture, which it does not use and which .NET does not have.
         [UpstreamTest("DD-012 should work if a frame is stalled")]
-        public async Task ShouldWorkIfAFrameIsStalled(IPage page, Server server)
+        public async Task ShouldWorkIfAFrameIsStalled()
         {
-            await page.GotoAsync(server.Prefix + "/drag-n-drop.html");
+            await Page.GotoAsync(Server.Prefix + "/drag-n-drop.html");
             var routePromise = new TaskCompletionSource<IRoute>(TaskCreationOptions.RunContinuationsAsynchronously);
-            await page.RouteAsync("**/empty.html", route =>
+            await Page.RouteAsync("**/empty.html", route =>
             {
                 routePromise.SetResult(route);
             });
-            IgnoreErrors(AttachFrame(page, "frame", server.EmptyPage));
+            IgnoreErrors(AttachFrame(Page, "frame", Server.EmptyPage));
             var route = await routePromise.Task;
-            await page.HoverAsync("#source");
-            await page.Mouse.DownAsync();
-            await page.HoverAsync("#target");
-            await page.Mouse.UpAsync();
+            await Page.HoverAsync("#source");
+            await Page.Mouse.DownAsync();
+            await Page.HoverAsync("#target");
+            await Page.Mouse.UpAsync();
             await route.AbortAsync();
-            Assert.That(await page.EvalOnSelectorAsync<bool>("#target", "target => target.contains(document.querySelector('#source'))"), Is.EqualTo(true)); // could not find source in target
+            Assert.That(await Page.EvalOnSelectorAsync<bool>("#target", "target => target.contains(document.querySelector('#source'))"), Is.EqualTo(true)); // could not find source in target
         }
 
         [UpstreamTest("DD-013 should work with the helper method")]
-        public async Task ShouldWorkWithTheHelperMethod(IPage page, Server server)
+        public async Task ShouldWorkWithTheHelperMethod()
         {
-            await page.GotoAsync(server.Prefix + "/drag-n-drop.html");
-            await page.DragAndDropAsync("#source", "#target");
-            Assert.That(await page.EvalOnSelectorAsync<bool>("#target", "target => target.contains(document.querySelector('#source'))"), Is.EqualTo(true)); // could not find source in target
+            await Page.GotoAsync(Server.Prefix + "/drag-n-drop.html");
+            await Page.DragAndDropAsync("#source", "#target");
+            Assert.That(await Page.EvalOnSelectorAsync<bool>("#target", "target => target.contains(document.querySelector('#source'))"), Is.EqualTo(true)); // could not find source in target
         }
 
         private static readonly object[][] Drags =
@@ -383,18 +386,18 @@ public class PageDragTests
         ];
 
         [UpstreamTest("DD-014 should ${title} with tweened mouse movement")]
-        [CaseSource(nameof(Drags))]
-        public async Task ShouldWithTweenedMouseMovement(string title, Func<IPage, int?, Task> drag, IPage page, bool headless)
+        [TestCaseSource(nameof(Drags))]
+        public async Task ShouldWithTweenedMouseMovement(string title, Func<IPage, int?, Task> drag)
         {
-            Info.Skip(!headless, "actual mouse interferes with the exact mousemove events");
+            Info.Skip(!Headless, "actual mouse interferes with the exact mousemove events");
 
-            await page.SetContentAsync(@"
+            await Page.SetContentAsync(@"
         <body style=""margin: 0; padding: 0;"">
           <div style=""width:100px;height:100px;background:red;"" id=""red""></div>
           <div style=""width:300px;height:100px;background:blue;"" id=""blue""></div>
         </body>
       ");
-            var eventsHandle = await page.EvaluateHandleAsync(@"() => {
+            var eventsHandle = await Page.EvaluateHandleAsync(@"() => {
         const events = [];
         document.addEventListener('mousedown', event => {
           events.push({
@@ -419,7 +422,7 @@ public class PageDragTests
         });
         return events;
       }");
-            await drag(page, 4);
+            await drag(Page, 4);
             await Expect(async () => ExpectToEqual(await eventsHandle.JsonValueAsync<object>(), new[]
             {
                 new { type = "mousemove", x = 50, y = 50 },
@@ -433,15 +436,15 @@ public class PageDragTests
         }
 
         [UpstreamTest("DD-015 should allow specifying the position")]
-        public async Task ShouldAllowSpecifyingThePosition(IPage page, Server server)
+        public async Task ShouldAllowSpecifyingThePosition()
         {
-            await page.SetContentAsync(@"
+            await Page.SetContentAsync(@"
       <div style=""width:100px;height:100px;background:red;"" id=""red"">
       </div>
       <div style=""width:100px;height:100px;background:blue;"" id=""blue"">
       </div>
     ");
-            var eventsHandle = await page.EvaluateHandleAsync(@"() => {
+            var eventsHandle = await Page.EvaluateHandleAsync(@"() => {
       const events = [];
       document.getElementById('red').addEventListener('mousedown', event => {
         events.push({
@@ -459,7 +462,7 @@ public class PageDragTests
       });
       return events;
     }");
-            await page.DragAndDropAsync("#red", "#blue", new()
+            await Page.DragAndDropAsync("#red", "#blue", new()
             {
                 SourcePosition = new() { X = 34, Y = 7 },
                 TargetPosition = new() { X = 10, Y = 20 },
@@ -472,29 +475,29 @@ public class PageDragTests
         }
 
         [UpstreamTest("DD-016 should work with locators")]
-        public async Task ShouldWorkWithLocators(IPage page, Server server)
+        public async Task ShouldWorkWithLocators()
         {
-            await page.GotoAsync(server.Prefix + "/drag-n-drop.html");
-            await page.Locator("#source").DragToAsync(page.Locator("#target"));
-            Assert.That(await page.EvalOnSelectorAsync<bool>("#target", "target => target.contains(document.querySelector('#source'))"), Is.EqualTo(true)); // could not find source in target
+            await Page.GotoAsync(Server.Prefix + "/drag-n-drop.html");
+            await Page.Locator("#source").DragToAsync(Page.Locator("#target"));
+            Assert.That(await Page.EvalOnSelectorAsync<bool>("#target", "target => target.contains(document.querySelector('#source'))"), Is.EqualTo(true)); // could not find source in target
         }
     }
 
     [UpstreamTest("DD-017 should work if not doing a drag")]
-    public async Task ShouldWorkIfNotDoingADrag(IPage page, bool isLinux, bool headless)
+    public async Task ShouldWorkIfNotDoingADrag()
     {
-        var eventsHandle = await TrackEvents(await page.QuerySelectorAsync("html"));
-        await page.Mouse.MoveAsync(50, 50);
-        await page.Mouse.DownAsync();
-        await page.Mouse.MoveAsync(100, 100);
-        await page.Mouse.UpAsync();
+        var eventsHandle = await TrackEvents(await Page.QuerySelectorAsync("html"));
+        await Page.Mouse.MoveAsync(50, 50);
+        await Page.Mouse.DownAsync();
+        await Page.Mouse.MoveAsync(100, 100);
+        await Page.Mouse.UpAsync();
         Assert.That(await eventsHandle.JsonValueAsync<string[]>(), Is.EqualTo(new[] { "mousemove at 50;50", "mousedown at 50;50", "mousemove at 100;100", "mouseup at 100;100" }));
     }
 
     [UpstreamTest("DD-018 should report event.buttons")]
-    public async Task ShouldReportEventButtons(IPage page, string browserName)
+    public async Task ShouldReportEventButtons()
     {
-        var logsHandle = await page.EvaluateHandleAsync(@"async () => {
+        var logsHandle = await Page.EvaluateHandleAsync(@"async () => {
     const div = document.createElement('div');
     document.body.appendChild(div);
     div.style.width = '200px';
@@ -510,10 +513,10 @@ public class PageDragTests
     await new Promise(window.builtins.requestAnimationFrame);
     return logs;
   }");
-        await page.Mouse.MoveAsync(20, 20);
-        await page.Mouse.DownAsync();
-        await page.Mouse.MoveAsync(40, 40);
-        await page.Mouse.UpAsync();
+        await Page.Mouse.MoveAsync(20, 20);
+        await Page.Mouse.DownAsync();
+        await Page.Mouse.MoveAsync(40, 40);
+        await Page.Mouse.UpAsync();
         var logs = await logsHandle.JsonValueAsync<object>();
         ExpectToEqual(logs, new[]
         {
@@ -548,12 +551,12 @@ public class PageDragTests
     }
 
     [UpstreamTest("DD-019 should handle custom dataTransfer")]
-    public async Task ShouldHandleCustomDataTransfer(IPage page, string browserName, bool isWindows)
+    public async Task ShouldHandleCustomDataTransfer()
     {
-        Info.Fixme(browserName == "webkit" && isWindows);
-        await page.SetContentAsync("<button draggable=\"true\">Draggable</button>");
+        Info.Fixme(BrowserName == "webkit" && IsWindows);
+        await Page.SetContentAsync("<button draggable=\"true\">Draggable</button>");
 
-        await page.EvaluateAsync(@"() => {
+        await Page.EvaluateAsync(@"() => {
     window.__result = new Promise(resolve => {
       document.addEventListener('dragstart', event => {
         event.dataTransfer.setData('custom-type', 'Hello World');
@@ -576,12 +579,12 @@ public class PageDragTests
     });
   }");
 
-        await page.HoverAsync("[draggable=\"true\"]");
-        await page.Mouse.DownAsync();
-        await page.Mouse.MoveAsync(100, 100);
-        await page.Mouse.UpAsync();
+        await Page.HoverAsync("[draggable=\"true\"]");
+        await Page.Mouse.DownAsync();
+        await Page.Mouse.MoveAsync(100, 100);
+        await Page.Mouse.UpAsync();
 
-        ExpectToEqual(await page.EvaluateAsync<object>("() => window.__result"), new
+        ExpectToEqual(await Page.EvaluateAsync<object>("() => window.__result"), new
         {
             types = new[] { "custom-type" },
             data = "Hello World",
@@ -589,14 +592,14 @@ public class PageDragTests
     }
 
     [UpstreamTest("DD-020 what happens when dragging element is destroyed")]
-    public async Task WhatHappensWhenDraggingElementIsDestroyed(IPage page, string browserName)
+    public async Task WhatHappensWhenDraggingElementIsDestroyed()
     {
-        await page.SetContentAsync(@"
+        await Page.SetContentAsync(@"
     <button draggable=""true"">Draggable</button>
     <div id=target>drop here</div>
   ");
 
-        await page.EvaluateAsync(@"() => {
+        await Page.EvaluateAsync(@"() => {
     document.querySelector('#target').addEventListener('dragover', event => {
       document.querySelector('button')?.remove();
     }, false);
@@ -606,7 +609,7 @@ public class PageDragTests
     }, false);
   }");
 
-        await page.Locator("button").DragToAsync(page.Locator("div"));
-        await Expect(page.Locator("div")).ToHaveTextAsync("drop here");
+        await Page.Locator("button").DragToAsync(Page.Locator("div"));
+        await Expect(Page.Locator("div")).ToHaveTextAsync("drop here");
     }
 }

@@ -22,18 +22,22 @@ using static Microsoft.Playwright.Tests.Fixtures.Utils;
 namespace Microsoft.Playwright.Tests.Library;
 
 /// <summary>Port of tests/library/browsercontext-cookies.spec.ts.</summary>
-public class BrowsercontextCookiesTests
+public class BrowsercontextCookiesTests : UpstreamBrowserTest
 {
     [UpstreamTest("CO-001 should return no cookies in pristine browser context")]
-    public async Task ShouldReturnNoCookiesInPristineBrowserContext(IBrowserContext context, IPage page, Server server)
+    public async Task ShouldReturnNoCookiesInPristineBrowserContext()
     {
+        var context = await ContextFixture();
+        var page = await PageFixture();
         ExpectToEqual(await context.CookiesAsync(), Array.Empty<object>());
     }
 
     [UpstreamTest("CO-002 should get a cookie @smoke")]
-    public async Task ShouldGetACookie(IBrowserContext context, IPage page, Server server, string defaultSameSiteCookieValue)
+    public async Task ShouldGetACookie()
     {
-        await page.GotoAsync(server.EmptyPage);
+        var context = await ContextFixture();
+        var page = await PageFixture();
+        await page.GotoAsync(Server.EmptyPage);
         var documentCookie = await page.EvaluateAsync<string>(@"() => {
     document.cookie = 'username=John Doe';
     return document.cookie;
@@ -45,20 +49,22 @@ public class BrowsercontextCookiesTests
             {
                 name = "username",
                 value = "John Doe",
-                domain = server.Hostname,
+                domain = Server.Hostname,
                 path = "/",
                 expires = -1,
                 httpOnly = false,
                 secure = false,
-                sameSite = defaultSameSiteCookieValue,
+                sameSite = DefaultSameSiteCookieValue,
             },
         });
     }
 
     [UpstreamTest("CO-003 should get a non-session cookie")]
-    public async Task ShouldGetANonSessionCookie(IBrowserContext context, IPage page, Server server, string defaultSameSiteCookieValue)
+    public async Task ShouldGetANonSessionCookie()
     {
-        await page.GotoAsync(server.EmptyPage);
+        var context = await ContextFixture();
+        var page = await PageFixture();
+        await page.GotoAsync(Server.EmptyPage);
         // @see https://en.wikipedia.org/wiki/Year_2038_problem
         var date = new DateTimeOffset(new DateTime(2038, 1, 1)).ToUnixTimeMilliseconds();
         var documentCookie = await page.EvaluateAsync<string>(@"timestamp => {
@@ -73,13 +79,13 @@ public class BrowsercontextCookiesTests
         {
             name = "username",
             value = "John Doe",
-            domain = server.Hostname,
+            domain = Server.Hostname,
             path = "/",
             // We will check this separately.
             expires = Anything,
             httpOnly = false,
             secure = false,
-            sameSite = defaultSameSiteCookieValue,
+            sameSite = DefaultSameSiteCookieValue,
         });
         // Browsers start to cap cookies with 400 days max expires value.
         // See https://github.com/httpwg/http-extensions/pull/1732
@@ -91,8 +97,9 @@ public class BrowsercontextCookiesTests
     }
 
     [UpstreamTest("CO-004 should allow adding cookies with >400 days expiration")]
-    public async Task ShouldAllowAddingCookiesWith400DaysExpiration(IBrowserContext context, Server server)
+    public async Task ShouldAllowAddingCookiesWith400DaysExpiration()
     {
+        var context = await ContextFixture();
         // Browsers start to cap cookies with 400 days max expires value.
         // See https://github.com/httpwg/http-extensions/pull/1732
         // Chromium patch: https://chromium.googlesource.com/chromium/src/+/aaa5d2b55478eac2ee642653dcd77a50ac3faff6
@@ -103,7 +110,7 @@ public class BrowsercontextCookiesTests
             {
                 Name = "username",
                 Value = "John Doe",
-                Domain = server.Hostname,
+                Domain = Server.Hostname,
                 Path = "/",
                 Expires = (float)expire,
                 HttpOnly = false,
@@ -118,7 +125,7 @@ public class BrowsercontextCookiesTests
         {
             name = "username",
             value = "John Doe",
-            domain = server.Hostname,
+            domain = Server.Hostname,
             path = "/",
         }));
         Assert.That(cookies[0].Expires, Is.GreaterThan(0));
@@ -126,55 +133,63 @@ public class BrowsercontextCookiesTests
     }
 
     [UpstreamTest("CO-005 should properly report httpOnly cookie")]
-    public async Task ShouldProperlyReportHttpOnlyCookie(IBrowserContext context, IPage page, Server server)
+    public async Task ShouldProperlyReportHttpOnlyCookie()
     {
-        server.SetRoute("/empty.html", (req, res) =>
+        var context = await ContextFixture();
+        var page = await PageFixture();
+        Server.SetRoute("/empty.html", (req, res) =>
         {
             res.SetHeader("Set-Cookie", "name=value;HttpOnly; Path=/");
             res.End();
         });
-        await page.GotoAsync(server.EmptyPage);
+        await page.GotoAsync(Server.EmptyPage);
         var cookies = await context.CookiesAsync();
         Assert.That(cookies.Count, Is.EqualTo(1));
         Assert.That(cookies[0].HttpOnly, Is.EqualTo(true));
     }
 
     [UpstreamTest("CO-006 should properly report \"Strict\" sameSite cookie")]
-    public async Task ShouldProperlyReportStrictSameSiteCookie(IBrowserContext context, IPage page, Server server, string browserName, string platform, string channel)
+    public async Task ShouldProperlyReportStrictSameSiteCookie()
     {
-        Info.Fixme(browserName == "webkit" && platform == "win32" && channel != "webkit-wsl");
+        var context = await ContextFixture();
+        var page = await PageFixture();
+        Info.Fixme(BrowserName == "webkit" && Platform == "win32" && Channel != "webkit-wsl");
 
-        server.SetRoute("/empty.html", (req, res) =>
+        Server.SetRoute("/empty.html", (req, res) =>
         {
             res.SetHeader("Set-Cookie", "name=value;SameSite=Strict");
             res.End();
         });
-        await page.GotoAsync(server.EmptyPage);
+        await page.GotoAsync(Server.EmptyPage);
         var cookies = await context.CookiesAsync();
         Assert.That(cookies.Count, Is.EqualTo(1));
         Assert.That(cookies[0].SameSite, Is.EqualTo(SameSiteAttribute.Strict));
     }
 
     [UpstreamTest("CO-007 should properly report \"Lax\" sameSite cookie")]
-    public async Task ShouldProperlyReportLaxSameSiteCookie(IBrowserContext context, IPage page, Server server, string browserName, string platform, string channel)
+    public async Task ShouldProperlyReportLaxSameSiteCookie()
     {
-        Info.Fixme(browserName == "webkit" && platform == "win32" && channel != "webkit-wsl");
+        var context = await ContextFixture();
+        var page = await PageFixture();
+        Info.Fixme(BrowserName == "webkit" && Platform == "win32" && Channel != "webkit-wsl");
 
-        server.SetRoute("/empty.html", (req, res) =>
+        Server.SetRoute("/empty.html", (req, res) =>
         {
             res.SetHeader("Set-Cookie", "name=value;SameSite=Lax");
             res.End();
         });
-        await page.GotoAsync(server.EmptyPage);
+        await page.GotoAsync(Server.EmptyPage);
         var cookies = await context.CookiesAsync();
         Assert.That(cookies.Count, Is.EqualTo(1));
         Assert.That(cookies[0].SameSite, Is.EqualTo(SameSiteAttribute.Lax));
     }
 
     [UpstreamTest("CO-008 should get multiple cookies")]
-    public async Task ShouldGetMultipleCookies(IBrowserContext context, IPage page, Server server, string defaultSameSiteCookieValue)
+    public async Task ShouldGetMultipleCookies()
     {
-        await page.GotoAsync(server.EmptyPage);
+        var context = await ContextFixture();
+        var page = await PageFixture();
+        await page.GotoAsync(Server.EmptyPage);
         var documentCookie = await page.EvaluateAsync<string>(@"() => {
     document.cookie = 'username=John Doe';
     document.cookie = 'password=1234';
@@ -187,30 +202,31 @@ public class BrowsercontextCookiesTests
             {
                 name = "password",
                 value = "1234",
-                domain = server.Hostname,
+                domain = Server.Hostname,
                 path = "/",
                 expires = -1,
                 httpOnly = false,
                 secure = false,
-                sameSite = defaultSameSiteCookieValue,
+                sameSite = DefaultSameSiteCookieValue,
             },
             new
             {
                 name = "username",
                 value = "John Doe",
-                domain = server.Hostname,
+                domain = Server.Hostname,
                 path = "/",
                 expires = -1,
                 httpOnly = false,
                 secure = false,
-                sameSite = defaultSameSiteCookieValue,
+                sameSite = DefaultSameSiteCookieValue,
             },
         ]));
     }
 
     [UpstreamTest("CO-009 should get cookies from multiple urls")]
-    public async Task ShouldGetCookiesFromMultipleUrls(IBrowserContext context, string browserName, bool isWindows, string channel)
+    public async Task ShouldGetCookiesFromMultipleUrls()
     {
+        var context = await ContextFixture();
         await context.AddCookiesAsync(new[]
         {
             new Cookie
@@ -245,7 +261,7 @@ public class BrowsercontextCookiesTests
             expires = -1,
             httpOnly = false,
             secure = true,
-            sameSite = (browserName == "webkit" && isWindows && channel != "webkit-wsl") ? "None" : "Lax",
+            sameSite = (BrowserName == "webkit" && IsWindows && Channel != "webkit-wsl") ? "None" : "Lax",
         }, new
         {
             name = "doggo",
@@ -260,8 +276,9 @@ public class BrowsercontextCookiesTests
     }
 
     [UpstreamTest("CO-010 should work with subdomain cookie")]
-    public async Task ShouldWorkWithSubdomainCookie(IBrowserContext context, string browserName, bool isWindows, string channel)
+    public async Task ShouldWorkWithSubdomainCookie()
     {
+        var context = await ContextFixture();
         await context.AddCookiesAsync(new[]
         {
             new Cookie
@@ -285,7 +302,7 @@ public class BrowsercontextCookiesTests
                 expires = -1,
                 httpOnly = false,
                 secure = true,
-                sameSite = (browserName == "webkit" && isWindows && channel != "webkit-wsl") ? "None" : "Lax",
+                sameSite = (BrowserName == "webkit" && IsWindows && Channel != "webkit-wsl") ? "None" : "Lax",
             },
         });
         ExpectToEqual(await context.CookiesAsync("https://sub.foo.com"), new[]
@@ -299,14 +316,15 @@ public class BrowsercontextCookiesTests
                 expires = -1,
                 httpOnly = false,
                 secure = true,
-                sameSite = (browserName == "webkit" && isWindows && channel != "webkit-wsl") ? "None" : "Lax",
+                sameSite = (BrowserName == "webkit" && IsWindows && Channel != "webkit-wsl") ? "None" : "Lax",
             },
         });
     }
 
     [UpstreamTest("CO-011 should only return cookies that apply to the url")]
-    public async Task ShouldOnlyReturnCookiesThatApplyToTheUrl(IBrowserContext context)
+    public async Task ShouldOnlyReturnCookiesThatApplyToTheUrl()
     {
+        var context = await ContextFixture();
         await context.AddCookiesAsync(new[]
         {
             new Cookie { Name = "hostonly", Value = "v", Domain = "foo.com", Path = "/api" },
@@ -325,14 +343,16 @@ public class BrowsercontextCookiesTests
     }
 
     [UpstreamTest("CO-012 should return cookies with empty value")]
-    public async Task ShouldReturnCookiesWithEmptyValue(IBrowserContext context, IPage page, Server server)
+    public async Task ShouldReturnCookiesWithEmptyValue()
     {
-        server.SetRoute("/empty.html", (req, res) =>
+        var context = await ContextFixture();
+        var page = await PageFixture();
+        Server.SetRoute("/empty.html", (req, res) =>
         {
             res.SetHeader("Set-Cookie", "name=;Path=/");
             res.End();
         });
-        await page.GotoAsync(server.EmptyPage);
+        await page.GotoAsync(Server.EmptyPage);
         var cookies = await context.CookiesAsync();
         ExpectToEqual(cookies, new[]
         {
@@ -345,8 +365,9 @@ public class BrowsercontextCookiesTests
     }
 
     [UpstreamTest("CO-013 should return secure cookies based on HTTP(S) protocol")]
-    public async Task ShouldReturnSecureCookiesBasedOnHTTPSProtocol(IBrowserContext context, string browserName, bool isWindows, string channel)
+    public async Task ShouldReturnSecureCookiesBasedOnHTTPSProtocol()
     {
+        var context = await ContextFixture();
         await context.AddCookiesAsync(new[]
         {
             new Cookie
@@ -376,7 +397,7 @@ public class BrowsercontextCookiesTests
             expires = -1,
             httpOnly = false,
             secure = false,
-            sameSite = (browserName == "webkit" && isWindows && channel != "webkit-wsl") ? "None" : "Lax",
+            sameSite = (BrowserName == "webkit" && IsWindows && Channel != "webkit-wsl") ? "None" : "Lax",
         }, new
         {
             name = "doggo",
@@ -386,7 +407,7 @@ public class BrowsercontextCookiesTests
             expires = -1,
             httpOnly = false,
             secure = true,
-            sameSite = (browserName == "webkit" && isWindows && channel != "webkit-wsl") ? "None" : "Lax",
+            sameSite = (BrowserName == "webkit" && IsWindows && Channel != "webkit-wsl") ? "None" : "Lax",
         }]));
         ExpectToEqual(await context.CookiesAsync("http://foo.com/"), new[]
         {
@@ -399,24 +420,26 @@ public class BrowsercontextCookiesTests
                 expires = -1,
                 httpOnly = false,
                 secure = false,
-                sameSite = (browserName == "webkit" && isWindows && channel != "webkit-wsl") ? "None" : "Lax",
+                sameSite = (BrowserName == "webkit" && IsWindows && Channel != "webkit-wsl") ? "None" : "Lax",
             },
         });
     }
 
     [UpstreamTest("CO-014 should return secure cookies for http ${host}")]
-    [Case("127.0.0.1")]
-    [Case("[::1]")]
-    public async Task ShouldReturnSecureCookiesForHttp(string host, IBrowserContext context)
+    [TestCase("127.0.0.1")]
+    [TestCase("[::1]")]
+    public async Task ShouldReturnSecureCookiesForHttp(string host)
     {
+        var context = await ContextFixture();
         await context.AddCookiesAsync(new[] { new Cookie { Name = "a", Value = "v", Domain = host, Path = "/", Secure = true } });
         Assert.That((await context.CookiesAsync($"http://{host}/")).Select(c => c.Name), Is.EqualTo(new[] { "a" }));
     }
 
     [UpstreamTest("CO-015 should add cookies with an expiration")]
     [LocalFixme("dotnet: Cookie.Expires is a float: 253402300800 is sent as 253402300416, which is a valid expiration, and AddCookiesAsync does not throw")]
-    public async Task ShouldAddCookiesWithAnExpiration(IBrowserContext context)
+    public async Task ShouldAddCookiesWithAnExpiration()
     {
+        var context = await ContextFixture();
         var expires = Math.Floor(DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() / 1000d) + 3600;
         await context.AddCookiesAsync(new[]
         {
@@ -485,34 +508,35 @@ public class BrowsercontextCookiesTests
     }
 
     [UpstreamTest("CO-016 should support requestStorageAccess")]
-    public async Task ShouldSupportRequestStorageAccess(IPage page, Server server, string channel, string browserName, bool isMac, bool isLinux, bool isWindows, int macVersion)
+    public async Task ShouldSupportRequestStorageAccess()
     {
-        Info.Skip(browserName == "chromium", "requestStorageAccess API is not available in Chromium");
+        var page = await PageFixture();
+        Info.Skip(BrowserName == "chromium", "requestStorageAccess API is not available in Chromium");
 
-        server.SetRoute("/set-cookie.html", (req, res) =>
+        Server.SetRoute("/set-cookie.html", (req, res) =>
         {
             res.SetHeader("Set-Cookie", "name=value; Path=/");
             res.End();
         });
         // Navigate once to the domain as top level.
-        await page.GotoAsync(server.CrossProcessPrefix + "/set-cookie.html");
-        await page.GotoAsync(server.EmptyPage);
-        await page.SetContentAsync($"<iframe src=\"{server.CrossProcessPrefix + "/empty.html"}\"></iframe>");
+        await page.GotoAsync(Server.CrossProcessPrefix + "/set-cookie.html");
+        await page.GotoAsync(Server.EmptyPage);
+        await page.SetContentAsync($"<iframe src=\"{Server.CrossProcessPrefix + "/empty.html"}\"></iframe>");
 
         var frame = page.Frames[1];
-        if (browserName == "firefox")
+        if (BrowserName == "firefox")
         {
             Assert.That(await frame.EvaluateAsync<bool>("() => document.hasStorageAccess()"), Is.True);
             {
                 var (serverRequest, _) = await PromiseAll(
-                    server.WaitForRequest("/title.html"),
+                    Server.WaitForRequest("/title.html"),
                     frame.EvaluateAsync("() => fetch('/title.html')"));
                 Assert.That(serverRequest.Headers["cookie"], Is.EqualTo("name=value"));
             }
         }
         else
         {
-            if (browserName == "webkit" && (isLinux || channel == "webkit-wsl"))
+            if (BrowserName == "webkit" && (IsLinux || Channel == "webkit-wsl"))
             {
                 Assert.That(await frame.EvaluateAsync<bool>("() => document.hasStorageAccess()"), Is.True);
             }
@@ -522,9 +546,9 @@ public class BrowsercontextCookiesTests
             }
             {
                 var (serverRequest, _) = await PromiseAll(
-                    server.WaitForRequest("/title.html"),
+                    Server.WaitForRequest("/title.html"),
                     frame.EvaluateAsync("() => fetch('/title.html')"));
-                if (isWindows && browserName == "webkit" && channel != "webkit-wsl")
+                if (IsWindows && BrowserName == "webkit" && Channel != "webkit-wsl")
                 {
                     Assert.That(serverRequest.Headers["cookie"], Is.EqualTo("name=value"));
                 }
@@ -537,9 +561,9 @@ public class BrowsercontextCookiesTests
             Assert.That(await frame.EvaluateAsync<bool>("() => document.hasStorageAccess()"), Is.True);
             {
                 var (serverRequest, _) = await PromiseAll(
-                    server.WaitForRequest("/title.html"),
+                    Server.WaitForRequest("/title.html"),
                     frame.EvaluateAsync("() => fetch('/title.html')"));
-                if (browserName == "webkit" && (isLinux || channel == "webkit-wsl"))
+                if (BrowserName == "webkit" && (IsLinux || Channel == "webkit-wsl"))
                 {
                     Assert.That(serverRequest.Headers["cookie"], Is.Null);
                 }
@@ -552,9 +576,10 @@ public class BrowsercontextCookiesTests
     }
 
     [UpstreamTest("CO-017 should parse cookie with large Max-Age correctly")]
-    public async Task ShouldParseCookieWithLargeMaxAgeCorrectly(Server server, IPage page, string defaultSameSiteCookieValue, string browserName, string platform)
+    public async Task ShouldParseCookieWithLargeMaxAgeCorrectly()
     {
-        server.SetRoute("/foobar", (req, res) =>
+        var page = await PageFixture();
+        Server.SetRoute("/foobar", (req, res) =>
         {
             res.SetHeader("set-cookie", new[]
             {
@@ -563,7 +588,7 @@ public class BrowsercontextCookiesTests
             res.StatusCode = 200;
             res.End();
         });
-        await page.GotoAsync(server.Prefix + "/foobar");
+        await page.GotoAsync(Server.Prefix + "/foobar");
         Assert.That(await page.EvaluateAsync<string>("() => document.cookie"), Is.EqualTo("cookie1=value1"));
         ExpectToEqual(await page.Context.CookiesAsync(), new[]
         {
@@ -571,19 +596,20 @@ public class BrowsercontextCookiesTests
             {
                 name = "cookie1",
                 value = "value1",
-                domain = server.Hostname,
+                domain = Server.Hostname,
                 path = "/",
                 expires = AnyNumber,
                 httpOnly = false,
                 secure = false,
-                sameSite = defaultSameSiteCookieValue,
+                sameSite = DefaultSameSiteCookieValue,
             },
         });
     }
 
     [UpstreamTest("CO-018 iframe should inherit cookies from parent")]
-    public async Task IframeShouldInheritCookiesFromParent(IPage page, bool isLinux, string browserName)
+    public async Task IframeShouldInheritCookiesFromParent()
     {
+        var page = await PageFixture();
         await page.RouteAsync("**/*", async route =>
         {
             if (route.Request.Url.Contains("sub.example.test"))

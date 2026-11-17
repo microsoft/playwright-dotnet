@@ -21,54 +21,54 @@ using static Microsoft.Playwright.Tests.Fixtures.Utils;
 namespace Microsoft.Playwright.Tests.Page;
 
 /// <summary>Port of tests/page/elementhandle-content-frame.spec.ts.</summary>
-public class ElementhandleContentFrameTests
+public class ElementhandleContentFrameTests : UpstreamPageTest
 {
     [UpstreamTest("EH-019 should work")]
-    public async Task ShouldWork(IPage page, Server server)
+    public async Task ShouldWork()
     {
-        await page.GotoAsync(server.EmptyPage);
-        await AttachFrame(page, "frame1", server.EmptyPage);
-        var elementHandle = await page.QuerySelectorAsync("#frame1");
+        await Page.GotoAsync(Server.EmptyPage);
+        await AttachFrame(Page, "frame1", Server.EmptyPage);
+        var elementHandle = await Page.QuerySelectorAsync("#frame1");
         var frame = await elementHandle.ContentFrameAsync();
-        Assert.That(frame, Is.SameAs(page.Frames[1]));
+        Assert.That(frame, Is.SameAs(Page.Frames[1]));
     }
 
     [UpstreamTest("EH-020 should work for cross-process iframes")]
-    public async Task ShouldWorkForCrossProcessIframes(IPage page, Server server)
+    public async Task ShouldWorkForCrossProcessIframes()
     {
-        await page.GotoAsync(server.EmptyPage);
-        await AttachFrame(page, "frame1", server.CrossProcessPrefix + "/empty.html");
-        var elementHandle = await page.QuerySelectorAsync("#frame1");
+        await Page.GotoAsync(Server.EmptyPage);
+        await AttachFrame(Page, "frame1", Server.CrossProcessPrefix + "/empty.html");
+        var elementHandle = await Page.QuerySelectorAsync("#frame1");
         var frame = await elementHandle.ContentFrameAsync();
-        Assert.That(frame, Is.SameAs(page.Frames[1]));
+        Assert.That(frame, Is.SameAs(Page.Frames[1]));
     }
 
     [UpstreamTest("EH-021 should work for cross-frame evaluations")]
-    public async Task ShouldWorkForCrossFrameEvaluations(IPage page, Server server)
+    public async Task ShouldWorkForCrossFrameEvaluations()
     {
-        await page.GotoAsync(server.EmptyPage);
-        await AttachFrame(page, "frame1", server.EmptyPage);
-        var frame = page.Frames[1];
+        await Page.GotoAsync(Server.EmptyPage);
+        await AttachFrame(Page, "frame1", Server.EmptyPage);
+        var frame = Page.Frames[1];
         var elementHandle = (IElementHandle)await frame.EvaluateHandleAsync("() => window.top.document.querySelector('#frame1')");
         Assert.That(await elementHandle.ContentFrameAsync(), Is.SameAs(frame));
     }
 
     [UpstreamTest("EH-022 should return null for non-iframes")]
-    public async Task ShouldReturnNullForNonIframes(IPage page, Server server)
+    public async Task ShouldReturnNullForNonIframes()
     {
-        await page.GotoAsync(server.EmptyPage);
-        await AttachFrame(page, "frame1", server.EmptyPage);
-        var frame = page.Frames[1];
+        await Page.GotoAsync(Server.EmptyPage);
+        await AttachFrame(Page, "frame1", Server.EmptyPage);
+        var frame = Page.Frames[1];
         var elementHandle = (IElementHandle)await frame.EvaluateHandleAsync("() => document.body");
         Assert.That(await elementHandle.ContentFrameAsync(), Is.Null);
     }
 
     [UpstreamTest("EH-023 should return null for document.documentElement")]
-    public async Task ShouldReturnNullForDocumentDocumentElement(IPage page, Server server)
+    public async Task ShouldReturnNullForDocumentDocumentElement()
     {
-        await page.GotoAsync(server.EmptyPage);
-        await AttachFrame(page, "frame1", server.EmptyPage);
-        var frame = page.Frames[1];
+        await Page.GotoAsync(Server.EmptyPage);
+        await AttachFrame(Page, "frame1", Server.EmptyPage);
+        var frame = Page.Frames[1];
         var elementHandle = (IElementHandle)await frame.EvaluateHandleAsync("() => document.documentElement");
         Assert.That(await elementHandle.ContentFrameAsync(), Is.Null);
     }

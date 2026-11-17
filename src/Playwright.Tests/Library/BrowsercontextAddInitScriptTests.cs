@@ -21,23 +21,25 @@ using static Microsoft.Playwright.Tests.Fixtures.Utils;
 namespace Microsoft.Playwright.Tests.Library;
 
 /// <summary>Port of tests/library/browsercontext-add-init-script.spec.ts.</summary>
-public class BrowsercontextAddInitScriptTests
+public class BrowsercontextAddInitScriptTests : UpstreamBrowserTest
 {
     [UpstreamTest("IS-024 should work with browser context scripts @smoke")]
-    public async Task ShouldWorkWithBrowserContextScripts(IBrowserContext context, Server server)
+    public async Task ShouldWorkWithBrowserContextScripts()
     {
+        var context = await ContextFixture();
         // .NET: AddInitScriptAsync takes the source of a script, not a function: the source calls the function, as the Node.js client does.
         await context.AddInitScriptAsync("(() => window['temp'] = 123)()");
         var page = await context.NewPageAsync();
         // .NET: AddInitScriptAsync takes the source of a script, not a function: the source calls the function, as the Node.js client does.
         await page.AddInitScriptAsync("(() => window['injected'] = window['temp'])()");
-        await page.GotoAsync(server.Prefix + "/tamperable.html");
+        await page.GotoAsync(Server.Prefix + "/tamperable.html");
         Assert.That(await page.EvaluateAsync<int>("() => window['result']"), Is.EqualTo(123));
     }
 
     [UpstreamTest("IS-025 should work without navigation, after all bindings")]
-    public async Task ShouldWorkWithoutNavigationAfterAllBindings(IBrowserContext context)
+    public async Task ShouldWorkWithoutNavigationAfterAllBindings()
     {
+        var context = await ContextFixture();
         var promise = new TaskCompletionSource<string>(TaskCreationOptions.RunContinuationsAsynchronously);
         await context.ExposeFunctionAsync("woof", (string arg) =>
         {
@@ -56,8 +58,9 @@ public class BrowsercontextAddInitScriptTests
     }
 
     [UpstreamTest("IS-026 should work without navigation in popup")]
-    public async Task ShouldWorkWithoutNavigationInPopup(IBrowserContext context)
+    public async Task ShouldWorkWithoutNavigationInPopup()
     {
+        var context = await ContextFixture();
         // .NET: AddInitScriptAsync takes the source of a script, not a function: the source calls the function, as the Node.js client does.
         await context.AddInitScriptAsync("(() => window['temp'] = 123)()");
         var page = await context.NewPageAsync();
@@ -68,54 +71,59 @@ public class BrowsercontextAddInitScriptTests
     }
 
     [UpstreamTest("IS-027 should work with browser context scripts with a path")]
-    public async Task ShouldWorkWithBrowserContextScriptsWithAPath(IBrowserContext context, Server server, Func<string, string> asset)
+    public async Task ShouldWorkWithBrowserContextScriptsWithAPath()
     {
-        await context.AddInitScriptAsync(scriptPath: asset("injectedfile.js"));
+        var context = await ContextFixture();
+        await context.AddInitScriptAsync(scriptPath: Asset("injectedfile.js"));
         var page = await context.NewPageAsync();
-        await page.GotoAsync(server.Prefix + "/tamperable.html");
+        await page.GotoAsync(Server.Prefix + "/tamperable.html");
         Assert.That(await page.EvaluateAsync<int>("() => window['result']"), Is.EqualTo(123));
     }
 
     [UpstreamTest("IS-028 should work with browser context scripts for already created pages")]
-    public async Task ShouldWorkWithBrowserContextScriptsForAlreadyCreatedPages(IBrowserContext context, Server server)
+    public async Task ShouldWorkWithBrowserContextScriptsForAlreadyCreatedPages()
     {
+        var context = await ContextFixture();
         var page = await context.NewPageAsync();
         // .NET: AddInitScriptAsync takes the source of a script, not a function: the source calls the function, as the Node.js client does.
         await context.AddInitScriptAsync("(() => window['temp'] = 123)()");
         // .NET: AddInitScriptAsync takes the source of a script, not a function: the source calls the function, as the Node.js client does.
         await page.AddInitScriptAsync("(() => window['injected'] = window['temp'])()");
-        await page.GotoAsync(server.Prefix + "/tamperable.html");
+        await page.GotoAsync(Server.Prefix + "/tamperable.html");
         Assert.That(await page.EvaluateAsync<int>("() => window['result']"), Is.EqualTo(123));
     }
 
     [UpstreamTest("IS-029 should remove context init script after dispose")]
-    public async Task ShouldRemoveContextInitScriptAfterDispose(IBrowserContext context, Server server)
+    public async Task ShouldRemoveContextInitScriptAfterDispose()
     {
+        var context = await ContextFixture();
         // .NET: AddInitScriptAsync takes the source of a script, not a function: the source calls the function, as the Node.js client does.
         var disposable = await context.AddInitScriptAsync("(() => window['temp'] = 123)()");
         var page = await context.NewPageAsync();
-        await page.GotoAsync(server.Prefix + "/tamperable.html");
+        await page.GotoAsync(Server.Prefix + "/tamperable.html");
         Assert.That(await page.EvaluateAsync<int>("() => window['temp']"), Is.EqualTo(123));
 
         await disposable.DisposeAsync();
-        await page.GotoAsync(server.Prefix + "/tamperable.html");
+        await page.GotoAsync(Server.Prefix + "/tamperable.html");
         Assert.That(await page.EvaluateAsync<object>("() => window['temp']"), Is.Null);
     }
 
     [UpstreamTest("IS-030 should remove context init script and keep working in new pages")]
-    public async Task ShouldRemoveContextInitScriptAndKeepWorkingInNewPages(IBrowserContext context, Server server)
+    public async Task ShouldRemoveContextInitScriptAndKeepWorkingInNewPages()
     {
+        var context = await ContextFixture();
         // .NET: AddInitScriptAsync takes the source of a script, not a function: the source calls the function, as the Node.js client does.
         var disposable = await context.AddInitScriptAsync("(() => window['temp'] = 123)()");
         await disposable.DisposeAsync();
         var page = await context.NewPageAsync();
-        await page.GotoAsync(server.Prefix + "/tamperable.html");
+        await page.GotoAsync(Server.Prefix + "/tamperable.html");
         Assert.That(await page.EvaluateAsync<object>("() => window['temp']"), Is.Null);
     }
 
     [UpstreamTest("IS-035 init script should run only once in popup")]
-    public async Task InitScriptShouldRunOnlyOnceInPopup(IBrowserContext context)
+    public async Task InitScriptShouldRunOnlyOnceInPopup()
     {
+        var context = await ContextFixture();
         // .NET: AddInitScriptAsync takes the source of a script, not a function: the source calls the function, as the Node.js client does.
         await context.AddInitScriptAsync(@"(() => {
     window['callCount'] = (window['callCount'] || 0) + 1;

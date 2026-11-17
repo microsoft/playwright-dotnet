@@ -20,7 +20,7 @@ using static Microsoft.Playwright.Tests.Fixtures.Utils;
 namespace Microsoft.Playwright.Tests.Library;
 
 /// <summary>Port of tests/library/webmcp.spec.ts.</summary>
-public class WebmcpTests
+public class WebmcpTests : UpstreamPageTest
 {
     // test.use({
     //   launchOptions: async ({ launchOptions, browserName }, use) => {
@@ -38,28 +38,27 @@ public class WebmcpTests
     //     await use({ ...launchOptions, args: [...(launchOptions.args ?? []), '--enable-features=WebMCP'] });
     //   },
     // });
-    [Fixture]
-    public static BrowserTypeLaunchOptions LaunchOptions(BrowserTypeLaunchOptions launchOptions, string browserName)
+    public override BrowserTypeLaunchOptions LaunchOptions()
     {
-        if (browserName == "firefox")
+        if (BrowserName == "firefox")
         {
-            return new(launchOptions)
+            return new(base.LaunchOptions())
             {
-                FirefoxUserPrefs = new Dictionary<string, object>(launchOptions.FirefoxUserPrefs ?? [])
+                FirefoxUserPrefs = new Dictionary<string, object>(base.LaunchOptions().FirefoxUserPrefs ?? [])
                 {
                     ["dom.modelcontext.enabled"] = true,
                     ["dom.modelcontext.testing.enabled"] = true,
                 },
             };
         }
-        return new(launchOptions) { Args = [.. launchOptions.Args ?? [], "--enable-features=WebMCP"] };
+        return new(base.LaunchOptions()) { Args = [.. base.LaunchOptions().Args ?? [], "--enable-features=WebMCP"] };
     }
 
-    [BeforeEach]
-    public static void Skip(string browserName) => Info.Skip(browserName == "webkit", "WebKit does not implement WebMCP");
+    [SetUp]
+    public void Skip() => Info.Skip(BrowserName == "webkit", "WebKit does not implement WebMCP");
 
-    [BeforeEach]
-    public static void Skip2(bool isBidi) => Info.Skip(isBidi, "WebMCP is not implemented over BiDi");
+    [SetUp]
+    public void Skip2() => Info.Skip(IsBidi, "WebMCP is not implemented over BiDi");
 
     private static string RegisterScript(string tools)
     {
@@ -91,20 +90,20 @@ public class WebmcpTests
     }
 
     [UpstreamTest("WM-001 should list tools registered by the page")]
-    public async Task ShouldListToolsRegisteredByThePage(IPage page, Server server)
+    public async Task ShouldListToolsRegisteredByThePage()
     {
-        Serve(server, "/", RegisterScript(kAdd + @"
+        Serve(Server, "/", RegisterScript(kAdd + @"
     modelContext.registerTool({
       name: 'noop',
       description: 'Does nothing',
       async execute() {},
     });
   "));
-        await page.GotoAsync(server.Prefix + "/");
+        await Page.GotoAsync(Server.Prefix + "/");
 
         // Browsers list tools in their own order.
         // .NET: sort((a, b) => a.name.localeCompare(b.name)) is a stable sort with the comparison of a culture.
-        var tools = (await page.Webmcp.ToolsAsync()).OrderBy(a => a.Name, StringComparer.InvariantCulture);
+        var tools = (await Page.Webmcp.ToolsAsync()).OrderBy(a => a.Name, StringComparer.InvariantCulture);
         ExpectToEqual(tools, new object[]
         {
             new
@@ -123,141 +122,141 @@ public class WebmcpTests
     }
 
     [UpstreamTest("WM-002 should report no tools when the page registers none")]
-    public async Task ShouldReportNoToolsWhenThePageRegistersNone(IPage page, Server server)
+    public async Task ShouldReportNoToolsWhenThePageRegistersNone()
     {
-        await page.GotoAsync(server.EmptyPage);
-        Assert.That(await page.Webmcp.ToolsAsync(), Is.EqualTo(Array.Empty<WebMCPTool>()));
+        await Page.GotoAsync(Server.EmptyPage);
+        Assert.That(await Page.Webmcp.ToolsAsync(), Is.EqualTo(Array.Empty<WebMCPTool>()));
     }
 
     [UpstreamTest("WM-003 should call a tool")]
-    public async Task ShouldCallATool(IPage page, Server server)
+    public async Task ShouldCallATool()
     {
-        Serve(server, "/", RegisterScript(kAdd));
-        await page.GotoAsync(server.Prefix + "/");
+        Serve(Server, "/", RegisterScript(kAdd));
+        await Page.GotoAsync(Server.Prefix + "/");
 
-        ExpectToEqual(await page.Webmcp.CallToolAsync<object>("add", new { a = 2, b = 40 }), new { content = new[] { new { type = "text", text = "42" } } });
+        ExpectToEqual(await Page.Webmcp.CallToolAsync<object>("add", new { a = 2, b = 40 }), new { content = new[] { new { type = "text", text = "42" } } });
     }
 
     [UpstreamTest("WM-004 should return isError results as is")]
-    public async Task ShouldReturnIsErrorResultsAsIs(IPage page, Server server)
+    public async Task ShouldReturnIsErrorResultsAsIs()
     {
-        Serve(server, "/", RegisterScript(@"
+        Serve(Server, "/", RegisterScript(@"
     modelContext.registerTool({
       name: 'broken',
       description: 'Always fails',
       async execute() { return { content: [{ type: 'text', text: 'nope' }], isError: true }; },
     });
   "));
-        await page.GotoAsync(server.Prefix + "/");
+        await Page.GotoAsync(Server.Prefix + "/");
 
-        ExpectToEqual(await page.Webmcp.CallToolAsync<object>("broken"), new { content = new[] { new { type = "text", text = "nope" } }, isError = true });
+        ExpectToEqual(await Page.Webmcp.CallToolAsync<object>("broken"), new { content = new[] { new { type = "text", text = "nope" } }, isError = true });
     }
 
     [UpstreamTest("WM-005 should throw when the tool throws")]
-    public async Task ShouldThrowWhenTheToolThrows(IPage page, Server server, string browserName)
+    public async Task ShouldThrowWhenTheToolThrows()
     {
-        Serve(server, "/", RegisterScript(@"
+        Serve(Server, "/", RegisterScript(@"
     modelContext.registerTool({
       name: 'throwing',
       description: 'Throws',
       async execute() { throw new Error('boom'); },
     });
   "));
-        await page.GotoAsync(server.Prefix + "/");
+        await Page.GotoAsync(Server.Prefix + "/");
 
-        var error = await Catch(() => page.Webmcp.CallToolAsync<object>("throwing"));
+        var error = await Catch(() => Page.Webmcp.CallToolAsync<object>("throwing"));
         // Chromium does not report the error that the tool threw.
-        Assert.That(error.Message, Does.Match(browserName == "chromium" ? "the invocation failed|Tool execution failed" : "boom"));
+        Assert.That(error.Message, Does.Match(BrowserName == "chromium" ? "the invocation failed|Tool execution failed" : "boom"));
     }
 
     [UpstreamTest("WM-006 should throw for an unknown tool")]
-    public async Task ShouldThrowForAnUnknownTool(IPage page, Server server)
+    public async Task ShouldThrowForAnUnknownTool()
     {
-        Serve(server, "/", RegisterScript(kAdd));
-        await page.GotoAsync(server.Prefix + "/");
+        Serve(Server, "/", RegisterScript(kAdd));
+        await Page.GotoAsync(Server.Prefix + "/");
 
-        var error = await Catch(() => page.Webmcp.CallToolAsync<object>("missing"));
+        var error = await Catch(() => Page.Webmcp.CallToolAsync<object>("missing"));
         Assert.That(error.Message, Does.Contain("No WebMCP tool named \"missing\""));
         Assert.That(error.Message, Does.Contain("Available tools: add"));
     }
 
     [UpstreamTest("WM-007 should time out when the tool does not settle")]
-    public async Task ShouldTimeOutWhenTheToolDoesNotSettle(IPage page, Server server)
+    public async Task ShouldTimeOutWhenTheToolDoesNotSettle()
     {
-        Serve(server, "/", RegisterScript(@"
+        Serve(Server, "/", RegisterScript(@"
     modelContext.registerTool({
       name: 'stuck',
       description: 'Never resolves',
       execute() { return new Promise(() => {}); },
     });
   "));
-        await page.GotoAsync(server.Prefix + "/");
+        await Page.GotoAsync(Server.Prefix + "/");
 
-        var error = await Catch(() => page.Webmcp.CallToolAsync<object>("stuck", new { }, new() { Timeout = 500 }));
+        var error = await Catch(() => Page.Webmcp.CallToolAsync<object>("stuck", new { }, new() { Timeout = 500 }));
         Assert.That(error.Message, Does.Contain("Timeout 500ms exceeded"));
     }
 
     [UpstreamTest("WM-008 should drop tools after navigation")]
-    public async Task ShouldDropToolsAfterNavigation(IPage page, Server server)
+    public async Task ShouldDropToolsAfterNavigation()
     {
-        Serve(server, "/", RegisterScript(kAdd));
-        await page.GotoAsync(server.Prefix + "/");
-        Assert.That(await page.Webmcp.ToolsAsync(), Has.Count.EqualTo(1));
+        Serve(Server, "/", RegisterScript(kAdd));
+        await Page.GotoAsync(Server.Prefix + "/");
+        Assert.That(await Page.Webmcp.ToolsAsync(), Has.Count.EqualTo(1));
 
-        await page.GotoAsync(server.EmptyPage);
-        Assert.That(await page.Webmcp.ToolsAsync(), Is.EqualTo(Array.Empty<WebMCPTool>()));
-        var error = await Catch(() => page.Webmcp.CallToolAsync<object>("add", new { a = 1, b = 1 }));
+        await Page.GotoAsync(Server.EmptyPage);
+        Assert.That(await Page.Webmcp.ToolsAsync(), Is.EqualTo(Array.Empty<WebMCPTool>()));
+        var error = await Catch(() => Page.Webmcp.CallToolAsync<object>("add", new { a = 1, b = 1 }));
         Assert.That(error.Message, Does.Contain("The frame does not register any WebMCP tools"));
     }
 
     [UpstreamTest("WM-009 should list a tool registered after load")]
-    public async Task ShouldListAToolRegisteredAfterLoad(IPage page, Server server)
+    public async Task ShouldListAToolRegisteredAfterLoad()
     {
-        Serve(server, "/", RegisterScript(kAdd));
-        await page.GotoAsync(server.Prefix + "/");
-        Assert.That(await page.Webmcp.ToolsAsync(), Has.Count.EqualTo(1));
+        Serve(Server, "/", RegisterScript(kAdd));
+        await Page.GotoAsync(Server.Prefix + "/");
+        Assert.That(await Page.Webmcp.ToolsAsync(), Has.Count.EqualTo(1));
 
-        await page.EvaluateAsync(@"() => {
+        await Page.EvaluateAsync(@"() => {
     const modelContext = document.modelContext || navigator.modelContext;
     modelContext.registerTool({ name: 'late', description: 'Registered later', async execute() {} });
   }");
         // .NET: sort((a, b) => a.name.localeCompare(b.name)) is a stable sort with the comparison of a culture.
-        var tools = (await page.Webmcp.ToolsAsync()).OrderBy(a => a.Name, StringComparer.InvariantCulture);
+        var tools = (await Page.Webmcp.ToolsAsync()).OrderBy(a => a.Name, StringComparer.InvariantCulture);
         Assert.That(tools.Select(tool => tool.Name), Is.EqualTo(new[] { "add", "late" }));
     }
 
     [UpstreamTest("WM-010 should list tools while a tool is running")]
-    public async Task ShouldListToolsWhileAToolIsRunning(IPage page, Server server)
+    public async Task ShouldListToolsWhileAToolIsRunning()
     {
-        Serve(server, "/", RegisterScript(kAdd + @"
+        Serve(Server, "/", RegisterScript(kAdd + @"
     modelContext.registerTool({
       name: 'gated',
       description: 'Resolves when released',
       execute() { return new Promise(resolve => window.release = () => resolve({ content: [{ type: 'text', text: 'released' }] })); },
     });
   "));
-        await page.GotoAsync(server.Prefix + "/");
+        await Page.GotoAsync(Server.Prefix + "/");
 
-        var result = page.Webmcp.CallToolAsync<object>("gated");
-        await page.WaitForFunctionAsync("() => !!window.release");
-        Assert.That(await page.Webmcp.ToolsAsync(), Has.Count.EqualTo(2));
-        await page.EvaluateAsync("() => window.release()");
+        var result = Page.Webmcp.CallToolAsync<object>("gated");
+        await Page.WaitForFunctionAsync("() => !!window.release");
+        Assert.That(await Page.Webmcp.ToolsAsync(), Has.Count.EqualTo(2));
+        await Page.EvaluateAsync("() => window.release()");
         ExpectToEqual(await result, new { content = new[] { new { type = "text", text = "released" } } });
     }
 
     [UpstreamTest("WM-011 should list declarative tools")]
-    public async Task ShouldListDeclarativeTools(IPage page, Server server, string browserName)
+    public async Task ShouldListDeclarativeTools()
     {
-        Info.Skip(browserName != "chromium", "Only Chromium implements declarative tools");
-        Serve(server, "/", @"
+        Info.Skip(BrowserName != "chromium", "Only Chromium implements declarative tools");
+        Serve(Server, "/", @"
     <form toolname=""subscribe"" tooldescription=""Subscribes to the newsletter"">
       <input name=""email"" type=""email"">
       <button>Subscribe</button>
     </form>
   ");
-        await page.GotoAsync(server.Prefix + "/");
+        await Page.GotoAsync(Server.Prefix + "/");
 
-        ExpectToEqual(await page.Webmcp.ToolsAsync(), new[]
+        ExpectToEqual(await Page.Webmcp.ToolsAsync(), new[]
         {
             ObjectContaining(new
             {
@@ -268,38 +267,38 @@ public class WebmcpTests
         });
 
         // A declarative tool waits for the user to submit the form.
-        var error = await Catch(() => page.Webmcp.CallToolAsync<object>("subscribe", new { email = "me@example.com" }, new() { Timeout = 500 }));
+        var error = await Catch(() => Page.Webmcp.CallToolAsync<object>("subscribe", new { email = "me@example.com" }, new() { Timeout = 500 }));
         Assert.That(error.Message, Does.Contain("Timeout 500ms exceeded"));
     }
 
     [UpstreamTest("WM-012 should scope tools to their frame")]
-    public async Task ShouldScopeToolsToTheirFrame(IPage page, Server server, string browserName)
+    public async Task ShouldScopeToolsToTheirFrame()
     {
-        Info.Skip(browserName == "firefox", "Firefox does not support registering WebMCP tools in iframes yet, https://bugzilla.mozilla.org/show_bug.cgi?id=2019743");
-        Serve(server, "/", RegisterScript(kAdd) + "<iframe src=\"/frame.html\"></iframe>");
-        Serve(server, "/frame.html", RegisterScript(@"
+        Info.Skip(BrowserName == "firefox", "Firefox does not support registering WebMCP tools in iframes yet, https://bugzilla.mozilla.org/show_bug.cgi?id=2019743");
+        Serve(Server, "/", RegisterScript(kAdd) + "<iframe src=\"/frame.html\"></iframe>");
+        Serve(Server, "/frame.html", RegisterScript(@"
     modelContext.registerTool({
       name: 'subscribe',
       description: 'Subscribes to the newsletter',
       async execute() { return { content: [{ type: 'text', text: 'subscribed' }] }; },
     });
   "));
-        await page.GotoAsync(server.Prefix + "/");
+        await Page.GotoAsync(Server.Prefix + "/");
 
-        var childFrame = page.Frames[1];
-        ExpectToEqual(await page.Webmcp.ToolsAsync(), new[] { ObjectContaining(new { name = "add" }) });
+        var childFrame = Page.Frames[1];
+        ExpectToEqual(await Page.Webmcp.ToolsAsync(), new[] { ObjectContaining(new { name = "add" }) });
         ExpectToEqual(await childFrame.Webmcp.ToolsAsync(), new[] { ObjectContaining(new { name = "subscribe" }) });
         ExpectToEqual(await childFrame.Webmcp.CallToolAsync<object>("subscribe"), new { content = new[] { new { type = "text", text = "subscribed" } } });
 
-        var error = await Catch(() => page.Webmcp.CallToolAsync<object>("subscribe"));
+        var error = await Catch(() => Page.Webmcp.CallToolAsync<object>("subscribe"));
         Assert.That(error.Message, Does.Contain("No WebMCP tool named \"subscribe\""));
         Assert.That(error.Message, Does.Contain("Available tools: add"));
     }
 
     [UpstreamTest("WM-013 should call same-name tools in their own frame")]
-    public async Task ShouldCallSameNameToolsInTheirOwnFrame(IPage page, Server server, string browserName)
+    public async Task ShouldCallSameNameToolsInTheirOwnFrame()
     {
-        Info.Skip(browserName == "firefox", "Firefox does not support registering WebMCP tools in iframes yet, https://bugzilla.mozilla.org/show_bug.cgi?id=2019743");
+        Info.Skip(BrowserName == "firefox", "Firefox does not support registering WebMCP tools in iframes yet, https://bugzilla.mozilla.org/show_bug.cgi?id=2019743");
         string registerEcho(string text) => RegisterScript($@"
     modelContext.registerTool({{
       name: 'echo',
@@ -307,19 +306,19 @@ public class WebmcpTests
       async execute() {{ return {{ content: [{{ type: 'text', text: '{text}' }}] }}; }},
     }});
   ");
-        Serve(server, "/", registerEcho("main") + "<iframe src=\"/frame.html\"></iframe>");
-        Serve(server, "/frame.html", registerEcho("frame"));
-        await page.GotoAsync(server.Prefix + "/");
-        var childFrame = page.Frames[1];
+        Serve(Server, "/", registerEcho("main") + "<iframe src=\"/frame.html\"></iframe>");
+        Serve(Server, "/frame.html", registerEcho("frame"));
+        await Page.GotoAsync(Server.Prefix + "/");
+        var childFrame = Page.Frames[1];
 
-        ExpectToEqual(await page.Webmcp.CallToolAsync<object>("echo"), new { content = new[] { new { type = "text", text = "main" } } });
+        ExpectToEqual(await Page.Webmcp.CallToolAsync<object>("echo"), new { content = new[] { new { type = "text", text = "main" } } });
         ExpectToEqual(await childFrame.Webmcp.CallToolAsync<object>("echo"), new { content = new[] { new { type = "text", text = "frame" } } });
     }
 
     [UpstreamTest("WM-014 should list and call tools in cross-origin and nested frames")]
-    public async Task ShouldListAndCallToolsInCrossOriginAndNestedFrames(IPage page, Server server, string browserName)
+    public async Task ShouldListAndCallToolsInCrossOriginAndNestedFrames()
     {
-        Info.Skip(browserName == "firefox", "Firefox does not support registering WebMCP tools in iframes yet, https://bugzilla.mozilla.org/show_bug.cgi?id=2019743");
+        Info.Skip(BrowserName == "firefox", "Firefox does not support registering WebMCP tools in iframes yet, https://bugzilla.mozilla.org/show_bug.cgi?id=2019743");
         string registerEcho(string text) => RegisterScript($@"
     modelContext.registerTool({{
       name: 'echo-{text}',
@@ -327,13 +326,13 @@ public class WebmcpTests
       async execute() {{ return {{ content: [{{ type: 'text', text: '{text}' }}] }}; }},
     }});
   ");
-        Serve(server, "/", registerEcho("main") + $"<iframe allow=\"tools\" src=\"{server.CrossProcessPrefix}/frame.html\"></iframe>");
-        Serve(server, "/frame.html", registerEcho("frame") + "<iframe src=\"/nested.html\"></iframe>");
-        Serve(server, "/nested.html", registerEcho("nested"));
-        await page.GotoAsync(server.Prefix + "/");
+        Serve(Server, "/", registerEcho("main") + $"<iframe allow=\"tools\" src=\"{Server.CrossProcessPrefix}/frame.html\"></iframe>");
+        Serve(Server, "/frame.html", registerEcho("frame") + "<iframe src=\"/nested.html\"></iframe>");
+        Serve(Server, "/nested.html", registerEcho("nested"));
+        await Page.GotoAsync(Server.Prefix + "/");
 
         // .NET: const [mainFrame, frame, nested] = page.frames();
-        var (mainFrame, frame, nested) = (page.Frames[0], page.Frames[1], page.Frames[2]);
+        var (mainFrame, frame, nested) = (Page.Frames[0], Page.Frames[1], Page.Frames[2]);
         ExpectToEqual(await mainFrame.Webmcp.ToolsAsync(), new[] { new { name = "echo-main", description = "Echoes main" } });
         ExpectToEqual(await frame.Webmcp.ToolsAsync(), new[] { new { name = "echo-frame", description = "Echoes frame" } });
         ExpectToEqual(await nested.Webmcp.ToolsAsync(), new[] { new { name = "echo-nested", description = "Echoes nested" } });

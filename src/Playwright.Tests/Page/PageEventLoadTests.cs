@@ -21,32 +21,32 @@ using static Microsoft.Playwright.Tests.Fixtures.Utils;
 namespace Microsoft.Playwright.Tests.Page;
 
 /// <summary>Port of tests/page/page-event-load.spec.ts.</summary>
-public class PageEventLoadTests
+public class PageEventLoadTests : UpstreamPageTest
 {
     [UpstreamTest("NA-087 should fire once")]
-    public async Task ShouldFireOnce(IPage page, Server server, string browserName, bool isBidi)
+    public async Task ShouldFireOnce()
     {
-        Info.Fixme(browserName == "firefox" && !isBidi, "Firefox sometimes double fires.");
+        Info.Fixme(BrowserName == "firefox" && !IsBidi, "Firefox sometimes double fires.");
 
         var count = 0;
-        page.Load += (_, _) => count++;
-        await page.GotoAsync(server.Prefix + "/one-style.html");
-        await page.WaitForTimeoutAsync(1000);
+        Page.Load += (_, _) => count++;
+        await Page.GotoAsync(Server.Prefix + "/one-style.html");
+        await Page.WaitForTimeoutAsync(1000);
         Assert.That(count, Is.EqualTo(1));
     }
 
     [UpstreamTest("NA-088 should fire once with iframe navigation")]
-    public async Task ShouldFireOnceWithIframeNavigation(IPage page, Server server, string browserName, bool isBidi)
+    public async Task ShouldFireOnceWithIframeNavigation()
     {
-        Info.Fixme(browserName == "firefox" && !isBidi, "Firefox sometimes double fires.");
+        Info.Fixme(BrowserName == "firefox" && !IsBidi, "Firefox sometimes double fires.");
 
         var requestCount = 0;
-        server.SetRoute("/tracker", (_, res) =>
+        Server.SetRoute("/tracker", (_, res) =>
         {
             res.Write($"request count: {++requestCount}");
             res.End();
         });
-        server.SetRoute("/home", (_, res) =>
+        Server.SetRoute("/home", (_, res) =>
         {
             res.Write(@"
       <!DOCTYPE html>
@@ -70,27 +70,27 @@ public class PageEventLoadTests
             res.End();
         });
         var count = 0;
-        page.Load += (_, _) => count++;
-        await page.GotoAsync(server.Prefix + "/home");
-        var trackingFrame = page.FrameLocator("[name=tracker]");
+        Page.Load += (_, _) => count++;
+        await Page.GotoAsync(Server.Prefix + "/home");
+        var trackingFrame = Page.FrameLocator("[name=tracker]");
         await Expect(trackingFrame.Locator(":scope")).ToContainTextAsync("request count: 1");
         // .NET: page.waitForEvent('load').then(() => 'loadfired') and page.waitForTimeout(1000).then(() => 'timeout') are local functions that are called in their place.
         async Task<string> LoadFired()
         {
-            await Once<IPage>(h => page.Load += h, h => page.Load -= h);
+            await Once<IPage>(h => Page.Load += h, h => Page.Load -= h);
             return "loadfired";
         }
         async Task<string> Timeout()
         {
-            await page.WaitForTimeoutAsync(1000);
+            await Page.WaitForTimeoutAsync(1000);
             return "timeout";
         }
         var loadFired = Task.WhenAny(
             LoadFired(),
             Timeout());
-        await page.Locator("input[type=submit]").ClickAsync();
+        await Page.Locator("input[type=submit]").ClickAsync();
         Assert.That(await await loadFired, Is.EqualTo("timeout"));
         Assert.That(count, Is.EqualTo(1));
-        Assert.That(await page.EvaluateAsync<string[]>("() => window['eventLog']"), Is.EqualTo(new[] { "load" }));
+        Assert.That(await Page.EvaluateAsync<string[]>("() => window['eventLog']"), Is.EqualTo(new[] { "load" }));
     }
 }

@@ -21,63 +21,63 @@ using static Microsoft.Playwright.Tests.Fixtures.Utils;
 namespace Microsoft.Playwright.Tests.Page;
 
 /// <summary>Port of tests/page/elementhandle-eval-on-selector.spec.ts.</summary>
-public class ElementhandleEvalOnSelectorTests
+public class ElementhandleEvalOnSelectorTests : UpstreamPageTest
 {
     [UpstreamTest("EH-039 should work")]
-    public async Task ShouldWork(IPage page, Server server)
+    public async Task ShouldWork()
     {
-        await page.SetContentAsync("<html><body><div class=\"tweet\"><div class=\"like\">100</div><div class=\"retweets\">10</div></div></body></html>");
-        var tweet = await page.QuerySelectorAsync(".tweet");
+        await Page.SetContentAsync("<html><body><div class=\"tweet\"><div class=\"like\">100</div><div class=\"retweets\">10</div></div></body></html>");
+        var tweet = await Page.QuerySelectorAsync(".tweet");
         var content = await tweet.EvalOnSelectorAsync<string>(".like", "node => node.innerText");
         Assert.That(content, Is.EqualTo("100"));
     }
 
     [UpstreamTest("EH-040 should retrieve content from subtree")]
-    public async Task ShouldRetrieveContentFromSubtree(IPage page, Server server)
+    public async Task ShouldRetrieveContentFromSubtree()
     {
         const string htmlContent = "<div class=\"a\">not-a-child-div</div><div id=\"myId\"><div class=\"a\">a-child-div</div></div>";
-        await page.SetContentAsync(htmlContent);
-        var elementHandle = await page.QuerySelectorAsync("#myId");
+        await Page.SetContentAsync(htmlContent);
+        var elementHandle = await Page.QuerySelectorAsync("#myId");
         var content = await elementHandle.EvalOnSelectorAsync<string>(".a", "node => node.innerText");
         Assert.That(content, Is.EqualTo("a-child-div"));
     }
 
     [UpstreamTest("EH-041 should throw in case of missing selector")]
     [LocalFixme("dotnet: the message is 'Failed to find element matching selector \".a\"', without the 'elementHandle.$eval: ' prefix of the call")]
-    public async Task ShouldThrowInCaseOfMissingSelector(IPage page, Server server)
+    public async Task ShouldThrowInCaseOfMissingSelector()
     {
         const string htmlContent = "<div class=\"a\">not-a-child-div</div><div id=\"myId\"></div>";
-        await page.SetContentAsync(htmlContent);
-        var elementHandle = await page.QuerySelectorAsync("#myId");
+        await Page.SetContentAsync(htmlContent);
+        var elementHandle = await Page.QuerySelectorAsync("#myId");
         var errorMessage = (await Catch(() => elementHandle.EvalOnSelectorAsync<string>(".a", "node => node.innerText"))).Message;
         Assert.That(errorMessage, Does.Contain("elementHandle.$eval: Failed to find element matching selector \".a\""));
     }
 
     [UpstreamTest("EH-042 should work for all")]
-    public async Task ShouldWorkForAll(IPage page, Server server)
+    public async Task ShouldWorkForAll()
     {
-        await page.SetContentAsync("<html><body><div class=\"tweet\"><div class=\"like\">100</div><div class=\"like\">10</div></div></body></html>");
-        var tweet = await page.QuerySelectorAsync(".tweet");
+        await Page.SetContentAsync("<html><body><div class=\"tweet\"><div class=\"like\">100</div><div class=\"like\">10</div></div></body></html>");
+        var tweet = await Page.QuerySelectorAsync(".tweet");
         var content = await tweet.EvalOnSelectorAllAsync<string[]>(".like", "nodes => nodes.map(n => n.innerText)");
         Assert.That(content, Is.EqualTo(new[] { "100", "10" }));
     }
 
     [UpstreamTest("EH-043 should retrieve content from subtree for all")]
-    public async Task ShouldRetrieveContentFromSubtreeForAll(IPage page, Server server)
+    public async Task ShouldRetrieveContentFromSubtreeForAll()
     {
         const string htmlContent = "<div class=\"a\">not-a-child-div</div><div id=\"myId\"><div class=\"a\">a1-child-div</div><div class=\"a\">a2-child-div</div></div>";
-        await page.SetContentAsync(htmlContent);
-        var elementHandle = await page.QuerySelectorAsync("#myId");
+        await Page.SetContentAsync(htmlContent);
+        var elementHandle = await Page.QuerySelectorAsync("#myId");
         var content = await elementHandle.EvalOnSelectorAllAsync<string[]>(".a", "nodes => nodes.map(n => n.innerText)");
         Assert.That(content, Is.EqualTo(new[] { "a1-child-div", "a2-child-div" }));
     }
 
     [UpstreamTest("EH-044 should not throw in case of missing selector for all")]
-    public async Task ShouldNotThrowInCaseOfMissingSelectorForAll(IPage page, Server server)
+    public async Task ShouldNotThrowInCaseOfMissingSelectorForAll()
     {
         const string htmlContent = "<div class=\"a\">not-a-child-div</div><div id=\"myId\"></div>";
-        await page.SetContentAsync(htmlContent);
-        var elementHandle = await page.QuerySelectorAsync("#myId");
+        await Page.SetContentAsync(htmlContent);
+        var elementHandle = await Page.QuerySelectorAsync("#myId");
         var nodesLength = await elementHandle.EvalOnSelectorAllAsync<int>(".a", "nodes => nodes.length");
         Assert.That(nodesLength, Is.EqualTo(0));
     }

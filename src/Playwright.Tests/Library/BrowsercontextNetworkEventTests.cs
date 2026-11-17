@@ -22,15 +22,16 @@ using static Microsoft.Playwright.Tests.Fixtures.Utils;
 namespace Microsoft.Playwright.Tests.Library;
 
 /// <summary>Port of tests/library/browsercontext-network-event.spec.ts.</summary>
-public class BrowsercontextNetworkEventTests
+public class BrowsercontextNetworkEventTests : UpstreamBrowserTest
 {
     [UpstreamTest("NE-121 BrowserContext.Events.Request")]
-    public async Task BrowserContextEventsRequest(IBrowserContext context, Server server)
+    public async Task BrowserContextEventsRequest()
     {
+        var context = await ContextFixture();
         var page = await context.NewPageAsync();
         var requests = new List<IRequest>();
         context.Request += (_, request) => requests.Add(request);
-        await page.GotoAsync(server.EmptyPage);
+        await page.GotoAsync(Server.EmptyPage);
         await page.SetContentAsync("<a target=_blank rel=noopener href=\"/one-style.html\">yo</a>");
         var page1 = await PromiseAll(
             context.WaitForPageAsync(),
@@ -39,19 +40,20 @@ public class BrowsercontextNetworkEventTests
         var urls = requests.Select(r => r.Url);
         Assert.That(urls, Is.EqualTo(new[]
         {
-            server.EmptyPage,
-            $"{server.Prefix}/one-style.html",
-            $"{server.Prefix}/one-style.css",
+            Server.EmptyPage,
+            $"{Server.Prefix}/one-style.html",
+            $"{Server.Prefix}/one-style.css",
         }));
     }
 
     [UpstreamTest("NE-122 BrowserContext.Events.Response")]
-    public async Task BrowserContextEventsResponse(IBrowserContext context, Server server)
+    public async Task BrowserContextEventsResponse()
     {
+        var context = await ContextFixture();
         var page = await context.NewPageAsync();
         var responses = new List<IResponse>();
         context.Response += (_, response) => responses.Add(response);
-        await page.GotoAsync(server.EmptyPage);
+        await page.GotoAsync(Server.EmptyPage);
         await page.SetContentAsync("<a target=_blank rel=noopener href=\"/one-style.html\">yo</a>");
         var page1 = await PromiseAll(
             context.WaitForPageAsync(),
@@ -60,16 +62,17 @@ public class BrowsercontextNetworkEventTests
         var urls = responses.Select(r => r.Url);
         Assert.That(urls, Is.EqualTo(new[]
         {
-            server.EmptyPage,
-            $"{server.Prefix}/one-style.html",
-            $"{server.Prefix}/one-style.css",
+            Server.EmptyPage,
+            $"{Server.Prefix}/one-style.html",
+            $"{Server.Prefix}/one-style.css",
         }));
     }
 
     [UpstreamTest("NE-123 BrowserContext.Events.RequestFailed")]
-    public async Task BrowserContextEventsRequestFailed(IBrowserContext context, Server server)
+    public async Task BrowserContextEventsRequestFailed()
     {
-        server.SetRoute("/one-style.css", (_, res) =>
+        var context = await ContextFixture();
+        Server.SetRoute("/one-style.css", (_, res) =>
         {
             res.SetHeader("Content-Type", "text/css");
             res.Connection.Destroy();
@@ -77,7 +80,7 @@ public class BrowsercontextNetworkEventTests
         var page = await context.NewPageAsync();
         var failedRequests = new List<IRequest>();
         context.RequestFailed += (_, request) => failedRequests.Add(request);
-        await page.GotoAsync(server.Prefix + "/one-style.html");
+        await page.GotoAsync(Server.Prefix + "/one-style.html");
         Assert.That(failedRequests.Count, Is.EqualTo(1));
         Assert.That(failedRequests[0].Url, Does.Contain("one-style.css"));
         Assert.That(await failedRequests[0].ResponseAsync(), Is.Null);
@@ -86,30 +89,32 @@ public class BrowsercontextNetworkEventTests
     }
 
     [UpstreamTest("NE-124 BrowserContext.Events.RequestFinished")]
-    public async Task BrowserContextEventsRequestFinished(IBrowserContext context, Server server)
+    public async Task BrowserContextEventsRequestFinished()
     {
+        var context = await ContextFixture();
         var page = await context.NewPageAsync();
         var (response, _) = await PromiseAll(
-            page.GotoAsync(server.EmptyPage),
+            page.GotoAsync(Server.EmptyPage),
             Once<IRequest>(h => context.RequestFinished += h, h => context.RequestFinished -= h));
         var request = response.Request;
-        Assert.That(request.Url, Is.EqualTo(server.EmptyPage));
+        Assert.That(request.Url, Is.EqualTo(Server.EmptyPage));
         Assert.That(await request.ResponseAsync(), Is.Not.Null);
         Assert.That(request.Frame == page.MainFrame, Is.EqualTo(true));
-        Assert.That(request.Frame.Url, Is.EqualTo(server.EmptyPage));
+        Assert.That(request.Frame.Url, Is.EqualTo(Server.EmptyPage));
         Assert.That(request.Failure, Is.Null);
     }
 
     [UpstreamTest("NE-125 should fire events in proper order")]
-    public async Task ShouldFireEventsInProperOrder(IBrowserContext context, Server server)
+    public async Task ShouldFireEventsInProperOrder()
     {
+        var context = await ContextFixture();
         var page = await context.NewPageAsync();
         var events = new List<string>();
         context.Request += (_, _) => events.Add("request");
         context.Response += (_, _) => events.Add("response");
         context.RequestFinished += (_, _) => events.Add("requestfinished");
         await PromiseAll(
-            page.GotoAsync(server.EmptyPage),
+            page.GotoAsync(Server.EmptyPage),
             Once<IRequest>(h => context.RequestFinished += h, h => context.RequestFinished -= h));
         Assert.That(events, Is.EqualTo(new[]
         {
@@ -120,16 +125,18 @@ public class BrowsercontextNetworkEventTests
     }
 
     [UpstreamTest("NE-126 should not fire events for favicon or favicon redirects")]
-    public async Task ShouldNotFireEventsForFaviconOrFaviconRedirects(IBrowserContext context, IPage page, Server server, string browserName, bool headless, string channel)
+    public async Task ShouldNotFireEventsForFaviconOrFaviconRedirects()
     {
-        Info.Skip(headless && browserName != "firefox", "headless browsers, except firefox, do not request favicons");
-        Info.Skip(!headless && browserName == "webkit", "headed webkit does not have a favicon feature");
+        var context = await ContextFixture();
+        var page = await PageFixture();
+        Info.Skip(Headless && BrowserName != "firefox", "headless browsers, except firefox, do not request favicons");
+        Info.Skip(!Headless && BrowserName == "webkit", "headed webkit does not have a favicon feature");
         var favicon = "/no-cache/favicon.ico";
         var hashedFaviconUrl = "/favicon-hashed.ico";
         var imagePath = "/fakeimage.png";
         var pagePath = "/page.html";
-        server.SetRedirect(favicon, hashedFaviconUrl);
-        server.SetRoute(pagePath, (_, res) =>
+        Server.SetRedirect(favicon, hashedFaviconUrl);
+        Server.SetRoute(pagePath, (_, res) =>
         {
             res.End($@"
       <!DOCTYPE html>
@@ -152,9 +159,9 @@ public class BrowsercontextNetworkEventTests
         context.RequestFinished += (_, req) => events.Add(req.Url);
 
         await PromiseAll(
-            server.WaitForRequest(favicon),
-            server.WaitForRequest(hashedFaviconUrl),
-            page.GotoAsync(server.Prefix + "/page.html"));
+            Server.WaitForRequest(favicon),
+            Server.WaitForRequest(hashedFaviconUrl),
+            page.GotoAsync(Server.Prefix + "/page.html"));
 
         ExpectToEqual(events, ArrayContaining(new[] { StringContaining(pagePath) }));
         ExpectToEqual(events, ArrayContaining(new[] { StringContaining(imagePath) }));
@@ -163,10 +170,11 @@ public class BrowsercontextNetworkEventTests
     }
 
     [UpstreamTest("NE-127 should reject response.finished if context closes")]
-    public async Task ShouldRejectResponseFinishedIfContextCloses(IPage page, Server server)
+    public async Task ShouldRejectResponseFinishedIfContextCloses()
     {
-        await page.GotoAsync(server.EmptyPage);
-        server.SetRoute("/get", (req, res) =>
+        var page = await PageFixture();
+        await page.GotoAsync(Server.EmptyPage);
+        Server.SetRoute("/get", (req, res) =>
         {
             // In Firefox, |fetch| will be hanging until it receives |Content-Type| header
             // from server.
@@ -185,9 +193,10 @@ public class BrowsercontextNetworkEventTests
     }
 
     [UpstreamTest("NE-144 should not wait for navigation after background cache revalidation")]
-    public async Task ShouldNotWaitForNavigationAfterBackgroundCacheRevalidation(IBrowserContext context, Server server)
+    public async Task ShouldNotWaitForNavigationAfterBackgroundCacheRevalidation()
     {
-        server.SetRoute("/swr.html", (req, res) =>
+        var context = await ContextFixture();
+        Server.SetRoute("/swr.html", (req, res) =>
         {
             var headers = new Dictionary<string, object>
             {
@@ -205,9 +214,9 @@ public class BrowsercontextNetworkEventTests
             res.End("<h1>Hello</h1>");
         });
         var page1 = await context.NewPageAsync();
-        await page1.GotoAsync(server.Prefix + "/swr.html");
+        await page1.GotoAsync(Server.Prefix + "/swr.html");
         var page2 = await context.NewPageAsync();
-        await page2.GotoAsync(server.Prefix + "/swr.html");
+        await page2.GotoAsync(Server.Prefix + "/swr.html");
         await page2.WaitForTimeoutAsync(1000);
         await Expect(page2.Locator("h1")).ToHaveTextAsync("Hello");
     }

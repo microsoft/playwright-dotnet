@@ -20,8 +20,14 @@ using static Microsoft.Playwright.Tests.Fixtures.Utils;
 
 namespace Microsoft.Playwright.Tests.Library;
 
+public abstract class VideoTestsBase : UpstreamBrowserTest
+{
+    [SetUp]
+    public void Skip() => Info.Skip(Video == "on", "conflicts with built-in video recording");
+}
+
 /// <summary>Port of tests/library/video.spec.ts.</summary>
-public class VideoTests
+public class VideoTests : VideoTestsBase
 {
     private sealed record Pixel(int r, int g, int b, int alpha);
 
@@ -114,31 +120,29 @@ public class VideoTests
         }
     }
 
-    [BeforeEach]
-    public static void Skip(string video) => Info.Skip(video == "on", "conflicts with built-in video recording");
-
-    public class Screencast
+    public class Screencast : VideoTestsBase
     {
         [SetUp]
         public void Slow() => Info.Slow();
 
-        [BeforeEach]
-        public static void Skip(string mode) => Info.Skip(mode != "default", "video.path() is not available in remote mode");
+        [SetUp]
+        public void Skip2() => Info.Skip(Mode != "default", "video.path() is not available in remote mode");
 
         [UpstreamTest("VI-001 should not have video by default")]
-        public async Task ShouldNotHaveVideoByDefault(IPage page)
+        public async Task ShouldNotHaveVideoByDefault()
         {
+            var page = await PageFixture();
             Assert.That(page.Video, Is.Null);
         }
 
         [UpstreamTest("VI-003 should capture static page")]
-        public async Task ShouldCaptureStaticPage(IBrowser browser, string browserName, string trace, bool headless, bool isWindows, TestInfo testInfo, BrowserNewContextOptions contextOptions)
+        public async Task ShouldCaptureStaticPage()
         {
             // Firefox does not have a mobile variant and has a large minimum size (500 on windows and 450 elsewhere).
-            var size = browserName == "firefox" ? (width: 500, height: 400) : (width: 320, height: 240);
-            var context = await browser.NewContextAsync(new(contextOptions)
+            var size = BrowserName == "firefox" ? (width: 500, height: 400) : (width: 320, height: 240);
+            var context = await Browser.NewContextAsync(new(ContextOptions())
             {
-                RecordVideoDir = testInfo.OutputPath(""),
+                RecordVideoDir = Info.OutputPath(""),
                 RecordVideoSize = new() { Width = size.width, Height = size.height },
                 ViewportSize = new() { Width = size.width, Height = size.height },
             });
@@ -153,12 +157,12 @@ public class VideoTests
         }
 
         [UpstreamTest("VI-004 should pad a short frame to the video size")]
-        public async Task ShouldPadAShortFrameToTheVideoSize(IBrowser browser, TestInfo testInfo, BrowserNewContextOptions contextOptions)
+        public async Task ShouldPadAShortFrameToTheVideoSize()
         {
             var videoSize = (width: 800, height: 600);
-            var context = await browser.NewContextAsync(new(contextOptions)
+            var context = await Browser.NewContextAsync(new(ContextOptions())
             {
-                RecordVideoDir = testInfo.OutputPath(""),
+                RecordVideoDir = Info.OutputPath(""),
                 RecordVideoSize = new() { Width = videoSize.width, Height = videoSize.height },
                 ViewportSize = new() { Width = 800, Height = 396 },
             });
@@ -173,13 +177,13 @@ public class VideoTests
         }
 
         [UpstreamTest("VI-005 should continue recording main page after popup closes")]
-        public async Task ShouldContinueRecordingMainPageAfterPopupCloses(IBrowser browser, string browserName, TestInfo testInfo, BrowserNewContextOptions contextOptions)
+        public async Task ShouldContinueRecordingMainPageAfterPopupCloses()
         {
             // Firefox does not have a mobile variant and has a large minimum size (500 on windows and 450 elsewhere).
-            var size = browserName == "firefox" ? (width: 500, height: 400) : (width: 320, height: 240);
-            var context = await browser.NewContextAsync(new(contextOptions)
+            var size = BrowserName == "firefox" ? (width: 500, height: 400) : (width: 320, height: 240);
+            var context = await Browser.NewContextAsync(new(ContextOptions())
             {
-                RecordVideoDir = testInfo.OutputPath(""),
+                RecordVideoDir = Info.OutputPath(""),
                 RecordVideoSize = new() { Width = size.width, Height = size.height },
                 ViewportSize = new() { Width = size.width, Height = size.height },
             });
@@ -203,11 +207,11 @@ public class VideoTests
         }
 
         [UpstreamTest("VI-006 should expose video path")]
-        public async Task ShouldExposeVideoPath(IBrowser browser, TestInfo testInfo, BrowserNewContextOptions contextOptions)
+        public async Task ShouldExposeVideoPath()
         {
-            var videosPath = testInfo.OutputPath("");
+            var videosPath = Info.OutputPath("");
             var size = (width: 320, height: 240);
-            var context = await browser.NewContextAsync(new(contextOptions)
+            var context = await Browser.NewContextAsync(new(ContextOptions())
             {
                 RecordVideoDir = videosPath,
                 RecordVideoSize = new() { Width = size.width, Height = size.height },
@@ -222,11 +226,11 @@ public class VideoTests
         }
 
         [UpstreamTest("VI-007 should delete video")]
-        public async Task ShouldDeleteVideo(IBrowser browser, TestInfo testInfo, BrowserNewContextOptions contextOptions)
+        public async Task ShouldDeleteVideo()
         {
-            var videosPath = testInfo.OutputPath("");
+            var videosPath = Info.OutputPath("");
             var size = (width: 320, height: 240);
-            var context = await browser.NewContextAsync(new(contextOptions)
+            var context = await Browser.NewContextAsync(new(ContextOptions())
             {
                 RecordVideoDir = videosPath,
                 RecordVideoSize = new() { Width = size.width, Height = size.height },
@@ -244,11 +248,11 @@ public class VideoTests
         }
 
         [UpstreamTest("VI-008 should expose video path blank page")]
-        public async Task ShouldExposeVideoPathBlankPage(IBrowser browser, TestInfo testInfo, BrowserNewContextOptions contextOptions)
+        public async Task ShouldExposeVideoPathBlankPage()
         {
-            var videosPath = testInfo.OutputPath("");
+            var videosPath = Info.OutputPath("");
             var size = (width: 320, height: 240);
-            var context = await browser.NewContextAsync(new(contextOptions)
+            var context = await Browser.NewContextAsync(new(ContextOptions())
             {
                 RecordVideoDir = videosPath,
                 RecordVideoSize = new() { Width = size.width, Height = size.height },
@@ -262,11 +266,11 @@ public class VideoTests
         }
 
         [UpstreamTest("VI-009 should work with weird screen resolution")]
-        public async Task ShouldWorkWithWeirdScreenResolution(IBrowser browser, TestInfo testInfo, BrowserNewContextOptions contextOptions)
+        public async Task ShouldWorkWithWeirdScreenResolution()
         {
-            var videosPath = testInfo.OutputPath("");
+            var videosPath = Info.OutputPath("");
             var size = (width: 1904, height: 609);
-            var context = await browser.NewContextAsync(new(contextOptions)
+            var context = await Browser.NewContextAsync(new(ContextOptions())
             {
                 RecordVideoDir = videosPath,
                 RecordVideoSize = new() { Width = size.width, Height = size.height },
@@ -280,11 +284,11 @@ public class VideoTests
         }
 
         [UpstreamTest("VI-010 should work with relative path for recordVideo.dir")]
-        public async Task ShouldWorkWithRelativePathForRecordVideoDir(IBrowser browser, TestInfo testInfo, BrowserNewContextOptions contextOptions)
+        public async Task ShouldWorkWithRelativePathForRecordVideoDir()
         {
-            var videosPath = Path.GetRelativePath(Directory.GetCurrentDirectory(), testInfo.OutputPath(""));
+            var videosPath = Path.GetRelativePath(Directory.GetCurrentDirectory(), Info.OutputPath(""));
             var size = (width: 320, height: 240);
-            var context = await browser.NewContextAsync(new(contextOptions)
+            var context = await Browser.NewContextAsync(new(ContextOptions())
             {
                 RecordVideoDir = videosPath,
                 RecordVideoSize = new() { Width = size.width, Height = size.height },
@@ -297,11 +301,11 @@ public class VideoTests
         }
 
         [UpstreamTest("VI-011 should expose video path blank popup")]
-        public async Task ShouldExposeVideoPathBlankPopup(IBrowser browser, TestInfo testInfo, BrowserNewContextOptions contextOptions)
+        public async Task ShouldExposeVideoPathBlankPopup()
         {
-            var videosPath = testInfo.OutputPath("");
+            var videosPath = Info.OutputPath("");
             var size = (width: 320, height: 240);
-            var context = await browser.NewContextAsync(new(contextOptions)
+            var context = await Browser.NewContextAsync(new(ContextOptions())
             {
                 RecordVideoDir = videosPath,
                 RecordVideoSize = new() { Width = size.width, Height = size.height },
@@ -318,18 +322,18 @@ public class VideoTests
         }
 
         [UpstreamTest("VI-012 should capture navigation")]
-        public async Task ShouldCaptureNavigation(IBrowser browser, string browserName, Server server, string trace, TestInfo testInfo, BrowserNewContextOptions contextOptions)
+        public async Task ShouldCaptureNavigation()
         {
-            var context = await browser.NewContextAsync(new(contextOptions)
+            var context = await Browser.NewContextAsync(new(ContextOptions())
             {
-                RecordVideoDir = testInfo.OutputPath(""),
+                RecordVideoDir = Info.OutputPath(""),
                 RecordVideoSize = new() { Width = 1280, Height = 720 },
             });
             var page = await context.NewPageAsync();
 
-            await page.GotoAsync(server.Prefix + "/background-color.html#rgb(0,0,0)");
+            await page.GotoAsync(Server.Prefix + "/background-color.html#rgb(0,0,0)");
             await EnsureSomeFrames(page);
-            await page.GotoAsync(server.CrossProcessPrefix + "/background-color.html#rgb(100,100,100)");
+            await page.GotoAsync(Server.CrossProcessPrefix + "/background-color.html#rgb(100,100,100)");
             await EnsureSomeFrames(page);
             await context.CloseAsync();
 
@@ -351,22 +355,22 @@ public class VideoTests
         }
 
         [UpstreamTest("VI-013 should capture css transformation")]
-        public async Task ShouldCaptureCssTransformation(IBrowser browser, Server server, bool headless, string browserName, string platform, string trace, TestInfo testInfo, BrowserNewContextOptions contextOptions)
+        public async Task ShouldCaptureCssTransformation()
         {
-            Info.Fixme(!headless, "Fails on headed");
-            Info.Fixme(browserName == "webkit" && platform == "win32");
+            Info.Fixme(!Headless, "Fails on headed");
+            Info.Fixme(BrowserName == "webkit" && Platform == "win32");
 
             var size = (width: 600, height: 400);
             // Set viewport equal to screencast frame size to avoid scaling.
-            var context = await browser.NewContextAsync(new(contextOptions)
+            var context = await Browser.NewContextAsync(new(ContextOptions())
             {
-                RecordVideoDir = testInfo.OutputPath(""),
+                RecordVideoDir = Info.OutputPath(""),
                 RecordVideoSize = new() { Width = size.width, Height = size.height },
                 ViewportSize = new() { Width = size.width, Height = size.height },
             });
             var page = await context.NewPageAsync();
 
-            await page.GotoAsync(server.Prefix + "/rotate-z.html");
+            await page.GotoAsync(Server.Prefix + "/rotate-z.html");
             await EnsureSomeFrames(page);
             await context.CloseAsync();
 
@@ -382,12 +386,12 @@ public class VideoTests
         }
 
         [UpstreamTest("VI-014 should work for popups")]
-        public async Task ShouldWorkForPopups(IBrowser browser, Server server, string browserName, bool isBidi, TestInfo testInfo, BrowserNewContextOptions contextOptions)
+        public async Task ShouldWorkForPopups()
         {
-            Info.Fixme(browserName == "firefox" && !isBidi, "https://github.com/microsoft/playwright/issues/14557");
-            var videosPath = testInfo.OutputPath("");
+            Info.Fixme(BrowserName == "firefox" && !IsBidi, "https://github.com/microsoft/playwright/issues/14557");
+            var videosPath = Info.OutputPath("");
             var size = (width: 600, height: 400);
-            var context = await browser.NewContextAsync(new(contextOptions)
+            var context = await Browser.NewContextAsync(new(ContextOptions())
             {
                 RecordVideoDir = videosPath,
                 RecordVideoSize = new() { Width = size.width, Height = size.height },
@@ -395,7 +399,7 @@ public class VideoTests
             });
 
             var page = await context.NewPageAsync();
-            await page.GotoAsync(server.EmptyPage);
+            await page.GotoAsync(Server.EmptyPage);
             var (popup, _) = await PromiseAll(
                 page.WaitForPopupAsync(),
                 page.EvaluateAsync("() => { window.open('about:blank'); }"));
@@ -415,21 +419,21 @@ public class VideoTests
         }
 
         [UpstreamTest("VI-015 should scale frames down to the requested size ")]
-        public async Task ShouldScaleFramesDownToTheRequestedSize(IBrowser browser, string browserName, Server server, bool headless, bool isHeadlessShell, TestInfo testInfo, BrowserNewContextOptions contextOptions)
+        public async Task ShouldScaleFramesDownToTheRequestedSize()
         {
-            Info.Fixme(!headless, "Fails on headed");
-            Info.Fixme(browserName == "chromium" && !isHeadlessShell, "Chromium (but not headless shell) has a min width issue");
+            Info.Fixme(!Headless, "Fails on headed");
+            Info.Fixme(BrowserName == "chromium" && !IsHeadlessShell, "Chromium (but not headless shell) has a min width issue");
 
-            var context = await browser.NewContextAsync(new(contextOptions)
+            var context = await Browser.NewContextAsync(new(ContextOptions())
             {
-                RecordVideoDir = testInfo.OutputPath(""),
+                RecordVideoDir = Info.OutputPath(""),
                 // Set size to 1/2 of the viewport.
                 RecordVideoSize = new() { Width = 320, Height = 240 },
                 ViewportSize = new() { Width = 640, Height = 480 },
             });
             var page = await context.NewPageAsync();
 
-            await page.GotoAsync(server.Prefix + "/checkerboard.html");
+            await page.GotoAsync(Server.Prefix + "/checkerboard.html");
             // Update the picture to ensure enough frames are generated.
             await page.EvalOnSelectorAsync(".container", @"container => {
       container.firstElementChild.classList.remove('red');
@@ -465,12 +469,12 @@ public class VideoTests
         }
 
         [UpstreamTest("VI-016 should use viewport scaled down to fit into 800x800 as default size")]
-        public async Task ShouldUseViewportScaledDownToFitInto800x800AsDefaultSize(IBrowser browser, TestInfo testInfo, BrowserNewContextOptions contextOptions)
+        public async Task ShouldUseViewportScaledDownToFitInto800x800AsDefaultSize()
         {
             var size = (width: 1600, height: 1200);
-            var context = await browser.NewContextAsync(new(contextOptions)
+            var context = await Browser.NewContextAsync(new(ContextOptions())
             {
-                RecordVideoDir = testInfo.OutputPath(""),
+                RecordVideoDir = Info.OutputPath(""),
                 ViewportSize = new() { Width = size.width, Height = size.height },
             });
 
@@ -485,11 +489,11 @@ public class VideoTests
         }
 
         [UpstreamTest("VI-017 should be 800x450 by default")]
-        public async Task ShouldBe800x450ByDefault(IBrowser browser, TestInfo testInfo, BrowserNewContextOptions contextOptions)
+        public async Task ShouldBe800x450ByDefault()
         {
-            var context = await browser.NewContextAsync(new(contextOptions)
+            var context = await Browser.NewContextAsync(new(ContextOptions())
             {
-                RecordVideoDir = testInfo.OutputPath(""),
+                RecordVideoDir = Info.OutputPath(""),
             });
 
             var page = await context.NewPageAsync();
@@ -503,11 +507,11 @@ public class VideoTests
         }
 
         [UpstreamTest("VI-018 should record video with the requested fps")]
-        public async Task ShouldRecordVideoWithTheRequestedFps(IBrowser browser, TestInfo testInfo, BrowserNewContextOptions contextOptions)
+        public async Task ShouldRecordVideoWithTheRequestedFps()
         {
-            var context = await browser.NewContextAsync(new(contextOptions)
+            var context = await Browser.NewContextAsync(new(ContextOptions())
             {
-                RecordVideoDir = testInfo.OutputPath(""),
+                RecordVideoDir = Info.OutputPath(""),
                 RecordVideoFps = 60,
             });
 
@@ -520,24 +524,24 @@ public class VideoTests
         }
 
         [UpstreamTest("VI-019 should throw on invalid fps")]
-        public async Task ShouldThrowOnInvalidFps(IBrowser browser, TestInfo testInfo, BrowserNewContextOptions contextOptions)
+        public async Task ShouldThrowOnInvalidFps()
         {
-            var error = await Catch(() => browser.NewContextAsync(new(contextOptions)
+            var error = await Catch(() => Browser.NewContextAsync(new(ContextOptions())
             {
-                RecordVideoDir = testInfo.OutputPath(""),
+                RecordVideoDir = Info.OutputPath(""),
                 RecordVideoFps = 0,
             }));
             Assert.That(error.Message, Does.Contain("\"recordVideo.fps\" must be a positive number, got 0"));
         }
 
         [UpstreamTest("VI-020 should be 800x600 with null viewport")]
-        public async Task ShouldBe800x600WithNullViewport(IBrowser browser, bool headless, string browserName, bool isBidi, TestInfo testInfo, BrowserNewContextOptions contextOptions)
+        public async Task ShouldBe800x600WithNullViewport()
         {
-            Info.Fixme(browserName == "firefox" && headless && !isBidi, "Fails in headless on bots");
+            Info.Fixme(BrowserName == "firefox" && Headless && !IsBidi, "Fails in headless on bots");
 
-            var context = await browser.NewContextAsync(new(contextOptions)
+            var context = await Browser.NewContextAsync(new(ContextOptions())
             {
-                RecordVideoDir = testInfo.OutputPath(""),
+                RecordVideoDir = Info.OutputPath(""),
                 ViewportSize = ViewportSize.NoViewport,
             });
 
@@ -552,13 +556,13 @@ public class VideoTests
         }
 
         [UpstreamTest("VI-021 should capture static page in persistent context @smoke")]
-        public async Task ShouldCaptureStaticPageInPersistentContext(LaunchPersistent launchPersistent, string browserName, string trace, bool isMac, TestInfo testInfo)
+        public async Task ShouldCaptureStaticPageInPersistentContext()
         {
-            Info.Skip(browserName == "webkit" && isMac && RuntimeInformation.ProcessArchitecture == Architecture.Arm64, "Is only failing on self-hosted github actions runner on M1 mac; not reproducible locally");
+            Info.Skip(BrowserName == "webkit" && IsMac && RuntimeInformation.ProcessArchitecture == Architecture.Arm64, "Is only failing on self-hosted github actions runner on M1 mac; not reproducible locally");
             var size = (width: 600, height: 400);
-            var (context, page) = await launchPersistent(new()
+            var (context, page) = await LaunchPersistent(new()
             {
-                RecordVideoDir = testInfo.OutputPath(""),
+                RecordVideoDir = Info.OutputPath(""),
                 RecordVideoSize = new() { Width = size.width, Height = size.height },
                 ViewportSize = new() { Width = size.width, Height = size.height },
             });
@@ -582,12 +586,12 @@ public class VideoTests
         }
 
         [UpstreamTest("VI-022 should emulate an iphone")]
-        public async Task ShouldEmulateAnIphone(ContextFactory contextFactory, IPlaywright playwright, string browserName, TestInfo testInfo)
+        public async Task ShouldEmulateAnIphone()
         {
-            var device = playwright.Devices["iPhone 6"];
-            var context = await contextFactory(new(device)
+            var device = Playwright.Devices["iPhone 6"];
+            var context = await ContextFactory(new(device)
             {
-                RecordVideoDir = testInfo.OutputPath(""),
+                RecordVideoDir = Info.OutputPath(""),
             });
 
             var page = await context.NewPageAsync();
@@ -601,13 +605,13 @@ public class VideoTests
         }
 
         [UpstreamTest("VI-023 should throw on browser close")]
-        public async Task ShouldThrowOnBrowserClose(IBrowserType browserType, TestInfo testInfo, BrowserTypeLaunchOptions launchOptions, BrowserNewContextOptions contextOptions)
+        public async Task ShouldThrowOnBrowserClose()
         {
             var size = (width: 320, height: 240);
-            var browser = await browserType.LaunchAsync(launchOptions);
-            var context = await browser.NewContextAsync(new(contextOptions)
+            var browser = await BrowserType.LaunchAsync(LaunchOptions());
+            var context = await browser.NewContextAsync(new(ContextOptions())
             {
-                RecordVideoDir = testInfo.OutputPath(""),
+                RecordVideoDir = Info.OutputPath(""),
                 RecordVideoSize = new() { Width = size.width, Height = size.height },
                 ViewportSize = new() { Width = size.width, Height = size.height },
             });
@@ -616,19 +620,19 @@ public class VideoTests
             await EnsureSomeFrames(page);
             await browser.CloseAsync();
 
-            var file = testInfo.OutputPath("saved-video-");
+            var file = Info.OutputPath("saved-video-");
             var saveResult = await Catch(() => page.Video.SaveAsAsync(file));
             Assert.That(saveResult.Message, Does.Contain("browser has been closed"));
         }
 
         [UpstreamTest("VI-025 should wait for video to finish if page was closed")]
-        public async Task ShouldWaitForVideoToFinishIfPageWasClosed(IBrowserType browserType, TestInfo testInfo, BrowserTypeLaunchOptions launchOptions, BrowserNewContextOptions contextOptions)
+        public async Task ShouldWaitForVideoToFinishIfPageWasClosed()
         {
             var size = (width: 320, height: 240);
-            var browser = await browserType.LaunchAsync(launchOptions);
+            var browser = await BrowserType.LaunchAsync(LaunchOptions());
 
-            var videoDir = testInfo.OutputPath("");
-            var context = await browser.NewContextAsync(new(contextOptions)
+            var videoDir = Info.OutputPath("");
+            var context = await browser.NewContextAsync(new(ContextOptions())
             {
                 RecordVideoDir = videoDir,
                 RecordVideoSize = new() { Width = size.width, Height = size.height },
@@ -649,13 +653,13 @@ public class VideoTests
         }
 
         [UpstreamTest("VI-026 should close ffmpeg even if there were no frames")]
-        public async Task ShouldCloseFfmpegEvenIfThereWereNoFrames(IBrowserType browserType, TestInfo testInfo, BrowserTypeLaunchOptions launchOptions, BrowserNewContextOptions contextOptions)
+        public async Task ShouldCloseFfmpegEvenIfThereWereNoFrames()
         {
             var size = (width: 320, height: 240);
-            var browser = await browserType.LaunchAsync(launchOptions);
+            var browser = await BrowserType.LaunchAsync(LaunchOptions());
 
-            var videoDir = testInfo.OutputPath("");
-            var context = await browser.NewContextAsync(new(contextOptions)
+            var videoDir = Info.OutputPath("");
+            var context = await browser.NewContextAsync(new(ContextOptions())
             {
                 RecordVideoDir = videoDir,
                 RecordVideoSize = new() { Width = size.width, Height = size.height },
@@ -676,22 +680,22 @@ public class VideoTests
         }
 
         [UpstreamTest("VI-027 should not create video for internal pages")]
-        public async Task ShouldNotCreateVideoForInternalPages(IBrowser browser, Server server, TestInfo testInfo, BrowserNewContextOptions contextOptions)
+        public async Task ShouldNotCreateVideoForInternalPages()
         {
-            server.SetRoute("/empty.html", (req, res) =>
+            Server.SetRoute("/empty.html", (req, res) =>
             {
                 res.SetHeader("Set-Cookie", "name=value");
                 res.End();
             });
 
-            var videoDir = testInfo.OutputPath("");
-            var context = await browser.NewContextAsync(new(contextOptions)
+            var videoDir = Info.OutputPath("");
+            var context = await Browser.NewContextAsync(new(ContextOptions())
             {
                 RecordVideoDir = videoDir,
             });
 
             var page = await context.NewPageAsync();
-            await page.GotoAsync(server.EmptyPage);
+            await page.GotoAsync(Server.EmptyPage);
             await EnsureSomeFrames(page);
 
             var cookies = await context.CookiesAsync();
@@ -704,15 +708,15 @@ public class VideoTests
         }
 
         [UpstreamTest("VI-028 should capture full viewport")]
-        public async Task ShouldCaptureFullViewport(IBrowserType browserType, string browserName, bool isWindows, bool headless, bool isHeadlessShell, TestInfo testInfo, BrowserTypeLaunchOptions launchOptions, BrowserNewContextOptions contextOptions)
+        public async Task ShouldCaptureFullViewport()
         {
-            Info.Fixme(browserName == "chromium" && !isHeadlessShell, "The square is not on the video");
-            Info.Fixme(browserName == "firefox" && isWindows, "https://github.com/microsoft/playwright/issues/14405");
+            Info.Fixme(BrowserName == "chromium" && !IsHeadlessShell, "The square is not on the video");
+            Info.Fixme(BrowserName == "firefox" && IsWindows, "https://github.com/microsoft/playwright/issues/14405");
             var size = (width: 600, height: 400);
-            var browser = await browserType.LaunchAsync(launchOptions);
+            var browser = await BrowserType.LaunchAsync(LaunchOptions());
 
-            var videoDir = testInfo.OutputPath("");
-            var context = await browser.NewContextAsync(new(contextOptions)
+            var videoDir = Info.OutputPath("");
+            var context = await browser.NewContextAsync(new(ContextOptions())
             {
                 ViewportSize = new() { Width = size.width, Height = size.height },
                 RecordVideoDir = videoDir,
@@ -739,16 +743,16 @@ public class VideoTests
         }
 
         [UpstreamTest("VI-029 should capture full viewport on hidpi")]
-        public async Task ShouldCaptureFullViewportOnHidpi(IBrowserType browserType, string browserName, bool headless, bool isWindows, bool isLinux, bool isHeadlessShell, string channel, TestInfo testInfo, BrowserTypeLaunchOptions launchOptions, BrowserNewContextOptions contextOptions)
+        public async Task ShouldCaptureFullViewportOnHidpi()
         {
-            Info.Fixme(browserName == "chromium" && !isHeadlessShell, "The square is not on the video");
-            Info.Fixme(browserName == "firefox" && isWindows, "https://github.com/microsoft/playwright/issues/14405");
-            Info.Fixme(browserName == "webkit" && !headless && (isLinux || (isWindows && channel == "webkit-wsl")), "https://github.com/microsoft/playwright/issues/22617");
+            Info.Fixme(BrowserName == "chromium" && !IsHeadlessShell, "The square is not on the video");
+            Info.Fixme(BrowserName == "firefox" && IsWindows, "https://github.com/microsoft/playwright/issues/14405");
+            Info.Fixme(BrowserName == "webkit" && !Headless && (IsLinux || (IsWindows && Channel == "webkit-wsl")), "https://github.com/microsoft/playwright/issues/22617");
             var size = (width: 600, height: 400);
-            var browser = await browserType.LaunchAsync(launchOptions);
+            var browser = await BrowserType.LaunchAsync(LaunchOptions());
 
-            var videoDir = testInfo.OutputPath("");
-            var context = await browser.NewContextAsync(new(contextOptions)
+            var videoDir = Info.OutputPath("");
+            var context = await browser.NewContextAsync(new(ContextOptions())
             {
                 ViewportSize = new() { Width = size.width, Height = size.height },
                 DeviceScaleFactor = 3,
@@ -776,18 +780,18 @@ public class VideoTests
         }
 
         [UpstreamTest("VI-030 should work with video+trace")]
-        public async Task ShouldWorkWithVideoTrace(IBrowser browser, string trace, bool headless, string browserName, bool isHeadlessShell, TestInfo testInfo, BrowserNewContextOptions contextOptions)
+        public async Task ShouldWorkWithVideoTrace()
         {
-            Info.Skip(trace == "on");
-            Info.Fixme(!headless, "different trace screencast image size on all browsers");
-            Info.Fixme(browserName == "chromium" && !isHeadlessShell, "different trace screencast image size");
+            Info.Skip(Trace == "on");
+            Info.Fixme(!Headless, "different trace screencast image size on all browsers");
+            Info.Fixme(BrowserName == "chromium" && !IsHeadlessShell, "different trace screencast image size");
 
             var size = (width: 500, height: 400);
-            var traceFile = testInfo.OutputPath("trace.zip");
+            var traceFile = Info.OutputPath("trace.zip");
 
-            var context = await browser.NewContextAsync(new(contextOptions)
+            var context = await Browser.NewContextAsync(new(ContextOptions())
             {
-                RecordVideoDir = testInfo.OutputPath(""),
+                RecordVideoDir = Info.OutputPath(""),
                 RecordVideoSize = new() { Width = size.width, Height = size.height },
                 ViewportSize = new() { Width = size.width, Height = size.height },
             });
@@ -820,13 +824,13 @@ public class VideoTests
     }
 
     [UpstreamTest("VI-031 should saveAs video")]
-    public async Task ShouldSaveAsVideo(IBrowser browser, TestInfo testInfo, BrowserNewContextOptions contextOptions)
+    public async Task ShouldSaveAsVideo()
     {
         Info.Slow();
 
-        var videosPath = testInfo.OutputPath("");
+        var videosPath = Info.OutputPath("");
         var size = (width: 320, height: 240);
-        var context = await browser.NewContextAsync(new(contextOptions)
+        var context = await Browser.NewContextAsync(new(ContextOptions())
         {
             RecordVideoDir = videosPath,
             RecordVideoSize = new() { Width = size.width, Height = size.height },
@@ -837,7 +841,7 @@ public class VideoTests
         await EnsureSomeFrames(page);
         await context.CloseAsync();
 
-        var saveAsPath = testInfo.OutputPath("my-video.webm");
+        var saveAsPath = Info.OutputPath("my-video.webm");
         await page.Video.SaveAsAsync(saveAsPath);
         Assert.That(File.Exists(saveAsPath), Is.True);
     }

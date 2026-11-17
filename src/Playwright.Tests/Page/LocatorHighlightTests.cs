@@ -21,20 +21,20 @@ using static Microsoft.Playwright.Tests.Fixtures.Utils;
 namespace Microsoft.Playwright.Tests.Page;
 
 /// <summary>Port of tests/page/locator-highlight.spec.ts.</summary>
-public class LocatorHighlightTests
+public class LocatorHighlightTests : UpstreamPageTest
 {
-    [BeforeEach]
-    public static void Skip(string mode) => Info.Skip(mode != "default", "Highlight element has a closed shadow-root on != default");
+    [SetUp]
+    public void Skip() => Info.Skip(Mode != "default", "Highlight element has a closed shadow-root on != default");
 
     [UpstreamTest("LO-114 should highlight locator")]
-    public async Task ShouldHighlightLocator(IPage page)
+    public async Task ShouldHighlightLocator()
     {
-        await page.SetContentAsync("<input type='text' />");
-        await page.Locator("input").HighlightAsync();
-        await Expect(page.Locator("x-pw-tooltip")).ToHaveTextAsync("locator('input')");
-        await Expect(page.Locator("x-pw-highlight")).ToBeVisibleAsync();
-        var box1 = RoundBox(await page.Locator("input").BoundingBoxAsync());
-        var box2 = RoundBox(await page.Locator("x-pw-highlight").BoundingBoxAsync());
+        await Page.SetContentAsync("<input type='text' />");
+        await Page.Locator("input").HighlightAsync();
+        await Expect(Page.Locator("x-pw-tooltip")).ToHaveTextAsync("locator('input')");
+        await Expect(Page.Locator("x-pw-highlight")).ToBeVisibleAsync();
+        var box1 = RoundBox(await Page.Locator("input").BoundingBoxAsync());
+        var box2 = RoundBox(await Page.Locator("x-pw-highlight").BoundingBoxAsync());
         ExpectToEqual(box1, box2);
     }
 }

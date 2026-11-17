@@ -20,12 +20,12 @@ using Microsoft.Playwright.Tests.Fixtures;
 namespace Microsoft.Playwright.Tests.Page;
 
 /// <summary>Port of tests/page/jshandle-evaluate.spec.ts.</summary>
-public class JshandleEvaluateTests
+public class JshandleEvaluateTests : UpstreamPageTest
 {
     [UpstreamTest("JH-005 should work with function @smoke")]
-    public async Task ShouldWorkWithFunction(IPage page)
+    public async Task ShouldWorkWithFunction()
     {
-        var windowHandle = await page.EvaluateHandleAsync(@"() => {
+        var windowHandle = await Page.EvaluateHandleAsync(@"() => {
     window['foo'] = [1, 2];
     return window;
   }");
@@ -33,9 +33,9 @@ public class JshandleEvaluateTests
     }
 
     [UpstreamTest("JH-006 should work with expression")]
-    public async Task ShouldWorkWithExpression(IPage page)
+    public async Task ShouldWorkWithExpression()
     {
-        var windowHandle = await page.EvaluateHandleAsync(@"() => {
+        var windowHandle = await Page.EvaluateHandleAsync(@"() => {
     window['foo'] = [1, 2];
     return window;
   }");

@@ -21,17 +21,17 @@ using static Microsoft.Playwright.Tests.Fixtures.Utils;
 namespace Microsoft.Playwright.Tests.Page;
 
 /// <summary>Port of tests/page/page-filechooser.spec.ts.</summary>
-public class PageFilechooserTests
+public class PageFilechooserTests : UpstreamPageTest
 {
     [UpstreamTest("FC-001 should upload multiple large files")]
-    public async Task ShouldUploadMultipleLargeFiles(IPage page, Server server, bool isAndroid, string mode, TestInfo testInfo)
+    public async Task ShouldUploadMultipleLargeFiles()
     {
-        Info.Skip(isAndroid);
+        Info.Skip(IsAndroid);
         Info.Slow();
 
         var filesCount = 10;
-        await page.GotoAsync(server.Prefix + "/input/fileupload-multi.html");
-        var uploadFile = testInfo.OutputPath("50MB_1.zip");
+        await Page.GotoAsync(Server.Prefix + "/input/fileupload-multi.html");
+        var uploadFile = Info.OutputPath("50MB_1.zip");
         var str = new string('A', 1024);
         var stream = new StreamWriter(uploadFile);
         // 49 is close to the actual limit
@@ -40,102 +40,102 @@ public class PageFilechooserTests
             await stream.WriteAsync(str);
         }
         await stream.DisposeAsync();
-        var input = page.Locator("input[type=\"file\"]");
+        var input = Page.Locator("input[type=\"file\"]");
         var uploadFiles = new List<string> { uploadFile };
         for (var i = 2; i <= filesCount; i++)
         {
-            var dstFile = testInfo.OutputPath($"50MB_{i}.zip");
+            var dstFile = Info.OutputPath($"50MB_{i}.zip");
             File.Copy(uploadFile, dstFile, true);
             uploadFiles.Add(dstFile);
         }
-        var fileChooserPromise = page.WaitForFileChooserAsync();
+        var fileChooserPromise = Page.WaitForFileChooserAsync();
         await input.ClickAsync();
         var fileChooser = await fileChooserPromise;
         await fileChooser.SetFilesAsync(uploadFiles);
-        var filesLen = await page.EvaluateAsync<int>("document.getElementsByTagName(\"input\")[0].files.length");
+        var filesLen = await Page.EvaluateAsync<int>("document.getElementsByTagName(\"input\")[0].files.length");
         Assert.That(fileChooser.IsMultiple, Is.EqualTo(true));
         Assert.That(filesLen, Is.EqualTo(filesCount));
         await PromiseAll(uploadFiles.Select(path => Task.Run(() => File.Delete(path))));
     }
 
     [UpstreamTest("FC-002 should emit event once")]
-    public async Task ShouldEmitEventOnce(IPage page, Server server)
+    public async Task ShouldEmitEventOnce()
     {
-        await page.SetContentAsync("<input type=file>");
+        await Page.SetContentAsync("<input type=file>");
         var chooser = await PromiseAll(
-            Once<IFileChooser>(h => page.FileChooser += h, h => page.FileChooser -= h),
-            page.ClickAsync("input"));
+            Once<IFileChooser>(h => Page.FileChooser += h, h => Page.FileChooser -= h),
+            Page.ClickAsync("input"));
         Assert.That(chooser, Is.Not.Null);
     }
 
     [UpstreamTest("FC-004 should emit event for iframe")]
-    public async Task ShouldEmitEventForIframe(IPage page, Server server)
+    public async Task ShouldEmitEventForIframe()
     {
-        var frame = await AttachFrame(page, "frame1", server.EmptyPage);
+        var frame = await AttachFrame(Page, "frame1", Server.EmptyPage);
         await frame.SetContentAsync("<input type=file>");
         var chooser = await PromiseAll(
-            Once<IFileChooser>(h => page.FileChooser += h, h => page.FileChooser -= h),
+            Once<IFileChooser>(h => Page.FileChooser += h, h => Page.FileChooser -= h),
             frame.ClickAsync("input"));
         Assert.That(chooser, Is.Not.Null);
     }
 
     [UpstreamTest("FC-005 should emit event on/off")]
-    public async Task ShouldEmitEventOnOff(IPage page, Server server)
+    public async Task ShouldEmitEventOnOff()
     {
-        await page.SetContentAsync("<input type=file>");
+        await Page.SetContentAsync("<input type=file>");
         // .NET: new Promise(f => { ... }) is a TaskCompletionSource that the listener settles.
         var f = new TaskCompletionSource<IFileChooser>(TaskCreationOptions.RunContinuationsAsynchronously);
         {
             EventHandler<IFileChooser> listener = null;
             listener = (_, chooser) =>
             {
-                page.FileChooser -= listener;
+                Page.FileChooser -= listener;
                 f.SetResult(chooser);
             };
-            page.FileChooser += listener;
+            Page.FileChooser += listener;
         }
         var chooser = await PromiseAll(
             f.Task,
-            page.ClickAsync("input"));
+            Page.ClickAsync("input"));
         Assert.That(chooser, Is.Not.Null);
     }
 
     [UpstreamTest("FC-006 should emit event addListener/removeListener")]
-    public async Task ShouldEmitEventAddListenerRemoveListener(IPage page, Server server)
+    public async Task ShouldEmitEventAddListenerRemoveListener()
     {
-        await page.SetContentAsync("<input type=file>");
+        await Page.SetContentAsync("<input type=file>");
         // .NET: new Promise(f => { ... }) is a TaskCompletionSource that the listener settles.
         var f = new TaskCompletionSource<IFileChooser>(TaskCreationOptions.RunContinuationsAsynchronously);
         {
             EventHandler<IFileChooser> listener = null;
             listener = (_, chooser) =>
             {
-                page.FileChooser -= listener;
+                Page.FileChooser -= listener;
                 f.SetResult(chooser);
             };
-            page.FileChooser += listener;
+            Page.FileChooser += listener;
         }
         var chooser = await PromiseAll(
             f.Task,
-            page.ClickAsync("input"));
+            Page.ClickAsync("input"));
         Assert.That(chooser, Is.Not.Null);
     }
 
     [UpstreamTest("FC-007 should work when file input is attached to DOM")]
-    public async Task ShouldWorkWhenFileInputIsAttachedToDOM(IPage page, Server server)
+    public async Task ShouldWorkWhenFileInputIsAttachedToDOM()
     {
-        await page.SetContentAsync("<input type=file>");
+        await Page.SetContentAsync("<input type=file>");
         var chooser = await PromiseAll(
-            page.WaitForFileChooserAsync(),
-            page.ClickAsync("input"));
+            Page.WaitForFileChooserAsync(),
+            Page.ClickAsync("input"));
         Assert.That(chooser, Is.Not.Null);
     }
 
     [UpstreamTest("FC-008 should work when file input is not attached to DOM")]
-    public async Task ShouldWorkWhenFileInputIsNotAttachedToDOM(IPage page, Func<string, string> asset)
+    public async Task ShouldWorkWhenFileInputIsNotAttachedToDOM()
     {
-        await page.SetContentAsync("<button>Open</button>");
-        await page.EvaluateAsync(@"() => {
+        await Page.SetContentAsync("<button>Open</button>");
+        await Page.EvaluateAsync(@"() => {
     document.querySelector('button').onclick = () => {
       const input = document.createElement('input');
       input.type = 'file';
@@ -146,10 +146,10 @@ public class PageFilechooserTests
     };
   }");
         var chooser = await PromiseAll(
-            page.WaitForFileChooserAsync(),
-            page.ClickAsync("button"));
-        await chooser.SetFilesAsync(asset("file-to-upload.txt"));
-        Assert.That(await page.EvaluateAsync<string[]>("() => window['events']"), Is.EqualTo(new[] { "input 1", "change 1" }));
+            Page.WaitForFileChooserAsync(),
+            Page.ClickAsync("button"));
+        await chooser.SetFilesAsync(Asset("file-to-upload.txt"));
+        Assert.That(await Page.EvaluateAsync<string[]>("() => window['events']"), Is.EqualTo(new[] { "input 1", "change 1" }));
         var content = await chooser.Element.EvaluateAsync<string>(@"input => {
     const reader = new FileReader();
     const promise = new Promise(fulfill => reader.onload = fulfill);
@@ -160,10 +160,10 @@ public class PageFilechooserTests
     }
 
     [UpstreamTest("FC-009 should not throw when filechooser belongs to iframe")]
-    public async Task ShouldNotThrowWhenFilechooserBelongsToIframe(IPage page, Server server, string browserName)
+    public async Task ShouldNotThrowWhenFilechooserBelongsToIframe()
     {
-        await page.GotoAsync(server.Prefix + "/frames/one-frame.html");
-        var frame = page.MainFrame.ChildFrames[0];
+        await Page.GotoAsync(Server.Prefix + "/frames/one-frame.html");
+        var frame = Page.MainFrame.ChildFrames[0];
         await frame.SetContentAsync(@"
     <div>Click me</div>
     <script>
@@ -176,16 +176,16 @@ public class PageFilechooserTests
     </script>
   ");
         await PromiseAll(
-            page.WaitForFileChooserAsync(),
+            Page.WaitForFileChooserAsync(),
             frame.ClickAsync("div"));
-        await page.WaitForFunctionAsync("() => window.__done");
+        await Page.WaitForFunctionAsync("() => window.__done");
     }
 
     [UpstreamTest("FC-010 should not throw when frame is detached immediately")]
-    public async Task ShouldNotThrowWhenFrameIsDetachedImmediately(IPage page, Server server)
+    public async Task ShouldNotThrowWhenFrameIsDetachedImmediately()
     {
-        await page.GotoAsync(server.Prefix + "/frames/one-frame.html");
-        var frame = page.MainFrame.ChildFrames[0];
+        await Page.GotoAsync(Server.Prefix + "/frames/one-frame.html");
+        var frame = Page.MainFrame.ChildFrames[0];
         await frame.SetContentAsync(@"
     <div>Click me</div>
     <script>
@@ -199,43 +199,43 @@ public class PageFilechooserTests
       });
     </script>
   ");
-        page.FileChooser += (_, _) => { };  // To ensure we handle file choosers.
+        Page.FileChooser += (_, _) => { };  // To ensure we handle file choosers.
         await frame.ClickAsync("div");
-        await page.WaitForFunctionAsync("() => window.__done");
+        await Page.WaitForFunctionAsync("() => window.__done");
     }
 
     [UpstreamTest("FC-011 should respect timeout")]
-    public async Task ShouldRespectTimeout(IPage page, IPlaywright playwright)
+    public async Task ShouldRespectTimeout()
     {
         Exception error = null;
-        error = await Catch(() => page.WaitForFileChooserAsync(new() { Timeout = 1 }));
+        error = await Catch(() => Page.WaitForFileChooserAsync(new() { Timeout = 1 }));
         Assert.That(error, Is.InstanceOf<TimeoutException>());
     }
 
     [UpstreamTest("FC-012 should respect default timeout when there is no custom timeout")]
-    public async Task ShouldRespectDefaultTimeoutWhenThereIsNoCustomTimeout(IPage page, IPlaywright playwright)
+    public async Task ShouldRespectDefaultTimeoutWhenThereIsNoCustomTimeout()
     {
-        page.SetDefaultTimeout(1);
+        Page.SetDefaultTimeout(1);
         Exception error = null;
-        error = await Catch(() => page.WaitForFileChooserAsync());
+        error = await Catch(() => Page.WaitForFileChooserAsync());
         Assert.That(error, Is.InstanceOf<TimeoutException>());
     }
 
     [UpstreamTest("FC-013 should prioritize exact timeout over default timeout")]
-    public async Task ShouldPrioritizeExactTimeoutOverDefaultTimeout(IPage page, IPlaywright playwright)
+    public async Task ShouldPrioritizeExactTimeoutOverDefaultTimeout()
     {
-        page.SetDefaultTimeout(0);
+        Page.SetDefaultTimeout(0);
         Exception error = null;
-        error = await Catch(() => page.WaitForFileChooserAsync(new() { Timeout = 1 }));
+        error = await Catch(() => Page.WaitForFileChooserAsync(new() { Timeout = 1 }));
         Assert.That(error, Is.InstanceOf<TimeoutException>());
     }
 
     [UpstreamTest("FC-014 should work with no timeout")]
-    public async Task ShouldWorkWithNoTimeout(IPage page, Server server)
+    public async Task ShouldWorkWithNoTimeout()
     {
         var (chooser, _) = await PromiseAll(
-            page.WaitForFileChooserAsync(new() { Timeout = 0 }),
-            page.EvaluateAsync(@"() => window.builtins.setTimeout(() => {
+            Page.WaitForFileChooserAsync(new() { Timeout = 0 }),
+            Page.EvaluateAsync(@"() => window.builtins.setTimeout(() => {
       const el = document.createElement('input');
       el.type = 'file';
       el.click();
@@ -244,68 +244,68 @@ public class PageFilechooserTests
     }
 
     [UpstreamTest("FC-016 should return the same file chooser when there are many watchdogs simultaneously")]
-    public async Task ShouldReturnTheSameFileChooserWhenThereAreManyWatchdogsSimultaneously(IPage page, Server server)
+    public async Task ShouldReturnTheSameFileChooserWhenThereAreManyWatchdogsSimultaneously()
     {
-        await page.SetContentAsync("<input type=file>");
+        await Page.SetContentAsync("<input type=file>");
         var (fileChooser1, fileChooser2, _) = await PromiseAll(
-            page.WaitForFileChooserAsync(),
-            page.WaitForFileChooserAsync(),
-            page.EvalOnSelectorAsync("input", "input => input.click()"));
+            Page.WaitForFileChooserAsync(),
+            Page.WaitForFileChooserAsync(),
+            Page.EvalOnSelectorAsync("input", "input => input.click()"));
         Assert.That(ReferenceEquals(fileChooser1, fileChooser2), Is.EqualTo(true));
     }
 
     [UpstreamTest("FC-017 should accept single file")]
-    public async Task ShouldAcceptSingleFile(IPage page, Func<string, string> asset)
+    public async Task ShouldAcceptSingleFile()
     {
-        await page.SetContentAsync("<input type=file oninput='javascript:console.timeStamp()'>");
+        await Page.SetContentAsync("<input type=file oninput='javascript:console.timeStamp()'>");
         var fileChooser = await PromiseAll(
-            page.WaitForFileChooserAsync(),
-            page.ClickAsync("input"));
-        Assert.That(fileChooser.Page, Is.SameAs(page));
+            Page.WaitForFileChooserAsync(),
+            Page.ClickAsync("input"));
+        Assert.That(fileChooser.Page, Is.SameAs(Page));
         Assert.That(fileChooser.Element, Is.Not.Null);
-        await fileChooser.SetFilesAsync(asset("file-to-upload.txt"));
-        Assert.That(await page.EvalOnSelectorAsync<int>("input", "input => input.files.length"), Is.EqualTo(1));
-        Assert.That(await page.EvalOnSelectorAsync<string>("input", "input => input.files[0].name"), Is.EqualTo("file-to-upload.txt"));
+        await fileChooser.SetFilesAsync(Asset("file-to-upload.txt"));
+        Assert.That(await Page.EvalOnSelectorAsync<int>("input", "input => input.files.length"), Is.EqualTo(1));
+        Assert.That(await Page.EvalOnSelectorAsync<string>("input", "input => input.files[0].name"), Is.EqualTo("file-to-upload.txt"));
     }
 
     [UpstreamTest("FC-018 should not trim big uploaded files")]
-    public async Task ShouldNotTrimBigUploadedFiles(IPage page, Server server)
+    public async Task ShouldNotTrimBigUploadedFiles()
     {
 
         FormidableMap<FormidableFile> files = null;
-        server.SetRoute("/upload", async (req, res) =>
+        Server.SetRoute("/upload", async (req, res) =>
         {
             var form = new IncomingForm();
             var (err, fields, f) = await form.Parse(req);
             files = f;
             res.End();
         });
-        await page.GotoAsync(server.EmptyPage);
+        await Page.GotoAsync(Server.EmptyPage);
 
         var DATA_SIZE = Math.Pow(2, 20);
         await PromiseAll(
-            page.EvaluateAsync(@"async size => {
+            Page.EvaluateAsync(@"async size => {
       const body = new FormData();
       body.set('file', new Blob([new Uint8Array(size)]));
       await fetch('/upload', { method: 'POST', body });
     }", DATA_SIZE),
-            server.WaitForRequest("/upload"));
+            Server.WaitForRequest("/upload"));
         Assert.That(files["file"].Size, Is.EqualTo(DATA_SIZE));
     }
 
     [UpstreamTest("FC-019 should be able to read selected file")]
-    public async Task ShouldBeAbleToReadSelectedFile(IPage page, Func<string, string> asset)
+    public async Task ShouldBeAbleToReadSelectedFile()
     {
-        await page.SetContentAsync("<input type=file>");
+        await Page.SetContentAsync("<input type=file>");
         // .NET: page.waitForEvent('filechooser').then(fileChooser => fileChooser.setFiles(...)) is a local function that is called in its place.
         async Task Then()
         {
-            var fileChooser = await page.WaitForFileChooserAsync();
-            await fileChooser.SetFilesAsync(asset("file-to-upload.txt"));
+            var fileChooser = await Page.WaitForFileChooserAsync();
+            await fileChooser.SetFilesAsync(Asset("file-to-upload.txt"));
         }
         var content = await PromiseAll(
             Then(),
-            page.EvalOnSelectorAsync<string>("input", @"async picker => {
+            Page.EvalOnSelectorAsync<string>("input", @"async picker => {
       picker.click();
       await new Promise(x => picker.oninput = x);
       const reader = new FileReader();
@@ -317,18 +317,18 @@ public class PageFilechooserTests
     }
 
     [UpstreamTest("FC-020 should be able to reset selected files with empty file list")]
-    public async Task ShouldBeAbleToResetSelectedFilesWithEmptyFileList(IPage page, Func<string, string> asset)
+    public async Task ShouldBeAbleToResetSelectedFilesWithEmptyFileList()
     {
-        await page.SetContentAsync("<input type=file>");
+        await Page.SetContentAsync("<input type=file>");
         // .NET: page.waitForEvent('filechooser').then(fileChooser => fileChooser.setFiles(...)) is a local function that is called in its place.
         async Task Then1()
         {
-            var fileChooser = await page.WaitForFileChooserAsync();
-            await fileChooser.SetFilesAsync(asset("file-to-upload.txt"));
+            var fileChooser = await Page.WaitForFileChooserAsync();
+            await fileChooser.SetFilesAsync(Asset("file-to-upload.txt"));
         }
         var fileLength1 = await PromiseAll(
             Then1(),
-            page.EvalOnSelectorAsync<int>("input", @"async picker => {
+            Page.EvalOnSelectorAsync<int>("input", @"async picker => {
       picker.click();
       await new Promise(x => picker.oninput = x);
       return picker.files.length;
@@ -337,12 +337,12 @@ public class PageFilechooserTests
         // .NET: page.waitForEvent('filechooser').then(fileChooser => fileChooser.setFiles([])) is a local function that is called in its place.
         async Task Then2()
         {
-            var fileChooser = await page.WaitForFileChooserAsync();
+            var fileChooser = await Page.WaitForFileChooserAsync();
             await fileChooser.SetFilesAsync(Array.Empty<string>());
         }
         var fileLength2 = await PromiseAll(
             Then2(),
-            page.EvalOnSelectorAsync<int>("input", @"async picker => {
+            Page.EvalOnSelectorAsync<int>("input", @"async picker => {
       picker.click();
       await new Promise(x => picker.oninput = x);
       return picker.files.length;
@@ -351,71 +351,71 @@ public class PageFilechooserTests
     }
 
     [UpstreamTest("FC-021 should work for single file pick")]
-    public async Task ShouldWorkForSingleFilePick(IPage page, Server server)
+    public async Task ShouldWorkForSingleFilePick()
     {
-        await page.SetContentAsync("<input type=file>");
+        await Page.SetContentAsync("<input type=file>");
         var fileChooser = await PromiseAll(
-            page.WaitForFileChooserAsync(),
-            page.ClickAsync("input"));
+            Page.WaitForFileChooserAsync(),
+            Page.ClickAsync("input"));
         Assert.That(fileChooser.IsMultiple, Is.EqualTo(false));
     }
 
     [UpstreamTest("FC-022 should work for \"multiple\"")]
-    public async Task ShouldWorkForMultiple(IPage page, Server server)
+    public async Task ShouldWorkForMultiple()
     {
-        await page.SetContentAsync("<input multiple type=file>");
+        await Page.SetContentAsync("<input multiple type=file>");
         var fileChooser = await PromiseAll(
-            page.WaitForFileChooserAsync(),
-            page.ClickAsync("input"));
+            Page.WaitForFileChooserAsync(),
+            Page.ClickAsync("input"));
         Assert.That(fileChooser.IsMultiple, Is.EqualTo(true));
     }
 
     [UpstreamTest("FC-023 should work for \"webkitdirectory\"")]
-    public async Task ShouldWorkForWebkitdirectory(IPage page, Server server)
+    public async Task ShouldWorkForWebkitdirectory()
     {
-        await page.SetContentAsync("<input multiple webkitdirectory type=file>");
+        await Page.SetContentAsync("<input multiple webkitdirectory type=file>");
         var fileChooser = await PromiseAll(
-            page.WaitForFileChooserAsync(),
-            page.ClickAsync("input"));
+            Page.WaitForFileChooserAsync(),
+            Page.ClickAsync("input"));
         Assert.That(fileChooser.IsMultiple, Is.EqualTo(true));
     }
 
     [UpstreamTest("FC-024 should emit event after navigation")]
-    public async Task ShouldEmitEventAfterNavigation(IPage page, Server server, string browserName, int browserMajorVersion)
+    public async Task ShouldEmitEventAfterNavigation()
     {
-        Info.Skip(browserName == "chromium" && browserMajorVersion < 99);
+        Info.Skip(BrowserName == "chromium" && BrowserMajorVersion < 99);
 
         var logs = new List<string>();
-        page.FileChooser += (_, _) => logs.Add("filechooser");
-        await page.GotoAsync(server.Prefix + "/empty.html");
-        await page.SetContentAsync("<input type=file>");
+        Page.FileChooser += (_, _) => logs.Add("filechooser");
+        await Page.GotoAsync(Server.Prefix + "/empty.html");
+        await Page.SetContentAsync("<input type=file>");
         await PromiseAll(
-            page.WaitForFileChooserAsync(),
-            page.ClickAsync("input"));
-        await page.GotoAsync(server.CrossProcessPrefix + "/empty.html");
-        await page.SetContentAsync("<input type=file>");
+            Page.WaitForFileChooserAsync(),
+            Page.ClickAsync("input"));
+        await Page.GotoAsync(Server.CrossProcessPrefix + "/empty.html");
+        await Page.SetContentAsync("<input type=file>");
         await PromiseAll(
-            page.WaitForFileChooserAsync(),
-            page.ClickAsync("input"));
+            Page.WaitForFileChooserAsync(),
+            Page.ClickAsync("input"));
         Assert.That(logs, Is.EqualTo(new[] { "filechooser", "filechooser" }));
     }
 
     [UpstreamTest("FC-025 should trigger listener added before navigation")]
-    public async Task ShouldTriggerListenerAddedBeforeNavigation(IPage page, Server server, int browserMajorVersion, bool isElectron)
+    public async Task ShouldTriggerListenerAddedBeforeNavigation()
     {
-        Info.Skip(isElectron && browserMajorVersion <= 98);
+        Info.Skip(IsElectron && BrowserMajorVersion <= 98);
         // Add listener before cross process navigation.
-        var chooserPromise = Once<IFileChooser>(h => page.FileChooser += h, h => page.FileChooser -= h);
-        await page.GotoAsync(server.Prefix + "/empty.html");
-        await page.GotoAsync(server.CrossProcessPrefix + "/empty.html");
-        await page.SetContentAsync("<input type=file>");
+        var chooserPromise = Once<IFileChooser>(h => Page.FileChooser += h, h => Page.FileChooser -= h);
+        await Page.GotoAsync(Server.Prefix + "/empty.html");
+        await Page.GotoAsync(Server.CrossProcessPrefix + "/empty.html");
+        await Page.SetContentAsync("<input type=file>");
         var chooser = await PromiseAll(
             chooserPromise,
-            page.ClickAsync("input"));
+            Page.ClickAsync("input"));
         Assert.That(chooser, Is.Not.Null);
     }
 
-    public class UserActivation
+    public class UserActivation : UpstreamPageTest
     {
         // Each test navigates to a fresh document, because transient activation
         // (including the one granted by page.evaluate in all browsers) sticks to
@@ -443,61 +443,61 @@ public class PageFilechooserTests
     </script>
   ";
 
-        [BeforeEach]
-        public async Task BeforeEach(IPage page, Server server)
+        [SetUp]
+        public async Task BeforeEach()
         {
-            await page.RouteAsync(server.Prefix + "/activation.html*", route => route.FulfillAsync(new() { ContentType = "text/html", Body = html }));
+            await Page.RouteAsync(Server.Prefix + "/activation.html*", route => route.FulfillAsync(new() { ContentType = "text/html", Body = html }));
         }
 
         [UpstreamTest("FC-026 should not open file chooser without user activation")]
-        public async Task ShouldNotOpenFileChooserWithoutUserActivation(IPage page, Server server, string browserName)
+        public async Task ShouldNotOpenFileChooserWithoutUserActivation()
         {
             Info.Skip(Environment.GetEnvironmentVariable("PW_CLOCK") == "frozen");
-            Info.Fixme(browserName == "webkit", "WebKit opens the file chooser from input.click() without user activation");
+            Info.Fixme(BrowserName == "webkit", "WebKit opens the file chooser from input.click() without user activation");
             var choosers = 0;
-            page.FileChooser += (_, _) => choosers++;
+            Page.FileChooser += (_, _) => choosers++;
 
-            await page.GotoAsync(server.Prefix + "/activation.html?click");
-            await page.WaitForTimeoutAsync(500);
+            await Page.GotoAsync(Server.Prefix + "/activation.html?click");
+            await Page.WaitForTimeoutAsync(500);
             Assert.That(choosers, Is.EqualTo(0));
 
             // Do not poll with waitForFunction: each poll evaluates in the page with a user gesture,
             // which grants transient user activation and would let showPicker() succeed.
-            var result = page.WaitForConsoleMessageAsync(new() { Predicate = msg => msg.Text.StartsWith("showPicker:", StringComparison.Ordinal) });
-            await page.GotoAsync(server.Prefix + "/activation.html?showPicker");
+            var result = Page.WaitForConsoleMessageAsync(new() { Predicate = msg => msg.Text.StartsWith("showPicker:", StringComparison.Ordinal) });
+            await Page.GotoAsync(Server.Prefix + "/activation.html?showPicker");
             Assert.That((await result).Text, Is.EqualTo("showPicker:NotAllowedError"));
             Assert.That(choosers, Is.EqualTo(0));
         }
 
         [UpstreamTest("FC-027 should open file chooser with user activation")]
-        public async Task ShouldOpenFileChooserWithUserActivation(IPage page, Server server)
+        public async Task ShouldOpenFileChooserWithUserActivation()
         {
-            await page.GotoAsync(server.Prefix + "/activation.html");
+            await Page.GotoAsync(Server.Prefix + "/activation.html");
             var chooser = await PromiseAll(
-                page.WaitForFileChooserAsync(),
-                page.ClickAsync("#once"));
+                Page.WaitForFileChooserAsync(),
+                Page.ClickAsync("#once"));
             Assert.That(chooser, Is.Not.Null);
 
             // page.evaluate grants transient user activation in all browsers.
-            await page.GotoAsync(server.Prefix + "/activation.html");
+            await Page.GotoAsync(Server.Prefix + "/activation.html");
             var (chooser2, _) = await PromiseAll(
-                page.WaitForFileChooserAsync(),
-                page.EvaluateAsync("() => document.querySelector('input').click()"));
+                Page.WaitForFileChooserAsync(),
+                Page.EvaluateAsync("() => document.querySelector('input').click()"));
             Assert.That(chooser2, Is.Not.Null);
-            await page.GotoAsync(server.Prefix + "/activation.html");
-            Assert.That(await page.EvaluateAsync<string>("() => window.showPicker()"), Is.EqualTo("ok"));
+            await Page.GotoAsync(Server.Prefix + "/activation.html");
+            Assert.That(await Page.EvaluateAsync<string>("() => window.showPicker()"), Is.EqualTo("ok"));
         }
 
         [UpstreamTest("FC-028 should consume user activation when opening file chooser")]
-        public async Task ShouldConsumeUserActivationWhenOpeningFileChooser(IPage page, Server server, string browserName, bool isElectron, bool isAndroid)
+        public async Task ShouldConsumeUserActivationWhenOpeningFileChooser()
         {
-            Info.Fixme(browserName == "webkit", "WebKit does not consume user activation when opening the file chooser");
-            Info.Fixme(isElectron || isAndroid, "Chromium 148 in Electron 42 and Chrome on the Android emulator do not consume user activation");
+            Info.Fixme(BrowserName == "webkit", "WebKit does not consume user activation when opening the file chooser");
+            Info.Fixme(IsElectron || IsAndroid, "Chromium 148 in Electron 42 and Chrome on the Android emulator do not consume user activation");
             var choosers = 0;
-            page.FileChooser += (_, _) => choosers++;
-            await page.GotoAsync(server.Prefix + "/activation.html");
-            await page.ClickAsync("#twice");
-            await page.WaitForTimeoutAsync(500);
+            Page.FileChooser += (_, _) => choosers++;
+            await Page.GotoAsync(Server.Prefix + "/activation.html");
+            await Page.ClickAsync("#twice");
+            await Page.WaitForTimeoutAsync(500);
             Assert.That(choosers, Is.EqualTo(1));
         }
     }

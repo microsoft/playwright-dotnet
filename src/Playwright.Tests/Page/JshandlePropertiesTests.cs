@@ -21,12 +21,12 @@ using static Microsoft.Playwright.Tests.Fixtures.Utils;
 namespace Microsoft.Playwright.Tests.Page;
 
 /// <summary>Port of tests/page/jshandle-properties.spec.ts.</summary>
-public class JshandlePropertiesTests
+public class JshandlePropertiesTests : UpstreamPageTest
 {
     [UpstreamTest("JH-010 should work @smoke")]
-    public async Task ShouldWork(IPage page)
+    public async Task ShouldWork()
     {
-        var aHandle = await page.EvaluateHandleAsync(@"() => ({
+        var aHandle = await Page.EvaluateHandleAsync(@"() => ({
     one: 1,
     two: 2,
     three: 3
@@ -36,9 +36,9 @@ public class JshandlePropertiesTests
     }
 
     [UpstreamTest("JH-011 should work with undefined, null, and empty")]
-    public async Task ShouldWorkWithUndefinedNullAndEmpty(IPage page)
+    public async Task ShouldWorkWithUndefinedNullAndEmpty()
     {
-        var aHandle = await page.EvaluateHandleAsync(@"() => ({
+        var aHandle = await Page.EvaluateHandleAsync(@"() => ({
     undefined: undefined,
     null: null,
   })");
@@ -53,9 +53,9 @@ public class JshandlePropertiesTests
     }
 
     [UpstreamTest("JH-012 should work with unserializable values")]
-    public async Task ShouldWorkWithUnserializableValues(IPage page)
+    public async Task ShouldWorkWithUnserializableValues()
     {
-        var aHandle = await page.EvaluateHandleAsync(@"() => ({
+        var aHandle = await Page.EvaluateHandleAsync(@"() => ({
     infinity: Infinity,
     nInfinity: -Infinity,
     nan: NaN,
@@ -73,9 +73,9 @@ public class JshandlePropertiesTests
     }
 
     [UpstreamTest("JH-013 getProperties should work")]
-    public async Task GetPropertiesShouldWork(IPage page)
+    public async Task GetPropertiesShouldWork()
     {
-        var aHandle = await page.EvaluateHandleAsync(@"() => ({
+        var aHandle = await Page.EvaluateHandleAsync(@"() => ({
     foo: 'bar'
   })");
         var properties = await aHandle.GetPropertiesAsync();
@@ -85,17 +85,17 @@ public class JshandlePropertiesTests
     }
 
     [UpstreamTest("JH-014 getProperties should return empty map for non-objects")]
-    public async Task GetPropertiesShouldReturnEmptyMapForNonObjects(IPage page)
+    public async Task GetPropertiesShouldReturnEmptyMapForNonObjects()
     {
-        var aHandle = await page.EvaluateHandleAsync("() => 123");
+        var aHandle = await Page.EvaluateHandleAsync("() => 123");
         var properties = await aHandle.GetPropertiesAsync();
         Assert.That(properties.Count, Is.EqualTo(0));
     }
 
     [UpstreamTest("JH-015 getProperties should return properties inhertied from super class")]
-    public async Task GetPropertiesShouldReturnPropertiesInhertiedFromSuperClass(IPage page)
+    public async Task GetPropertiesShouldReturnPropertiesInhertiedFromSuperClass()
     {
-        var aHandle = await page.EvaluateHandleAsync(@"() => {
+        var aHandle = await Page.EvaluateHandleAsync(@"() => {
     class A {
       constructor() {
         this.a = '1';
@@ -115,9 +115,9 @@ public class JshandlePropertiesTests
     }
 
     [UpstreamTest("JH-016 getProperties should return own enumerable properties only")]
-    public async Task GetPropertiesShouldReturnOwnEnumerablePropertiesOnly(IPage page)
+    public async Task GetPropertiesShouldReturnOwnEnumerablePropertiesOnly()
     {
-        var aHandle = await page.EvaluateHandleAsync(@"() => {
+        var aHandle = await Page.EvaluateHandleAsync(@"() => {
     class A {
       constructor() {
         this.own = 1;
@@ -129,16 +129,16 @@ public class JshandlePropertiesTests
   }");
         Assert.That((await aHandle.GetPropertiesAsync()).Keys, Is.EqualTo(new[] { "own" }));
 
-        await page.SetContentAsync("<div id=d><span>a</span><span>b</span></div>");
-        var collection = await page.EvaluateHandleAsync("() => document.querySelector('#d').children");
+        await Page.SetContentAsync("<div id=d><span>a</span><span>b</span></div>");
+        var collection = await Page.EvaluateHandleAsync("() => document.querySelector('#d').children");
         Assert.That((await collection.GetPropertiesAsync()).Keys, Is.EqualTo(new[] { "0", "1" }));
     }
 
     [UpstreamTest("JH-017 getProperties should work with elements")]
-    public async Task GetPropertiesShouldWorkWithElements(IPage page)
+    public async Task GetPropertiesShouldWorkWithElements()
     {
-        await page.SetContentAsync("<div>Hello</div>");
-        var handle = await page.EvaluateHandleAsync("() => ({ body: document.body })");
+        await Page.SetContentAsync("<div>Hello</div>");
+        var handle = await Page.EvaluateHandleAsync("() => ({ body: document.body })");
         var properties = await handle.GetPropertiesAsync();
         var body = (IElementHandle)properties.GetValueOrDefault("body");
         Assert.That(body, Is.Not.Null);

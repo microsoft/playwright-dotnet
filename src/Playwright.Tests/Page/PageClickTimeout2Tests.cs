@@ -21,15 +21,15 @@ using static Microsoft.Playwright.Tests.Fixtures.Utils;
 namespace Microsoft.Playwright.Tests.Page;
 
 /// <summary>Port of tests/page/page-click-timeout-2.spec.ts.</summary>
-public class PageClickTimeout2Tests
+public class PageClickTimeout2Tests : UpstreamPageTest
 {
     [UpstreamTest("CL-114 should timeout waiting for display:none to be gone")]
     [LocalFixme("dotnet: the message is 'Timeout 5000ms exceeded.', without the 'page.click: ' prefix of the call")]
-    public async Task ShouldTimeoutWaitingForDisplayNoneToBeGone(IPage page, Server server)
+    public async Task ShouldTimeoutWaitingForDisplayNoneToBeGone()
     {
-        await page.GotoAsync(server.Prefix + "/input/button.html");
-        await page.EvalOnSelectorAsync("button", "b => b.style.display = 'none'");
-        var error = await Catch(() => page.ClickAsync("button", new() { Timeout = 5000 }));
+        await Page.GotoAsync(Server.Prefix + "/input/button.html");
+        await Page.EvalOnSelectorAsync("button", "b => b.style.display = 'none'");
+        var error = await Catch(() => Page.ClickAsync("button", new() { Timeout = 5000 }));
         Assert.That(error.Message, Does.Contain("page.click: Timeout 5000ms exceeded."));
         Assert.That(error.Message, Does.Contain("waiting for element to be visible, enabled and stable"));
         Assert.That(error.Message, Does.Contain("element is not visible"));
@@ -38,11 +38,11 @@ public class PageClickTimeout2Tests
 
     [UpstreamTest("CL-115 should timeout waiting for visibility:hidden to be gone")]
     [LocalFixme("dotnet: the message is 'Timeout 5000ms exceeded.', without the 'page.click: ' prefix of the call")]
-    public async Task ShouldTimeoutWaitingForVisibilityHiddenToBeGone(IPage page, Server server)
+    public async Task ShouldTimeoutWaitingForVisibilityHiddenToBeGone()
     {
-        await page.GotoAsync(server.Prefix + "/input/button.html");
-        await page.EvalOnSelectorAsync("button", "b => b.style.visibility = 'hidden'");
-        var error = await Catch(() => page.ClickAsync("button", new() { Timeout = 5000 }));
+        await Page.GotoAsync(Server.Prefix + "/input/button.html");
+        await Page.EvalOnSelectorAsync("button", "b => b.style.visibility = 'hidden'");
+        var error = await Catch(() => Page.ClickAsync("button", new() { Timeout = 5000 }));
         Assert.That(error.Message, Does.Contain("page.click: Timeout 5000ms exceeded."));
         Assert.That(error.Message, Does.Contain("waiting for element to be visible, enabled and stable"));
         Assert.That(error.Message, Does.Contain("element is not visible"));

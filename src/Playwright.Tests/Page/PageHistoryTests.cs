@@ -23,164 +23,164 @@ using static Microsoft.Playwright.Tests.Fixtures.Utils;
 namespace Microsoft.Playwright.Tests.Page;
 
 /// <summary>Port of tests/page/page-history.spec.ts.</summary>
-public class PageHistoryTests
+public class PageHistoryTests : UpstreamPageTest
 {
     [UpstreamTest("NA-071 page.goBack should work @smoke")]
-    public async Task PageGoBackShouldWork(IPage page, Server server)
+    public async Task PageGoBackShouldWork()
     {
-        Assert.That(await page.GoBackAsync(), Is.Null);
+        Assert.That(await Page.GoBackAsync(), Is.Null);
 
-        await page.GotoAsync(server.EmptyPage);
-        await page.GotoAsync(server.Prefix + "/grid.html");
+        await Page.GotoAsync(Server.EmptyPage);
+        await Page.GotoAsync(Server.Prefix + "/grid.html");
 
-        var response = await page.GoBackAsync();
+        var response = await Page.GoBackAsync();
         Assert.That(response.Ok, Is.EqualTo(true));
-        Assert.That(response.Url, Does.Contain(server.EmptyPage));
+        Assert.That(response.Url, Does.Contain(Server.EmptyPage));
 
-        response = await page.GoForwardAsync();
+        response = await Page.GoForwardAsync();
         Assert.That(response.Ok, Is.EqualTo(true));
         Assert.That(response.Url, Does.Contain("/grid.html"));
 
-        response = await page.GoForwardAsync();
+        response = await Page.GoForwardAsync();
         Assert.That(response, Is.Null);
     }
 
     [UpstreamTest("NA-072 page.goBack should work with HistoryAPI")]
-    public async Task PageGoBackShouldWorkWithHistoryAPI(IPage page, Server server)
+    public async Task PageGoBackShouldWorkWithHistoryAPI()
     {
-        await page.GotoAsync(server.EmptyPage);
-        await page.EvaluateAsync(@"() => {
+        await Page.GotoAsync(Server.EmptyPage);
+        await Page.EvaluateAsync(@"() => {
     history.pushState({}, '', '/first.html');
     history.pushState({}, '', '/second.html');
   }");
-        Assert.That(page.Url, Is.EqualTo(server.Prefix + "/second.html"));
+        Assert.That(Page.Url, Is.EqualTo(Server.Prefix + "/second.html"));
 
-        await page.GoBackAsync();
-        Assert.That(page.Url, Is.EqualTo(server.Prefix + "/first.html"));
-        await page.GoBackAsync();
-        Assert.That(page.Url, Is.EqualTo(server.EmptyPage));
-        await page.GoForwardAsync();
-        Assert.That(page.Url, Is.EqualTo(server.Prefix + "/first.html"));
+        await Page.GoBackAsync();
+        Assert.That(Page.Url, Is.EqualTo(Server.Prefix + "/first.html"));
+        await Page.GoBackAsync();
+        Assert.That(Page.Url, Is.EqualTo(Server.EmptyPage));
+        await Page.GoForwardAsync();
+        Assert.That(Page.Url, Is.EqualTo(Server.Prefix + "/first.html"));
     }
 
     [UpstreamTest("NA-073 page.goBack should work for file urls")]
-    public async Task PageGoBackShouldWorkForFileUrls(IPage page, Server server, Func<string, string> asset, string channel, bool isAndroid, string mode)
+    public async Task PageGoBackShouldWorkForFileUrls()
     {
-        Info.Skip(isAndroid, "No files on Android");
-        Info.Skip(channel == "webkit-wsl");
+        Info.Skip(IsAndroid, "No files on Android");
+        Info.Skip(Channel == "webkit-wsl");
 
-        var url1 = new Uri(asset("consolelog.html")).AbsoluteUri;
-        var url2 = server.Prefix + "/consolelog.html";
+        var url1 = new Uri(Asset("consolelog.html")).AbsoluteUri;
+        var url2 = Server.Prefix + "/consolelog.html";
         await PromiseAll(
-            page.WaitForConsoleMessageAsync(new() { Predicate = message => message.Text == "here:" + url1 }),
-            page.GotoAsync(url1));
-        await page.SetContentAsync($"<a href='{url2}'>url2</a>");
-        Assert.That(page.Url.ToLowerInvariant(), Is.EqualTo(url1.ToLowerInvariant()));
-
-        await PromiseAll(
-            page.WaitForConsoleMessageAsync(new() { Predicate = message => message.Text == "here:" + url2 }),
-            page.ClickAsync("a"));
-        Assert.That(page.Url, Is.EqualTo(url2));
+            Page.WaitForConsoleMessageAsync(new() { Predicate = message => message.Text == "here:" + url1 }),
+            Page.GotoAsync(url1));
+        await Page.SetContentAsync($"<a href='{url2}'>url2</a>");
+        Assert.That(Page.Url.ToLowerInvariant(), Is.EqualTo(url1.ToLowerInvariant()));
 
         await PromiseAll(
-            page.WaitForConsoleMessageAsync(new() { Predicate = message => message.Text == "here:" + url1 }),
-            page.GoBackAsync());
-        Assert.That(page.Url.ToLowerInvariant(), Is.EqualTo(url1.ToLowerInvariant()));
+            Page.WaitForConsoleMessageAsync(new() { Predicate = message => message.Text == "here:" + url2 }),
+            Page.ClickAsync("a"));
+        Assert.That(Page.Url, Is.EqualTo(url2));
+
+        await PromiseAll(
+            Page.WaitForConsoleMessageAsync(new() { Predicate = message => message.Text == "here:" + url1 }),
+            Page.GoBackAsync());
+        Assert.That(Page.Url.ToLowerInvariant(), Is.EqualTo(url1.ToLowerInvariant()));
         // Should be able to evaluate in the new context, and
         // not reach for the old cross-process one.
-        Assert.That(await page.EvaluateAsync<int>("() => window.scrollX"), Is.EqualTo(0));
+        Assert.That(await Page.EvaluateAsync<int>("() => window.scrollX"), Is.EqualTo(0));
         // Should be able to screenshot.
-        await page.ScreenshotAsync();
+        await Page.ScreenshotAsync();
 
         await PromiseAll(
-            page.WaitForConsoleMessageAsync(new() { Predicate = message => message.Text == "here:" + url2 }),
-            page.GoForwardAsync());
-        Assert.That(page.Url, Is.EqualTo(url2));
-        Assert.That(await page.EvaluateAsync<int>("() => window.scrollX"), Is.EqualTo(0));
-        await page.ScreenshotAsync();
+            Page.WaitForConsoleMessageAsync(new() { Predicate = message => message.Text == "here:" + url2 }),
+            Page.GoForwardAsync());
+        Assert.That(Page.Url, Is.EqualTo(url2));
+        Assert.That(await Page.EvaluateAsync<int>("() => window.scrollX"), Is.EqualTo(0));
+        await Page.ScreenshotAsync();
     }
 
     [UpstreamTest("NA-074 goBack/goForward should work with bfcache-able pages")]
-    public async Task GoBackGoForwardShouldWorkWithBfcacheAblePages(IPage page, Server server)
+    public async Task GoBackGoForwardShouldWorkWithBfcacheAblePages()
     {
-        await page.GotoAsync(server.Prefix + "/cached/bfcached.html");
-        await page.SetContentAsync($"<a href={JsonSerializer.Serialize(server.Prefix + "/cached/bfcached.html?foo")}>click me</a>");
-        await page.ClickAsync("a");
+        await Page.GotoAsync(Server.Prefix + "/cached/bfcached.html");
+        await Page.SetContentAsync($"<a href={JsonSerializer.Serialize(Server.Prefix + "/cached/bfcached.html?foo")}>click me</a>");
+        await Page.ClickAsync("a");
 
-        var response = await page.GoBackAsync();
-        Assert.That(response.Url, Is.EqualTo(server.Prefix + "/cached/bfcached.html"));
+        var response = await Page.GoBackAsync();
+        Assert.That(response.Url, Is.EqualTo(Server.Prefix + "/cached/bfcached.html"));
         // BFCache should be disabled.
-        ExpectToEqual(await page.EvaluateAsync<object>("window.didShow"), new { persisted = false });
+        ExpectToEqual(await Page.EvaluateAsync<object>("window.didShow"), new { persisted = false });
 
-        response = await page.GoForwardAsync();
-        Assert.That(response.Url, Is.EqualTo(server.Prefix + "/cached/bfcached.html?foo"));
+        response = await Page.GoForwardAsync();
+        Assert.That(response.Url, Is.EqualTo(Server.Prefix + "/cached/bfcached.html?foo"));
     }
 
     [UpstreamTest("NA-075 page.reload should work")]
-    public async Task PageReloadShouldWork(IPage page, Server server)
+    public async Task PageReloadShouldWork()
     {
-        await page.GotoAsync(server.EmptyPage);
-        await page.EvaluateAsync("() => window['_foo'] = 10");
-        await page.ReloadAsync();
-        Assert.That(await page.EvaluateAsync<object>("() => window['_foo']"), Is.Null);
+        await Page.GotoAsync(Server.EmptyPage);
+        await Page.EvaluateAsync("() => window['_foo'] = 10");
+        await Page.ReloadAsync();
+        Assert.That(await Page.EvaluateAsync<object>("() => window['_foo']"), Is.Null);
     }
 
     [UpstreamTest("NA-076 page.reload should work with data url")]
-    public async Task PageReloadShouldWorkWithDataUrl(IPage page, Server server)
+    public async Task PageReloadShouldWorkWithDataUrl()
     {
-        await page.GotoAsync("data:text/html,hello");
-        Assert.That(await page.ContentAsync(), Does.Contain("hello"));
-        Assert.That(await page.ReloadAsync(), Is.Null);
-        Assert.That(await page.ContentAsync(), Does.Contain("hello"));
+        await Page.GotoAsync("data:text/html,hello");
+        Assert.That(await Page.ContentAsync(), Does.Contain("hello"));
+        Assert.That(await Page.ReloadAsync(), Is.Null);
+        Assert.That(await Page.ContentAsync(), Does.Contain("hello"));
     }
 
     [UpstreamTest("NA-077 page.reload during renderer-initiated navigation")]
-    public async Task PageReloadDuringRendererInitiatedNavigation(IPage page, Server server)
+    public async Task PageReloadDuringRendererInitiatedNavigation()
     {
-        await page.GotoAsync(server.Prefix + "/one-style.html");
-        await page.SetContentAsync("<form method='POST' action='/post'>Form is here<input type='submit'></form>");
-        server.SetRoute("/post", (req, res) => { });
+        await Page.GotoAsync(Server.Prefix + "/one-style.html");
+        await Page.SetContentAsync("<form method='POST' action='/post'>Form is here<input type='submit'></form>");
+        Server.SetRoute("/post", (req, res) => { });
 
         var reloadFailedPromise = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
         EventHandler<IRequest> handler = null;
         handler = async (_, _) =>
         {
-            page.Request -= handler;
-            await Catch(() => page.ReloadAsync());
+            Page.Request -= handler;
+            await Catch(() => Page.ReloadAsync());
             reloadFailedPromise.TrySetResult();
         };
-        page.Request += handler;
-        var clickPromise = Catch(() => page.ClickAsync("input[type=submit]"));
+        Page.Request += handler;
+        var clickPromise = Catch(() => Page.ClickAsync("input[type=submit]"));
         await reloadFailedPromise.Task;
         await clickPromise;
 
         // Form submit should be canceled, and reload should eventually arrive
         // to the original one-style.html.
-        await page.WaitForSelectorAsync("text=hello");
+        await Page.WaitForSelectorAsync("text=hello");
     }
 
     [UpstreamTest("NA-078 page.reload should not resolve with same-document navigation")]
-    public async Task PageReloadShouldNotResolveWithSameDocumentNavigation(IPage page, Server server)
+    public async Task PageReloadShouldNotResolveWithSameDocumentNavigation()
     {
-        await page.GotoAsync(server.EmptyPage);
+        await Page.GotoAsync(Server.EmptyPage);
         // 1. Make sure execution contexts are ready for fast evaluate.
-        await page.EvaluateAsync("1");
+        await Page.EvaluateAsync("1");
 
         // 2. Stall the reload request.
         ServerResponse response = null;
-        server.SetRoute("/empty.html", (req, res) => { response = res; });
-        var requestPromise = server.WaitForRequest("/empty.html");
+        Server.SetRoute("/empty.html", (req, res) => { response = res; });
+        var requestPromise = Server.WaitForRequest("/empty.html");
 
         // 3. Trigger push state that could resolve the reload.
-        IgnoreErrors(page.EvaluateAsync(@"() => {
+        IgnoreErrors(Page.EvaluateAsync(@"() => {
     window.history.pushState({}, '');
   }"));
 
         // 4. Trigger the reload, it should not resolve.
-        var reloadPromise = page.ReloadAsync();
+        var reloadPromise = Page.ReloadAsync();
 
         // 5. Trigger push state again, for the good measure :)
-        IgnoreErrors(page.EvaluateAsync(@"() => {
+        IgnoreErrors(Page.EvaluateAsync(@"() => {
     window.history.pushState({}, '');
   }"));
 
@@ -194,98 +194,98 @@ public class PageHistoryTests
     }
 
     [UpstreamTest("NA-079 page.reload should work with same origin redirect")]
-    public async Task PageReloadShouldWorkWithSameOriginRedirect(IPage page, Server server)
+    public async Task PageReloadShouldWorkWithSameOriginRedirect()
     {
-        await page.GotoAsync(server.EmptyPage);
-        server.SetRedirect("/empty.html", server.Prefix + "/title.html");
-        await page.ReloadAsync();
-        await Expect(page).ToHaveURLAsync(server.Prefix + "/title.html");
+        await Page.GotoAsync(Server.EmptyPage);
+        Server.SetRedirect("/empty.html", Server.Prefix + "/title.html");
+        await Page.ReloadAsync();
+        await Expect(Page).ToHaveURLAsync(Server.Prefix + "/title.html");
     }
 
     [UpstreamTest("NA-080 page.reload should work with cross-origin redirect")]
-    public async Task PageReloadShouldWorkWithCrossOriginRedirect(IPage page, Server server, string browserName)
+    public async Task PageReloadShouldWorkWithCrossOriginRedirect()
     {
-        await page.GotoAsync(server.EmptyPage);
-        server.SetRedirect("/empty.html", server.CrossProcessPrefix + "/title.html");
-        await page.ReloadAsync();
-        await Expect(page).ToHaveURLAsync(server.CrossProcessPrefix + "/title.html");
+        await Page.GotoAsync(Server.EmptyPage);
+        Server.SetRedirect("/empty.html", Server.CrossProcessPrefix + "/title.html");
+        await Page.ReloadAsync();
+        await Expect(Page).ToHaveURLAsync(Server.CrossProcessPrefix + "/title.html");
     }
 
     [UpstreamTest("NA-081 page.reload should work on a page with a hash")]
-    public async Task PageReloadShouldWorkOnAPageWithAHash(IPage page, Server server)
+    public async Task PageReloadShouldWorkOnAPageWithAHash()
     {
-        await page.GotoAsync(server.EmptyPage + "#hash");
-        await page.ReloadAsync();
-        await Expect(page).ToHaveURLAsync(server.EmptyPage + "#hash");
+        await Page.GotoAsync(Server.EmptyPage + "#hash");
+        await Page.ReloadAsync();
+        await Expect(Page).ToHaveURLAsync(Server.EmptyPage + "#hash");
     }
 
     [UpstreamTest("NA-082 page.reload should work on a page with a hash at the end")]
-    public async Task PageReloadShouldWorkOnAPageWithAHashAtTheEnd(IPage page, Server server)
+    public async Task PageReloadShouldWorkOnAPageWithAHashAtTheEnd()
     {
-        await page.GotoAsync(server.EmptyPage + "#");
-        await page.ReloadAsync();
-        await Expect(page).ToHaveURLAsync(server.EmptyPage + "#");
+        await Page.GotoAsync(Server.EmptyPage + "#");
+        await Page.ReloadAsync();
+        await Expect(Page).ToHaveURLAsync(Server.EmptyPage + "#");
     }
 
     [UpstreamTest("NA-083 page.goBack during renderer-initiated navigation")]
-    public async Task PageGoBackDuringRendererInitiatedNavigation(IPage page, Server server)
+    public async Task PageGoBackDuringRendererInitiatedNavigation()
     {
-        await page.GotoAsync(server.Prefix + "/one-style.html");
-        await page.GotoAsync(server.EmptyPage);
-        await page.SetContentAsync("<form method='POST' action='/post'>Form is here<input type='submit'></form>");
-        server.SetRoute("/post", (req, res) => { });
+        await Page.GotoAsync(Server.Prefix + "/one-style.html");
+        await Page.GotoAsync(Server.EmptyPage);
+        await Page.SetContentAsync("<form method='POST' action='/post'>Form is here<input type='submit'></form>");
+        Server.SetRoute("/post", (req, res) => { });
 
         var reloadFailedPromise = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
         EventHandler<IRequest> handler = null;
         handler = async (_, _) =>
         {
-            page.Request -= handler;
-            await Catch(() => page.GoBackAsync());
+            Page.Request -= handler;
+            await Catch(() => Page.GoBackAsync());
             reloadFailedPromise.TrySetResult();
         };
-        page.Request += handler;
-        var clickPromise = Catch(() => page.ClickAsync("input[type=submit]"));
+        Page.Request += handler;
+        var clickPromise = Catch(() => Page.ClickAsync("input[type=submit]"));
         await reloadFailedPromise.Task;
         await clickPromise;
 
         // Form submit should be canceled, and goBack should eventually arrive
         // to the original one-style.html.
-        await page.WaitForSelectorAsync("text=hello");
+        await Page.WaitForSelectorAsync("text=hello");
     }
 
     [UpstreamTest("NA-084 page.goForward during renderer-initiated navigation")]
-    public async Task PageGoForwardDuringRendererInitiatedNavigation(IPage page, Server server)
+    public async Task PageGoForwardDuringRendererInitiatedNavigation()
     {
-        await page.GotoAsync(server.EmptyPage);
-        await page.GotoAsync(server.Prefix + "/one-style.html");
-        await page.GoBackAsync();
+        await Page.GotoAsync(Server.EmptyPage);
+        await Page.GotoAsync(Server.Prefix + "/one-style.html");
+        await Page.GoBackAsync();
 
-        await page.SetContentAsync("<form method='POST' action='/post'>Form is here<input type='submit'></form>");
-        server.SetRoute("/post", (req, res) => { });
+        await Page.SetContentAsync("<form method='POST' action='/post'>Form is here<input type='submit'></form>");
+        Server.SetRoute("/post", (req, res) => { });
 
         var reloadFailedPromise = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
         EventHandler<IRequest> handler = null;
         handler = async (_, _) =>
         {
-            page.Request -= handler;
-            await Catch(() => page.GoForwardAsync());
+            Page.Request -= handler;
+            await Catch(() => Page.GoForwardAsync());
             reloadFailedPromise.TrySetResult();
         };
-        page.Request += handler;
-        var clickPromise = Catch(() => page.ClickAsync("input[type=submit]"));
+        Page.Request += handler;
+        var clickPromise = Catch(() => Page.ClickAsync("input[type=submit]"));
         await reloadFailedPromise.Task;
         await clickPromise;
 
         // Form submit should be canceled, and goForward should eventually arrive
         // to the original one-style.html.
-        await page.WaitForSelectorAsync("text=hello");
+        await Page.WaitForSelectorAsync("text=hello");
     }
 
     [UpstreamTest("NA-085 regression test for issue 20791")]
-    public async Task RegressionTestForIssue20791(IPage page, Server server)
+    public async Task RegressionTestForIssue20791()
     {
         Info.Skip(Environment.GetEnvironmentVariable("PW_CLOCK") == "frozen");
-        server.SetRoute("/iframe.html", (req, res) =>
+        Server.SetRoute("/iframe.html", (req, res) =>
         {
             res.WriteHead(200, new() { ["content-type"] = "text/html; charset=utf-8" });
             // iframe access parent frame to log a value from it.
@@ -296,7 +296,7 @@ public class PageHistoryTests
       </script>
     ");
         });
-        server.SetRoute("/main.html", (req, res) =>
+        Server.SetRoute("/main.html", (req, res) =>
         {
             res.WriteHead(200, new() { ["content-type"] = "text/html; charset=utf-8" });
             res.End($@"
@@ -304,46 +304,46 @@ public class PageHistoryTests
       <iframe id=myframe src=""about:blank""></iframe>
       <script type=""text/javascript"">
         setTimeout(() => window.foo = 'foo', 0);
-        setTimeout(() => myframe.contentDocument.location.href = '{server.Prefix}/iframe.html', 0);
+        setTimeout(() => myframe.contentDocument.location.href = '{Server.Prefix}/iframe.html', 0);
       </script>
     ");
         });
         var messages = new List<string>();
-        page.Console += (_, msg) => messages.Add(msg.Text);
-        await page.GotoAsync(server.Prefix + "/main.html");
+        Page.Console += (_, msg) => messages.Add(msg.Text);
+        await Page.GotoAsync(Server.Prefix + "/main.html");
         await Expect(() => Assert.That(messages, Is.EqualTo(new[] { "foo" }))).ToPassAsync();
-        await page.ReloadAsync();
+        await Page.ReloadAsync();
         await Expect(() => Assert.That(messages, Is.EqualTo(new[] { "foo", "foo" }))).ToPassAsync();
     }
 
     [UpstreamTest("NA-086 should reload proper page")]
-    public async Task ShouldReloadProperPage(IPage page, Server server)
+    public async Task ShouldReloadProperPage()
     {
         var mainRequest = 0;
         var popupRequest = 0;
-        server.SetRoute("/main.html", (req, res) =>
+        Server.SetRoute("/main.html", (req, res) =>
         {
             res.WriteHead(200, new() { ["content-type"] = "text/html; charset=utf-8" });
             res.End($"<!doctype html><h1>main: {++mainRequest}</h1>");
         });
-        server.SetRoute("/popup.html", (req, res) =>
+        Server.SetRoute("/popup.html", (req, res) =>
         {
             res.WriteHead(200, new() { ["content-type"] = "text/html; charset=utf-8" });
             res.End($"<!doctype html><h1>popup: {++popupRequest}</h1>");
         });
-        await page.GotoAsync(server.Prefix + "/main.html");
+        await Page.GotoAsync(Server.Prefix + "/main.html");
         var (popup, _) = await PromiseAll(
-            page.WaitForPopupAsync(),
-            page.EvaluateAsync("() => window.open('/popup.html')"));
-        await Expect(page.Locator("h1")).ToHaveTextAsync("main: 1");
+            Page.WaitForPopupAsync(),
+            Page.EvaluateAsync("() => window.open('/popup.html')"));
+        await Expect(Page.Locator("h1")).ToHaveTextAsync("main: 1");
         await Expect(popup.Locator("h1")).ToHaveTextAsync("popup: 1");
 
-        await page.ReloadAsync();
-        await Expect(page.Locator("h1")).ToHaveTextAsync("main: 2");
+        await Page.ReloadAsync();
+        await Expect(Page.Locator("h1")).ToHaveTextAsync("main: 2");
         await Expect(popup.Locator("h1")).ToHaveTextAsync("popup: 1");
 
         await popup.ReloadAsync();
-        await Expect(page.Locator("h1")).ToHaveTextAsync("main: 2");
+        await Expect(Page.Locator("h1")).ToHaveTextAsync("main: 2");
         await Expect(popup.Locator("h1")).ToHaveTextAsync("popup: 2");
     }
 }

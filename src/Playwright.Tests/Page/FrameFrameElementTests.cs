@@ -21,18 +21,18 @@ using static Microsoft.Playwright.Tests.Fixtures.Utils;
 namespace Microsoft.Playwright.Tests.Page;
 
 /// <summary>Port of tests/page/frame-frame-element.spec.ts.</summary>
-public class FrameFrameElementTests
+public class FrameFrameElementTests : UpstreamPageTest
 {
     [UpstreamTest("FR-014 should work @smoke")]
-    public async Task ShouldWork(IPage page, Server server)
+    public async Task ShouldWork()
     {
-        await page.GotoAsync(server.EmptyPage);
-        var frame1 = await AttachFrame(page, "frame1", server.EmptyPage);
-        await AttachFrame(page, "frame2", server.EmptyPage);
-        var frame3 = await AttachFrame(page, "frame3", server.EmptyPage);
-        var frame1handle1 = await page.QuerySelectorAsync("#frame1");
+        await Page.GotoAsync(Server.EmptyPage);
+        var frame1 = await AttachFrame(Page, "frame1", Server.EmptyPage);
+        await AttachFrame(Page, "frame2", Server.EmptyPage);
+        var frame3 = await AttachFrame(Page, "frame3", Server.EmptyPage);
+        var frame1handle1 = await Page.QuerySelectorAsync("#frame1");
         var frame1handle2 = await frame1.FrameElementAsync();
-        var frame3handle1 = await page.QuerySelectorAsync("#frame3");
+        var frame3handle1 = await Page.QuerySelectorAsync("#frame3");
         var frame3handle2 = await frame3.FrameElementAsync();
         Assert.That(await frame1handle1.EvaluateAsync<bool>("(a, b) => a === b", frame1handle2), Is.EqualTo(true));
         Assert.That(await frame3handle1.EvaluateAsync<bool>("(a, b) => a === b", frame3handle2), Is.EqualTo(true));
@@ -40,40 +40,40 @@ public class FrameFrameElementTests
     }
 
     [UpstreamTest("FR-015 should work with contentFrame")]
-    public async Task ShouldWorkWithContentFrame(IPage page, Server server)
+    public async Task ShouldWorkWithContentFrame()
     {
-        await page.GotoAsync(server.EmptyPage);
-        var frame = await AttachFrame(page, "frame1", server.EmptyPage);
+        await Page.GotoAsync(Server.EmptyPage);
+        var frame = await AttachFrame(Page, "frame1", Server.EmptyPage);
         var handle = await frame.FrameElementAsync();
         var contentFrame = await handle.ContentFrameAsync();
         Assert.That(contentFrame, Is.SameAs(frame));
     }
 
     [UpstreamTest("FR-016 should work with frameset")]
-    public async Task ShouldWorkWithFrameset(IPage page, Server server)
+    public async Task ShouldWorkWithFrameset()
     {
-        await page.GotoAsync(server.Prefix + "/frames/frameset.html");
-        var frameElement1 = await page.QuerySelectorAsync("frame");
+        await Page.GotoAsync(Server.Prefix + "/frames/frameset.html");
+        var frameElement1 = await Page.QuerySelectorAsync("frame");
         var frame = await frameElement1.ContentFrameAsync();
         var frameElement2 = await frame.FrameElementAsync();
         Assert.That(await frameElement1.EvaluateAsync<bool>("(a, b) => a === b", frameElement2), Is.EqualTo(true));
     }
 
     [UpstreamTest("FR-017 should throw when detached")]
-    public async Task ShouldThrowWhenDetached(IPage page, Server server)
+    public async Task ShouldThrowWhenDetached()
     {
-        await page.GotoAsync(server.EmptyPage);
-        var frame1 = await AttachFrame(page, "frame1", server.EmptyPage);
-        await page.EvalOnSelectorAsync("#frame1", "e => e.remove()");
+        await Page.GotoAsync(Server.EmptyPage);
+        var frame1 = await AttachFrame(Page, "frame1", Server.EmptyPage);
+        await Page.EvalOnSelectorAsync("#frame1", "e => e.remove()");
         var error = await Catch(() => frame1.FrameElementAsync());
         Assert.That(error.Message, Does.Contain("Frame has been detached."));
     }
 
     [UpstreamTest("FR-018 should work inside closed shadow root")]
-    public async Task ShouldWorkInsideClosedShadowRoot(IPage page, Server server, string browserName)
+    public async Task ShouldWorkInsideClosedShadowRoot()
     {
-        await page.GotoAsync(server.EmptyPage);
-        await page.SetContentAsync(@"
+        await Page.GotoAsync(Server.EmptyPage);
+        await Page.SetContentAsync(@"
     <div id=framecontainer>
     </div>
     <script>
@@ -86,16 +86,16 @@ public class FrameFrameElementTests
     </script>
   ");
 
-        var frame = page.Frames[1];
+        var frame = Page.Frames[1];
         var element = await frame.FrameElementAsync();
         Assert.That(await element.GetAttributeAsync("name"), Is.EqualTo("myframe"));
     }
 
     [UpstreamTest("FR-019 should work inside declarative shadow root")]
-    public async Task ShouldWorkInsideDeclarativeShadowRoot(IPage page, Server server, string browserName)
+    public async Task ShouldWorkInsideDeclarativeShadowRoot()
     {
-        await page.GotoAsync(server.EmptyPage);
-        await page.SetContentAsync(@"
+        await Page.GotoAsync(Server.EmptyPage);
+        await Page.SetContentAsync(@"
     <div>
       <template shadowrootmode=""open"">
         <iframe name=""myframe"" srcdoc=""<h1>Hi!</h1>""></iframe>
@@ -104,7 +104,7 @@ public class FrameFrameElementTests
       <span>footer</span>
     </div>
   ");
-        var frame = page.Frames[1];
+        var frame = Page.Frames[1];
         var element = await frame.FrameElementAsync();
         Assert.That(await element.GetAttributeAsync("name"), Is.EqualTo("myframe"));
     }

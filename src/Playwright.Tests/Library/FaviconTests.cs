@@ -22,23 +22,23 @@ using static Microsoft.Playwright.Tests.Fixtures.Utils;
 namespace Microsoft.Playwright.Tests.Library;
 
 /// <summary>Port of tests/library/favicon.spec.ts.</summary>
-public class FaviconTests
+public class FaviconTests : UpstreamPageTest
 {
     [UpstreamTest("FA-001 should load svg favicon with prefer-color-scheme")]
-    public async Task ShouldLoadSvgFaviconWithPreferColorScheme(IPage page, Server server, string browserName, bool headless, Func<string, string> asset, string channel)
+    public async Task ShouldLoadSvgFaviconWithPreferColorScheme()
     {
-        Info.Skip(headless && browserName != "firefox", "headless browsers, except firefox, do not request favicons");
-        Info.Skip(!headless && browserName == "webkit", "headed webkit does not have a favicon feature");
+        Info.Skip(Headless && BrowserName != "firefox", "headless browsers, except firefox, do not request favicons");
+        Info.Skip(!Headless && BrowserName == "webkit", "headed webkit does not have a favicon feature");
 
         // Browsers aggressively cache favicons, so force bust with the
         // `d` parameter to make iterating on this test more predictable and isolated.
         var favicon = $"/favicon.svg?d={DateTimeOffset.UtcNow.ToUnixTimeMilliseconds().ToString(CultureInfo.InvariantCulture)}";
-        server.SetRoute(favicon, (req, res) =>
+        Server.SetRoute(favicon, (req, res) =>
         {
-            server.ServeFile(req, res, asset("media-query-prefers-color-scheme.svg"));
+            Server.ServeFile(req, res, Asset("media-query-prefers-color-scheme.svg"));
         });
 
-        server.SetRoute("/page.html", (_, res) =>
+        Server.SetRoute("/page.html", (_, res) =>
         {
             res.End($@"
       <!DOCTYPE html>
@@ -56,15 +56,15 @@ public class FaviconTests
         });
 
         await PromiseAll(
-            server.WaitForRequest(favicon),
-            page.GotoAsync(server.Prefix + "/page.html"));
+            Server.WaitForRequest(favicon),
+            Page.GotoAsync(Server.Prefix + "/page.html"));
 
         // Add artificial delay since, just because we saw the request for the favicon,
         // it does not mean the browser has processed it. There's not a great way to
         // hook into something like "favicon is fully displayed" event, so hopefully
         // 500ms is enough, but not too much!
-        await page.WaitForTimeoutAsync(500);
+        await Page.WaitForTimeoutAsync(500);
         // Text still being around ensures we haven't actually lost our browser to a crash.
-        await page.WaitForSelectorAsync("text=favicons");
+        await Page.WaitForSelectorAsync("text=favicons");
     }
 }

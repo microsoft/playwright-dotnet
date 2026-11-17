@@ -21,15 +21,16 @@ using static Microsoft.Playwright.Tests.Fixtures.Utils;
 namespace Microsoft.Playwright.Tests.Library.Chromium;
 
 /// <summary>Port of tests/library/chromium/session.spec.ts.</summary>
-public class SessionTests
+public class SessionTests : UpstreamBrowserTest
 {
     // .NET: upstream runs the files of tests/library/chromium only in the Chromium project.
-    [BeforeEach]
-    public static void Skip(string browserName) => Info.Skip(browserName != "chromium", "chromium only");
+    [SetUp]
+    public void Skip() => Info.Skip(BrowserName != "chromium", "chromium only");
 
     [UpstreamTest("CD-037 should work")]
-    public async Task ShouldWork(IPage page)
+    public async Task ShouldWork()
     {
+        var page = await PageFixture();
         var client = await page.Context.NewCDPSessionAsync(page);
 
         await PromiseAll(
@@ -40,8 +41,9 @@ public class SessionTests
     }
 
     [UpstreamTest("CD-038 should respect timeout and signal options")]
-    public async Task ShouldRespectTimeoutAndSignalOptions(IPage page, IPlaywright playwright)
+    public async Task ShouldRespectTimeoutAndSignalOptions()
     {
+        var page = await PageFixture();
         var client = await page.Context.NewCDPSessionAsync(page);
         var evalResponse = await client.SendAsync("Runtime.evaluate", new() { ["expression"] = "1 + 2", ["returnByValue"] = true }, new() { Timeout = 5000 });
         Assert.That(evalResponse.Value.GetProperty("result").GetProperty("value").GetInt32(), Is.EqualTo(3));
@@ -60,19 +62,21 @@ public class SessionTests
     }
 
     [UpstreamTest("CD-039 should send events")]
-    public async Task ShouldSendEvents(IPage page, Server server)
+    public async Task ShouldSendEvents()
     {
+        var page = await PageFixture();
         var client = await page.Context.NewCDPSessionAsync(page);
         await client.SendAsync("Network.enable");
         var events = new List<JsonElement?>();
         client.Event("Network.requestWillBeSent").OnEvent += (_, @event) => events.Add(@event);
-        await page.GotoAsync(server.EmptyPage);
+        await page.GotoAsync(Server.EmptyPage);
         Assert.That(events.Count, Is.EqualTo(1));
     }
 
     [UpstreamTest("CD-042 should be able to detach session")]
-    public async Task ShouldBeAbleToDetachSession(IPage page)
+    public async Task ShouldBeAbleToDetachSession()
     {
+        var page = await PageFixture();
         var client = await page.Context.NewCDPSessionAsync(page);
         await client.SendAsync("Runtime.enable");
         var evalResponse = await client.SendAsync("Runtime.evaluate", new() { ["expression"] = "1 + 2", ["returnByValue"] = true });
@@ -91,8 +95,9 @@ public class SessionTests
     }
 
     [UpstreamTest("CD-043 should throw nice errors")]
-    public async Task ShouldThrowNiceErrors(IPage page)
+    public async Task ShouldThrowNiceErrors()
     {
+        var page = await PageFixture();
         var client = await page.Context.NewCDPSessionAsync(page);
         var error = await Catch(() => theSourceOfTheProblems());
         Assert.That(error.ToString(), Does.Contain("theSourceOfTheProblems"));
@@ -105,8 +110,9 @@ public class SessionTests
     }
 
     [UpstreamTest("CD-044 should work with main frame")]
-    public async Task ShouldWorkWithMainFrame(IPage page)
+    public async Task ShouldWorkWithMainFrame()
     {
+        var page = await PageFixture();
         var client = await page.Context.NewCDPSessionAsync(page.MainFrame);
 
         await PromiseAll(
@@ -117,9 +123,10 @@ public class SessionTests
     }
 
     [UpstreamTest("CD-045 should throw if target is part of main")]
-    public async Task ShouldThrowIfTargetIsPartOfMain(Server server, IPage page)
+    public async Task ShouldThrowIfTargetIsPartOfMain()
     {
-        await page.GotoAsync(server.Prefix + "/frames/one-frame.html");
+        var page = await PageFixture();
+        await page.GotoAsync(Server.Prefix + "/frames/one-frame.html");
         Assert.That(page.Frames[0].Url, Does.Contain("/frames/one-frame.html"));
         Assert.That(page.Frames[1].Url, Does.Contain("/frames/frame.html"));
 
@@ -128,9 +135,9 @@ public class SessionTests
     }
 
     [UpstreamTest("CD-046 should not break page.close()")]
-    public async Task ShouldNotBreakPageClose(IBrowser browser, BrowserNewContextOptions contextOptions)
+    public async Task ShouldNotBreakPageClose()
     {
-        var context = await browser.NewContextAsync(contextOptions);
+        var context = await Browser.NewContextAsync(ContextOptions());
         var page = await context.NewPageAsync();
         var session = await page.Context.NewCDPSessionAsync(page);
         await session.DetachAsync();
@@ -139,9 +146,9 @@ public class SessionTests
     }
 
     [UpstreamTest("CD-047 should detach when page closes")]
-    public async Task ShouldDetachWhenPageCloses(IBrowser browser, BrowserNewContextOptions contextOptions)
+    public async Task ShouldDetachWhenPageCloses()
     {
-        var context = await browser.NewContextAsync(contextOptions);
+        var context = await Browser.NewContextAsync(ContextOptions());
         var page = await context.NewPageAsync();
         var session = await context.NewCDPSessionAsync(page);
         await page.CloseAsync();
@@ -152,9 +159,9 @@ public class SessionTests
     }
 
     [UpstreamTest("CD-048 should reject protocol calls when page closes")]
-    public async Task ShouldRejectProtocolCallsWhenPageCloses(IBrowser browser, BrowserNewContextOptions contextOptions)
+    public async Task ShouldRejectProtocolCallsWhenPageCloses()
     {
-        var context = await browser.NewContextAsync(contextOptions);
+        var context = await Browser.NewContextAsync(ContextOptions());
         var page = await context.NewPageAsync();
         var session = await context.NewCDPSessionAsync(page);
         var promise = Catch(() => session.SendAsync("Runtime.evaluate", new() { ["expression"] = "new Promise(() => {})", ["awaitPromise"] = true }));
@@ -167,8 +174,9 @@ public class SessionTests
     }
 
     [UpstreamTest("CD-050 should emit close event when session is detached")]
-    public async Task ShouldEmitCloseEventWhenSessionIsDetached(IPage page)
+    public async Task ShouldEmitCloseEventWhenSessionIsDetached()
     {
+        var page = await PageFixture();
         var client = await page.Context.NewCDPSessionAsync(page);
         ICDPSession closedSession = null;
         client.Close += (_, session) => closedSession = session;
@@ -177,9 +185,9 @@ public class SessionTests
     }
 
     [UpstreamTest("CD-051 should emit close event when page closes")]
-    public async Task ShouldEmitCloseEventWhenPageCloses(IBrowser browser, BrowserNewContextOptions contextOptions)
+    public async Task ShouldEmitCloseEventWhenPageCloses()
     {
-        var context = await browser.NewContextAsync(contextOptions);
+        var context = await Browser.NewContextAsync(ContextOptions());
         var page = await context.NewPageAsync();
         var session = await context.NewCDPSessionAsync(page);
         var closePromise = Once<ICDPSession>(h => session.Close += h, h => session.Close -= h);
@@ -190,9 +198,9 @@ public class SessionTests
     }
 
     [UpstreamTest("CD-052 should work with newBrowserCDPSession")]
-    public async Task ShouldWorkWithNewBrowserCDPSession(IBrowser browser, BrowserNewPageOptions newPageOptions)
+    public async Task ShouldWorkWithNewBrowserCDPSession()
     {
-        var session = await browser.NewBrowserCDPSessionAsync();
+        var session = await Browser.NewBrowserCDPSessionAsync();
 
         var version = await session.SendAsync("Browser.getVersion");
         Assert.That(version.Value.GetProperty("userAgent").GetString(), Is.Not.Empty);
@@ -200,7 +208,7 @@ public class SessionTests
         var gotEvent = false;
         session.Event("Target.targetCreated").OnEvent += (_, _) => gotEvent = true;
         await session.SendAsync("Target.setDiscoverTargets", new() { ["discover"] = true });
-        var page = await browser.NewPageAsync(newPageOptions);
+        var page = await Browser.NewPageAsync(NewPageOptions());
         Assert.That(gotEvent, Is.EqualTo(true));
         await page.CloseAsync();
 

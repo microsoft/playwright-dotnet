@@ -21,104 +21,104 @@ using static Microsoft.Playwright.Tests.Fixtures.Utils;
 namespace Microsoft.Playwright.Tests.Page;
 
 /// <summary>Port of tests/page/elementhandle-click.spec.ts.</summary>
-public class ElementhandleClickTests
+public class ElementhandleClickTests : UpstreamPageTest
 {
     [UpstreamTest("EH-010 should work @smoke")]
-    public async Task ShouldWork(IPage page, Server server)
+    public async Task ShouldWork()
     {
-        await page.GotoAsync(server.Prefix + "/input/button.html");
-        var button = await page.QuerySelectorAsync("button");
+        await Page.GotoAsync(Server.Prefix + "/input/button.html");
+        var button = await Page.QuerySelectorAsync("button");
         await button.ClickAsync();
-        Assert.That(await page.EvaluateAsync<string>("() => window['result']"), Is.EqualTo("Clicked"));
+        Assert.That(await Page.EvaluateAsync<string>("() => window['result']"), Is.EqualTo("Clicked"));
     }
 
     [UpstreamTest("EH-011 should work with Node removed")]
-    public async Task ShouldWorkWithNodeRemoved(IPage page, Server server)
+    public async Task ShouldWorkWithNodeRemoved()
     {
-        await page.GotoAsync(server.Prefix + "/input/button.html");
-        await page.EvaluateAsync("() => delete window['Node']");
-        var button = await page.QuerySelectorAsync("button");
+        await Page.GotoAsync(Server.Prefix + "/input/button.html");
+        await Page.EvaluateAsync("() => delete window['Node']");
+        var button = await Page.QuerySelectorAsync("button");
         await button.ClickAsync();
-        Assert.That(await page.EvaluateAsync<string>("() => window['result']"), Is.EqualTo("Clicked"));
+        Assert.That(await Page.EvaluateAsync<string>("() => window['result']"), Is.EqualTo("Clicked"));
     }
 
     [UpstreamTest("EH-012 should work for Shadow DOM v1")]
-    public async Task ShouldWorkForShadowDOMV1(IPage page, Server server)
+    public async Task ShouldWorkForShadowDOMV1()
     {
-        await page.GotoAsync(server.Prefix + "/shadow.html");
-        var buttonHandle = (IElementHandle)await page.EvaluateHandleAsync("() => window['button']");
+        await Page.GotoAsync(Server.Prefix + "/shadow.html");
+        var buttonHandle = (IElementHandle)await Page.EvaluateHandleAsync("() => window['button']");
         await buttonHandle.ClickAsync();
-        Assert.That(await page.EvaluateAsync<bool>("clicked"), Is.EqualTo(true));
+        Assert.That(await Page.EvaluateAsync<bool>("clicked"), Is.EqualTo(true));
     }
 
     [UpstreamTest("EH-013 should work for TextNodes")]
-    public async Task ShouldWorkForTextNodes(IPage page)
+    public async Task ShouldWorkForTextNodes()
     {
-        await page.SetContentAsync(@"
+        await Page.SetContentAsync(@"
     <div id='outer' onclick=""window['result'] = 'Clicked ' + event.target.id;"">
       <div id='inner' style=""max-width: 50px"">Lorem ipsum dolor sit amet consectetur adipiscing elit proin, integer curabitur imperdiet rhoncus cursus tincidunt bibendum, consequat sed magnis laoreet luctus mollis tellus. Nisl parturient mus accumsan feugiat sem laoreet magnis nisi, aptent per sollicitudin gravida orci ac blandit, viverra eros praesent auctor vivamus semper bibendum. Consequat sed habitasse luctus dictumst gravida platea semper phasellus, nascetur ridiculus purus est varius quisque et scelerisque, id vehicula eleifend montes sollicitudin dis velit. Pellentesque ridiculus per natoque et eleifend taciti nunc, laoreet auctor at condimentum imperdiet ante, conubia mi cubilia scelerisque sociosqu sem.</div>
       Custom Text.
     </div>
   ");
-        var buttonTextNode = (IElementHandle)await page.EvaluateHandleAsync("() => document.querySelector('#outer').lastChild");
+        var buttonTextNode = (IElementHandle)await Page.EvaluateHandleAsync("() => document.querySelector('#outer').lastChild");
         await buttonTextNode.ClickAsync();
-        Assert.That(await page.EvaluateAsync<string>("() => window['result']"), Is.EqualTo("Clicked outer"));
+        Assert.That(await Page.EvaluateAsync<string>("() => window['result']"), Is.EqualTo("Clicked outer"));
     }
 
     [UpstreamTest("EH-014 should throw for detached nodes")]
-    public async Task ShouldThrowForDetachedNodes(IPage page, Server server)
+    public async Task ShouldThrowForDetachedNodes()
     {
-        await page.GotoAsync(server.Prefix + "/input/button.html");
-        var button = await page.QuerySelectorAsync("button");
-        await page.EvaluateAsync("button => button.remove()", button);
+        await Page.GotoAsync(Server.Prefix + "/input/button.html");
+        var button = await Page.QuerySelectorAsync("button");
+        await Page.EvaluateAsync("button => button.remove()", button);
         Exception error = null;
         error = await Catch(() => button.ClickAsync());
         Assert.That(error.Message, Does.Contain("Element is not attached to the DOM"));
     }
 
     [UpstreamTest("EH-015 should throw for hidden nodes with force")]
-    public async Task ShouldThrowForHiddenNodesWithForce(IPage page, Server server)
+    public async Task ShouldThrowForHiddenNodesWithForce()
     {
-        await page.GotoAsync(server.Prefix + "/input/button.html");
-        var button = await page.QuerySelectorAsync("button");
-        await page.EvaluateAsync("button => button.style.display = 'none'", button);
+        await Page.GotoAsync(Server.Prefix + "/input/button.html");
+        var button = await Page.QuerySelectorAsync("button");
+        await Page.EvaluateAsync("button => button.style.display = 'none'", button);
         var error = await Catch(() => button.ClickAsync(new() { Force = true }));
         Assert.That(error.Message, Does.Contain("Element is not visible"));
     }
 
     [UpstreamTest("EH-016 should throw for recursively hidden nodes with force")]
-    public async Task ShouldThrowForRecursivelyHiddenNodesWithForce(IPage page, Server server)
+    public async Task ShouldThrowForRecursivelyHiddenNodesWithForce()
     {
-        await page.GotoAsync(server.Prefix + "/input/button.html");
-        var button = await page.QuerySelectorAsync("button");
-        await page.EvaluateAsync("button => button.parentElement.style.display = 'none'", button);
+        await Page.GotoAsync(Server.Prefix + "/input/button.html");
+        var button = await Page.QuerySelectorAsync("button");
+        await Page.EvaluateAsync("button => button.parentElement.style.display = 'none'", button);
         var error = await Catch(() => button.ClickAsync(new() { Force = true }));
         Assert.That(error.Message, Does.Contain("Element is not visible"));
     }
 
     [UpstreamTest("EH-017 should throw for <br> elements with force")]
-    public async Task ShouldThrowForBrElementsWithForce(IPage page, Server server)
+    public async Task ShouldThrowForBrElementsWithForce()
     {
-        await page.SetContentAsync("hello<br>goodbye");
-        var br = await page.QuerySelectorAsync("br");
+        await Page.SetContentAsync("hello<br>goodbye");
+        var br = await Page.QuerySelectorAsync("br");
         var error = await Catch(() => br.ClickAsync(new() { Force = true }));
         Assert.That(error.Message, Does.Contain("Element is outside of the viewport"));
     }
 
     [UpstreamTest("EH-018 should double click the button")]
-    public async Task ShouldDoubleClickTheButton(IPage page, Server server)
+    public async Task ShouldDoubleClickTheButton()
     {
-        await page.GotoAsync(server.Prefix + "/input/button.html");
-        await page.EvaluateAsync(@"() => {
+        await Page.GotoAsync(Server.Prefix + "/input/button.html");
+        await Page.EvaluateAsync(@"() => {
     window['double'] = false;
     const button = document.querySelector('button');
     button.addEventListener('dblclick', event => {
       window['double'] = true;
     });
   }");
-        var button = await page.QuerySelectorAsync("button");
+        var button = await Page.QuerySelectorAsync("button");
         await button.DblClickAsync();
-        Assert.That(await page.EvaluateAsync<bool>("double"), Is.EqualTo(true));
-        Assert.That(await page.EvaluateAsync<string>("result"), Is.EqualTo("Clicked"));
+        Assert.That(await Page.EvaluateAsync<bool>("double"), Is.EqualTo(true));
+        Assert.That(await Page.EvaluateAsync<string>("result"), Is.EqualTo("Clicked"));
     }
 }

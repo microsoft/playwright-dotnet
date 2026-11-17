@@ -23,12 +23,12 @@ using static Microsoft.Playwright.Tests.Fixtures.Utils;
 namespace Microsoft.Playwright.Tests.Library;
 
 /// <summary>Port of tests/library/browsercontext-storage-state.spec.ts.</summary>
-public class BrowsercontextStorageStateTests
+public class BrowsercontextStorageStateTests : UpstreamBrowserTest
 {
     [UpstreamTest("ST-001 should capture local storage")]
-    public async Task ShouldCaptureLocalStorage(ContextFactory contextFactory)
+    public async Task ShouldCaptureLocalStorage()
     {
-        var context = await contextFactory();
+        var context = await ContextFactory();
         var page1 = await context.NewPageAsync();
         await page1.RouteAsync("**/*", route =>
         {
@@ -75,11 +75,11 @@ public class BrowsercontextStorageStateTests
 
     [UpstreamTest("ST-002 should set local storage")]
     [LocalFixme("dotnet: SetStorageStateAsync takes the path of a file only. A storage state, which is a JSON string in .NET, fails with 'The specified storage state file does not exist: {\"cookies\":[],...'")]
-    public async Task ShouldSetLocalStorage(ContextFactory contextFactory, string channel)
+    public async Task ShouldSetLocalStorage()
     {
-        Info.Fixme(channel?.StartsWith("msedge", StringComparison.Ordinal) == true, "Network.clearBrowserCache sometimes stalls");
+        Info.Fixme(Channel?.StartsWith("msedge", StringComparison.Ordinal) == true, "Network.clearBrowserCache sometimes stalls");
 
-        var context = await contextFactory(new()
+        var context = await ContextFactory(new()
         {
             // .NET: a storage state is a JSON string.
             StorageState = JsonStringify(new
@@ -142,9 +142,9 @@ public class BrowsercontextStorageStateTests
 
     [UpstreamTest("ST-003 should report good error if the url is not valid")]
     [LocalFixme("dotnet: the message is 'Error setting storage state:\\n...', without the 'browser.newContext: ' prefix of the call")]
-    public async Task ShouldReportGoodErrorIfTheUrlIsNotValid(ContextFactory contextFactory)
+    public async Task ShouldReportGoodErrorIfTheUrlIsNotValid()
     {
-        var error = await Catch(() => contextFactory(new()
+        var error = await Catch(() => ContextFactory(new()
         {
             // .NET: a storage state is a JSON string.
             StorageState = JsonStringify(new
@@ -172,11 +172,11 @@ public class BrowsercontextStorageStateTests
     }
 
     [UpstreamTest("ST-004 should round-trip through the file")]
-    public async Task ShouldRoundTripThroughTheFile(ContextFactory contextFactory, string channel, TestInfo testInfo)
+    public async Task ShouldRoundTripThroughTheFile()
     {
-        Info.Fixme(channel?.StartsWith("msedge", StringComparison.Ordinal) == true, "Network.clearBrowserCache sometimes stalls");
+        Info.Fixme(Channel?.StartsWith("msedge", StringComparison.Ordinal) == true, "Network.clearBrowserCache sometimes stalls");
 
-        var context = await contextFactory();
+        var context = await ContextFactory();
         var page1 = await context.NewPageAsync();
         await page1.RouteAsync("**/*", route =>
         {
@@ -209,7 +209,7 @@ public class BrowsercontextStorageStateTests
     return document.cookie;
   }");
 
-        var path = testInfo.OutputPath("storage-state.json");
+        var path = Info.OutputPath("storage-state.json");
         var state = await context.StorageStateAsync(new() { Path = path, IndexedDB = true });
         var written = await File.ReadAllTextAsync(path);
         // .NET: a storage state is a JSON string, JSON.stringify(state, undefined, 2) is the state.
@@ -251,11 +251,11 @@ public class BrowsercontextStorageStateTests
             });
         };
 
-        var context2 = await contextFactory(new() { StorageStatePath = path });
+        var context2 = await ContextFactory(new() { StorageStatePath = path });
         await checkContext(context2);
         await context2.CloseAsync();
 
-        var context3 = await contextFactory();
+        var context3 = await ContextFactory();
         await context3.SetStorageStateAsync(path);
         Assert.That(context3.Pages, Has.Count.EqualTo(0));
         await checkContext(context3);
@@ -264,11 +264,12 @@ public class BrowsercontextStorageStateTests
 
     [UpstreamTest("ST-005 should round-trip OPFS")]
     [LocalFixme("dotnet: SetStorageStateAsync takes the path of a file only. A storage state, which is a JSON string in .NET, fails with 'The specified storage state file does not exist: {\"cookies\":[],...'")]
-    public async Task ShouldRoundTripOPFS(string browserName, ContextFactory contextFactory, IPage page, Server server, TestInfo testInfo)
+    public async Task ShouldRoundTripOPFS()
     {
-        Info.Skip(browserName == "webkit", "OPFS is unavailable in non-persistent WebKit contexts");
+        var page = await PageFixture();
+        Info.Skip(BrowserName == "webkit", "OPFS is unavailable in non-persistent WebKit contexts");
 
-        await page.GotoAsync(server.EmptyPage);
+        await page.GotoAsync(Server.EmptyPage);
         await page.EvaluateAsync(@"async () => {
     const root = await navigator.storage.getDirectory();
     const nested = await root.getDirectoryHandle('nested', { create: true });
@@ -288,13 +289,13 @@ public class BrowsercontextStorageStateTests
         // .NET: a storage state is a JSON string.
         ExpectToEqual(JsonSerializer.Deserialize<JsonElement>(await page.Context.StorageStateAsync()), new { cookies = Array.Empty<object>(), origins = Array.Empty<object>() });
 
-        var path = testInfo.OutputPath("storage-state.json");
+        var path = Info.OutputPath("storage-state.json");
         var storageState = await page.Context.StorageStateAsync(new() { Path = path, Opfs = true });
         ExpectToEqual(JsonSerializer.Deserialize<JsonElement>(storageState).GetProperty("origins"), new[]
         {
             new
             {
-                origin = server.Prefix,
+                origin = Server.Prefix,
                 localStorage = Array.Empty<object>(),
                 opfs = new object[]
                 {
@@ -312,7 +313,7 @@ public class BrowsercontextStorageStateTests
         {
             ExpectToEqual(JsonSerializer.Deserialize<JsonElement>(await context.StorageStateAsync(new() { Opfs = true })), JsonSerializer.Deserialize<JsonElement>(storageState));
             var checkPage = await context.NewPageAsync();
-            await checkPage.GotoAsync(server.EmptyPage);
+            await checkPage.GotoAsync(Server.EmptyPage);
             ExpectToEqual(await checkPage.EvaluateAsync<object>(@"async () => {
       const root = await navigator.storage.getDirectory();
       const hello = await (await root.getFileHandle('hello.txt')).getFile();
@@ -335,13 +336,13 @@ public class BrowsercontextStorageStateTests
             });
         };
 
-        var context2 = await contextFactory(new() { StorageStatePath = path });
+        var context2 = await ContextFactory(new() { StorageStatePath = path });
         await checkContext(context2);
         await context2.CloseAsync();
 
-        var context3 = await contextFactory();
+        var context3 = await ContextFactory();
         var page3 = await context3.NewPageAsync();
-        await page3.GotoAsync(server.EmptyPage);
+        await page3.GotoAsync(Server.EmptyPage);
         await page3.EvaluateAsync(@"async () => {
     const root = await navigator.storage.getDirectory();
     await root.getFileHandle('stale.txt', { create: true });
@@ -352,15 +353,17 @@ public class BrowsercontextStorageStateTests
     }
 
     [UpstreamTest("ST-006 should capture cookies")]
-    public async Task ShouldCaptureCookies(Server server, IBrowserContext context, IPage page, ContextFactory contextFactory)
+    public async Task ShouldCaptureCookies()
     {
-        server.SetRoute("/setcookie.html", (req, res) =>
+        var context = await ContextFixture();
+        var page = await PageFixture();
+        Server.SetRoute("/setcookie.html", (req, res) =>
         {
             res.SetHeader("Set-Cookie", new[] { "a=b", "empty=" });
             res.End();
         });
 
-        await page.GotoAsync(server.Prefix + "/setcookie.html");
+        await page.GotoAsync(Server.Prefix + "/setcookie.html");
         Assert.That(await page.EvaluateAsync<string[]>(@"() => {
     const cookies = document.cookie.split(';');
     return cookies.map(cookie => cookie.trim()).sort();
@@ -384,9 +387,9 @@ public class BrowsercontextStorageStateTests
                 value = "",
             }),
         });
-        var context2 = await contextFactory(new() { StorageState = storageState });
+        var context2 = await ContextFactory(new() { StorageState = storageState });
         var page2 = await context2.NewPageAsync();
-        await page2.GotoAsync(server.EmptyPage);
+        await page2.GotoAsync(Server.EmptyPage);
         Assert.That(await page2.EvaluateAsync<string[]>(@"() => {
     const cookies = document.cookie.split(';');
     return cookies.map(cookie => cookie.trim()).sort();
@@ -398,9 +401,9 @@ public class BrowsercontextStorageStateTests
     }
 
     [UpstreamTest("ST-007 should not emit events about internal page")]
-    public async Task ShouldNotEmitEventsAboutInternalPage(ContextFactory contextFactory)
+    public async Task ShouldNotEmitEventsAboutInternalPage()
     {
-        var context = await contextFactory();
+        var context = await ContextFactory();
         var page = await context.NewPageAsync();
         await page.RouteAsync("**/*", route =>
         {
@@ -422,9 +425,9 @@ public class BrowsercontextStorageStateTests
     }
 
     [UpstreamTest("ST-008 should not restore localStorage twice")]
-    public async Task ShouldNotRestoreLocalStorageTwice(ContextFactory contextFactory)
+    public async Task ShouldNotRestoreLocalStorageTwice()
     {
-        var context = await contextFactory(new()
+        var context = await ContextFactory(new()
         {
             // .NET: a storage state is a JSON string.
             StorageState = JsonStringify(new
@@ -467,10 +470,10 @@ public class BrowsercontextStorageStateTests
 
     [UpstreamTest("ST-009 should handle missing file")]
     [LocalFixme("dotnet: the client reads the file itself, and the message is 'The specified storage state file does not exist: <file>'. Upstream expects 'Error reading storage state from <file>:\\nENOENT'")]
-    public async Task ShouldHandleMissingFile(ContextFactory contextFactory, TestInfo testInfo)
+    public async Task ShouldHandleMissingFile()
     {
-        var file = testInfo.OutputPath("does-not-exist.json");
-        var error = await Catch(() => contextFactory(new()
+        var file = Info.OutputPath("does-not-exist.json");
+        var error = await Catch(() => ContextFactory(new()
         {
             StorageStatePath = file,
         }));
@@ -479,15 +482,15 @@ public class BrowsercontextStorageStateTests
 
     [UpstreamTest("ST-010 should handle malformed file")]
     [LocalFixme("dotnet: the client parses the file itself, and the message is ''not-json' is an invalid JSON literal. Expected the literal 'null'. Path: $ | LineNumber: 0 | BytePositionInLine: 1.'. Upstream expects 'Error reading storage state from <file>:\\nUnexpected token 'o', \"not-json\" is not valid JSON'")]
-    public async Task ShouldHandleMalformedFile(ContextFactory contextFactory, (int Major, int Minor, int Patch) nodeVersion, TestInfo testInfo)
+    public async Task ShouldHandleMalformedFile()
     {
-        var file = testInfo.OutputPath("state.json");
+        var file = Info.OutputPath("state.json");
         File.WriteAllText(file, "not-json");
-        var error = await Catch(() => contextFactory(new()
+        var error = await Catch(() => ContextFactory(new()
         {
             StorageStatePath = file,
         }));
-        if (nodeVersion.Major > 18)
+        if (NodeVersion.Major > 18)
         {
             Assert.That(error.Message, Does.Contain($"Error reading storage state from {file}:\nUnexpected token 'o', \"not-json\" is not valid JSON"));
         }
@@ -499,9 +502,11 @@ public class BrowsercontextStorageStateTests
 
     [UpstreamTest("ST-011 should serialize storageState with lone surrogates")]
     [LocalFixme("dotnet: the storage state has U+FFFD, the replacement character, in place of the lone surrogate U+DA7E")]
-    public async Task ShouldSerializeStorageStateWithLoneSurrogates(IPage page, IBrowserContext context, Server server)
+    public async Task ShouldSerializeStorageStateWithLoneSurrogates()
     {
-        await page.GotoAsync(server.EmptyPage);
+        var page = await PageFixture();
+        var context = await ContextFixture();
+        await page.GotoAsync(Server.EmptyPage);
         await page.EvaluateAsync("() => window.localStorage.setItem('foo', String.fromCharCode(55934))");
         // .NET: a storage state is a JSON string.
         var storageState = JsonSerializer.Deserialize<JsonElement>(await context.StorageStateAsync());
@@ -509,12 +514,14 @@ public class BrowsercontextStorageStateTests
     }
 
     [UpstreamTest("ST-012 should work when service worker is intefering")]
-    public async Task ShouldWorkWhenServiceWorkerIsIntefering(IPage page, IBrowserContext context, Server server, bool isAndroid, bool isElectron, int electronMajorVersion)
+    public async Task ShouldWorkWhenServiceWorkerIsIntefering()
     {
-        Info.Skip(isAndroid);
-        Info.Skip(isElectron && electronMajorVersion < 30, "error: Browser context management is not supported.");
+        var page = await PageFixture();
+        var context = await ContextFixture();
+        Info.Skip(IsAndroid);
+        Info.Skip(IsElectron && ElectronMajorVersion < 30, "error: Browser context management is not supported.");
 
-        server.SetRoute("/", (req, res) =>
+        Server.SetRoute("/", (req, res) =>
         {
             res.WriteHead(200, new() { ["content-type"] = "text/html" });
             res.End(@"
@@ -527,7 +534,7 @@ public class BrowsercontextStorageStateTests
     ");
         });
 
-        server.SetRoute("/sw.js", (req, res) =>
+        Server.SetRoute("/sw.js", (req, res) =>
         {
             res.WriteHead(200, new() { ["content-type"] = "application/javascript" });
             res.End(@"
@@ -558,7 +565,7 @@ public class BrowsercontextStorageStateTests
     ");
         });
 
-        await page.GotoAsync(server.Prefix);
+        await page.GotoAsync(Server.Prefix);
         await page.EvaluateAsync("() => window['activationPromise']");
 
         // .NET: a storage state is a JSON string.
@@ -567,12 +574,14 @@ public class BrowsercontextStorageStateTests
     }
 
     [UpstreamTest("ST-013 should work when service worker is intefering and the origin is not open")]
-    public async Task ShouldWorkWhenServiceWorkerIsInteferingAndTheOriginIsNotOpen(IPage page, IBrowserContext context, Server server, bool isAndroid, bool isElectron, int electronMajorVersion)
+    public async Task ShouldWorkWhenServiceWorkerIsInteferingAndTheOriginIsNotOpen()
     {
-        Info.Skip(isAndroid);
-        Info.Skip(isElectron && electronMajorVersion < 30, "error: Browser context management is not supported.");
+        var page = await PageFixture();
+        var context = await ContextFixture();
+        Info.Skip(IsAndroid);
+        Info.Skip(IsElectron && ElectronMajorVersion < 30, "error: Browser context management is not supported.");
 
-        server.SetRoute("/", (req, res) =>
+        Server.SetRoute("/", (req, res) =>
         {
             res.WriteHead(200, new() { ["content-type"] = "text/html" });
             res.End(@"
@@ -584,7 +593,7 @@ public class BrowsercontextStorageStateTests
     ");
         });
 
-        server.SetRoute("/sw.js", (req, res) =>
+        Server.SetRoute("/sw.js", (req, res) =>
         {
             res.WriteHead(200, new() { ["content-type"] = "application/javascript" });
             res.End(@"
@@ -608,13 +617,13 @@ public class BrowsercontextStorageStateTests
     ");
         });
 
-        server.SetRoute("/redirected.html", (req, res) =>
+        Server.SetRoute("/redirected.html", (req, res) =>
         {
             res.WriteHead(200, new() { ["content-type"] = "text/html" });
             res.End("<html></html>");
         });
 
-        await page.GotoAsync(server.Prefix);
+        await page.GotoAsync(Server.Prefix);
         await page.EvaluateAsync("() => window['activationPromise']");
         await page.GotoAsync("about:blank");
 
@@ -624,9 +633,9 @@ public class BrowsercontextStorageStateTests
     }
 
     [UpstreamTest("ST-014 should set local storage in third-party context")]
-    public async Task ShouldSetLocalStorageInThirdPartyContext(ContextFactory contextFactory, Server server)
+    public async Task ShouldSetLocalStorageInThirdPartyContext()
     {
-        var context = await contextFactory(new()
+        var context = await ContextFactory(new()
         {
             // .NET: a storage state is a JSON string.
             StorageState = JsonStringify(new
@@ -636,7 +645,7 @@ public class BrowsercontextStorageStateTests
                 {
                     new
                     {
-                        origin = server.CrossProcessPrefix,
+                        origin = Server.CrossProcessPrefix,
                         localStorage = new[]
                         {
                             new
@@ -650,8 +659,8 @@ public class BrowsercontextStorageStateTests
             }),
         });
         var page = await context.NewPageAsync();
-        await page.GotoAsync(server.EmptyPage);
-        var frame = await AttachFrame(page, "frame1", server.CrossProcessPrefix + "/empty.html");
+        await page.GotoAsync(Server.EmptyPage);
+        var frame = await AttachFrame(page, "frame1", Server.CrossProcessPrefix + "/empty.html");
 
         var localStorage = await frame.EvaluateAsync<object>("window.localStorage");
         ExpectToEqual(localStorage, new { name1 = "value1" });
@@ -659,17 +668,18 @@ public class BrowsercontextStorageStateTests
     }
 
     [UpstreamTest("ST-015 should roundtrip local storage in third-party context")]
-    public async Task ShouldRoundtripLocalStorageInThirdPartyContext(IPage page, ContextFactory contextFactory, Server server)
+    public async Task ShouldRoundtripLocalStorageInThirdPartyContext()
     {
-        await page.GotoAsync(server.EmptyPage);
-        var frame = await AttachFrame(page, "frame1", server.CrossProcessPrefix + "/empty.html");
+        var page = await PageFixture();
+        await page.GotoAsync(Server.EmptyPage);
+        var frame = await AttachFrame(page, "frame1", Server.CrossProcessPrefix + "/empty.html");
         await frame.EvaluateAsync("() => window.localStorage.setItem('name1', 'value1')");
         var storageState = await page.Context.StorageStateAsync();
 
-        var context2 = await contextFactory(new() { StorageState = storageState });
+        var context2 = await ContextFactory(new() { StorageState = storageState });
         var page2 = await context2.NewPageAsync();
-        await page2.GotoAsync(server.EmptyPage);
-        var frame2 = await AttachFrame(page2, "frame1", server.CrossProcessPrefix + "/empty.html");
+        await page2.GotoAsync(Server.EmptyPage);
+        var frame2 = await AttachFrame(page2, "frame1", Server.CrossProcessPrefix + "/empty.html");
 
         var localStorage = await frame2.EvaluateAsync<object>("window.localStorage");
         ExpectToEqual(localStorage, new { name1 = "value1" });
@@ -677,9 +687,10 @@ public class BrowsercontextStorageStateTests
     }
 
     [UpstreamTest("ST-016 should support IndexedDB")]
-    public async Task ShouldSupportIndexedDB(IPage page, Server server, ContextFactory contextFactory)
+    public async Task ShouldSupportIndexedDB()
     {
-        await page.GotoAsync(server.Prefix + "/to-do-notifications/index.html");
+        var page = await PageFixture();
+        await page.GotoAsync(Server.Prefix + "/to-do-notifications/index.html");
 
         await Expect(page.Locator("#notifications")).ToMatchAriaSnapshotAsync(@"
     - list:
@@ -700,7 +711,7 @@ public class BrowsercontextStorageStateTests
         {
             new
             {
-                origin = server.Prefix,
+                origin = Server.Prefix,
                 localStorage = Array.Empty<object>(),
                 indexedDB = new[]
                 {
@@ -788,11 +799,11 @@ public class BrowsercontextStorageStateTests
             },
         });
 
-        var context = await contextFactory(new() { StorageState = storageState });
+        var context = await ContextFactory(new() { StorageState = storageState });
         ExpectToEqual(JsonSerializer.Deserialize<JsonElement>(await context.StorageStateAsync(new() { IndexedDB = true })), JsonSerializer.Deserialize<JsonElement>(storageState));
 
         var recreatedPage = await context.NewPageAsync();
-        await recreatedPage.GotoAsync(server.Prefix + "/to-do-notifications/index.html");
+        await recreatedPage.GotoAsync(Server.Prefix + "/to-do-notifications/index.html");
         await Expect(recreatedPage.Locator("#task-list")).ToMatchAriaSnapshotAsync(@"
     - list:
       - listitem:
@@ -803,12 +814,13 @@ public class BrowsercontextStorageStateTests
     }
 
     [UpstreamTest("ST-017 should roundtrip IndexedDB values and keys with ${restore}")]
-    [Case("newContext")]
-    [Case("setStorageState")]
+    [TestCase("newContext")]
+    [TestCase("setStorageState")]
     [LocalFixme("dotnet: SetStorageStateAsync takes the path of a file only. A storage state, which is a JSON string in .NET, fails with 'The specified storage state file does not exist: {\"cookies\":[],...' (only for setStorageState)")]
-    public async Task ShouldRoundtripIndexedDBValuesAndKeysWith(string restore, IPage page, Server server, ContextFactory contextFactory, TestInfo testInfo)
+    public async Task ShouldRoundtripIndexedDBValuesAndKeysWith(string restore)
     {
-        await page.GotoAsync(server.EmptyPage);
+        var page = await PageFixture();
+        await page.GotoAsync(Server.EmptyPage);
         await page.EvaluateAsync(@"() => new Promise((resolve, reject) => {
       const request = indexedDB.open('collections', 1);
       request.onupgradeneeded = () => request.result.createObjectStore('store');
@@ -834,9 +846,9 @@ public class BrowsercontextStorageStateTests
       };
     })");
 
-        var path = testInfo.OutputPath("storage-state.json");
+        var path = Info.OutputPath("storage-state.json");
         var storageState = await page.Context.StorageStateAsync(new() { IndexedDB = true, Path = path });
-        var context = await contextFactory(restore == "newContext" ? new() { StorageStatePath = path } : new());
+        var context = await ContextFactory(restore == "newContext" ? new() { StorageStatePath = path } : new());
         if (restore == "setStorageState")
         {
             await context.SetStorageStateAsync(storageState);
@@ -845,7 +857,7 @@ public class BrowsercontextStorageStateTests
         ExpectToEqual(JsonSerializer.Deserialize<JsonElement>(await context.StorageStateAsync(new() { IndexedDB = true })), JsonSerializer.Deserialize<JsonElement>(storageState));
 
         var restoredPage = await context.NewPageAsync();
-        await restoredPage.GotoAsync(server.EmptyPage);
+        await restoredPage.GotoAsync(Server.EmptyPage);
         var entries = await restoredPage.EvaluateAsync<object>(@"async () => {
       const db = await new Promise((resolve, reject) => {
         const request = indexedDB.open('collections', 1);
@@ -883,9 +895,10 @@ public class BrowsercontextStorageStateTests
     }
 
     [UpstreamTest("ST-018 should support empty indexedDB")]
-    public async Task ShouldSupportEmptyIndexedDB(IPage page, Server server, ContextFactory contextFactory)
+    public async Task ShouldSupportEmptyIndexedDB()
     {
-        await page.GotoAsync(server.EmptyPage);
+        var page = await PageFixture();
+        await page.GotoAsync(Server.EmptyPage);
         await page.EvaluateAsync(@"() => new Promise(resolve => {
     const openRequest = indexedDB.open('unused-db');
     openRequest.onsuccess = () => resolve();
@@ -897,7 +910,7 @@ public class BrowsercontextStorageStateTests
         {
             new
             {
-                origin = server.Prefix,
+                origin = Server.Prefix,
                 localStorage = Array.Empty<object>(),
                 indexedDB = new[]
                 {
@@ -911,17 +924,17 @@ public class BrowsercontextStorageStateTests
             },
         });
 
-        var context = await contextFactory(new() { StorageState = storageState });
+        var context = await ContextFactory(new() { StorageState = storageState });
         ExpectToEqual(JsonSerializer.Deserialize<JsonElement>(await context.StorageStateAsync(new() { IndexedDB = true })), JsonSerializer.Deserialize<JsonElement>(storageState));
     }
 
     [UpstreamTest("ST-019 should not leave IndexedDB connections open")]
     [LocalFixme("dotnet: SetStorageStateAsync takes the path of a file only. A storage state, which is a JSON string in .NET, fails with 'The specified storage state file does not exist: {\"cookies\":[],...'")]
-    public async Task ShouldNotLeaveIndexedDBConnectionsOpen(ContextFactory contextFactory, Server server)
+    public async Task ShouldNotLeaveIndexedDBConnectionsOpen()
     {
-        var context = await contextFactory();
+        var context = await ContextFactory();
         var page = await context.NewPageAsync();
-        await page.GotoAsync(server.EmptyPage);
+        await page.GotoAsync(Server.EmptyPage);
         await page.EvaluateAsync(@"async () => {
     const openRequest = indexedDB.open('db', 1);
     openRequest.onupgradeneeded = () => openRequest.result.createObjectStore('store');
@@ -955,10 +968,10 @@ public class BrowsercontextStorageStateTests
     }
 
     [UpstreamTest("ST-020 should round-trip WebAuthn credentials with storageState")]
-    public async Task ShouldRoundTripWebAuthnCredentialsWithStorageState(ContextFactory contextFactory, Server server)
+    public async Task ShouldRoundTripWebAuthnCredentialsWithStorageState()
     {
-        var context = await contextFactory();
-        var credential = await context.Credentials.CreateAsync(server.Hostname);
+        var context = await ContextFactory();
+        var credential = await context.Credentials.CreateAsync(Server.Hostname);
 
         // Credentials are opt-in, omitted by default.
         // .NET: a storage state is a JSON string.
@@ -968,24 +981,24 @@ public class BrowsercontextStorageStateTests
         ExpectToEqual(JsonSerializer.Deserialize<JsonElement>(storageState), new { cookies = Array.Empty<object>(), origins = Array.Empty<object>(), credentials = new[] { credential } });
 
         // A fresh context seeded from the storage state holds the same credential and round-trips equal.
-        var context2 = await contextFactory(new() { StorageState = storageState });
+        var context2 = await ContextFactory(new() { StorageState = storageState });
         ExpectToEqual(await context2.Credentials.GetAsync(), new[] { credential });
         ExpectToEqual(JsonSerializer.Deserialize<JsonElement>(await context2.StorageStateAsync(new() { Credentials = true })), JsonSerializer.Deserialize<JsonElement>(storageState));
     }
 
     [UpstreamTest("ST-021 setStorageState should replace credentials")]
     [LocalFixme("dotnet: SetStorageStateAsync takes the path of a file only. A storage state, which is a JSON string in .NET, fails with 'The specified storage state file does not exist: {\"cookies\":[],...'")]
-    public async Task SetStorageStateShouldReplaceCredentials(ContextFactory contextFactory)
+    public async Task SetStorageStateShouldReplaceCredentials()
     {
-        var ctxA = await contextFactory();
+        var ctxA = await ContextFactory();
         var credA = await ctxA.Credentials.CreateAsync("a.example.com");
         var stateA = await ctxA.StorageStateAsync(new() { Credentials = true });
 
-        var ctxB = await contextFactory();
+        var ctxB = await ContextFactory();
         var credB = await ctxB.Credentials.CreateAsync("b.example.com");
         var stateB = await ctxB.StorageStateAsync(new() { Credentials = true });
 
-        var context = await contextFactory(new() { StorageState = stateA });
+        var context = await ContextFactory(new() { StorageState = stateA });
         ExpectToEqual(await context.Credentials.GetAsync(), new[] { credA });
 
         // Replacing the storage state swaps in the new credentials.
@@ -1004,10 +1017,10 @@ public class BrowsercontextStorageStateTests
 
     [UpstreamTest("ST-022 setStorageState should handle missing file")]
     [LocalFixme("dotnet: the message is 'The specified storage state file does not exist: <file>'. Upstream expects 'Error reading storage state from <file>'")]
-    public async Task SetStorageStateShouldHandleMissingFile(ContextFactory contextFactory, TestInfo testInfo)
+    public async Task SetStorageStateShouldHandleMissingFile()
     {
-        var context = await contextFactory();
-        var file = testInfo.OutputPath("does-not-exist.json");
+        var context = await ContextFactory();
+        var file = Info.OutputPath("does-not-exist.json");
         var error = await Catch(() => context.SetStorageStateAsync(file));
         Assert.That(error.Message, Does.Contain($"Error reading storage state from {file}"));
     }

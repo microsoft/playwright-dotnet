@@ -20,14 +20,14 @@ using static Microsoft.Playwright.Tests.Fixtures.Utils;
 namespace Microsoft.Playwright.Tests.Page;
 
 /// <summary>Port of tests/page/page-transition.spec.ts.</summary>
-public class PageTransitionTests
+public class PageTransitionTests : UpstreamPageTest
 {
     [UpstreamTest("PA-038 should not crash when filter transition completes")]
-    public async Task ShouldNotCrashWhenFilterTransitionCompletes(IPage page, string browserName)
+    public async Task ShouldNotCrashWhenFilterTransitionCompletes()
     {
-        Info.Fixme(browserName == "webkit", "Web process crashes on the compositor thread when a filter transitions to none");
+        Info.Fixme(BrowserName == "webkit", "Web process crashes on the compositor thread when a filter transitions to none");
 
-        await page.SetContentAsync($@"
+        await Page.SetContentAsync($@"
     <style>
       div {{ transition: filter 0.1s; }}
       .dim {{ filter: brightness(0.95); }}
@@ -35,10 +35,10 @@ public class PageTransitionTests
     {string.Concat(Enumerable.Repeat("<div>hello</div>", 10))}
   ");
         var crashed = false;
-        page.Crash += (_, _) => crashed = true;
+        Page.Crash += (_, _) => crashed = true;
         for (var i = 0; i < 10 && !crashed; i++)
         {
-            await Catch(() => page.EvaluateAsync(@"async () => {
+            await Catch(() => Page.EvaluateAsync(@"async () => {
       const divs = [...document.querySelectorAll('div')];
       const settled = () => Promise.all(divs.map(div => new Promise(f => div.addEventListener('transitionend', f, { once: true }))));
       let promise = settled();

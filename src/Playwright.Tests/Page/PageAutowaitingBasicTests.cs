@@ -22,7 +22,7 @@ using static Microsoft.Playwright.Tests.Fixtures.Utils;
 namespace Microsoft.Playwright.Tests.Page;
 
 /// <summary>Port of tests/page/page-autowaiting-basic.spec.ts.</summary>
-public class PageAutowaitingBasicTests
+public class PageAutowaitingBasicTests : UpstreamPageTest
 {
     private static List<string> InitServer(Server server)
     {
@@ -37,60 +37,60 @@ public class PageAutowaitingBasicTests
     }
 
     [UpstreamTest("AW-001 should await navigation when clicking anchor")]
-    public async Task ShouldAwaitNavigationWhenClickingAnchor(IPage page, Server server)
+    public async Task ShouldAwaitNavigationWhenClickingAnchor()
     {
-        var messages = InitServer(server);
-        await page.SetContentAsync($"<a id=\"anchor\" href=\"{server.EmptyPage}\">empty.html</a>");
+        var messages = InitServer(Server);
+        await Page.SetContentAsync($"<a id=\"anchor\" href=\"{Server.EmptyPage}\">empty.html</a>");
         // .NET: promise.then(() => messages.push('click')) is a local function that is called in its place.
         async Task Click()
         {
-            await page.ClickAsync("a");
+            await Page.ClickAsync("a");
             messages.Add("click");
         }
         await PromiseAll(
             Click(),
-            OnceThen<IFrame>(h => page.FrameNavigated += h, h => page.FrameNavigated -= h, _ => messages.Add("navigated")));
+            OnceThen<IFrame>(h => Page.FrameNavigated += h, h => Page.FrameNavigated -= h, _ => messages.Add("navigated")));
         Assert.That(string.Join("|", messages), Is.EqualTo("route|navigated|click"));
     }
 
     [UpstreamTest("AW-002 should not stall on JS navigation link")]
-    public async Task ShouldNotStallOnJSNavigationLink(IPage page, string browserName)
+    public async Task ShouldNotStallOnJSNavigationLink()
     {
-        await page.SetContentAsync("<a href=\"javascript:console.log(1)\">console.log</a>");
-        await page.ClickAsync("a");
+        await Page.SetContentAsync("<a href=\"javascript:console.log(1)\">console.log</a>");
+        await Page.ClickAsync("a");
     }
 
     [UpstreamTest("AW-003 should await cross-process navigation when clicking anchor")]
-    public async Task ShouldAwaitCrossProcessNavigationWhenClickingAnchor(IPage page, Server server)
+    public async Task ShouldAwaitCrossProcessNavigationWhenClickingAnchor()
     {
-        var messages = InitServer(server);
-        await page.SetContentAsync($"<a href=\"{server.CrossProcessPrefix + "/empty.html"}\">empty.html</a>");
+        var messages = InitServer(Server);
+        await Page.SetContentAsync($"<a href=\"{Server.CrossProcessPrefix + "/empty.html"}\">empty.html</a>");
 
         // .NET: promise.then(() => messages.push('click')) is a local function that is called in its place.
         async Task Click()
         {
-            await page.ClickAsync("a");
+            await Page.ClickAsync("a");
             messages.Add("click");
         }
         await PromiseAll(
             Click(),
-            OnceThen<IFrame>(h => page.FrameNavigated += h, h => page.FrameNavigated -= h, _ => messages.Add("navigated")));
+            OnceThen<IFrame>(h => Page.FrameNavigated += h, h => Page.FrameNavigated -= h, _ => messages.Add("navigated")));
         Assert.That(string.Join("|", messages), Is.EqualTo("route|navigated|click"));
     }
 
     [UpstreamTest("AW-004 should await form-get on click")]
-    public async Task ShouldAwaitFormGetOnClick(IPage page, Server server)
+    public async Task ShouldAwaitFormGetOnClick()
     {
         var messages = new List<string>();
-        server.SetRoute("/empty.html?foo=bar", (req, res) =>
+        Server.SetRoute("/empty.html?foo=bar", (req, res) =>
         {
             messages.Add("route");
             res.SetHeader("Content-Type", "text/html");
             res.End("<link rel='stylesheet' href='./one-style.css'>");
         });
 
-        await page.SetContentAsync($@"
-    <form action=""{server.EmptyPage}"" method=""get"">
+        await Page.SetContentAsync($@"
+    <form action=""{Server.EmptyPage}"" method=""get"">
       <input name=""foo"" value=""bar"">
       <input type=""submit"" value=""Submit"">
     </form>");
@@ -98,21 +98,21 @@ public class PageAutowaitingBasicTests
         // .NET: promise.then(() => messages.push('click')) is a local function that is called in its place.
         async Task Click()
         {
-            await page.ClickAsync("input[type=submit]");
+            await Page.ClickAsync("input[type=submit]");
             messages.Add("click");
         }
         await PromiseAll(
             Click(),
-            OnceThen<IFrame>(h => page.FrameNavigated += h, h => page.FrameNavigated -= h, _ => messages.Add("navigated")));
+            OnceThen<IFrame>(h => Page.FrameNavigated += h, h => Page.FrameNavigated -= h, _ => messages.Add("navigated")));
         Assert.That(string.Join("|", messages), Is.EqualTo("route|navigated|click"));
     }
 
     [UpstreamTest("AW-005 should await form-post on click")]
-    public async Task ShouldAwaitFormPostOnClick(IPage page, Server server)
+    public async Task ShouldAwaitFormPostOnClick()
     {
-        var messages = InitServer(server);
-        await page.SetContentAsync($@"
-    <form action=""{server.EmptyPage}"" method=""post"">
+        var messages = InitServer(Server);
+        await Page.SetContentAsync($@"
+    <form action=""{Server.EmptyPage}"" method=""post"">
       <input name=""foo"" value=""bar"">
       <input type=""submit"" value=""Submit"">
     </form>");
@@ -120,74 +120,74 @@ public class PageAutowaitingBasicTests
         // .NET: promise.then(() => messages.push('click')) is a local function that is called in its place.
         async Task Click()
         {
-            await page.ClickAsync("input[type=submit]");
+            await Page.ClickAsync("input[type=submit]");
             messages.Add("click");
         }
         await PromiseAll(
             Click(),
-            OnceThen<IFrame>(h => page.FrameNavigated += h, h => page.FrameNavigated -= h, _ => messages.Add("navigated")));
+            OnceThen<IFrame>(h => Page.FrameNavigated += h, h => Page.FrameNavigated -= h, _ => messages.Add("navigated")));
         Assert.That(string.Join("|", messages), Is.EqualTo("route|navigated|click"));
     }
 
     [UpstreamTest("AW-006 should work with noWaitAfter: true")]
-    public async Task ShouldWorkWithNoWaitAfterTrue(IPage page, Server server)
+    public async Task ShouldWorkWithNoWaitAfterTrue()
     {
-        server.SetRoute("/empty.html", (req, res) => { });
-        await page.SetContentAsync($"<a id=\"anchor\" href=\"{server.EmptyPage}\">empty.html</a>");
-        await page.ClickAsync("a", new() { NoWaitAfter = true });
+        Server.SetRoute("/empty.html", (req, res) => { });
+        await Page.SetContentAsync($"<a id=\"anchor\" href=\"{Server.EmptyPage}\">empty.html</a>");
+        await Page.ClickAsync("a", new() { NoWaitAfter = true });
     }
 
     [UpstreamTest("AW-007 should work with dblclick without noWaitAfter when navigation is stalled")]
-    public async Task ShouldWorkWithDblclickWithoutNoWaitAfterWhenNavigationIsStalled(IPage page, Server server)
+    public async Task ShouldWorkWithDblclickWithoutNoWaitAfterWhenNavigationIsStalled()
     {
-        server.SetRoute("/empty.html", (req, res) => { });
-        await page.SetContentAsync($"<a id=\"anchor\" href=\"{server.EmptyPage}\">empty.html</a>");
-        await page.DblClickAsync("a");
+        Server.SetRoute("/empty.html", (req, res) => { });
+        await Page.SetContentAsync($"<a id=\"anchor\" href=\"{Server.EmptyPage}\">empty.html</a>");
+        await Page.DblClickAsync("a");
     }
 
     [UpstreamTest("AW-008 should work with waitForLoadState(load)")]
-    public async Task ShouldWorkWithWaitForLoadStateLoad(IPage page, Server server)
+    public async Task ShouldWorkWithWaitForLoadStateLoad()
     {
-        var messages = InitServer(server);
-        await page.SetContentAsync($"<a id=\"anchor\" href=\"{server.EmptyPage}\">empty.html</a>");
+        var messages = InitServer(Server);
+        await Page.SetContentAsync($"<a id=\"anchor\" href=\"{Server.EmptyPage}\">empty.html</a>");
         // .NET: promise.then(() => ...).then(() => messages.push('clickload')) is a local function that is called in its place.
         async Task Clickload()
         {
-            await page.ClickAsync("a");
-            await page.WaitForLoadStateAsync(LoadState.Load);
+            await Page.ClickAsync("a");
+            await Page.WaitForLoadStateAsync(LoadState.Load);
             messages.Add("clickload");
         }
         await PromiseAll(
             Clickload(),
-            OnceThen<IPage>(h => page.Load += h, h => page.Load -= h, _ => messages.Add("load")));
+            OnceThen<IPage>(h => Page.Load += h, h => Page.Load -= h, _ => messages.Add("load")));
         Assert.That(string.Join("|", messages), Is.EqualTo("route|load|clickload"));
     }
 
     [UpstreamTest("AW-009 should work with goto following click")]
-    public async Task ShouldWorkWithGotoFollowingClick(IPage page, Server server)
+    public async Task ShouldWorkWithGotoFollowingClick()
     {
-        server.SetRoute("/login.html", (req, res) =>
+        Server.SetRoute("/login.html", (req, res) =>
         {
             res.SetHeader("Content-Type", "text/html");
             res.End("You are logged in");
         });
 
-        await page.SetContentAsync($@"
-    <form action=""{server.Prefix}/login.html"" method=""get"">
+        await Page.SetContentAsync($@"
+    <form action=""{Server.Prefix}/login.html"" method=""get"">
       <input type=""text"">
       <input type=""submit"" value=""Submit"">
     </form>");
 
-        await page.FillAsync("input[type=text]", "admin");
-        await page.ClickAsync("input[type=submit]");
-        await page.GotoAsync(server.EmptyPage);
+        await Page.FillAsync("input[type=text]", "admin");
+        await Page.ClickAsync("input[type=submit]");
+        await Page.GotoAsync(Server.EmptyPage);
     }
 
     [UpstreamTest("AW-011 should report and collapse log in action")]
-    public async Task ShouldReportAndCollapseLogInAction(IPage page, Server server, string mode)
+    public async Task ShouldReportAndCollapseLogInAction()
     {
-        await page.SetContentAsync("<input id='checkbox' type='checkbox' style=\"visibility: hidden\"></input>");
-        var error = await Catch(() => page.Locator("input").ClickAsync(new() { Timeout = 5000 }));
+        await Page.SetContentAsync("<input id='checkbox' type='checkbox' style=\"visibility: hidden\"></input>");
+        var error = await Catch(() => Page.Locator("input").ClickAsync(new() { Timeout = 5000 }));
         var message = StripAnsi(error.Message);
         Assert.That(message, Does.Contain("Call log:"));
         Assert.That(message, Does.Match("\\d+ × waiting for"));
@@ -196,10 +196,10 @@ public class PageAutowaitingBasicTests
     }
 
     [UpstreamTest("AW-012 should report and collapse log in expect")]
-    public async Task ShouldReportAndCollapseLogInExpect(IPage page, Server server, string mode)
+    public async Task ShouldReportAndCollapseLogInExpect()
     {
-        await page.SetContentAsync("<input id='checkbox' type='checkbox' style=\"visibility: hidden\"></input>");
-        var error = await Catch(() => Expect(page.Locator("input")).ToBeVisibleAsync(new() { Timeout = 5000 }));
+        await Page.SetContentAsync("<input id='checkbox' type='checkbox' style=\"visibility: hidden\"></input>");
+        var error = await Catch(() => Expect(Page.Locator("input")).ToBeVisibleAsync(new() { Timeout = 5000 }));
         var message = StripAnsi(error.Message);
         Assert.That(message, Does.Contain("Call log:"));
         Assert.That(message, Does.Match("\\d+ × locator resolved to"));

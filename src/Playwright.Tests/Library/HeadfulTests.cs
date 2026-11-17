@@ -20,30 +20,30 @@ using static Microsoft.Playwright.Tests.Fixtures.Utils;
 namespace Microsoft.Playwright.Tests.Library;
 
 /// <summary>Port of tests/library/headful.spec.ts.</summary>
-public class HeadfulTests
+public class HeadfulTests : UpstreamBrowserTest
 {
-    [BeforeEach]
-    public static void Skip(bool headless) => Info.Skip(headless, "avoid popping windows in headless mode");
+    [SetUp]
+    public void Skip() => Info.Skip(Headless, "avoid popping windows in headless mode");
 
-    [BeforeEach]
-    public static void Skip2(string channel) => Info.Skip(channel == "chromium-headless-shell", "shell is never headed");
+    [SetUp]
+    public void Skip2() => Info.Skip(Channel == "chromium-headless-shell", "shell is never headed");
 
     [UpstreamTest("HE-001 should have default url when launching browser @smoke")]
-    public async Task ShouldHaveDefaultUrlWhenLaunchingBrowser(LaunchPersistent launchPersistent)
+    public async Task ShouldHaveDefaultUrlWhenLaunchingBrowser()
     {
-        var (context, _) = await launchPersistent();
+        var (context, _) = await LaunchPersistent();
         var urls = context.Pages.Select(page => page.Url);
         Assert.That(urls, Is.EqualTo(new[] { "about:blank" }));
     }
 
     [UpstreamTest("HE-002 should close browser with beforeunload page")]
-    public async Task ShouldCloseBrowserWithBeforeunloadPage(LaunchPersistent launchPersistent, Server server)
+    public async Task ShouldCloseBrowserWithBeforeunloadPage()
     {
         Info.Slow();
 
-        var (context, _) = await launchPersistent();
+        var (context, _) = await LaunchPersistent();
         var page = await context.NewPageAsync();
-        await page.GotoAsync(server.Prefix + "/beforeunload.html");
+        await page.GotoAsync(Server.Prefix + "/beforeunload.html");
         // We have to interact with a page so that 'beforeunload' handlers
         // fire.
         await page.ClickAsync("body");
@@ -51,10 +51,11 @@ public class HeadfulTests
     }
 
     [UpstreamTest("HE-003 should close browsercontext with pending beforeunload dialog")]
-    public async Task ShouldCloseBrowsercontextWithPendingBeforeunloadDialog(Server server, IBrowserContext context)
+    public async Task ShouldCloseBrowsercontextWithPendingBeforeunloadDialog()
     {
+        var context = await ContextFixture();
         var page = await context.NewPageAsync();
-        await page.GotoAsync(server.Prefix + "/beforeunload.html");
+        await page.GotoAsync(Server.Prefix + "/beforeunload.html");
         // We have to interact with a page so that 'beforeunload' handlers
         // fire.
         await page.ClickAsync("body");
@@ -65,23 +66,24 @@ public class HeadfulTests
     }
 
     [UpstreamTest("HE-004 should not crash when creating second context")]
-    public async Task ShouldNotCrashWhenCreatingSecondContext(IBrowser browser, BrowserNewContextOptions contextOptions)
+    public async Task ShouldNotCrashWhenCreatingSecondContext()
     {
         {
-            var browserContext = await browser.NewContextAsync(contextOptions);
+            var browserContext = await Browser.NewContextAsync(ContextOptions());
             await browserContext.NewPageAsync();
             await browserContext.CloseAsync();
         }
         {
-            var browserContext = await browser.NewContextAsync(contextOptions);
+            var browserContext = await Browser.NewContextAsync(ContextOptions());
             await browserContext.NewPageAsync();
             await browserContext.CloseAsync();
         }
     }
 
     [UpstreamTest("HE-005 should click when viewport size is larger than screen")]
-    public async Task ShouldClickWhenViewportSizeIsLargerThanScreen(IPage page)
+    public async Task ShouldClickWhenViewportSizeIsLargerThanScreen()
     {
+        var page = await PageFixture();
         await page.SetViewportSizeAsync(3000, 3000);
         await page.SetContentAsync(@"
     <style>
@@ -93,8 +95,9 @@ public class HeadfulTests
     }
 
     [UpstreamTest("HE-006 should dispatch click events to oversized viewports")]
-    public async Task ShouldDispatchClickEventsToOversizedViewports(IPage page)
+    public async Task ShouldDispatchClickEventsToOversizedViewports()
     {
+        var page = await PageFixture();
         // Some prime numbers for width/height.
         const int width = 2971;
         const int height = 3067;
@@ -119,27 +122,29 @@ public class HeadfulTests
     }
 
     [UpstreamTest("HE-007 should click background tab")]
-    public async Task ShouldClickBackgroundTab(IPage page, Server server)
+    public async Task ShouldClickBackgroundTab()
     {
-        await page.SetContentAsync($"<button>Hello</button><a target=_blank href=\"{server.EmptyPage}\">empty.html</a>");
+        var page = await PageFixture();
+        await page.SetContentAsync($"<button>Hello</button><a target=_blank href=\"{Server.EmptyPage}\">empty.html</a>");
         await page.ClickAsync("a");
         await page.ClickAsync("button");
     }
 
     [UpstreamTest("HE-008 should close browser after context menu was triggered")]
-    public async Task ShouldCloseBrowserAfterContextMenuWasTriggered(IBrowserType browserType, Server server, BrowserTypeLaunchOptions launchOptions, BrowserNewPageOptions newPageOptions)
+    public async Task ShouldCloseBrowserAfterContextMenuWasTriggered()
     {
-        var browser = await browserType.LaunchAsync(launchOptions);
-        var page = await browser.NewPageAsync(newPageOptions);
-        await page.GotoAsync(server.Prefix + "/grid.html");
+        var browser = await BrowserType.LaunchAsync(LaunchOptions());
+        var page = await browser.NewPageAsync(NewPageOptions());
+        await page.GotoAsync(Server.Prefix + "/grid.html");
         await page.ClickAsync("body", new() { Button = MouseButton.Right });
         await browser.CloseAsync();
     }
 
     [UpstreamTest("HE-009 should(not) block third party cookies")]
-    public async Task ShouldNotBlockThirdPartyCookies(IPage page, Server server, bool allowsThirdParty, string defaultSameSiteCookieValue)
+    public async Task ShouldNotBlockThirdPartyCookies()
     {
-        await page.GotoAsync(server.EmptyPage);
+        var page = await PageFixture();
+        await page.GotoAsync(Server.EmptyPage);
         await page.EvaluateAsync(@"src => {
     let fulfill;
     const promise = new Promise(x => fulfill = x);
@@ -148,15 +153,15 @@ public class HeadfulTests
     iframe.onload = fulfill;
     iframe.src = src;
     return promise;
-  }", server.CrossProcessPrefix + "/grid.html");
+  }", Server.CrossProcessPrefix + "/grid.html");
         var documentCookie = await page.Frames[1].EvaluateAsync<string>(@"() => {
     document.cookie = 'username=John Doe';
     return document.cookie;
   }");
         await page.WaitForTimeoutAsync(2000);
-        Assert.That(documentCookie, Is.EqualTo(allowsThirdParty ? "username=John Doe" : ""));
-        var cookies = await page.Context.CookiesAsync(server.CrossProcessPrefix + "/grid.html");
-        if (allowsThirdParty)
+        Assert.That(documentCookie, Is.EqualTo(AllowsThirdParty ? "username=John Doe" : ""));
+        var cookies = await page.Context.CookiesAsync(Server.CrossProcessPrefix + "/grid.html");
+        if (AllowsThirdParty)
         {
             ExpectToEqual(cookies, new[]
             {
@@ -167,7 +172,7 @@ public class HeadfulTests
                     httpOnly = false,
                     name = "username",
                     path = "/",
-                    sameSite = defaultSameSiteCookieValue,
+                    sameSite = DefaultSameSiteCookieValue,
                     secure = false,
                     value = "John Doe",
                 },
@@ -180,25 +185,25 @@ public class HeadfulTests
     }
 
     [UpstreamTest("HE-010 should not block third party SameSite=None cookies")]
-    public async Task ShouldNotBlockThirdPartySameSiteNoneCookies(Server httpsServer, string browserName, IBrowser browser, BrowserNewPageOptions newPageOptions)
+    public async Task ShouldNotBlockThirdPartySameSiteNoneCookies()
     {
-        Info.Skip(browserName == "webkit", "No third party cookies in WebKit");
+        Info.Skip(BrowserName == "webkit", "No third party cookies in WebKit");
         Info.Skip(Environment.GetEnvironmentVariable("PW_CLOCK") == "frozen");
-        var page = await browser.NewPageAsync(new(newPageOptions)
+        var page = await Browser.NewPageAsync(new(NewPageOptions())
         {
             IgnoreHTTPSErrors = true,
         });
 
-        httpsServer.SetRoute("/empty.html", (req, res) =>
+        HttpsServer.SetRoute("/empty.html", (req, res) =>
         {
             res.WriteHead(200, new()
             {
                 ["Content-Type"] = "text/html",
             });
-            res.End($"<iframe src=\"{httpsServer.CrossProcessPrefix}/grid.html\"></iframe>");
+            res.End($"<iframe src=\"{HttpsServer.CrossProcessPrefix}/grid.html\"></iframe>");
         });
 
-        httpsServer.SetRoute("/grid.html", (req, res) =>
+        HttpsServer.SetRoute("/grid.html", (req, res) =>
         {
             res.WriteHead(200, new()
             {
@@ -212,25 +217,25 @@ public class HeadfulTests
         });
 
         var cookie = new TaskCompletionSource<string>(TaskCreationOptions.RunContinuationsAsynchronously);
-        httpsServer.SetRoute("/json", (req, res) =>
+        HttpsServer.SetRoute("/json", (req, res) =>
         {
             cookie.TrySetResult(req.Headers["cookie"]);
             res.End();
         });
 
-        await page.GotoAsync(httpsServer.EmptyPage);
+        await page.GotoAsync(HttpsServer.EmptyPage);
         Assert.That(await cookie.Task, Is.EqualTo("a=b"));
         await page.CloseAsync();
     }
 
     [UpstreamTest("HE-011 should not override viewport size when passed null")]
-    public async Task ShouldNotOverrideViewportSizeWhenPassedNull(string browserName, Server server, IBrowser browser, BrowserNewContextOptions contextOptions)
+    public async Task ShouldNotOverrideViewportSizeWhenPassedNull()
     {
-        Info.Skip(browserName == "webkit", "Our WebKit embedder does not respect window features");
+        Info.Skip(BrowserName == "webkit", "Our WebKit embedder does not respect window features");
 
-        var context = await browser.NewContextAsync(new(contextOptions) { ViewportSize = ViewportSize.NoViewport });
+        var context = await Browser.NewContextAsync(new(ContextOptions()) { ViewportSize = ViewportSize.NoViewport });
         var page = await context.NewPageAsync();
-        await page.GotoAsync(server.EmptyPage);
+        await page.GotoAsync(Server.EmptyPage);
         var (popup, _) = await PromiseAll(
             page.WaitForPopupAsync(),
             page.EvaluateAsync(@"() => {
@@ -243,11 +248,11 @@ public class HeadfulTests
     }
 
     [UpstreamTest("HE-012 Page.bringToFront should work")]
-    public async Task PageBringToFrontShouldWork(IBrowser browser, BrowserNewPageOptions newPageOptions)
+    public async Task PageBringToFrontShouldWork()
     {
-        var page1 = await browser.NewPageAsync(newPageOptions);
+        var page1 = await Browser.NewPageAsync(NewPageOptions());
         await page1.SetContentAsync("Page1");
-        var page2 = await browser.NewPageAsync(newPageOptions);
+        var page2 = await Browser.NewPageAsync(NewPageOptions());
         await page2.SetContentAsync("Page2");
 
         await page1.BringToFrontAsync();
@@ -264,32 +269,32 @@ public class HeadfulTests
     }
 
     [UpstreamTest("HE-013 should click in OOPIF")]
-    public async Task ShouldClickInOOPIF(string browserName, LaunchPersistent launchPersistent, Server server)
+    public async Task ShouldClickInOOPIF()
     {
-        server.SetRoute("/empty.html", (req, res) =>
+        Server.SetRoute("/empty.html", (req, res) =>
         {
             res.WriteHead(200, new() { ["Content-Type"] = "text/html" });
-            res.End($"<iframe src=\"{server.CrossProcessPrefix}/iframe.html\"></iframe>");
+            res.End($"<iframe src=\"{Server.CrossProcessPrefix}/iframe.html\"></iframe>");
         });
-        server.SetRoute("/iframe.html", (req, res) =>
+        Server.SetRoute("/iframe.html", (req, res) =>
         {
             res.WriteHead(200, new() { ["Content-Type"] = "text/html" });
             res.End(@"<button id=""button"" onclick=""console.log('ok')"">Submit</button>
     <script>console.log('frame loaded')</script>");
         });
 
-        var (_, page) = await launchPersistent();
+        var (_, page) = await LaunchPersistent();
         var consoleLog = new List<string>();
         page.Console += (_, m) => consoleLog.Add(m.Text);
-        await page.GotoAsync(server.EmptyPage);
+        await page.GotoAsync(Server.EmptyPage);
         await page.Frames[1].ClickAsync("text=Submit");
         Assert.That(consoleLog, Does.Contain("ok"));
     }
 
     [UpstreamTest("HE-014 should click bottom row w/ infobar in OOPIF")]
-    public async Task ShouldClickBottomRowWInfobarInOOPIF(string browserName, LaunchPersistent launchPersistent, Server server)
+    public async Task ShouldClickBottomRowWInfobarInOOPIF()
     {
-        server.SetRoute("/empty.html", (req, res) =>
+        Server.SetRoute("/empty.html", (req, res) =>
         {
             res.WriteHead(200, new() { ["Content-Type"] = "text/html" });
             res.End($@"
@@ -297,11 +302,11 @@ public class HeadfulTests
         html, body {{ margin: 0; padding: 0; width: 100%; height: 100%; }}
         iframe {{ position: absolute; bottom: 0; }}
       </style>
-      <iframe src=""{server.CrossProcessPrefix}/iframe.html""></iframe>
+      <iframe src=""{Server.CrossProcessPrefix}/iframe.html""></iframe>
     ");
         });
 
-        server.SetRoute("/iframe.html", (req, res) =>
+        Server.SetRoute("/iframe.html", (req, res) =>
         {
             res.WriteHead(200, new() { ["Content-Type"] = "text/html" });
             res.End(@"
@@ -312,9 +317,9 @@ public class HeadfulTests
       <button id=""button"" onclick=""window._clicked=true"">Submit</button>");
         });
 
-        var (_, page) = await launchPersistent();
-        await page.GotoAsync(server.EmptyPage);
-        if (browserName == "chromium")
+        var (_, page) = await LaunchPersistent();
+        await page.GotoAsync(Server.EmptyPage);
+        if (BrowserName == "chromium")
         {
             // CHROME BUG:
             //   Unfortunately, on some platforms the automation infobar is shown up late or animates in.
@@ -331,9 +336,10 @@ public class HeadfulTests
     }
 
     [UpstreamTest("HE-015 headless and headful should use same default fonts")]
-    public async Task HeadlessAndHeadfulShouldUseSameDefaultFonts(IPage page, string browserName, IBrowserType browserType, bool isBidi, BrowserTypeLaunchOptions launchOptions, BrowserNewPageOptions newPageOptions)
+    public async Task HeadlessAndHeadfulShouldUseSameDefaultFonts()
     {
-        Info.Skip(browserName == "firefox" && !isBidi, "Text is misaligned in headed vs headless");
+        var page = await PageFixture();
+        Info.Skip(BrowserName == "firefox" && !IsBidi, "Text is misaligned in headed vs headless");
 
         var genericFontFamilies = new[]
         {
@@ -345,8 +351,8 @@ public class HeadfulTests
             "fantasy",
             "emoji",
         };
-        var headlessBrowser = await browserType.LaunchAsync(new(launchOptions) { Headless = true });
-        var headlessPage = await headlessBrowser.NewPageAsync(newPageOptions);
+        var headlessBrowser = await BrowserType.LaunchAsync(new(LaunchOptions()) { Headless = true });
+        var headlessPage = await headlessBrowser.NewPageAsync(NewPageOptions());
         foreach (var family in genericFontFamilies)
         {
             var content = $@"<div style=""font: 15px bold {(family == "standard" ? "" : family)}; max-width: 300px; max-height: 300px; overflow: hidden"">
@@ -368,8 +374,9 @@ public class HeadfulTests
     }
 
     [UpstreamTest("HE-016 should have the same hyphen rendering on headless and headed")]
-    public async Task ShouldHaveTheSameHyphenRenderingOnHeadlessAndHeaded(IBrowserType browserType, IPage page, bool headless, Server server, BrowserTypeLaunchOptions launchOptions, BrowserNewPageOptions newPageOptions)
+    public async Task ShouldHaveTheSameHyphenRenderingOnHeadlessAndHeaded()
     {
+        var page = await PageFixture();
         const string content = @"
     <!DOCTYPE html>
     <html lang=""en"">
@@ -390,15 +397,15 @@ public class HeadfulTests
     </body>
     </html>
   ";
-        server.SetRoute("/hyphenated.html", (req, res) =>
+        Server.SetRoute("/hyphenated.html", (req, res) =>
         {
             res.WriteHead(200, new() { ["Content-Type"] = "text/html" });
             res.End(content);
         });
-        var oppositeBrowser = await browserType.LaunchAsync(new(launchOptions) { Headless = !headless });
-        var oppositePage = await oppositeBrowser.NewPageAsync(newPageOptions);
-        await oppositePage.GotoAsync(server.Prefix + "/hyphenated.html");
-        await page.GotoAsync(server.Prefix + "/hyphenated.html");
+        var oppositeBrowser = await BrowserType.LaunchAsync(new(LaunchOptions()) { Headless = !Headless });
+        var oppositePage = await oppositeBrowser.NewPageAsync(NewPageOptions());
+        await oppositePage.GotoAsync(Server.Prefix + "/hyphenated.html");
+        await page.GotoAsync(Server.Prefix + "/hyphenated.html");
 
         var (divHeight1, divHeight2) = await PromiseAll(
             page.EvaluateAsync<double>("() => document.querySelector('.hyphenated').getBoundingClientRect().height"),

@@ -20,13 +20,13 @@ using Microsoft.Playwright.Tests.Fixtures;
 namespace Microsoft.Playwright.Tests.Page;
 
 /// <summary>Port of tests/page/selectors-register.spec.ts.</summary>
-public class SelectorsRegisterTests
+public class SelectorsRegisterTests : UpstreamPageTest
 {
-    [BeforeEach]
-    public static void Skip() => Info.Skip(!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("PW_TEST_CONNECT_WS_ENDPOINT")), "selectors.register does not support reuse");
+    [SetUp]
+    public void Skip() => Info.Skip(!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("PW_TEST_CONNECT_WS_ENDPOINT")), "selectors.register does not support reuse");
 
     [UpstreamTest("SE-154 textContent should be atomic")]
-    public async Task TextContentShouldBeAtomic(IPlaywright playwright, IPage page)
+    public async Task TextContentShouldBeAtomic()
     {
         const string createDummySelector = @"() => ({
     query(root, selector) {
@@ -43,15 +43,15 @@ public class SelectorsRegisterTests
     }
   })";
         // .NET: a function is the script that the Node.js client makes of it, `(${fun})(undefined)`.
-        await playwright.Selectors.RegisterAsync("textContent", new() { Script = $"({createDummySelector})(undefined)" });
-        await page.GotoAsync("data:text/html,<div>Hello</div>");
-        var tc = await page.TextContentAsync("textContent=div");
+        await Playwright.Selectors.RegisterAsync("textContent", new() { Script = $"({createDummySelector})(undefined)" });
+        await Page.GotoAsync("data:text/html,<div>Hello</div>");
+        var tc = await Page.TextContentAsync("textContent=div");
         Assert.That(tc, Is.EqualTo("Hello"));
-        Assert.That(await page.EvaluateAsync<string>("() => document.querySelector('div').textContent"), Is.EqualTo("modified"));
+        Assert.That(await Page.EvaluateAsync<string>("() => document.querySelector('div').textContent"), Is.EqualTo("modified"));
     }
 
     [UpstreamTest("SE-155 innerText should be atomic")]
-    public async Task InnerTextShouldBeAtomic(IPlaywright playwright, IPage page)
+    public async Task InnerTextShouldBeAtomic()
     {
         const string createDummySelector = @"() => ({
     query(root, selector) {
@@ -68,15 +68,15 @@ public class SelectorsRegisterTests
     }
   })";
         // .NET: a function is the script that the Node.js client makes of it, `(${fun})(undefined)`.
-        await playwright.Selectors.RegisterAsync("innerText", new() { Script = $"({createDummySelector})(undefined)" });
-        await page.GotoAsync("data:text/html,<div>Hello</div>");
-        var tc = await page.InnerTextAsync("innerText=div");
+        await Playwright.Selectors.RegisterAsync("innerText", new() { Script = $"({createDummySelector})(undefined)" });
+        await Page.GotoAsync("data:text/html,<div>Hello</div>");
+        var tc = await Page.InnerTextAsync("innerText=div");
         Assert.That(tc, Is.EqualTo("Hello"));
-        Assert.That(await page.EvaluateAsync<string>("() => document.querySelector('div').innerText"), Is.EqualTo("modified"));
+        Assert.That(await Page.EvaluateAsync<string>("() => document.querySelector('div').innerText"), Is.EqualTo("modified"));
     }
 
     [UpstreamTest("SE-156 innerHTML should be atomic")]
-    public async Task InnerHTMLShouldBeAtomic(IPlaywright playwright, IPage page)
+    public async Task InnerHTMLShouldBeAtomic()
     {
         const string createDummySelector = @"() => ({
     query(root, selector) {
@@ -93,15 +93,15 @@ public class SelectorsRegisterTests
     }
   })";
         // .NET: a function is the script that the Node.js client makes of it, `(${fun})(undefined)`.
-        await playwright.Selectors.RegisterAsync("innerHTML", new() { Script = $"({createDummySelector})(undefined)" });
-        await page.GotoAsync("data:text/html,<div>Hello<span>world</span></div>");
-        var tc = await page.InnerHTMLAsync("innerHTML=div");
+        await Playwright.Selectors.RegisterAsync("innerHTML", new() { Script = $"({createDummySelector})(undefined)" });
+        await Page.GotoAsync("data:text/html,<div>Hello<span>world</span></div>");
+        var tc = await Page.InnerHTMLAsync("innerHTML=div");
         Assert.That(tc, Is.EqualTo("Hello<span>world</span>"));
-        Assert.That(await page.EvaluateAsync<string>("() => document.querySelector('div').innerHTML"), Is.EqualTo("modified"));
+        Assert.That(await Page.EvaluateAsync<string>("() => document.querySelector('div').innerHTML"), Is.EqualTo("modified"));
     }
 
     [UpstreamTest("SE-157 getAttribute should be atomic")]
-    public async Task GetAttributeShouldBeAtomic(IPlaywright playwright, IPage page)
+    public async Task GetAttributeShouldBeAtomic()
     {
         const string createDummySelector = @"() => ({
     query(root, selector) {
@@ -118,15 +118,15 @@ public class SelectorsRegisterTests
     }
   })";
         // .NET: a function is the script that the Node.js client makes of it, `(${fun})(undefined)`.
-        await playwright.Selectors.RegisterAsync("getAttribute", new() { Script = $"({createDummySelector})(undefined)" });
-        await page.GotoAsync("data:text/html,<div foo=hello></div>");
-        var tc = await page.GetAttributeAsync("getAttribute=div", "foo");
+        await Playwright.Selectors.RegisterAsync("getAttribute", new() { Script = $"({createDummySelector})(undefined)" });
+        await Page.GotoAsync("data:text/html,<div foo=hello></div>");
+        var tc = await Page.GetAttributeAsync("getAttribute=div", "foo");
         Assert.That(tc, Is.EqualTo("hello"));
-        Assert.That(await page.EvaluateAsync<string>("() => document.querySelector('div').getAttribute('foo')"), Is.EqualTo("modified"));
+        Assert.That(await Page.EvaluateAsync<string>("() => document.querySelector('div').getAttribute('foo')"), Is.EqualTo("modified"));
     }
 
     [UpstreamTest("SE-158 isVisible should be atomic")]
-    public async Task IsVisibleShouldBeAtomic(IPlaywright playwright, IPage page)
+    public async Task IsVisibleShouldBeAtomic()
     {
         const string createDummySelector = @"() => ({
     query(root, selector) {
@@ -143,15 +143,15 @@ public class SelectorsRegisterTests
     }
   })";
         // .NET: a function is the script that the Node.js client makes of it, `(${fun})(undefined)`.
-        await playwright.Selectors.RegisterAsync("isVisible", new() { Script = $"({createDummySelector})(undefined)" });
-        await page.GotoAsync("data:text/html,<div>Hello</div>");
-        var result = await page.IsVisibleAsync("isVisible=div");
+        await Playwright.Selectors.RegisterAsync("isVisible", new() { Script = $"({createDummySelector})(undefined)" });
+        await Page.GotoAsync("data:text/html,<div>Hello</div>");
+        var result = await Page.IsVisibleAsync("isVisible=div");
         Assert.That(result, Is.EqualTo(true));
-        Assert.That(await page.EvaluateAsync<string>("() => document.querySelector('div').style.display"), Is.EqualTo("none"));
+        Assert.That(await Page.EvaluateAsync<string>("() => document.querySelector('div').style.display"), Is.EqualTo("none"));
     }
 
     [UpstreamTest("SE-159 should take java-style string")]
-    public async Task ShouldTakeJavaStyleString(IPlaywright playwright, IPage page)
+    public async Task ShouldTakeJavaStyleString()
     {
         var createDummySelector = @"{
     query(root, selector) {
@@ -161,8 +161,8 @@ public class SelectorsRegisterTests
       return root.querySelectorAll(selector);
     }
   }";
-        await playwright.Selectors.RegisterAsync("objectLiteral", new() { Script = createDummySelector });
-        await page.GotoAsync("data:text/html,<div>Hello</div>");
-        await page.TextContentAsync("objectLiteral=div");
+        await Playwright.Selectors.RegisterAsync("objectLiteral", new() { Script = createDummySelector });
+        await Page.GotoAsync("data:text/html,<div>Hello</div>");
+        await Page.TextContentAsync("objectLiteral=div");
     }
 }

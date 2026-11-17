@@ -22,11 +22,12 @@ using static Microsoft.Playwright.Tests.Fixtures.Utils;
 namespace Microsoft.Playwright.Tests.Library;
 
 /// <summary>Port of tests/library/browsercontext-expose-function.spec.ts.</summary>
-public class BrowsercontextExposeFunctionTests
+public class BrowsercontextExposeFunctionTests : UpstreamBrowserTest
 {
     [UpstreamTest("EF-022 expose binding should work")]
-    public async Task ExposeBindingShouldWork(IBrowserContext context)
+    public async Task ExposeBindingShouldWork()
     {
+        var context = await ContextFixture();
         BindingSource bindingSource = null;
         await context.ExposeBindingAsync("add", (BindingSource source, int a, int b) =>
         {
@@ -42,8 +43,9 @@ public class BrowsercontextExposeFunctionTests
     }
 
     [UpstreamTest("EF-023 should work")]
-    public async Task ShouldWork(IBrowserContext context, Server server)
+    public async Task ShouldWork()
     {
+        var context = await ContextFixture();
         await context.ExposeFunctionAsync("add", (int a, int b) => a + b);
         var page = await context.NewPageAsync();
         await page.ExposeFunctionAsync("mul", (int a, int b) => a * b);
@@ -59,8 +61,9 @@ public class BrowsercontextExposeFunctionTests
     }
 
     [UpstreamTest("EF-024 should dispose")]
-    public async Task ShouldDispose(IBrowserContext context, Server server)
+    public async Task ShouldDispose()
     {
+        var context = await ContextFixture();
         var binding = await context.ExposeFunctionAsync("compute", (int a, int b) =>
         {
             return a * b;
@@ -79,8 +82,9 @@ public class BrowsercontextExposeFunctionTests
     }
 
     [UpstreamTest("EF-025 should throw for duplicate registrations")]
-    public async Task ShouldThrowForDuplicateRegistrations(IBrowserContext context, Server server)
+    public async Task ShouldThrowForDuplicateRegistrations()
     {
+        var context = await ContextFixture();
         await context.ExposeFunctionAsync("foo", () => { });
         await context.ExposeFunctionAsync("bar", () => { });
         var error = await Catch(() => context.ExposeFunctionAsync("foo", () => { }));
@@ -94,8 +98,9 @@ public class BrowsercontextExposeFunctionTests
     }
 
     [UpstreamTest("EF-026 should be callable from-inside addInitScript")]
-    public async Task ShouldBeCallableFromInsideAddInitScript(IBrowserContext context, Server server)
+    public async Task ShouldBeCallableFromInsideAddInitScript()
     {
+        var context = await ContextFixture();
         List<string> args = [];
         await context.ExposeFunctionAsync("woof", (string arg) =>
         {
@@ -113,10 +118,12 @@ public class BrowsercontextExposeFunctionTests
 
     [UpstreamTest("EF-027 should work with CSP")]
     [LocalFixme("dotnet: a call of a binding of ExposeBindingAsync(name, Action) fails with \"TargetParameterCountException: Parameter count mismatch.\": BindingCall.CallAsync passes the BindingSource to the callback, which has no parameters")]
-    public async Task ShouldWorkWithCSP(IPage page, IBrowserContext context, Server server)
+    public async Task ShouldWorkWithCSP()
     {
-        server.SetCSP("/empty.html", "default-src \"self\"");
-        await page.GotoAsync(server.EmptyPage);
+        var page = await PageFixture();
+        var context = await ContextFixture();
+        Server.SetCSP("/empty.html", "default-src \"self\"");
+        await page.GotoAsync(Server.EmptyPage);
         var called = false;
         await context.ExposeBindingAsync("hi", () => called = true);
         await page.EvaluateAsync("() => window.hi()");
@@ -124,23 +131,25 @@ public class BrowsercontextExposeFunctionTests
     }
 
     [UpstreamTest("EF-028 should call binding from pagehide handler when navigating away")]
-    public async Task ShouldCallBindingFromPagehideHandlerWhenNavigatingAway(IBrowserContext context, IPage page, Server server, string browserName)
+    public async Task ShouldCallBindingFromPagehideHandlerWhenNavigatingAway()
     {
-        Info.Fixme(browserName == "chromium", "Chromium drops CDP events from the old document after the frame host swap");
+        var context = await ContextFixture();
+        var page = await PageFixture();
+        Info.Fixme(BrowserName == "chromium", "Chromium drops CDP events from the old document after the frame host swap");
         var calls = new List<string>();
         await context.ExposeBindingAsync("reportFromPage", (BindingSource _source, string message) => { calls.Add(message); });
         var html = (string body) => $"<!doctype html>{body}<script>addEventListener('pagehide', () => window.reportFromPage('pagehide of ' + location.pathname));</script>";
-        server.SetRoute("/a.html", (req, res) =>
+        Server.SetRoute("/a.html", (req, res) =>
         {
             res.WriteHead(200, new() { ["content-type"] = "text/html" });
             res.End(html("<a id=\"next\" href=\"/b.html\">next</a>"));
         });
-        server.SetRoute("/b.html", (req, res) =>
+        Server.SetRoute("/b.html", (req, res) =>
         {
             res.WriteHead(200, new() { ["content-type"] = "text/html" });
             res.End(html("<p>b</p>"));
         });
-        await page.GotoAsync(server.Prefix + "/a.html");
+        await page.GotoAsync(Server.Prefix + "/a.html");
         await page.ClickAsync("#next");
         await page.WaitForURLAsync("**/b.html");
         await Expect(() => Assert.That(calls, Does.Contain("pagehide of /a.html"))).ToPassAsync();

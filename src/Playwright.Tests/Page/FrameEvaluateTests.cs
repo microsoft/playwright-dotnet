@@ -21,53 +21,53 @@ using static Microsoft.Playwright.Tests.Fixtures.Utils;
 namespace Microsoft.Playwright.Tests.Page;
 
 /// <summary>Port of tests/page/frame-evaluate.spec.ts.</summary>
-public class FrameEvaluateTests
+public class FrameEvaluateTests : UpstreamPageTest
 {
     [UpstreamTest("FR-001 should have different execution contexts")]
-    public async Task ShouldHaveDifferentExecutionContexts(IPage page, Server server)
+    public async Task ShouldHaveDifferentExecutionContexts()
     {
-        await page.GotoAsync(server.EmptyPage);
-        await AttachFrame(page, "frame1", server.EmptyPage);
-        Assert.That(page.Frames.Count, Is.EqualTo(2));
-        await page.Frames[0].EvaluateAsync("() => window['FOO'] = 'foo'");
-        await page.Frames[1].EvaluateAsync("() => window['FOO'] = 'bar'");
-        Assert.That(await page.Frames[0].EvaluateAsync<string>("() => window['FOO']"), Is.EqualTo("foo"));
-        Assert.That(await page.Frames[1].EvaluateAsync<string>("() => window['FOO']"), Is.EqualTo("bar"));
+        await Page.GotoAsync(Server.EmptyPage);
+        await AttachFrame(Page, "frame1", Server.EmptyPage);
+        Assert.That(Page.Frames.Count, Is.EqualTo(2));
+        await Page.Frames[0].EvaluateAsync("() => window['FOO'] = 'foo'");
+        await Page.Frames[1].EvaluateAsync("() => window['FOO'] = 'bar'");
+        Assert.That(await Page.Frames[0].EvaluateAsync<string>("() => window['FOO']"), Is.EqualTo("foo"));
+        Assert.That(await Page.Frames[1].EvaluateAsync<string>("() => window['FOO']"), Is.EqualTo("bar"));
     }
 
     [UpstreamTest("FR-002 should have correct execution contexts @smoke")]
-    public async Task ShouldHaveCorrectExecutionContexts(IPage page, Server server)
+    public async Task ShouldHaveCorrectExecutionContexts()
     {
-        await page.GotoAsync(server.Prefix + "/frames/one-frame.html");
-        Assert.That(page.Frames.Count, Is.EqualTo(2));
-        Assert.That(await page.Frames[0].EvaluateAsync<string>("() => document.body.textContent.trim()"), Is.EqualTo(""));
-        Assert.That(await page.Frames[1].EvaluateAsync<string>("() => document.body.textContent.trim()"), Is.EqualTo("Hi, I'm frame"));
+        await Page.GotoAsync(Server.Prefix + "/frames/one-frame.html");
+        Assert.That(Page.Frames.Count, Is.EqualTo(2));
+        Assert.That(await Page.Frames[0].EvaluateAsync<string>("() => document.body.textContent.trim()"), Is.EqualTo(""));
+        Assert.That(await Page.Frames[1].EvaluateAsync<string>("() => document.body.textContent.trim()"), Is.EqualTo("Hi, I'm frame"));
     }
 
     [UpstreamTest("FR-005 should execute after cross-site navigation")]
-    public async Task ShouldExecuteAfterCrossSiteNavigation(IPage page, Server server)
+    public async Task ShouldExecuteAfterCrossSiteNavigation()
     {
-        await page.GotoAsync(server.EmptyPage);
-        var mainFrame = page.MainFrame;
-        Assert.That(await mainFrame.EvaluateAsync<string>("() => window.location.href"), Does.Contain(server.EmptyPage));
-        await page.GotoAsync(server.CrossProcessPrefix + "/empty.html");
-        Assert.That(await mainFrame.EvaluateAsync<string>("() => window.location.href"), Does.Contain(server.CrossProcessPrefix));
+        await Page.GotoAsync(Server.EmptyPage);
+        var mainFrame = Page.MainFrame;
+        Assert.That(await mainFrame.EvaluateAsync<string>("() => window.location.href"), Does.Contain(Server.EmptyPage));
+        await Page.GotoAsync(Server.CrossProcessPrefix + "/empty.html");
+        Assert.That(await mainFrame.EvaluateAsync<string>("() => window.location.href"), Does.Contain(Server.CrossProcessPrefix));
     }
 
     [UpstreamTest("FR-006 should not allow cross-frame js handles")]
-    public async Task ShouldNotAllowCrossFrameJsHandles(IPage page, Server server)
+    public async Task ShouldNotAllowCrossFrameJsHandles()
     {
         // TODO: this should actually be possible because frames script each other,
         // but protocol implementations do not support this. For now, assume current
         // behavior.
-        await page.GotoAsync(server.Prefix + "/frames/one-frame.html");
-        var handle = await page.EvaluateHandleAsync(@"() => {
+        await Page.GotoAsync(Server.Prefix + "/frames/one-frame.html");
+        var handle = await Page.EvaluateHandleAsync(@"() => {
     const iframe = document.querySelector('iframe');
     const foo = { bar: 'baz' };
     iframe.contentWindow['__foo'] = foo;
     return foo;
   }");
-        var childFrame = page.MainFrame.ChildFrames[0];
+        var childFrame = Page.MainFrame.ChildFrames[0];
         var childResult = await childFrame.EvaluateAsync<object>("() => window['__foo']");
         ExpectToEqual(childResult, new { bar = "baz" });
         var error = await Catch(() => childFrame.EvaluateAsync("foo => foo.bar", handle));
@@ -75,45 +75,45 @@ public class FrameEvaluateTests
     }
 
     [UpstreamTest("FR-007 should allow cross-frame element handles")]
-    public async Task ShouldAllowCrossFrameElementHandles(IPage page, Server server)
+    public async Task ShouldAllowCrossFrameElementHandles()
     {
-        await page.GotoAsync(server.Prefix + "/frames/one-frame.html");
-        var bodyHandle = await page.MainFrame.ChildFrames[0].QuerySelectorAsync("body");
-        var result = await page.EvaluateAsync<string>("body => body.innerHTML", bodyHandle);
+        await Page.GotoAsync(Server.Prefix + "/frames/one-frame.html");
+        var bodyHandle = await Page.MainFrame.ChildFrames[0].QuerySelectorAsync("body");
+        var result = await Page.EvaluateAsync<string>("body => body.innerHTML", bodyHandle);
         Assert.That(result.Trim(), Is.EqualTo("<div>Hi, I'm frame</div>"));
     }
 
     [UpstreamTest("FR-008 should not allow cross-frame element handles when frames do not script each other")]
-    public async Task ShouldNotAllowCrossFrameElementHandlesWhenFramesDoNotScriptEachOther(IPage page, Server server, bool isAndroid)
+    public async Task ShouldNotAllowCrossFrameElementHandlesWhenFramesDoNotScriptEachOther()
     {
-        Info.Skip(isAndroid, "No cross-process on Android");
+        Info.Skip(IsAndroid, "No cross-process on Android");
 
-        await page.GotoAsync(server.EmptyPage);
-        var frame = await AttachFrame(page, "frame1", server.CrossProcessPrefix + "/empty.html");
+        await Page.GotoAsync(Server.EmptyPage);
+        var frame = await AttachFrame(Page, "frame1", Server.CrossProcessPrefix + "/empty.html");
         var bodyHandle = await frame.QuerySelectorAsync("body");
-        var error = await Catch(() => page.EvaluateAsync("body => body.innerHTML", bodyHandle));
+        var error = await Catch(() => Page.EvaluateAsync("body => body.innerHTML", bodyHandle));
         Assert.That(error.Message, Does.Contain("Unable to adopt element handle from a different document"));
     }
 
     [UpstreamTest("FR-009 should throw for detached frames")]
     [LocalFixme("dotnet: the message is 'Frame was detached', without the 'frame.evaluate: ' prefix of the call")]
-    public async Task ShouldThrowForDetachedFrames(IPage page, Server server)
+    public async Task ShouldThrowForDetachedFrames()
     {
-        var frame1 = await AttachFrame(page, "frame1", server.EmptyPage);
-        await DetachFrame(page, "frame1");
+        var frame1 = await AttachFrame(Page, "frame1", Server.EmptyPage);
+        await DetachFrame(Page, "frame1");
         Exception error = null;
         error = await Catch(() => frame1.EvaluateAsync("() => 7 * 8"));
         Assert.That(error.Message, Does.Contain("frame.evaluate: Frame was detached"));
     }
 
     [UpstreamTest("FR-010 should be isolated between frames")]
-    public async Task ShouldBeIsolatedBetweenFrames(IPage page, Server server)
+    public async Task ShouldBeIsolatedBetweenFrames()
     {
-        await page.GotoAsync(server.EmptyPage);
-        await AttachFrame(page, "frame1", server.EmptyPage);
-        Assert.That(page.Frames.Count, Is.EqualTo(2));
+        await Page.GotoAsync(Server.EmptyPage);
+        await AttachFrame(Page, "frame1", Server.EmptyPage);
+        Assert.That(Page.Frames.Count, Is.EqualTo(2));
         // .NET: const [frame1, frame2] = page.frames();
-        var (frame1, frame2) = (page.Frames[0], page.Frames[1]);
+        var (frame1, frame2) = (Page.Frames[0], Page.Frames[1]);
         Assert.That(frame1 != frame2, Is.True);
 
         await PromiseAll(
@@ -127,30 +127,30 @@ public class FrameEvaluateTests
     }
 
     [UpstreamTest("FR-011 should work in iframes that failed initial navigation")]
-    public async Task ShouldWorkInIframesThatFailedInitialNavigation(IPage page, string browserName)
+    public async Task ShouldWorkInIframesThatFailedInitialNavigation()
     {
-        await page.SetContentAsync(@"
+        await Page.SetContentAsync(@"
     <meta http-equiv=""Content-Security-Policy"" content=""script-src 'none';"">
     <iframe src='javascript:""""'></iframe>
   ", new() { WaitUntil = WaitUntilState.DOMContentLoaded });
-        await page.EvaluateAsync(@"() => {
+        await Page.EvaluateAsync(@"() => {
     const iframe = document.querySelector('iframe');
     const div = iframe.contentDocument.createElement('div');
     iframe.contentDocument.body.appendChild(div);
   }");
-        Assert.That(page.Frames[1].Url, Is.EqualTo(browserName == "webkit" ? "about:blank" : ""));
+        Assert.That(Page.Frames[1].Url, Is.EqualTo(BrowserName == "webkit" ? "about:blank" : ""));
         // Main world should work.
-        Assert.That(await page.Frames[1].EvaluateAsync<string>("() => window.location.href"), Is.EqualTo("about:blank"));
+        Assert.That(await Page.Frames[1].EvaluateAsync<string>("() => window.location.href"), Is.EqualTo("about:blank"));
         // Utility world should work.
-        Assert.That(await page.Frames[1].QuerySelectorAsync("div"), Is.Not.Null);
+        Assert.That(await Page.Frames[1].QuerySelectorAsync("div"), Is.Not.Null);
     }
 
     [UpstreamTest("FR-012 should work in iframes that interrupted initial javascript url navigation")]
-    public async Task ShouldWorkInIframesThatInterruptedInitialJavascriptUrlNavigation(IPage page, Server server, string browserName)
+    public async Task ShouldWorkInIframesThatInterruptedInitialJavascriptUrlNavigation()
     {
         // Chromium does not report isolated world for the iframe.
-        await page.GotoAsync(server.EmptyPage);
-        await page.EvaluateAsync(@"() => {
+        await Page.GotoAsync(Server.EmptyPage);
+        await Page.EvaluateAsync(@"() => {
     const iframe = document.createElement('iframe');
     iframe.src = 'javascript:""""';
     document.body.appendChild(iframe);
@@ -159,16 +159,16 @@ public class FrameEvaluateTests
     iframe.contentDocument.close();
   }");
         // Main world should work.
-        Assert.That(await page.Frames[1].EvaluateAsync<string>("() => window.top.location.href"), Is.EqualTo(server.EmptyPage));
+        Assert.That(await Page.Frames[1].EvaluateAsync<string>("() => window.top.location.href"), Is.EqualTo(Server.EmptyPage));
         // Utility world should work.
-        Assert.That(await page.Frames[1].QuerySelectorAsync("div"), Is.Not.Null);
+        Assert.That(await Page.Frames[1].QuerySelectorAsync("div"), Is.Not.Null);
     }
 
     [UpstreamTest("FR-013 evaluateHandle should work")]
-    public async Task EvaluateHandleShouldWork(IPage page, Server server)
+    public async Task EvaluateHandleShouldWork()
     {
-        await page.GotoAsync(server.EmptyPage);
-        var mainFrame = page.MainFrame;
+        await Page.GotoAsync(Server.EmptyPage);
+        var mainFrame = Page.MainFrame;
         var windowHandle = await mainFrame.EvaluateHandleAsync("() => window");
         Assert.That(windowHandle, Is.Not.Null);
     }

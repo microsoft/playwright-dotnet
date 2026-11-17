@@ -23,81 +23,81 @@ using static Microsoft.Playwright.Tests.Fixtures.Utils;
 namespace Microsoft.Playwright.Tests.Page;
 
 /// <summary>Port of tests/page/page-network-sizes.spec.ts.</summary>
-public class PageNetworkSizesTests
+public class PageNetworkSizesTests : UpstreamPageTest
 {
-    [BeforeEach]
-    public static void Skip(bool isElectron, int browserMajorVersion) => Info.Skip(isElectron && browserMajorVersion < 99, "This needs Chromium >= 99");
+    [SetUp]
+    public void Skip() => Info.Skip(IsElectron && BrowserMajorVersion < 99, "This needs Chromium >= 99");
 
     [UpstreamTest("NE-058 should set bodySize and headersSize")]
-    public async Task ShouldSetBodySizeAndHeadersSize(IPage page, Server server)
+    public async Task ShouldSetBodySizeAndHeadersSize()
     {
-        await page.GotoAsync(server.EmptyPage);
+        await Page.GotoAsync(Server.EmptyPage);
         var (request, _) = await PromiseAll(
-            page.WaitForRequestAsync(_ => true),
-            page.EvaluateAsync("() => fetch('./get', { method: 'POST', body: '12345' }).then(r => r.text())"));
+            Page.WaitForRequestAsync(_ => true),
+            Page.EvaluateAsync("() => fetch('./get', { method: 'POST', body: '12345' }).then(r => r.text())"));
         var sizes = await request.SizesAsync();
         Assert.That(sizes.RequestBodySize, Is.EqualTo(5));
         Assert.That(sizes.RequestHeadersSize, Is.GreaterThanOrEqualTo(250));
     }
 
     [UpstreamTest("NE-059 should set bodySize to 0 if there was no body")]
-    public async Task ShouldSetBodySizeTo0IfThereWasNoBody(IPage page, Server server, string browserName, string platform)
+    public async Task ShouldSetBodySizeTo0IfThereWasNoBody()
     {
-        await page.GotoAsync(server.EmptyPage);
+        await Page.GotoAsync(Server.EmptyPage);
         var (request, _) = await PromiseAll(
-            page.WaitForRequestAsync(_ => true),
-            page.EvaluateAsync("() => fetch('./get').then(r => r.text())"));
+            Page.WaitForRequestAsync(_ => true),
+            Page.EvaluateAsync("() => fetch('./get').then(r => r.text())"));
         var sizes = await request.SizesAsync();
         Assert.That(sizes.RequestBodySize, Is.EqualTo(0));
         Assert.That(sizes.RequestHeadersSize, Is.GreaterThanOrEqualTo(190));
     }
 
     [UpstreamTest("NE-060 should set bodySize, headersSize, and transferSize")]
-    public async Task ShouldSetBodySizeHeadersSizeAndTransferSize(IPage page, Server server)
+    public async Task ShouldSetBodySizeHeadersSizeAndTransferSize()
     {
-        server.SetRoute("/get", (req, res) =>
+        Server.SetRoute("/get", (req, res) =>
         {
             // In Firefox, |fetch| will be hanging until it receives |Content-Type| header
             // from server.
             res.SetHeader("Content-Type", "text/plain; charset=utf-8");
             res.End("abc134");
         });
-        await page.GotoAsync(server.EmptyPage);
+        await Page.GotoAsync(Server.EmptyPage);
         var (response, _, _) = await PromiseAll(
-            page.WaitForResponseAsync(_ => true),
-            page.EvaluateAsync("async () => fetch('./get').then(r => r.text())"),
-            server.WaitForRequest("/get"));
+            Page.WaitForResponseAsync(_ => true),
+            Page.EvaluateAsync("async () => fetch('./get').then(r => r.text())"),
+            Server.WaitForRequest("/get"));
         var sizes = await response.Request.SizesAsync();
         Assert.That(sizes.ResponseBodySize, Is.EqualTo(6));
         Assert.That(sizes.ResponseHeadersSize, Is.GreaterThanOrEqualTo(100));
     }
 
     [UpstreamTest("NE-061 should set bodySize to 0 when there was no response body")]
-    public async Task ShouldSetBodySizeTo0WhenThereWasNoResponseBody(IPage page, Server server)
+    public async Task ShouldSetBodySizeTo0WhenThereWasNoResponseBody()
     {
-        var response = await page.GotoAsync(server.EmptyPage);
+        var response = await Page.GotoAsync(Server.EmptyPage);
         var sizes = await response.Request.SizesAsync();
         Assert.That(sizes.ResponseBodySize, Is.EqualTo(0));
         Assert.That(sizes.ResponseHeadersSize, Is.GreaterThanOrEqualTo(150));
     }
 
     [UpstreamTest("NE-062 should have the correct responseBodySize")]
-    public async Task ShouldHaveTheCorrectResponseBodySize(IPage page, Server server, Func<string, string> asset, string browserName)
+    public async Task ShouldHaveTheCorrectResponseBodySize()
     {
-        var response = await page.GotoAsync(server.Prefix + "/simplezip.json");
+        var response = await Page.GotoAsync(Server.Prefix + "/simplezip.json");
         var sizes = await response.Request.SizesAsync();
-        Assert.That(sizes.ResponseBodySize, Is.EqualTo(new FileInfo(asset("simplezip.json")).Length));
+        Assert.That(sizes.ResponseBodySize, Is.EqualTo(new FileInfo(Asset("simplezip.json")).Length));
     }
 
     [UpstreamTest("NE-063 should have the correct responseBodySize for chunked request")]
-    public async Task ShouldHaveTheCorrectResponseBodySizeForChunkedRequest(IPage page, Server server, Func<string, string> asset, string browserName, string platform)
+    public async Task ShouldHaveTheCorrectResponseBodySizeForChunkedRequest()
     {
-        Info.Fixme(browserName == "firefox");
-        Info.Fixme(browserName == "webkit" && platform != "darwin");
-        var content = File.ReadAllBytes(asset("simplezip.json"));
+        Info.Fixme(BrowserName == "firefox");
+        Info.Fixme(BrowserName == "webkit" && Platform != "darwin");
+        var content = File.ReadAllBytes(Asset("simplezip.json"));
         var AMOUNT_OF_CHUNKS = 10;
         var CHUNK_SIZE = (int)Math.Ceiling(content.Length / (double)AMOUNT_OF_CHUNKS);
-        server.SetRoute("/chunked-simplezip.json", async (req, resp) =>
+        Server.SetRoute("/chunked-simplezip.json", async (req, resp) =>
         {
             resp.WriteHead(200, new() { ["Content-Type"] = "text/html; charset=utf-8", ["Transfer-Encoding"] = "chunked" });
             for (var start = 0; start < content.Length; start += CHUNK_SIZE)
@@ -108,10 +108,10 @@ public class PageNetworkSizesTests
             }
             resp.End();
         });
-        var response = await page.GotoAsync(server.Prefix + "/chunked-simplezip.json");
+        var response = await Page.GotoAsync(Server.Prefix + "/chunked-simplezip.json");
         var sizes = await response.Request.SizesAsync();
         // The actual file size is 5100 bytes. The extra 75 bytes are coming from the chunked encoding headers and end bytes.
-        if (browserName == "webkit")
+        if (BrowserName == "webkit")
         {
             // WebKit on macOS reports 5173 with the legacy CFNetwork loader (builds <= 2346) and the
             // correct 5175 with NWLoader. TODO: expect 5175 once the NWLoader-based build ships.
@@ -124,34 +124,34 @@ public class PageNetworkSizesTests
     }
 
     [UpstreamTest("NE-064 should have the correct responseBodySize with gzip compression")]
-    public async Task ShouldHaveTheCorrectResponseBodySizeWithGzipCompression(IPage page, Server server, Func<string, string> asset, TestInfo testInfo)
+    public async Task ShouldHaveTheCorrectResponseBodySizeWithGzipCompression()
     {
-        server.EnableGzip("/simplezip.json");
-        await page.GotoAsync(server.EmptyPage);
+        Server.EnableGzip("/simplezip.json");
+        await Page.GotoAsync(Server.EmptyPage);
         var (response, _) = await PromiseAll(
-            page.WaitForResponseAsync(_ => true),
-            page.EvaluateAsync("() => fetch('./simplezip.json').then(r => r.text())"));
+            Page.WaitForResponseAsync(_ => true),
+            Page.EvaluateAsync("() => fetch('./simplezip.json').then(r => r.text())"));
         var sizes = await response.Request.SizesAsync();
 
         // .NET: fs.createReadStream(asset('simplezip.json')).pipe(zlib.createGzip()) and its 'data' and 'end' events are a GZipStream.
         using var chunks = new MemoryStream();
         using (var gzip = new GZipStream(chunks, CompressionLevel.Optimal, true))
         {
-            await gzip.WriteAsync(File.ReadAllBytes(asset("simplezip.json")));
+            await gzip.WriteAsync(File.ReadAllBytes(Asset("simplezip.json")));
         }
 
         Assert.That(sizes.ResponseBodySize, Is.EqualTo(chunks.ToArray().Length));
     }
 
     [UpstreamTest("NE-065 should handle redirects")]
-    public async Task ShouldHandleRedirects(IPage page, Server server)
+    public async Task ShouldHandleRedirects()
     {
-        server.SetRedirect("/foo", "/bar");
-        server.SetRoute("/bar", (req, resp) => resp.End("bar"));
-        await page.GotoAsync(server.EmptyPage);
+        Server.SetRedirect("/foo", "/bar");
+        Server.SetRoute("/bar", (req, resp) => resp.End("bar"));
+        await Page.GotoAsync(Server.EmptyPage);
         var (response, _) = await PromiseAll(
-            page.WaitForResponseAsync(_ => true),
-            page.EvaluateAsync(@"async () => fetch('/foo', {
+            Page.WaitForResponseAsync(_ => true),
+            Page.EvaluateAsync(@"async () => fetch('/foo', {
       method: 'POST',
       body: '12345',
     }).then(r => r.text())"));
@@ -162,29 +162,29 @@ public class PageNetworkSizesTests
 
     [UpstreamTest("NE-066 should throw for failed requests")]
     [LocalFixme("dotnet: the message of Request.SizesAsync for a failed request is \"Unable to fetch resources sizes.\", upstream has \"Unable to fetch sizes for failed request\"")]
-    public async Task ShouldThrowForFailedRequests(IPage page, Server server)
+    public async Task ShouldThrowForFailedRequests()
     {
-        server.SetRoute("/one-style.css", (req, res) =>
+        Server.SetRoute("/one-style.css", (req, res) =>
         {
             res.SetHeader("Content-Type", "text/css");
             res.Connection.Destroy();
         });
-        await page.GotoAsync(server.EmptyPage);
+        await Page.GotoAsync(Server.EmptyPage);
         var (request, _) = await PromiseAll(
-            Once<IRequest>(h => page.RequestFailed += h, h => page.RequestFailed -= h),
-            page.GotoAsync(server.Prefix + "/one-style.html"));
+            Once<IRequest>(h => Page.RequestFailed += h, h => Page.RequestFailed -= h),
+            Page.GotoAsync(Server.Prefix + "/one-style.html"));
         var error = await ThrowsAsync<PlaywrightException>(() => request.SizesAsync());
         Assert.That(error.Message, Does.Contain("Unable to fetch sizes for failed request"));
     }
 
     [UpstreamTest("NE-067 should work with ${statusCode} status code")]
-    [Case(200)]
-    [Case(401)]
-    [Case(404)]
-    [Case(500)]
-    public async Task ShouldWorkWithStatusCode(int statusCode, IPage page, Server server)
+    [TestCase(200)]
+    [TestCase(401)]
+    [TestCase(404)]
+    [TestCase(500)]
+    public async Task ShouldWorkWithStatusCode(int statusCode)
     {
-        server.SetRoute("/foo", (req, resp) =>
+        Server.SetRoute("/foo", (req, resp) =>
         {
             resp.WriteHead(statusCode, new()
             {
@@ -193,10 +193,10 @@ public class PageNetworkSizesTests
             });
             resp.End("bar");
         });
-        await page.GotoAsync(server.EmptyPage);
+        await Page.GotoAsync(Server.EmptyPage);
         var (response, _) = await PromiseAll(
-            page.WaitForResponseAsync(_ => true),
-            page.EvaluateAsync(@"async () => fetch('/foo', {
+            Page.WaitForResponseAsync(_ => true),
+            Page.EvaluateAsync(@"async () => fetch('/foo', {
         method: 'POST',
         body: '12345',
       }).then(r => r.text())"));
@@ -207,16 +207,16 @@ public class PageNetworkSizesTests
     }
 
     [UpstreamTest("NE-068 should have correct responseBodySize for 404 with content")]
-    public async Task ShouldHaveCorrectResponseBodySizeFor404WithContent(IPage page, Server server, string browserName)
+    public async Task ShouldHaveCorrectResponseBodySizeFor404WithContent()
     {
-        Info.Fixme(browserName == "chromium");
+        Info.Fixme(BrowserName == "chromium");
 
-        server.SetRoute("/broken-image.png", (req, resp) =>
+        Server.SetRoute("/broken-image.png", (req, resp) =>
         {
             resp.WriteHead(404);
             resp.End("<p>this should have a non-negative size</p>");
         });
-        server.SetRoute("/page-with-404-image.html", (req, resp) =>
+        Server.SetRoute("/page-with-404-image.html", (req, resp) =>
         {
             resp.End(@"
     <!DOCTYPE html>
@@ -230,8 +230,8 @@ public class PageNetworkSizesTests
         });
 
         var (req, _) = await PromiseAll(
-            page.WaitForRequestAsync(new Regex("broken-image\\.png$")),
-            page.GotoAsync(server.Prefix + "/page-with-404-image.html"));
+            Page.WaitForRequestAsync(new Regex("broken-image\\.png$")),
+            Page.GotoAsync(Server.Prefix + "/page-with-404-image.html"));
 
         // .NET: const { responseBodySize } = await req.sizes();
         var responseBodySize = (await req.SizesAsync()).ResponseBodySize;
@@ -239,11 +239,11 @@ public class PageNetworkSizesTests
     }
 
     [UpstreamTest("NE-069 should return sizes without hanging")]
-    public async Task ShouldReturnSizesWithoutHanging(IPage page, Server server, string browserName)
+    public async Task ShouldReturnSizesWithoutHanging()
     {
-        Info.Fixme(browserName == "chromium");
+        Info.Fixme(BrowserName == "chromium");
 
-        server.SetRoute("/has-abandoned-fetch", (req, resp) =>
+        Server.SetRoute("/has-abandoned-fetch", (req, resp) =>
         {
             resp.End(@"
     <!DOCTYPE html>
@@ -259,8 +259,8 @@ public class PageNetworkSizesTests
         });
 
         var (req, _) = await PromiseAll(
-            page.WaitForRequestAsync(new Regex("404$")),
-            page.GotoAsync(server.Prefix + "/has-abandoned-fetch"));
+            Page.WaitForRequestAsync(new Regex("404$")),
+            Page.GotoAsync(Server.Prefix + "/has-abandoned-fetch"));
 
         await req.SizesAsync();
     }

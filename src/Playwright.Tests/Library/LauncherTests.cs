@@ -21,22 +21,22 @@ using static Microsoft.Playwright.Tests.Fixtures.Utils;
 namespace Microsoft.Playwright.Tests.Library;
 
 /// <summary>Port of tests/library/launcher.spec.ts.</summary>
-public class LauncherTests
+public class LauncherTests : UpstreamBrowserTest
 {
     [UpstreamTest("BT-019 should have a devices object")]
-    public async Task ShouldHaveADevicesObject(IPlaywright playwright)
+    public async Task ShouldHaveADevicesObject()
     {
-        Assert.That(playwright.Devices["iPhone 6"], Is.Not.Null);
+        Assert.That(Playwright.Devices["iPhone 6"], Is.Not.Null);
         // .NET: expect(playwright.devices['iPhone 6'].defaultBrowserType).toBe('webkit'): a device is a BrowserNewContextOptions, which has no defaultBrowserType.
     }
 
     [UpstreamTest("BT-021 should throw a friendly error if its headed and there is no xserver on linux running")]
-    public async Task ShouldThrowAFriendlyErrorIfItsHeadedAndThereIsNoXserverOnLinuxRunning(string mode, IBrowserType browserType, string platform, string channel, BrowserTypeLaunchOptions launchOptions)
+    public async Task ShouldThrowAFriendlyErrorIfItsHeadedAndThereIsNoXserverOnLinuxRunning()
     {
-        Info.Skip(platform != "linux");
-        Info.Skip(channel == "chromium-headless-shell", "shell is never headed");
+        Info.Skip(Platform != "linux");
+        Info.Skip(Channel == "chromium-headless-shell", "shell is never headed");
 
-        var error = await Catch(() => browserType.LaunchAsync(new(launchOptions)
+        var error = await Catch(() => BrowserType.LaunchAsync(new(LaunchOptions())
         {
             Headless = false,
             Env = TestChildProcess.InheritAndCleanEnv(new Dictionary<string, string> { ["DISPLAY"] = null }),

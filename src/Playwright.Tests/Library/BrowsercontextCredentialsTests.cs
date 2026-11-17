@@ -23,28 +23,27 @@ using static Microsoft.Playwright.Tests.Fixtures.Utils;
 namespace Microsoft.Playwright.Tests.Library;
 
 /// <summary>Port of tests/library/browsercontext-credentials.spec.ts.</summary>
-public class BrowsercontextCredentialsTests
+public class BrowsercontextCredentialsTests : UpstreamBrowserTest
 {
-    [Fixture]
-    public static bool FailsOn401(string browserName, bool isHeadlessShell) => browserName == "chromium" && !isHeadlessShell;
+    private bool FailsOn401 => BrowserName == "chromium" && !IsHeadlessShell;
 
     [UpstreamTest("AU-001 should fail without credentials")]
-    public async Task ShouldFailWithoutCredentials(IBrowser browser, Server server, bool failsOn401, BrowserNewContextOptions contextOptions)
+    public async Task ShouldFailWithoutCredentials()
     {
-        server.SetAuth("/empty.html", "user", "pass");
-        var context = await browser.NewContextAsync(contextOptions);
+        Server.SetAuth("/empty.html", "user", "pass");
+        var context = await Browser.NewContextAsync(ContextOptions());
         var page = await context.NewPageAsync();
         // .NET: responseOrError is an object, cast to the response or to the error where upstream reads a member.
         object responseOrError;
         try
         {
-            responseOrError = await page.GotoAsync(server.EmptyPage);
+            responseOrError = await page.GotoAsync(Server.EmptyPage);
         }
         catch (Exception e)
         {
             responseOrError = e;
         }
-        if (failsOn401)
+        if (FailsOn401)
         {
             Assert.That(((Exception)responseOrError).Message, Does.Contain("net::ERR_INVALID_AUTH_CREDENTIALS"));
         }
@@ -55,43 +54,43 @@ public class BrowsercontextCredentialsTests
     }
 
     [UpstreamTest("AU-004 should work with correct credentials @smoke")]
-    public async Task ShouldWorkWithCorrectCredentials(IBrowser browser, Server server, BrowserNewContextOptions contextOptions)
+    public async Task ShouldWorkWithCorrectCredentials()
     {
-        server.SetAuth("/empty.html", "user", "pass");
-        var context = await browser.NewContextAsync(new(contextOptions)
+        Server.SetAuth("/empty.html", "user", "pass");
+        var context = await Browser.NewContextAsync(new(ContextOptions())
         {
             HttpCredentials = new() { Username = "user", Password = "pass" }
         });
         var page = await context.NewPageAsync();
-        var response = await page.GotoAsync(server.EmptyPage);
+        var response = await page.GotoAsync(Server.EmptyPage);
         Assert.That(response.Status, Is.EqualTo(200));
         await context.CloseAsync();
     }
 
     [UpstreamTest("AU-005 should fail with wrong credentials")]
-    public async Task ShouldFailWithWrongCredentials(IBrowser browser, Server server, BrowserNewContextOptions contextOptions)
+    public async Task ShouldFailWithWrongCredentials()
     {
-        server.SetAuth("/empty.html", "user", "pass");
-        var context = await browser.NewContextAsync(new(contextOptions)
+        Server.SetAuth("/empty.html", "user", "pass");
+        var context = await Browser.NewContextAsync(new(ContextOptions())
         {
             HttpCredentials = new() { Username = "foo", Password = "bar" }
         });
         var page = await context.NewPageAsync();
-        var response = await page.GotoAsync(server.EmptyPage);
+        var response = await page.GotoAsync(Server.EmptyPage);
         Assert.That(response.Status, Is.EqualTo(401));
         await context.CloseAsync();
     }
 
     [UpstreamTest("AU-006 should return resource body")]
-    public async Task ShouldReturnResourceBody(IBrowser browser, Server server, BrowserNewContextOptions contextOptions)
+    public async Task ShouldReturnResourceBody()
     {
-        server.SetAuth("/playground.html", "user", "pass");
-        var context = await browser.NewContextAsync(new(contextOptions)
+        Server.SetAuth("/playground.html", "user", "pass");
+        var context = await Browser.NewContextAsync(new(ContextOptions())
         {
             HttpCredentials = new() { Username = "user", Password = "pass" }
         });
         var page = await context.NewPageAsync();
-        var response = await page.GotoAsync(server.Prefix + "/playground.html");
+        var response = await page.GotoAsync(Server.Prefix + "/playground.html");
         Assert.That(response.Status, Is.EqualTo(200));
         Assert.That(await page.TitleAsync(), Is.EqualTo("Playground"));
         Assert.That(Encoding.UTF8.GetString(await response.BodyAsync()), Does.Contain("Playground"));
@@ -99,127 +98,127 @@ public class BrowsercontextCredentialsTests
     }
 
     [UpstreamTest("AU-007 should work with a single credential in an array")]
-    public async Task ShouldWorkWithASingleCredentialInAnArray(IBrowser browser, Server server, BrowserNewContextOptions contextOptions)
+    public async Task ShouldWorkWithASingleCredentialInAnArray()
     {
-        server.SetAuth("/empty.html", "user", "pass");
-        var context = await browser.NewContextAsync(new(contextOptions)
+        Server.SetAuth("/empty.html", "user", "pass");
+        var context = await Browser.NewContextAsync(new(ContextOptions())
         {
             HttpCredentialsList = [new() { Username = "user", Password = "pass" }]
         });
         var page = await context.NewPageAsync();
-        var response = await page.GotoAsync(server.EmptyPage);
+        var response = await page.GotoAsync(Server.EmptyPage);
         Assert.That(response.Status, Is.EqualTo(200));
         await context.CloseAsync();
     }
 
     [UpstreamTest("AU-008 should work with multiple credentials for different origins")]
-    public async Task ShouldWorkWithMultipleCredentialsForDifferentOrigins(IBrowser browser, Server server, string browserName, BrowserNewContextOptions contextOptions)
+    public async Task ShouldWorkWithMultipleCredentialsForDifferentOrigins()
     {
-        server.SetAuth("/empty.html", "user1", "pass1");
-        var context = await browser.NewContextAsync(new(contextOptions)
+        Server.SetAuth("/empty.html", "user1", "pass1");
+        var context = await Browser.NewContextAsync(new(ContextOptions())
         {
             HttpCredentialsList =
             [
-                new() { Username = "user1", Password = "pass1", Origin = server.Prefix },
-                new() { Username = "user2", Password = "pass2", Origin = server.CrossProcessPrefix },
+                new() { Username = "user1", Password = "pass1", Origin = Server.Prefix },
+                new() { Username = "user2", Password = "pass2", Origin = Server.CrossProcessPrefix },
             ]
         });
         var page = await context.NewPageAsync();
-        var response1 = await page.GotoAsync(server.EmptyPage);
+        var response1 = await page.GotoAsync(Server.EmptyPage);
         Assert.That(response1.Status, Is.EqualTo(200));
         // Wrong credentials are picked for the other origin.
-        var response2 = await page.GotoAsync(server.CrossProcessPrefix + "/empty.html");
+        var response2 = await page.GotoAsync(Server.CrossProcessPrefix + "/empty.html");
         Assert.That(response2.Status, Is.EqualTo(401));
         await context.CloseAsync();
     }
 
     [UpstreamTest("AU-009 should fall back to credentials without origin")]
-    public async Task ShouldFallBackToCredentialsWithoutOrigin(IBrowser browser, Server server, string browserName, BrowserNewContextOptions contextOptions)
+    public async Task ShouldFallBackToCredentialsWithoutOrigin()
     {
-        server.SetAuth("/empty.html", "user", "pass");
-        var context = await browser.NewContextAsync(new(contextOptions)
+        Server.SetAuth("/empty.html", "user", "pass");
+        var context = await Browser.NewContextAsync(new(ContextOptions())
         {
             HttpCredentialsList =
             [
-                new() { Username = "user2", Password = "pass2", Origin = server.CrossProcessPrefix },
+                new() { Username = "user2", Password = "pass2", Origin = Server.CrossProcessPrefix },
                 new() { Username = "user", Password = "pass" },
             ]
         });
         var page = await context.NewPageAsync();
-        var response1 = await page.GotoAsync(server.EmptyPage);
+        var response1 = await page.GotoAsync(Server.EmptyPage);
         Assert.That(response1.Status, Is.EqualTo(200));
         // First matching entry has wrong credentials for this origin.
-        var response2 = await page.GotoAsync(server.CrossProcessPrefix + "/empty.html");
+        var response2 = await page.GotoAsync(Server.CrossProcessPrefix + "/empty.html");
         Assert.That(response2.Status, Is.EqualTo(401));
         await context.CloseAsync();
     }
 
     [UpstreamTest("AU-010 should use the first matching credential")]
-    public async Task ShouldUseTheFirstMatchingCredential(IBrowser browser, Server server, string browserName, BrowserNewContextOptions contextOptions)
+    public async Task ShouldUseTheFirstMatchingCredential()
     {
-        server.SetAuth("/empty.html", "user", "pass");
-        var context = await browser.NewContextAsync(new(contextOptions)
+        Server.SetAuth("/empty.html", "user", "pass");
+        var context = await Browser.NewContextAsync(new(ContextOptions())
         {
             HttpCredentialsList =
             [
                 new() { Username = "wrong", Password = "wrong" },
-                new() { Username = "user", Password = "pass", Origin = server.Prefix },
+                new() { Username = "user", Password = "pass", Origin = Server.Prefix },
             ]
         });
         var page = await context.NewPageAsync();
-        var response = await page.GotoAsync(server.EmptyPage);
+        var response = await page.GotoAsync(Server.EmptyPage);
         Assert.That(response.Status, Is.EqualTo(401));
         await context.CloseAsync();
     }
 
     [UpstreamTest("AU-011 should work with correct credentials and matching origin")]
-    public async Task ShouldWorkWithCorrectCredentialsAndMatchingOrigin(IBrowser browser, Server server, BrowserNewContextOptions contextOptions)
+    public async Task ShouldWorkWithCorrectCredentialsAndMatchingOrigin()
     {
-        server.SetAuth("/empty.html", "user", "pass");
-        var context = await browser.NewContextAsync(new(contextOptions)
+        Server.SetAuth("/empty.html", "user", "pass");
+        var context = await Browser.NewContextAsync(new(ContextOptions())
         {
-            HttpCredentials = new() { Username = "user", Password = "pass", Origin = server.Prefix }
+            HttpCredentials = new() { Username = "user", Password = "pass", Origin = Server.Prefix }
         });
         var page = await context.NewPageAsync();
-        var response = await page.GotoAsync(server.EmptyPage);
+        var response = await page.GotoAsync(Server.EmptyPage);
         Assert.That(response.Status, Is.EqualTo(200));
         await context.CloseAsync();
     }
 
     [UpstreamTest("AU-012 should work with correct credentials and matching origin case insensitive")]
-    public async Task ShouldWorkWithCorrectCredentialsAndMatchingOriginCaseInsensitive(IBrowser browser, Server server, BrowserNewContextOptions contextOptions)
+    public async Task ShouldWorkWithCorrectCredentialsAndMatchingOriginCaseInsensitive()
     {
-        server.SetAuth("/empty.html", "user", "pass");
-        var context = await browser.NewContextAsync(new(contextOptions)
+        Server.SetAuth("/empty.html", "user", "pass");
+        var context = await Browser.NewContextAsync(new(ContextOptions())
         {
-            HttpCredentials = new() { Username = "user", Password = "pass", Origin = server.Prefix.ToUpperInvariant() }
+            HttpCredentials = new() { Username = "user", Password = "pass", Origin = Server.Prefix.ToUpperInvariant() }
         });
         var page = await context.NewPageAsync();
-        var response = await page.GotoAsync(server.EmptyPage);
+        var response = await page.GotoAsync(Server.EmptyPage);
         Assert.That(response.Status, Is.EqualTo(200));
         await context.CloseAsync();
     }
 
     [UpstreamTest("AU-013 should fail with correct credentials and mismatching scheme")]
-    public async Task ShouldFailWithCorrectCredentialsAndMismatchingScheme(IBrowser browser, Server server, bool failsOn401, BrowserNewContextOptions contextOptions)
+    public async Task ShouldFailWithCorrectCredentialsAndMismatchingScheme()
     {
-        server.SetAuth("/empty.html", "user", "pass");
-        var context = await browser.NewContextAsync(new(contextOptions)
+        Server.SetAuth("/empty.html", "user", "pass");
+        var context = await Browser.NewContextAsync(new(ContextOptions())
         {
-            HttpCredentials = new() { Username = "user", Password = "pass", Origin = ReplaceFirst(server.Prefix, "http://", "https://") }
+            HttpCredentials = new() { Username = "user", Password = "pass", Origin = ReplaceFirst(Server.Prefix, "http://", "https://") }
         });
         var page = await context.NewPageAsync();
         // .NET: responseOrError is an object, cast to the response or to the error where upstream reads a member.
         object responseOrError;
         try
         {
-            responseOrError = await page.GotoAsync(server.EmptyPage);
+            responseOrError = await page.GotoAsync(Server.EmptyPage);
         }
         catch (Exception e)
         {
             responseOrError = e;
         }
-        if (failsOn401)
+        if (FailsOn401)
         {
             Assert.That(((Exception)responseOrError).Message, Does.Contain("net::ERR_INVALID_AUTH_CREDENTIALS"));
         }
@@ -231,12 +230,12 @@ public class BrowsercontextCredentialsTests
     }
 
     [UpstreamTest("AU-014 should fail with correct credentials and mismatching hostname")]
-    public async Task ShouldFailWithCorrectCredentialsAndMismatchingHostname(IBrowser browser, Server server, bool failsOn401, BrowserNewContextOptions contextOptions)
+    public async Task ShouldFailWithCorrectCredentialsAndMismatchingHostname()
     {
-        server.SetAuth("/empty.html", "user", "pass");
-        var hostname = new Uri(server.Prefix).Host;
-        var origin = ReplaceFirst(server.Prefix, hostname, "mismatching-hostname");
-        var context = await browser.NewContextAsync(new(contextOptions)
+        Server.SetAuth("/empty.html", "user", "pass");
+        var hostname = new Uri(Server.Prefix).Host;
+        var origin = ReplaceFirst(Server.Prefix, hostname, "mismatching-hostname");
+        var context = await Browser.NewContextAsync(new(ContextOptions())
         {
             HttpCredentials = new() { Username = "user", Password = "pass", Origin = origin }
         });
@@ -245,13 +244,13 @@ public class BrowsercontextCredentialsTests
         object responseOrError;
         try
         {
-            responseOrError = await page.GotoAsync(server.EmptyPage);
+            responseOrError = await page.GotoAsync(Server.EmptyPage);
         }
         catch (Exception e)
         {
             responseOrError = e;
         }
-        if (failsOn401)
+        if (FailsOn401)
         {
             Assert.That(((Exception)responseOrError).Message, Does.Contain("net::ERR_INVALID_AUTH_CREDENTIALS"));
         }
@@ -263,11 +262,11 @@ public class BrowsercontextCredentialsTests
     }
 
     [UpstreamTest("AU-015 should fail with correct credentials and mismatching port")]
-    public async Task ShouldFailWithCorrectCredentialsAndMismatchingPort(IBrowser browser, Server server, bool failsOn401, BrowserNewContextOptions contextOptions)
+    public async Task ShouldFailWithCorrectCredentialsAndMismatchingPort()
     {
-        server.SetAuth("/empty.html", "user", "pass");
-        var origin = ReplaceFirst(server.Prefix, server.Port.ToString(CultureInfo.InvariantCulture), (server.Port + 1).ToString(CultureInfo.InvariantCulture));
-        var context = await browser.NewContextAsync(new(contextOptions)
+        Server.SetAuth("/empty.html", "user", "pass");
+        var origin = ReplaceFirst(Server.Prefix, Server.Port.ToString(CultureInfo.InvariantCulture), (Server.Port + 1).ToString(CultureInfo.InvariantCulture));
+        var context = await Browser.NewContextAsync(new(ContextOptions())
         {
             HttpCredentials = new() { Username = "user", Password = "pass", Origin = origin }
         });
@@ -276,13 +275,13 @@ public class BrowsercontextCredentialsTests
         object responseOrError;
         try
         {
-            responseOrError = await page.GotoAsync(server.EmptyPage);
+            responseOrError = await page.GotoAsync(Server.EmptyPage);
         }
         catch (Exception e)
         {
             responseOrError = e;
         }
-        if (failsOn401)
+        if (FailsOn401)
         {
             Assert.That(((Exception)responseOrError).Message, Does.Contain("net::ERR_INVALID_AUTH_CREDENTIALS"));
         }
@@ -294,19 +293,19 @@ public class BrowsercontextCredentialsTests
     }
 
     [UpstreamTest("AU-016 should not override Authorization header set by the page")]
-    public async Task ShouldNotOverrideAuthorizationHeaderSetByThePage(IBrowser browser, Server server, BrowserNewContextOptions contextOptions)
+    public async Task ShouldNotOverrideAuthorizationHeaderSetByThePage()
     {
-        server.SetAuth("/empty.html", "user", "pass");
-        server.SetRoute("/echo-auth", (req, res) =>
+        Server.SetAuth("/empty.html", "user", "pass");
+        Server.SetRoute("/echo-auth", (req, res) =>
         {
             res.End(req.Headers["authorization"] ?? "<none>");
         });
-        var context = await browser.NewContextAsync(new(contextOptions)
+        var context = await Browser.NewContextAsync(new(ContextOptions())
         {
             HttpCredentials = new() { Username = "user", Password = "pass" }
         });
         var page = await context.NewPageAsync();
-        var response = await page.GotoAsync(server.EmptyPage);
+        var response = await page.GotoAsync(Server.EmptyPage);
         Assert.That(response.Status, Is.EqualTo(200));
         var received = await page.EvaluateAsync<string>(@"async () => {
     const response = await fetch('/echo-auth', { headers: { 'Authorization': 'Bearer my-own-app-token' } });

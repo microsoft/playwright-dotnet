@@ -20,41 +20,41 @@ using Microsoft.Playwright.Tests.Fixtures;
 namespace Microsoft.Playwright.Tests.Page;
 
 /// <summary>Port of tests/page/jshandle-as-element.spec.ts.</summary>
-public class JshandleAsElementTests
+public class JshandleAsElementTests : UpstreamPageTest
 {
     [UpstreamTest("JH-001 should work @smoke")]
-    public async Task ShouldWork(IPage page)
+    public async Task ShouldWork()
     {
-        var aHandle = await page.EvaluateHandleAsync("() => document.body");
+        var aHandle = await Page.EvaluateHandleAsync("() => document.body");
         var element = aHandle.AsElement();
         Assert.That(element, Is.Not.Null);
     }
 
     [UpstreamTest("JH-002 should return null for non-elements")]
     [LocalFixme("dotnet: JSHandle.AsElement() throws InvalidCastException for a handle that is not an element, it casts itself to IElementHandle; upstream returns null")]
-    public async Task ShouldReturnNullForNonElements(IPage page)
+    public async Task ShouldReturnNullForNonElements()
     {
-        var aHandle = await page.EvaluateHandleAsync("() => 2");
+        var aHandle = await Page.EvaluateHandleAsync("() => 2");
         var element = aHandle.AsElement();
         Assert.That(element, Is.Null);
     }
 
     [UpstreamTest("JH-003 should return ElementHandle for TextNodes")]
-    public async Task ShouldReturnElementHandleForTextNodes(IPage page)
+    public async Task ShouldReturnElementHandleForTextNodes()
     {
-        await page.SetContentAsync("<div>ee!</div>");
-        var aHandle = await page.EvaluateHandleAsync("() => document.querySelector('div').firstChild");
+        await Page.SetContentAsync("<div>ee!</div>");
+        var aHandle = await Page.EvaluateHandleAsync("() => document.querySelector('div').firstChild");
         var element = aHandle.AsElement();
         Assert.That(element, Is.Not.Null);
-        Assert.That(await page.EvaluateAsync<bool>("e => e.nodeType === Node.TEXT_NODE", element), Is.True);
+        Assert.That(await Page.EvaluateAsync<bool>("e => e.nodeType === Node.TEXT_NODE", element), Is.True);
     }
 
     [UpstreamTest("JH-004 should work with nullified Node")]
-    public async Task ShouldWorkWithNullifiedNode(IPage page)
+    public async Task ShouldWorkWithNullifiedNode()
     {
-        await page.SetContentAsync("<section>test</section>");
-        await page.EvaluateAsync("delete Node");
-        var handle = await page.EvaluateHandleAsync("() => document.querySelector('section')");
+        await Page.SetContentAsync("<section>test</section>");
+        await Page.EvaluateAsync("delete Node");
+        var handle = await Page.EvaluateHandleAsync("() => document.querySelector('section')");
         var element = handle.AsElement();
         Assert.That(element, Is.Not.Null);
     }

@@ -21,35 +21,35 @@ using static Microsoft.Playwright.Tests.Fixtures.Utils;
 namespace Microsoft.Playwright.Tests.Library;
 
 /// <summary>Port of tests/library/browser.spec.ts.</summary>
-public class BrowserTests
+public class BrowserTests : UpstreamBrowserTest
 {
     [UpstreamTest("BR-001 should return browserType")]
-    public async Task ShouldReturnBrowserType(IBrowser browser, IBrowserType browserType)
+    public async Task ShouldReturnBrowserType()
     {
-        Assert.That(browser.BrowserType, Is.SameAs(browserType));
+        Assert.That(Browser.BrowserType, Is.SameAs(BrowserType));
     }
 
     [UpstreamTest("BR-002 should create new page @smoke")]
-    public async Task ShouldCreateNewPage(IBrowser browser, BrowserNewPageOptions newPageOptions)
+    public async Task ShouldCreateNewPage()
     {
-        var page1 = await browser.NewPageAsync(newPageOptions);
-        Assert.That(browser.Contexts.Count, Is.EqualTo(1));
+        var page1 = await Browser.NewPageAsync(NewPageOptions());
+        Assert.That(Browser.Contexts.Count, Is.EqualTo(1));
 
-        var page2 = await browser.NewPageAsync(newPageOptions);
-        Assert.That(browser.Contexts.Count, Is.EqualTo(2));
+        var page2 = await Browser.NewPageAsync(NewPageOptions());
+        Assert.That(Browser.Contexts.Count, Is.EqualTo(2));
 
         await page1.CloseAsync();
-        Assert.That(browser.Contexts.Count, Is.EqualTo(1));
+        Assert.That(Browser.Contexts.Count, Is.EqualTo(1));
 
         await page2.CloseAsync();
-        Assert.That(browser.Contexts.Count, Is.EqualTo(0));
+        Assert.That(Browser.Contexts.Count, Is.EqualTo(0));
     }
 
     [UpstreamTest("BR-003 should throw upon second create new page")]
     [LocalFixme("dotnet: the message is \"Please use Browser.NewContextAsync()\", upstream expects \"Please use browser.newContext()\"")]
-    public async Task ShouldThrowUponSecondCreateNewPage(IBrowser browser, BrowserNewPageOptions newPageOptions)
+    public async Task ShouldThrowUponSecondCreateNewPage()
     {
-        var page = await browser.NewPageAsync(newPageOptions);
+        var page = await Browser.NewPageAsync(NewPageOptions());
         Exception error = null;
         error = await Catch(() => page.Context.NewPageAsync());
         await page.CloseAsync();
@@ -57,10 +57,10 @@ public class BrowserTests
     }
 
     [UpstreamTest("BR-004 version should work")]
-    public async Task VersionShouldWork(IBrowser browser, string browserName)
+    public async Task VersionShouldWork()
     {
-        var version = browser.Version;
-        if (browserName == "chromium")
+        var version = Browser.Version;
+        if (BrowserName == "chromium")
         {
             Assert.That(Regex.Match(version, @"^\d+\.\d+\.\d+\.\d+$").Success, Is.True);
         }
@@ -71,10 +71,10 @@ public class BrowserTests
     }
 
     [UpstreamTest("BR-005 should dispatch page.on(close) upon browser.close and reject evaluate")]
-    public async Task ShouldDispatchPageOnCloseUponBrowserCloseAndRejectEvaluate(IBrowserType browserType, BrowserTypeLaunchOptions launchOptions, BrowserNewPageOptions newPageOptions)
+    public async Task ShouldDispatchPageOnCloseUponBrowserCloseAndRejectEvaluate()
     {
-        var browser = await browserType.LaunchAsync(launchOptions);
-        var page = await browser.NewPageAsync(newPageOptions);
+        var browser = await BrowserType.LaunchAsync(LaunchOptions());
+        var page = await browser.NewPageAsync(NewPageOptions());
         var closed = false;
         page.Close += (_, _) => closed = true;
         var promise = Catch(() => page.EvaluateAsync("() => new Promise(() => {})"));
@@ -85,11 +85,11 @@ public class BrowserTests
     }
 
     [UpstreamTest("BR-006 should fire context event on newContext")]
-    public async Task ShouldFireContextEventOnNewContext(IBrowser browser, BrowserNewContextOptions contextOptions)
+    public async Task ShouldFireContextEventOnNewContext()
     {
         var events = new List<IBrowserContext>();
-        browser.Context += (_, ctx) => events.Add(ctx);
-        var context = await browser.NewContextAsync(contextOptions);
+        Browser.Context += (_, ctx) => events.Add(ctx);
+        var context = await Browser.NewContextAsync(ContextOptions());
         Assert.That(events, Is.EqualTo(new[] { context }));
         await context.CloseAsync();
     }

@@ -23,31 +23,31 @@ using static Microsoft.Playwright.Tests.Fixtures.Utils;
 namespace Microsoft.Playwright.Tests.Library;
 
 /// <summary>Port of tests/library/browsercontext-basic.spec.ts.</summary>
-public class BrowsercontextBasicTests
+public class BrowsercontextBasicTests : UpstreamBrowserTest
 {
     [UpstreamTest("BC-001 should create new context @smoke")]
-    public async Task ShouldCreateNewContext(IBrowser browser, BrowserNewContextOptions contextOptions)
+    public async Task ShouldCreateNewContext()
     {
-        Assert.That(browser.Contexts.Count, Is.EqualTo(0));
-        var context = await browser.NewContextAsync(contextOptions);
-        Assert.That(browser.Contexts, Is.EqualTo(new[] { context }));
-        Assert.That(browser, Is.SameAs(context.Browser));
-        var context2 = await browser.NewContextAsync(contextOptions);
-        Assert.That(browser.Contexts, Is.EqualTo(new[] { context, context2 }));
+        Assert.That(Browser.Contexts.Count, Is.EqualTo(0));
+        var context = await Browser.NewContextAsync(ContextOptions());
+        Assert.That(Browser.Contexts, Is.EqualTo(new[] { context }));
+        Assert.That(Browser, Is.SameAs(context.Browser));
+        var context2 = await Browser.NewContextAsync(ContextOptions());
+        Assert.That(Browser.Contexts, Is.EqualTo(new[] { context, context2 }));
         await context.CloseAsync();
-        Assert.That(browser.Contexts, Is.EqualTo(new[] { context2 }));
-        Assert.That(browser, Is.SameAs(context.Browser));
+        Assert.That(Browser.Contexts, Is.EqualTo(new[] { context2 }));
+        Assert.That(Browser, Is.SameAs(context.Browser));
         await context2.CloseAsync();
     }
 
     [UpstreamTest("BC-002 should be able to click across browser contexts")]
-    public async Task ShouldBeAbleToClickAcrossBrowserContexts(IBrowser browser, BrowserNewPageOptions newPageOptions)
+    public async Task ShouldBeAbleToClickAcrossBrowserContexts()
     {
-        Assert.That(browser.Contexts.Count, Is.EqualTo(0));
+        Assert.That(Browser.Contexts.Count, Is.EqualTo(0));
 
         var createPage = async () =>
         {
-            var page = await browser.NewPageAsync(newPageOptions);
+            var page = await Browser.NewPageAsync(NewPageOptions());
             await page.SetContentAsync("<button>Click me</button>");
             await page.Locator("button").EvaluateAsync(@"button => {
       window['clicks'] = 0;
@@ -81,9 +81,9 @@ public class BrowsercontextBasicTests
     }
 
     [UpstreamTest("BC-003 should be able to hover across browser contexts in parallel")]
-    public async Task ShouldBeAbleToHoverAcrossBrowserContextsInParallel(IBrowser browser, string browserName, bool headless, BrowserNewContextOptions contextOptions)
+    public async Task ShouldBeAbleToHoverAcrossBrowserContextsInParallel()
     {
-        Info.Fixme(browserName == "firefox" && !headless, "Hover is flaky in headed Firefox");
+        Info.Fixme(BrowserName == "firefox" && !Headless, "Hover is flaky in headed Firefox");
 
         var html = @"
     <style>
@@ -102,7 +102,7 @@ public class BrowsercontextBasicTests
 
         var pages = await PromiseAll(new[] { 1, 2, 3, 4, 5 }.Select(async _ =>
         {
-            var context = await browser.NewContextAsync(contextOptions);
+            var context = await Browser.NewContextAsync(ContextOptions());
             var page = await context.NewPageAsync();
             await page.SetContentAsync(html);
             return page;
@@ -118,30 +118,30 @@ public class BrowsercontextBasicTests
     }
 
     [UpstreamTest("BC-004 window.open should use parent tab context")]
-    public async Task WindowOpenShouldUseParentTabContext(IBrowser browser, Server server, BrowserNewContextOptions contextOptions)
+    public async Task WindowOpenShouldUseParentTabContext()
     {
-        var context = await browser.NewContextAsync(contextOptions);
+        var context = await Browser.NewContextAsync(ContextOptions());
         var page = await context.NewPageAsync();
-        await page.GotoAsync(server.EmptyPage);
+        await page.GotoAsync(Server.EmptyPage);
         var (popup, _) = await PromiseAll(
             page.WaitForPopupAsync(),
-            page.EvaluateAsync("url => window.open(url)", server.EmptyPage));
+            page.EvaluateAsync("url => window.open(url)", Server.EmptyPage));
         Assert.That(popup.Context, Is.SameAs(context));
         await context.CloseAsync();
     }
 
     [UpstreamTest("BC-005 should isolate localStorage and cookies @smoke")]
-    public async Task ShouldIsolateLocalStorageAndCookies(IBrowser browser, Server server, BrowserNewContextOptions contextOptions)
+    public async Task ShouldIsolateLocalStorageAndCookies()
     {
         // Create two incognito contexts.
-        var context1 = await browser.NewContextAsync(contextOptions);
-        var context2 = await browser.NewContextAsync(contextOptions);
+        var context1 = await Browser.NewContextAsync(ContextOptions());
+        var context2 = await Browser.NewContextAsync(ContextOptions());
         Assert.That(context1.Pages.Count, Is.EqualTo(0));
         Assert.That(context2.Pages.Count, Is.EqualTo(0));
 
         // Create a page in first incognito context.
         var page1 = await context1.NewPageAsync();
-        await page1.GotoAsync(server.EmptyPage);
+        await page1.GotoAsync(Server.EmptyPage);
         await page1.EvaluateAsync(@"() => {
     localStorage.setItem('name', 'page1');
     document.cookie = 'name=page1';
@@ -152,7 +152,7 @@ public class BrowsercontextBasicTests
 
         // Create a page in second incognito context.
         var page2 = await context2.NewPageAsync();
-        await page2.GotoAsync(server.EmptyPage);
+        await page2.GotoAsync(Server.EmptyPage);
         await page2.EvaluateAsync(@"() => {
     localStorage.setItem('name', 'page2');
     document.cookie = 'name=page2';
@@ -173,23 +173,23 @@ public class BrowsercontextBasicTests
         await PromiseAll(
             context1.CloseAsync(),
             context2.CloseAsync());
-        Assert.That(browser.Contexts.Count, Is.EqualTo(0));
+        Assert.That(Browser.Contexts.Count, Is.EqualTo(0));
     }
 
     [UpstreamTest("BC-006 should propagate default viewport to the page")]
-    public async Task ShouldPropagateDefaultViewportToThePage(IBrowser browser, BrowserNewContextOptions contextOptions)
+    public async Task ShouldPropagateDefaultViewportToThePage()
     {
-        var context = await browser.NewContextAsync(new(contextOptions) { ViewportSize = new() { Width = 456, Height = 789 } });
+        var context = await Browser.NewContextAsync(new(ContextOptions()) { ViewportSize = new() { Width = 456, Height = 789 } });
         var page = await context.NewPageAsync();
         await VerifyViewport(page, 456, 789);
         await context.CloseAsync();
     }
 
     [UpstreamTest("BC-007 should make a copy of default viewport")]
-    public async Task ShouldMakeACopyOfDefaultViewport(IBrowser browser, BrowserNewContextOptions contextOptions)
+    public async Task ShouldMakeACopyOfDefaultViewport()
     {
         var viewport = new ViewportSize { Width = 456, Height = 789 };
-        var context = await browser.NewContextAsync(new(contextOptions) { ViewportSize = viewport });
+        var context = await Browser.NewContextAsync(new(ContextOptions()) { ViewportSize = viewport });
         viewport.Width = 567;
         var page = await context.NewPageAsync();
         await VerifyViewport(page, 456, 789);
@@ -197,41 +197,41 @@ public class BrowsercontextBasicTests
     }
 
     [UpstreamTest("BC-008 should respect deviceScaleFactor")]
-    public async Task ShouldRespectDeviceScaleFactor(IBrowser browser, BrowserNewContextOptions contextOptions)
+    public async Task ShouldRespectDeviceScaleFactor()
     {
-        var context = await browser.NewContextAsync(new(contextOptions) { DeviceScaleFactor = 3 });
+        var context = await Browser.NewContextAsync(new(ContextOptions()) { DeviceScaleFactor = 3 });
         var page = await context.NewPageAsync();
         Assert.That(await page.EvaluateAsync<int>("window.devicePixelRatio"), Is.EqualTo(3));
         await context.CloseAsync();
     }
 
     [UpstreamTest("BC-009 should not allow deviceScaleFactor with null viewport")]
-    public async Task ShouldNotAllowDeviceScaleFactorWithNullViewport(IBrowser browser, BrowserNewContextOptions contextOptions)
+    public async Task ShouldNotAllowDeviceScaleFactorWithNullViewport()
     {
         // .NET: viewport: null is ViewportSize.NoViewport.
-        var error = await Catch(() => browser.NewContextAsync(new(contextOptions) { ViewportSize = ViewportSize.NoViewport, DeviceScaleFactor = 1 }));
+        var error = await Catch(() => Browser.NewContextAsync(new(ContextOptions()) { ViewportSize = ViewportSize.NoViewport, DeviceScaleFactor = 1 }));
         Assert.That(error.Message, Does.Contain("\"deviceScaleFactor\" option is not supported with null \"viewport\""));
     }
 
     [UpstreamTest("BC-010 should not allow isMobile with null viewport")]
-    public async Task ShouldNotAllowIsMobileWithNullViewport(IBrowser browser, BrowserNewContextOptions contextOptions)
+    public async Task ShouldNotAllowIsMobileWithNullViewport()
     {
         // .NET: viewport: null is ViewportSize.NoViewport.
-        var error = await Catch(() => browser.NewContextAsync(new(contextOptions) { ViewportSize = ViewportSize.NoViewport, IsMobile = true }));
+        var error = await Catch(() => Browser.NewContextAsync(new(ContextOptions()) { ViewportSize = ViewportSize.NoViewport, IsMobile = true }));
         Assert.That(error.Message, Does.Contain("\"isMobile\" option is not supported with null \"viewport\""));
     }
 
     [UpstreamTest("BC-011 close() should work for empty context")]
-    public async Task CloseShouldWorkForEmptyContext(IBrowser browser, BrowserNewContextOptions contextOptions)
+    public async Task CloseShouldWorkForEmptyContext()
     {
-        var context = await browser.NewContextAsync(contextOptions);
+        var context = await Browser.NewContextAsync(ContextOptions());
         await context.CloseAsync();
     }
 
     [UpstreamTest("BC-012 close() should abort waitForEvent")]
-    public async Task CloseShouldAbortWaitForEvent(IBrowser browser, BrowserNewContextOptions contextOptions)
+    public async Task CloseShouldAbortWaitForEvent()
     {
-        var context = await browser.NewContextAsync(contextOptions);
+        var context = await Browser.NewContextAsync(ContextOptions());
         var promise = Catch(() => context.WaitForPageAsync());
         await context.CloseAsync();
         var error = await promise;
@@ -239,17 +239,17 @@ public class BrowsercontextBasicTests
     }
 
     [UpstreamTest("BC-013 close() should be callable twice")]
-    public async Task CloseShouldBeCallableTwice(IBrowser browser, BrowserNewContextOptions contextOptions)
+    public async Task CloseShouldBeCallableTwice()
     {
-        var context = await browser.NewContextAsync(contextOptions);
+        var context = await Browser.NewContextAsync(ContextOptions());
         await context.CloseAsync();
         await context.CloseAsync();
     }
 
     [UpstreamTest("BC-014 should pass self to close event")]
-    public async Task ShouldPassSelfToCloseEvent(IBrowser browser, BrowserNewContextOptions contextOptions)
+    public async Task ShouldPassSelfToCloseEvent()
     {
-        var newContext = await browser.NewContextAsync(contextOptions);
+        var newContext = await Browser.NewContextAsync(ContextOptions());
         var closedContext = await PromiseAll(
             Once<IBrowserContext>(h => newContext.Close += h, h => newContext.Close -= h),
             newContext.CloseAsync());
@@ -257,17 +257,17 @@ public class BrowsercontextBasicTests
     }
 
     [UpstreamTest("BC-015 should not report frameless pages on error")]
-    public async Task ShouldNotReportFramelessPagesOnError(IBrowser browser, Server server, BrowserNewContextOptions contextOptions)
+    public async Task ShouldNotReportFramelessPagesOnError()
     {
-        var context = await browser.NewContextAsync(contextOptions);
+        var context = await Browser.NewContextAsync(ContextOptions());
         var page = await context.NewPageAsync();
-        server.SetRoute("/empty.html", (req, res) =>
+        Server.SetRoute("/empty.html", (req, res) =>
         {
-            res.End($"<a href=\"{server.EmptyPage}\" target=\"_blank\">Click me</a>");
+            res.End($"<a href=\"{Server.EmptyPage}\" target=\"_blank\">Click me</a>");
         });
         IPage popup = null;
         context.Page += (_, p) => popup = p;
-        await page.GotoAsync(server.EmptyPage);
+        await page.GotoAsync(Server.EmptyPage);
         await page.ClickAsync("\"Click me\"");
         await context.CloseAsync();
         if (popup != null)
@@ -279,9 +279,9 @@ public class BrowsercontextBasicTests
     }
 
     [UpstreamTest("BC-016 should return all of the pages")]
-    public async Task ShouldReturnAllOfThePages(IBrowser browser, Server server, BrowserNewContextOptions contextOptions)
+    public async Task ShouldReturnAllOfThePages()
     {
-        var context = await browser.NewContextAsync(contextOptions);
+        var context = await Browser.NewContextAsync(ContextOptions());
         var page = await context.NewPageAsync();
         var second = await context.NewPageAsync();
         var allPages = context.Pages;
@@ -292,9 +292,9 @@ public class BrowsercontextBasicTests
     }
 
     [UpstreamTest("BC-017 should close all belonging pages once closing context")]
-    public async Task ShouldCloseAllBelongingPagesOnceClosingContext(IBrowser browser, BrowserNewContextOptions contextOptions)
+    public async Task ShouldCloseAllBelongingPagesOnceClosingContext()
     {
-        var context = await browser.NewContextAsync(contextOptions);
+        var context = await Browser.NewContextAsync(ContextOptions());
         await context.NewPageAsync();
         Assert.That(context.Pages.Count, Is.EqualTo(1));
 
@@ -303,15 +303,15 @@ public class BrowsercontextBasicTests
     }
 
     [UpstreamTest("BC-018 should disable javascript")]
-    public async Task ShouldDisableJavascript(IBrowser browser, string browserName, BrowserNewContextOptions contextOptions)
+    public async Task ShouldDisableJavascript()
     {
         {
-            var context = await browser.NewContextAsync(new(contextOptions) { JavaScriptEnabled = false });
+            var context = await Browser.NewContextAsync(new(ContextOptions()) { JavaScriptEnabled = false });
             var page = await context.NewPageAsync();
             await page.GotoAsync("data:text/html, <script>var something = \"forbidden\"</script>");
             Exception error = null;
             error = await Catch(() => page.EvaluateAsync("something"));
-            if (browserName == "webkit")
+            if (BrowserName == "webkit")
             {
                 Assert.That(error.Message, Does.Contain("Can't find variable: something"));
             }
@@ -323,7 +323,7 @@ public class BrowsercontextBasicTests
         }
 
         {
-            var context = await browser.NewContextAsync(contextOptions);
+            var context = await Browser.NewContextAsync(ContextOptions());
             var page = await context.NewPageAsync();
             await page.GotoAsync("data:text/html, <script>var something = \"forbidden\"</script>");
             Assert.That(await page.EvaluateAsync<string>("something"), Is.EqualTo("forbidden"));
@@ -332,37 +332,37 @@ public class BrowsercontextBasicTests
     }
 
     [UpstreamTest("BC-019 should be able to navigate after disabling javascript")]
-    public async Task ShouldBeAbleToNavigateAfterDisablingJavascript(IBrowser browser, Server server, BrowserNewContextOptions contextOptions)
+    public async Task ShouldBeAbleToNavigateAfterDisablingJavascript()
     {
-        var context = await browser.NewContextAsync(new(contextOptions) { JavaScriptEnabled = false });
+        var context = await Browser.NewContextAsync(new(ContextOptions()) { JavaScriptEnabled = false });
         var page = await context.NewPageAsync();
-        await page.GotoAsync(server.EmptyPage);
+        await page.GotoAsync(Server.EmptyPage);
         await context.CloseAsync();
     }
 
     [UpstreamTest("BC-020 should not hang on promises after disabling javascript")]
-    public async Task ShouldNotHangOnPromisesAfterDisablingJavascript(string browserName, ContextFactory contextFactory, bool isBidi)
+    public async Task ShouldNotHangOnPromisesAfterDisablingJavascript()
     {
-        Info.Fixme(browserName == "firefox" && !isBidi);
-        var context = await contextFactory(new() { JavaScriptEnabled = false });
+        Info.Fixme(BrowserName == "firefox" && !IsBidi);
+        var context = await ContextFactory(new() { JavaScriptEnabled = false });
         var page = await context.NewPageAsync();
         Assert.That(await page.EvaluateAsync<int>("() => 1"), Is.EqualTo(1));
         Assert.That(await page.EvaluateAsync<int>("async () => 2"), Is.EqualTo(2));
     }
 
     [UpstreamTest("BC-021 setContent should work after disabling javascript")]
-    public async Task SetContentShouldWorkAfterDisablingJavascript(ContextFactory contextFactory)
+    public async Task SetContentShouldWorkAfterDisablingJavascript()
     {
-        var context = await contextFactory(new() { JavaScriptEnabled = false });
+        var context = await ContextFactory(new() { JavaScriptEnabled = false });
         var page = await context.NewPageAsync();
         await page.SetContentAsync("<h1>Hello</h1>");
         await Expect(page.Locator("h1")).ToHaveTextAsync("Hello");
     }
 
     [UpstreamTest("BC-022 should retry click after disabling javascript")]
-    public async Task ShouldRetryClickAfterDisablingJavascript(ContextFactory contextFactory)
+    public async Task ShouldRetryClickAfterDisablingJavascript()
     {
-        var context = await contextFactory(new() { JavaScriptEnabled = false });
+        var context = await ContextFactory(new() { JavaScriptEnabled = false });
         var page = await context.NewPageAsync();
         await page.SetContentAsync(@"
     <details><summary>Continue</summary>Details</details>
@@ -385,40 +385,40 @@ public class BrowsercontextBasicTests
     }
 
     [UpstreamTest("BC-023 should work with offline option")]
-    public async Task ShouldWorkWithOfflineOption(IBrowser browser, Server server, string browserName, BrowserNewContextOptions contextOptions)
+    public async Task ShouldWorkWithOfflineOption()
     {
-        var context = await browser.NewContextAsync(new(contextOptions) { Offline = true });
+        var context = await Browser.NewContextAsync(new(ContextOptions()) { Offline = true });
         var page = await context.NewPageAsync();
         Exception error = null;
-        if (browserName == "firefox")
+        if (BrowserName == "firefox")
         {
             // Firefox navigates to an error page, and this navigation might conflict with the
             // next navigation we do in test.
             // So we need to wait for the navigation explicitly.
             (error, _) = await PromiseAll(
-                Catch(() => page.GotoAsync(server.EmptyPage)),
+                Catch(() => page.GotoAsync(Server.EmptyPage)),
                 Once<IFrame>(h => page.FrameNavigated += h, h => page.FrameNavigated -= h));
         }
         else
         {
-            error = await Catch(() => page.GotoAsync(server.EmptyPage));
+            error = await Catch(() => page.GotoAsync(Server.EmptyPage));
         }
         Assert.That(error, Is.Not.Null);
         await context.SetOfflineAsync(false);
-        var response = await page.GotoAsync(server.EmptyPage);
+        var response = await page.GotoAsync(Server.EmptyPage);
         Assert.That(response.Status, Is.EqualTo(200));
         await context.CloseAsync();
     }
 
     [UpstreamTest("BC-024 fetch with keepalive should throw when offline")]
-    public async Task FetchWithKeepaliveShouldThrowWhenOffline(ContextFactory contextFactory, Server server)
+    public async Task FetchWithKeepaliveShouldThrowWhenOffline()
     {
-        var context = await contextFactory();
+        var context = await ContextFactory();
         var page = await context.NewPageAsync();
-        await page.GotoAsync(server.EmptyPage);
+        await page.GotoAsync(Server.EmptyPage);
 
-        var url = server.Prefix + "/fetch";
-        server.SetRoute("/fetch", (req, res) =>
+        var url = Server.Prefix + "/fetch";
+        Server.SetRoute("/fetch", (req, res) =>
         {
             res.SetHeader("Content-Type", "application/json");
             res.End(JsonSerializer.Serialize("hello"));
@@ -440,9 +440,9 @@ public class BrowsercontextBasicTests
     }
 
     [UpstreamTest("BC-025 should emulate navigator.onLine")]
-    public async Task ShouldEmulateNavigatorOnLine(IBrowser browser, Server server, BrowserNewContextOptions contextOptions)
+    public async Task ShouldEmulateNavigatorOnLine()
     {
-        var context = await browser.NewContextAsync(contextOptions);
+        var context = await Browser.NewContextAsync(ContextOptions());
         var page = await context.NewPageAsync();
         Assert.That(await page.EvaluateAsync<bool>("() => window.navigator.onLine"), Is.EqualTo(true));
         await context.SetOfflineAsync(true);
@@ -453,13 +453,13 @@ public class BrowsercontextBasicTests
     }
 
     [UpstreamTest("BC-026 should emulate navigator.onLine across navigations")]
-    public async Task ShouldEmulateNavigatorOnLineAcrossNavigations(IBrowser browser, Server server, string browserName, int browserMajorVersion, BrowserNewContextOptions contextOptions)
+    public async Task ShouldEmulateNavigatorOnLineAcrossNavigations()
     {
-        Info.Skip(browserName == "chromium" && browserMajorVersion < 155, "does not survive cross-process navgiation");
+        Info.Skip(BrowserName == "chromium" && BrowserMajorVersion < 155, "does not survive cross-process navgiation");
 
-        var context = await browser.NewContextAsync(contextOptions);
+        var context = await Browser.NewContextAsync(ContextOptions());
         var page = await context.NewPageAsync();
-        await page.GotoAsync(server.EmptyPage);
+        await page.GotoAsync(Server.EmptyPage);
         Assert.That(await page.EvaluateAsync<bool>("() => window.navigator.onLine"), Is.EqualTo(true));
         await context.SetOfflineAsync(true);
         Assert.That(await page.EvaluateAsync<bool>("() => window.navigator.onLine"), Is.EqualTo(false));
@@ -469,11 +469,11 @@ public class BrowsercontextBasicTests
         await page.GotoAsync("data:text/html,<title>offline</title>");
         Assert.That(await page.EvaluateAsync<bool>("() => window.navigator.onLine"), Is.EqualTo(false));
 
-        if (browserName == "chromium")
+        if (BrowserName == "chromium")
         {
             // Try a cross-process navigation in Chromium, which allows routing while offline.
             await page.RouteAsync("**/*", route => route.FulfillAsync(new() { ContentType = "text/html", Body = "<html></html>" }));
-            await page.GotoAsync(server.CrossProcessPrefix + "/empty.html");
+            await page.GotoAsync(Server.CrossProcessPrefix + "/empty.html");
             Assert.That(await page.EvaluateAsync<bool>("() => window.navigator.onLine"), Is.EqualTo(false));
         }
 
@@ -483,9 +483,9 @@ public class BrowsercontextBasicTests
     }
 
     [UpstreamTest("BC-027 should emulate offline event")]
-    public async Task ShouldEmulateOfflineEvent(IBrowser browser, BrowserNewContextOptions contextOptions)
+    public async Task ShouldEmulateOfflineEvent()
     {
-        var context = await browser.NewContextAsync(contextOptions);
+        var context = await Browser.NewContextAsync(ContextOptions());
         var page = await context.NewPageAsync();
         var events = await page.EvaluateHandleAsync(@"() => {
     const events = [];
@@ -501,25 +501,25 @@ public class BrowsercontextBasicTests
     }
 
     [UpstreamTest("BC-028 should emulate media in popup")]
-    public async Task ShouldEmulateMediaInPopup(IBrowser browser, Server server, BrowserNewContextOptions contextOptions, BrowserNewPageOptions newPageOptions)
+    public async Task ShouldEmulateMediaInPopup()
     {
         {
-            var context = await browser.NewContextAsync(new(contextOptions) { ColorScheme = ColorScheme.Dark });
+            var context = await Browser.NewContextAsync(new(ContextOptions()) { ColorScheme = ColorScheme.Dark });
             var page = await context.NewPageAsync();
-            await page.GotoAsync(server.EmptyPage);
+            await page.GotoAsync(Server.EmptyPage);
             var (popup, _) = await PromiseAll(
                 page.WaitForPopupAsync(),
-                page.EvaluateAsync("url => { window.open(url); }", server.EmptyPage));
+                page.EvaluateAsync("url => { window.open(url); }", Server.EmptyPage));
             Assert.That(await popup.EvaluateAsync<bool>("() => matchMedia('(prefers-color-scheme: light)').matches"), Is.EqualTo(false));
             Assert.That(await popup.EvaluateAsync<bool>("() => matchMedia('(prefers-color-scheme: dark)').matches"), Is.EqualTo(true));
             await context.CloseAsync();
         }
         {
-            var page = await browser.NewPageAsync(new(newPageOptions) { ColorScheme = ColorScheme.Light });
-            await page.GotoAsync(server.EmptyPage);
+            var page = await Browser.NewPageAsync(new(NewPageOptions()) { ColorScheme = ColorScheme.Light });
+            await page.GotoAsync(Server.EmptyPage);
             var (popup, _) = await PromiseAll(
                 page.WaitForPopupAsync(),
-                page.EvaluateAsync("url => { window.open(url); }", server.EmptyPage));
+                page.EvaluateAsync("url => { window.open(url); }", Server.EmptyPage));
             Assert.That(await popup.EvaluateAsync<bool>("() => matchMedia('(prefers-color-scheme: light)').matches"), Is.EqualTo(true));
             Assert.That(await popup.EvaluateAsync<bool>("() => matchMedia('(prefers-color-scheme: dark)').matches"), Is.EqualTo(false));
             await page.CloseAsync();
@@ -527,21 +527,21 @@ public class BrowsercontextBasicTests
     }
 
     [UpstreamTest("BC-029 should emulate media in cross-process iframe")]
-    public async Task ShouldEmulateMediaInCrossProcessIframe(IBrowser browser, Server server, BrowserNewPageOptions newPageOptions)
+    public async Task ShouldEmulateMediaInCrossProcessIframe()
     {
-        var page = await browser.NewPageAsync(new(newPageOptions) { ColorScheme = ColorScheme.Dark });
-        await page.GotoAsync(server.EmptyPage);
-        await AttachFrame(page, "frame1", server.CrossProcessPrefix + "/empty.html");
+        var page = await Browser.NewPageAsync(new(NewPageOptions()) { ColorScheme = ColorScheme.Dark });
+        await page.GotoAsync(Server.EmptyPage);
+        await AttachFrame(page, "frame1", Server.CrossProcessPrefix + "/empty.html");
         var frame = page.Frames[1];
         Assert.That(await frame.EvaluateAsync<bool>("() => matchMedia('(prefers-color-scheme: dark)').matches"), Is.EqualTo(true));
         await page.CloseAsync();
     }
 
     [UpstreamTest("BC-031 should create two pages in parallel in various contexts")]
-    public async Task ShouldCreateTwoPagesInParallelInVariousContexts(IBrowser browser, BrowserNewContextOptions contextOptions)
+    public async Task ShouldCreateTwoPagesInParallelInVariousContexts()
     {
-        var context1 = await browser.NewContextAsync(contextOptions);
-        var context2 = await browser.NewContextAsync(contextOptions);
+        var context1 = await Browser.NewContextAsync(ContextOptions());
+        var context2 = await Browser.NewContextAsync(ContextOptions());
         await PromiseAll(
             context1.NewPageAsync(),
             context1.NewPageAsync(),
@@ -549,7 +549,7 @@ public class BrowsercontextBasicTests
             context2.NewPageAsync());
         await context1.CloseAsync();
         await context2.CloseAsync();
-        var context3 = await browser.NewContextAsync(contextOptions);
+        var context3 = await Browser.NewContextAsync(ContextOptions());
         await PromiseAll(
             context3.NewPageAsync(),
             context3.NewPageAsync());

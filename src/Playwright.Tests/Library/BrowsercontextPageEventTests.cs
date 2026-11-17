@@ -21,37 +21,37 @@ using static Microsoft.Playwright.Tests.Fixtures.Utils;
 namespace Microsoft.Playwright.Tests.Library;
 
 /// <summary>Port of tests/library/browsercontext-page-event.spec.ts.</summary>
-public class BrowsercontextPageEventTests
+public class BrowsercontextPageEventTests : UpstreamBrowserTest
 {
     [UpstreamTest("BC-062 should have url")]
-    public async Task ShouldHaveUrl(IBrowser browser, Server server, BrowserNewContextOptions contextOptions)
+    public async Task ShouldHaveUrl()
     {
-        var context = await browser.NewContextAsync(contextOptions);
+        var context = await Browser.NewContextAsync(ContextOptions());
         var page = await context.NewPageAsync();
         var (otherPage, _) = await PromiseAll(
             context.WaitForPageAsync(),
-            page.EvaluateAsync("url => window.open(url)", server.EmptyPage));
-        Assert.That(otherPage.Url, Is.EqualTo(server.EmptyPage));
+            page.EvaluateAsync("url => window.open(url)", Server.EmptyPage));
+        Assert.That(otherPage.Url, Is.EqualTo(Server.EmptyPage));
         await context.CloseAsync();
     }
 
     [UpstreamTest("BC-063 should have url after domcontentloaded")]
-    public async Task ShouldHaveUrlAfterDomcontentloaded(IBrowser browser, Server server, BrowserNewContextOptions contextOptions)
+    public async Task ShouldHaveUrlAfterDomcontentloaded()
     {
-        var context = await browser.NewContextAsync(contextOptions);
+        var context = await Browser.NewContextAsync(ContextOptions());
         var page = await context.NewPageAsync();
         var (otherPage, _) = await PromiseAll(
             context.WaitForPageAsync(),
-            page.EvaluateAsync("url => window.open(url)", server.EmptyPage));
+            page.EvaluateAsync("url => window.open(url)", Server.EmptyPage));
         await otherPage.WaitForLoadStateAsync(LoadState.DOMContentLoaded);
-        Assert.That(otherPage.Url, Is.EqualTo(server.EmptyPage));
+        Assert.That(otherPage.Url, Is.EqualTo(Server.EmptyPage));
         await context.CloseAsync();
     }
 
     [UpstreamTest("BC-064 should have about:blank url with domcontentloaded")]
-    public async Task ShouldHaveAboutBlankUrlWithDomcontentloaded(IBrowser browser, Server server, BrowserNewContextOptions contextOptions)
+    public async Task ShouldHaveAboutBlankUrlWithDomcontentloaded()
     {
-        var context = await browser.NewContextAsync(contextOptions);
+        var context = await Browser.NewContextAsync(ContextOptions());
         var page = await context.NewPageAsync();
         var (otherPage, _) = await PromiseAll(
             context.WaitForPageAsync(),
@@ -62,9 +62,9 @@ public class BrowsercontextPageEventTests
     }
 
     [UpstreamTest("BC-065 should have about:blank for empty url with domcontentloaded")]
-    public async Task ShouldHaveAboutBlankForEmptyUrlWithDomcontentloaded(IBrowser browser, Server server, BrowserNewContextOptions contextOptions)
+    public async Task ShouldHaveAboutBlankForEmptyUrlWithDomcontentloaded()
     {
-        var context = await browser.NewContextAsync(contextOptions);
+        var context = await Browser.NewContextAsync(ContextOptions());
         var page = await context.NewPageAsync();
         var (otherPage, _) = await PromiseAll(
             context.WaitForPageAsync(),
@@ -75,15 +75,15 @@ public class BrowsercontextPageEventTests
     }
 
     [UpstreamTest("BC-066 should report when a new page is created and closed")]
-    public async Task ShouldReportWhenANewPageIsCreatedAndClosed(IBrowser browser, Server server, BrowserNewContextOptions contextOptions)
+    public async Task ShouldReportWhenANewPageIsCreatedAndClosed()
     {
-        var context = await browser.NewContextAsync(contextOptions);
+        var context = await Browser.NewContextAsync(ContextOptions());
         var page = await context.NewPageAsync();
         var (otherPage, _) = await PromiseAll(
             context.WaitForPageAsync(),
-            page.EvaluateAsync("url => window.open(url)", server.CrossProcessPrefix + "/empty.html"));
+            page.EvaluateAsync("url => window.open(url)", Server.CrossProcessPrefix + "/empty.html"));
         // The url is about:blank in FF when 'page' event is fired.
-        Assert.That(otherPage.Url, Does.Contain(server.CrossProcessPrefix));
+        Assert.That(otherPage.Url, Does.Contain(Server.CrossProcessPrefix));
         Assert.That(await otherPage.EvaluateAsync<string>("() => ['Hello', 'world'].join(' ')"), Is.EqualTo("Hello world"));
         Assert.That(await otherPage.QuerySelectorAsync("body"), Is.Not.Null);
 
@@ -110,9 +110,9 @@ public class BrowsercontextPageEventTests
     }
 
     [UpstreamTest("BC-067 should report initialized pages")]
-    public async Task ShouldReportInitializedPages(IBrowser browser, Server server, BrowserNewContextOptions contextOptions)
+    public async Task ShouldReportInitializedPages()
     {
-        var context = await browser.NewContextAsync(contextOptions);
+        var context = await Browser.NewContextAsync(ContextOptions());
         var pagePromise = context.WaitForPageAsync();
         IgnoreErrors(context.NewPageAsync());
         var newPage = await pagePromise;
@@ -127,45 +127,45 @@ public class BrowsercontextPageEventTests
     }
 
     [UpstreamTest("BC-068 should not crash while redirecting of original request was missed")]
-    public async Task ShouldNotCrashWhileRedirectingOfOriginalRequestWasMissed(IBrowser browser, Server server, BrowserNewContextOptions contextOptions)
+    public async Task ShouldNotCrashWhileRedirectingOfOriginalRequestWasMissed()
     {
-        var context = await browser.NewContextAsync(contextOptions);
+        var context = await Browser.NewContextAsync(ContextOptions());
         var page = await context.NewPageAsync();
         ServerResponse serverResponse = null;
-        server.SetRoute("/one-style.css", (req, res) => serverResponse = res);
+        Server.SetRoute("/one-style.css", (req, res) => serverResponse = res);
         // Open a new page. Use window.open to connect to the page later.
         var (newPage, _, _) = await PromiseAll(
             context.WaitForPageAsync(),
-            page.EvaluateAsync("url => window.open(url)", server.Prefix + "/one-style.html"),
-            server.WaitForRequest("/one-style.css"));
+            page.EvaluateAsync("url => window.open(url)", Server.Prefix + "/one-style.html"),
+            Server.WaitForRequest("/one-style.css"));
         // Issue a redirect.
         serverResponse.WriteHead(302, new() { ["location"] = "/injectedstyle.css" });
         serverResponse.End();
         await newPage.WaitForLoadStateAsync(LoadState.DOMContentLoaded);
-        Assert.That(newPage.Url, Is.EqualTo(server.Prefix + "/one-style.html"));
+        Assert.That(newPage.Url, Is.EqualTo(Server.Prefix + "/one-style.html"));
         // Cleanup.
         await context.CloseAsync();
     }
 
     [UpstreamTest("BC-069 should have an opener")]
-    public async Task ShouldHaveAnOpener(IBrowser browser, Server server, BrowserNewContextOptions contextOptions)
+    public async Task ShouldHaveAnOpener()
     {
-        var context = await browser.NewContextAsync(contextOptions);
+        var context = await Browser.NewContextAsync(ContextOptions());
         var page = await context.NewPageAsync();
-        await page.GotoAsync(server.EmptyPage);
+        await page.GotoAsync(Server.EmptyPage);
         var (popup, _) = await PromiseAll(
             context.WaitForPageAsync(),
-            page.GotoAsync(server.Prefix + "/popup/window-open.html"));
-        Assert.That(popup.Url, Is.EqualTo(server.Prefix + "/popup/popup.html"));
+            page.GotoAsync(Server.Prefix + "/popup/window-open.html"));
+        Assert.That(popup.Url, Is.EqualTo(Server.Prefix + "/popup/popup.html"));
         Assert.That(await popup.OpenerAsync(), Is.SameAs(page));
         Assert.That(await page.OpenerAsync(), Is.Null);
         await context.CloseAsync();
     }
 
     [UpstreamTest("BC-070 should fire page lifecycle events")]
-    public async Task ShouldFirePageLifecycleEvents(IBrowser browser, Server server, BrowserNewContextOptions contextOptions)
+    public async Task ShouldFirePageLifecycleEvents()
     {
-        var context = await browser.NewContextAsync(contextOptions);
+        var context = await Browser.NewContextAsync(ContextOptions());
         var events = new List<string>();
         // .NET: the parameter of the handler is `page` upstream, which is a variable of the test here.
         context.Page += (_, page1) =>
@@ -174,22 +174,22 @@ public class BrowsercontextPageEventTests
             page1.Close += (_, _) => events.Add("DESTROYED: " + page1.Url);
         };
         var page = await context.NewPageAsync();
-        await page.GotoAsync(server.EmptyPage);
+        await page.GotoAsync(Server.EmptyPage);
         await page.CloseAsync();
         Assert.That(events, Is.EqualTo(new[]
         {
             "CREATED: about:blank",
-            $"DESTROYED: {server.EmptyPage}",
+            $"DESTROYED: {Server.EmptyPage}",
         }));
         await context.CloseAsync();
     }
 
     [UpstreamTest("BC-071 should work with Shift-clicking")]
-    public async Task ShouldWorkWithShiftClicking(IBrowser browser, Server server, string browserName, BrowserNewContextOptions contextOptions)
+    public async Task ShouldWorkWithShiftClicking()
     {
-        var context = await browser.NewContextAsync(contextOptions);
+        var context = await Browser.NewContextAsync(ContextOptions());
         var page = await context.NewPageAsync();
-        await page.GotoAsync(server.EmptyPage);
+        await page.GotoAsync(Server.EmptyPage);
         await page.SetContentAsync("<a href=\"/one-style.html\">yo</a>");
         var popup = await PromiseAll(
             context.WaitForPageAsync(),
@@ -199,16 +199,16 @@ public class BrowsercontextPageEventTests
     }
 
     [UpstreamTest("BC-072 should work with Ctrl-clicking")]
-    public async Task ShouldWorkWithCtrlClicking(IBrowser browser, Server server, string browserName, BrowserNewContextOptions contextOptions)
+    public async Task ShouldWorkWithCtrlClicking()
     {
-        var context = await browser.NewContextAsync(contextOptions);
+        var context = await Browser.NewContextAsync(ContextOptions());
         var page = await context.NewPageAsync();
-        await page.GotoAsync(server.EmptyPage);
+        await page.GotoAsync(Server.EmptyPage);
         await page.SetContentAsync("<a href=\"/one-style.html\">yo</a>");
         var popup = await PromiseAll(
             context.WaitForPageAsync(),
             page.ClickAsync("a", new() { Modifiers = new[] { KeyboardModifier.ControlOrMeta } }));
-        Assert.That(await popup.OpenerAsync(), Is.SameAs(browserName == "firefox" ? page : null));
+        Assert.That(await popup.OpenerAsync(), Is.SameAs(BrowserName == "firefox" ? page : null));
         await context.CloseAsync();
     }
 }

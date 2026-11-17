@@ -20,50 +20,47 @@ using static Microsoft.Playwright.Tests.Fixtures.Utils;
 
 namespace Microsoft.Playwright.Tests.Library.Chromium;
 
-/// <summary>Port of tests/library/chromium/extensions.spec.ts.</summary>
-public class ExtensionsTests
+public abstract class ExtensionsTestsBase : UpstreamBrowserTest
 {
     // .NET: upstream runs the files of tests/library/chromium only in the Chromium project.
-    [BeforeEach]
-    public static void Skip(string browserName) => Info.Skip(browserName != "chromium", "chromium only");
+    [SetUp]
+    public void Skip() => Info.Skip(BrowserName != "chromium", "chromium only");
 
-    public delegate Task<IBrowserContext> LaunchPersistentContextFixture(string extensionPath, BrowserTypeLaunchPersistentContextOptions options = null);
-
-    [Fixture]
-    public static async Task LaunchPersistentContext(IBrowserType browserType, BrowserTypeLaunchPersistentContextOptions launchPersistentContextOptions, Func<LaunchPersistentContextFixture, Task> use)
+    protected async Task<IBrowserContext> LaunchPersistentContext(string extensionPath, BrowserTypeLaunchPersistentContextOptions options = null)
     {
-        var browsers = new List<IBrowserContext>();
-        await use(async (extensionPath, options) =>
+        var extensionOptions = new BrowserTypeLaunchPersistentContextOptions(options)
         {
-            var extensionOptions = new BrowserTypeLaunchPersistentContextOptions(options)
-            {
-                Args =
-                [
-                    $"--disable-extensions-except={extensionPath}",
-                    $"--load-extension={extensionPath}",
-                ],
-            };
-            return await browserType.LaunchPersistentContextAsync(string.Empty, MergeOptions(extensionOptions, launchPersistentContextOptions));
-        });
-        await PromiseAll(browsers.Select(browser => browser.CloseAsync()));
+            Args =
+            [
+                $"--disable-extensions-except={extensionPath}",
+                $"--load-extension={extensionPath}",
+            ],
+        };
+        return await BrowserType.LaunchPersistentContextAsync(string.Empty, MergeOptions(extensionOptions, LaunchPersistentContextOptions()));
     }
 
-    [BeforeEach]
-    public static void Skip2(bool isHeadlessShell) => Info.Skip(isHeadlessShell, "Headless Shell has no support for extensions");
+    // .NET: upstream closes the contexts of a list that it never fills, so there is no teardown.
 
-    public class MV3
+    [SetUp]
+    public void Skip2() => Info.Skip(IsHeadlessShell, "Headless Shell has no support for extensions");
+}
+
+/// <summary>Port of tests/library/chromium/extensions.spec.ts.</summary>
+public class ExtensionsTests : ExtensionsTestsBase
+{
+    public class MV3 : ExtensionsTestsBase
     {
-        [BeforeEach]
-        public static void Skip(string channel) => Info.Skip(channel?.StartsWith("chrome", StringComparison.Ordinal) == true, "--load-extension is not supported in Chrome anymore. https://groups.google.com/a/chromium.org/g/chromium-extensions/c/1-g8EFx2BBY/m/S0ET5wPjCAAJ");
+        [SetUp]
+        public void Skip3() => Info.Skip(Channel?.StartsWith("chrome", StringComparison.Ordinal) == true, "--load-extension is not supported in Chrome anymore. https://groups.google.com/a/chromium.org/g/chromium-extensions/c/1-g8EFx2BBY/m/S0ET5wPjCAAJ");
 
         [UpstreamTest("CR-040 should report console messages from content script")]
-        public async Task ShouldReportConsoleMessagesFromContentScript(LaunchPersistentContextFixture launchPersistentContext, Func<string, string> asset, Server server)
+        public async Task ShouldReportConsoleMessagesFromContentScript()
         {
-            var extensionPath = asset("extension-mv3-with-logging");
-            var context = await launchPersistentContext(extensionPath);
+            var extensionPath = Asset("extension-mv3-with-logging");
+            var context = await LaunchPersistentContext(extensionPath);
             var page = await context.NewPageAsync();
             var consolePromise = page.WaitForConsoleMessageAsync(new() { Predicate = e => e.Text.Contains("Test console log from a third-party execution context") });
-            await page.GotoAsync(server.EmptyPage);
+            await page.GotoAsync(Server.EmptyPage);
             var message = await consolePromise;
             Assert.That(message.Text, Does.Contain("Test console log from a third-party execution context"));
             await context.CloseAsync();
