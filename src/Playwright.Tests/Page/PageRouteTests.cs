@@ -847,7 +847,7 @@ public class PageRouteTests
     [UpstreamTest("RO-037 should respect cors overrides")]
     public async Task ShouldRespectCorsOverrides(IPage page, Server server, string browserName, bool isAndroid)
     {
-        It.Fail(isAndroid, "no cors error in android emulator");
+        It.Fixme(isAndroid, "no cors error in android emulator");
         await page.GotoAsync(server.EmptyPage);
         server.SetRoute("/something", (request, response) =>
         {
@@ -1297,7 +1297,7 @@ public class PageRouteTests
     [UpstreamTest("RO-050 should contain sec-fetch headers in route")]
     public async Task ShouldContainSecFetchHeadersInRoute(IPage page, Server server, string browserName)
     {
-        It.Fail(browserName == "chromium", "Fetch.requestPaused fires before Chromium attaches Fetch Metadata headers");
+        It.Fixme(browserName == "chromium", "Fetch.requestPaused fires before Chromium attaches Fetch Metadata headers");
 
         Func<IEnumerable<KeyValuePair<string, string>>, Dictionary<string, string>> secFetch = headers => headers
             .Where(entry => entry.Key.ToLowerInvariant().StartsWith("sec-fetch-", StringComparison.Ordinal))

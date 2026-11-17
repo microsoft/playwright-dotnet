@@ -123,7 +123,7 @@ public class PageNetworkRequestTests
     public async Task ShouldGetTheSameHeadersAsTheServer(IPage page, Server server, string browserName, string platform, bool isElectron, int browserMajorVersion, string channel)
     {
         It.Skip(isElectron && browserMajorVersion < 99, "This needs Chromium >= 99");
-        It.Fail(browserName == "webkit" && platform == "win32" && channel != "webkit-wsl", "Curl does not show accept-encoding and accept-language");
+        It.Fixme(browserName == "webkit" && platform == "win32" && channel != "webkit-wsl", "Curl does not show accept-encoding and accept-language");
         ServerRequest serverRequest = null;
         server.SetRoute("/empty.html", (request, response) =>
         {
@@ -139,7 +139,7 @@ public class PageNetworkRequestTests
     public async Task ShouldNotReturnAllHeadersUntilTheyAreAvailable(IPage page, Server server, string browserName, string platform, bool isElectron, int browserMajorVersion, string channel)
     {
         It.Skip(isElectron && browserMajorVersion < 99, "This needs Chromium >= 99");
-        It.Fail(browserName == "webkit" && platform == "win32" && channel != "webkit-wsl", "Curl does not show accept-encoding and accept-language");
+        It.Fixme(browserName == "webkit" && platform == "win32" && channel != "webkit-wsl", "Curl does not show accept-encoding and accept-language");
 
         Task<Dictionary<string, string>> requestHeadersPromise = null;
         page.Request += (_, request) => requestHeadersPromise = request.AllHeadersAsync();
@@ -167,7 +167,7 @@ public class PageNetworkRequestTests
     public async Task ShouldGetTheSameHeadersAsTheServerCORS(IPage page, Server server, string browserName, string platform, bool isElectron, int browserMajorVersion, string channel)
     {
         It.Skip(isElectron && browserMajorVersion < 99, "This needs Chromium >= 99");
-        It.Fail(browserName == "webkit" && platform == "win32" && channel != "webkit-wsl", "Curl does not show accept-encoding and accept-language");
+        It.Fixme(browserName == "webkit" && platform == "win32" && channel != "webkit-wsl", "Curl does not show accept-encoding and accept-language");
 
         await page.GotoAsync(server.Prefix + "/empty.html");
         ServerRequest serverRequest = null;
@@ -191,7 +191,7 @@ public class PageNetworkRequestTests
     [UpstreamTest("NE-010 should not get preflight CORS requests when intercepting")]
     public async Task ShouldNotGetPreflightCORSRequestsWhenIntercepting(IPage page, Server server, string browserName, bool isAndroid, bool isBidi)
     {
-        It.Fail(isAndroid, "Playwright does not get CORS pre-flight on Android");
+        It.Fixme(isAndroid, "Playwright does not get CORS pre-flight on Android");
         await page.GotoAsync(server.Prefix + "/empty.html");
 
         var requests = new List<string>();

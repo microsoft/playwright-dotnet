@@ -22,6 +22,8 @@
  * SOFTWARE.
  */
 
+using NUnit.Framework.Internal;
+
 namespace Microsoft.Playwright.Tests.Fixtures;
 
 /// <summary>
@@ -31,40 +33,29 @@ namespace Microsoft.Playwright.Tests.Fixtures;
 public static class It
 {
     /// <summary><c>it.skip()</c>.</summary>
-    public static void Skip() => throw new IgnoreException("skip");
+    public static void Skip() => Assert.Ignore("skip");
 
     /// <summary><c>it.skip(condition, description)</c>.</summary>
     public static void Skip(bool condition, string description = null)
     {
         if (condition)
         {
-            throw new IgnoreException(description ?? "skip");
+            Assert.Ignore(description ?? "skip");
         }
     }
 
     /// <summary><c>it.fixme()</c>: a skip that upstream has.</summary>
-    public static void Fixme() => throw new IgnoreException("fixme");
+    public static void Fixme() => Assert.Ignore("fixme");
 
-    /// <summary><c>it.fixme(condition, description)</c>: a skip that upstream has.</summary>
+    /// <summary>
+    /// <c>it.fixme(condition, description)</c>: a skip that upstream has. Also
+    /// <c>it.fail(condition, description)</c>, which the port does not run.
+    /// </summary>
     public static void Fixme(bool condition, string description = null)
     {
         if (condition)
         {
-            throw new IgnoreException(description == null ? "fixme" : "fixme: " + description);
-        }
-    }
-
-    /// <summary><c>it.fail()</c>: the test must fail.</summary>
-    public static void Fail() => Fail(true);
-
-    /// <summary><c>it.fail(condition, description)</c>: the test must fail when the condition holds.</summary>
-    public static void Fail(bool condition, string description = null)
-    {
-        if (condition)
-        {
-            var info = Info();
-            info.ExpectedStatus = "failed";
-            info.ExpectedFailureReason = description == null ? "fail" : "fail: " + description;
+            Assert.Ignore(description == null ? "fixme" : "fixme: " + description);
         }
     }
 
@@ -84,7 +75,7 @@ public static class It
     public static void SetTimeout(int timeout) => Info().SetTimeout(timeout);
 
     /// <summary><c>it.info()</c>.</summary>
-    public static TestInfo Info() => TestScope.Current?.TestInfo ?? throw new InvalidOperationException("It.Info() is called outside of a test");
+    public static TestInfo Info() => (TestExecutionContext.CurrentContext.TestObject as UpstreamPlaywrightTest)?.TestInfo ?? throw new InvalidOperationException("It.Info() is called outside of a test");
 
     /// <summary><c>await it.step(title, async () => { ... })</c>.</summary>
     public static Task Step(string title, Func<Task> body) => body();

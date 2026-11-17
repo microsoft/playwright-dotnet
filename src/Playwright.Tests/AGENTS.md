@@ -21,14 +21,12 @@ then report it with the evidence.
 
 The one allowed mark is `[Fixme("dotnet: <reason>")]` for a bug or a gap of the .NET client
 that is not fixed yet, or `[Fixme("harness: <reason>")]` for a missing piece of the test
-harness. The test still runs, its failure is reported as skipped with the reason, and it fails
-when it starts to pass, so that the mark gets removed.
+harness. The test does not run: it is skipped, with the reason, as a test with `[ItFixme]`.
+Remove the mark when the bug is fixed.
 
 - `Browsers = "webkit"` limits the mark to some browsers, `Platforms = "darwin"` to some
   platforms (`win32`, `darwin`, `linux`), `Case = "..."` to the copies of a looped test or of a
   looped describe whose full name contains the text (`ShouldWork("a")`, `Describe("launch")`).
-- `Strict = false` is for a test that fails nearly always and can pass by chance (a time that
-  the client rounds): it does not fail when it passes.
 - The reason says what .NET does and what upstream expects. It holds for every browser of the
   mark: a text that only one browser gives goes in a mark with `Browsers`. A line break in a
   reason is written `\\n`.
@@ -45,8 +43,8 @@ scheme. They are a good place to look up how a call is written with the .NET API
 their structure, their skips or their helpers (`TestConstants`, `TestUtils`, `PlaywrightAssert`,
 `PageTestEx`, `SimpleServer`), and do not change them.
 
-The harness (fixtures, test server, helpers) is `src/Playwright.Tests/Fixtures/`, the port of
-`tests/config/`. A port of a test file does not change it. Section 7 says what to do when a
+The harness (base classes, test server, helpers) is `src/Playwright.Tests/Fixtures/`, the port
+of `tests/config/`. A port of a test file does not change it. Section 7 says what to do when a
 test needs something that the harness does not have.
 
 ## 1. Files and names
@@ -68,12 +66,17 @@ test needs something that the harness does not have.
   namespace Microsoft.Playwright.Tests.Page;
 
   /// <summary>Port of tests/page/page-check.spec.ts.</summary>
-  public class PageCheckTests
+  public class PageCheckTests : UpstreamPageTest
   {
   ```
 
   The tests keep the upstream order, and they run in that order. `PageCheckTests.cs` is the
   model. A file without a test that can be ported has no C# file.
+- The class derives from a base class of the harness, which has the fixtures as properties
+  (section 2). A file of `tests/page`, and a file of `tests/library` whose tests all take
+  `page`, derives from `UpstreamPageTest`: every test has `Page` and `Context`. Another file
+  derives from `UpstreamBrowserTest`: a test has `Browser`, and it asks for a context or a
+  page when the upstream test takes one.
 - Every upstream test has an identifier, the first token of its title
   (`it('CH-001 should check the box @smoke', ...)`). `.upstream/tests/registry.md` lists them
   all. The port is a `public async Task` method with `[UpstreamTest("...")]` holding the
@@ -82,7 +85,7 @@ test needs something that the harness does not have.
 
   ```csharp
   [UpstreamTest("CH-001 should check the box @smoke")]
-  public async Task ShouldCheckTheBox(IPage page)
+  public async Task ShouldCheckTheBox()
   {
   ```
 
@@ -95,8 +98,15 @@ test needs something that the harness does not have.
   The title in the attribute is the title of the `it()` call itself, with its characters as in
   the source: the registry shows the same title after the describe titles and a `›`, with
   markdown escapes, which are not part of it.
-- `test.describe('toHaveCount', () => { ... })` is a nested `public class ToHaveCount { ... }`,
-  named after the describe title in PascalCase.
+- `test.describe('toHaveCount', () => { ... })` is a nested
+  `public class ToHaveCount : UpstreamPageTest { ... }`, named after the describe title in
+  PascalCase, with the base class of the class around it.
+  - A nested class never derives from the class around it: NUnit would run the tests of that
+    class once more in it. When the tests of a describe need a hook, a `test.use()`, a fixture
+    or a variable of the file, these go to an abstract class without tests,
+    `PageClockTestsBase : UpstreamPageTest`, in the same file before the file class, and the
+    file class and its nested classes derive from it. The hooks of the file run before the
+    hooks of the describe, as upstream. A field that a nested class uses is `protected`.
   - When that name is the name of a test in it, the name of an earlier describe, or does not
     compile, it is `ToHaveCountDescribe`.
   - A describe whose whole title is a loop variable is `Describe`.
@@ -106,52 +116,55 @@ test needs something that the harness does not have.
   - A constant or a helper function of a describe is a member of its class. Tests and nested
     classes keep the upstream order, mixed as upstream mixes them.
 - A test that a loop declares several times (`for (const kind of kinds) it(...)`) is one
-  method with a `[Case(...)]` per copy, or `[CaseSource(nameof(Kinds))]` for a static field,
-  property or method of the class that holds the loop values. The values go to the first
-  parameters of the method, the fixtures come after them; a loop over objects has one
-  parameter per property. The title keeps `${kind}` as written in the source:
+  method with an NUnit `[TestCase(...)]` per copy, or `[TestCaseSource(nameof(Kinds))]` for a
+  static field, property or method of the class that holds the loop values. The values are
+  the parameters of the method; a loop over objects has one parameter per property. The title
+  keeps `${kind}` as written in the source:
 
   ```csharp
   [UpstreamTest("EV-090 should work with ${kind}")]
-  [Case("a")]
-  [Case("b")]
-  public async Task ShouldWorkWith(string kind, IPage page)
+  [TestCase("a")]
+  [TestCase("b")]
+  public async Task ShouldWorkWith(string kind)
   ```
 
   A describe that a loop declares several times is a nested class with a constructor and one
   NUnit `[TestFixture(value)]` per copy; its tests read the field.
-- `beforeEach`/`afterEach` are `[BeforeEach]`/`[AfterEach]` methods, which take fixture
-  parameters like a test, named `BeforeEach` and `AfterEach` (`BeforeEach2` for a second one).
-  `beforeAll`/`afterAll` are static `[BeforeAll]`/`[AfterAll]` methods with worker fixtures.
+- `beforeEach`/`afterEach` are public `[SetUp]`/`[TearDown]` methods, named `BeforeEach` and
+  `AfterEach` (`BeforeEach2` for a second one). They use the fixtures like a test.
+  `beforeAll`/`afterAll` are static `[OneTimeSetUp]`/`[OneTimeTearDown]` methods, named
+  `BeforeAll` and `AfterAll`. They run outside of a test: the fixtures of a test are not there.
   A variable of the file or of a describe (`let page; beforeEach(...)`) is a private field of
-  the class with the upstream name, at the upstream place. A hook or a fixture that the tests
-  of a nested class use is static, and so are the fields it sets.
+  the class with the upstream name, at the upstream place. Every test runs in an instance of
+  the class of its own, so a field keeps nothing from one test to the next: a variable that a
+  `beforeAll` sets, or that one test leaves for another, is a static field.
 - The fixtures that a file defines (`test.extend({ name: async ({ dep }, use) => { ... } })`)
-  are `[Fixture]` methods at the top of the class. The name of the fixture is the name of the
-  method with a lower-case first letter. The parameters are fixtures. The method returns the
-  value, or takes a last parameter `Func<T, Task> use` and awaits `use(value)` where upstream
-  does; what follows is the teardown. `[Fixture(Scope = FixtureScope.Worker)]` is
-  `{ scope: 'worker' }`, `Auto = true` is `{ auto: true }`. A fixture whose value is a function
-  has a nested delegate type, named after the fixture with `Fixture` at the end
-  (`public delegate Task<IBrowser> ConnectFixture(string wsEndpoint, BrowserTypeConnectOptions options = null);`).
+  are members at the top of the class, named after the fixture in PascalCase.
+  - A value without a setup is a property:
+    `public bool FailsOn401 => BrowserName == "chromium" && !IsHeadlessShell;`.
+  - A fixture with a setup is a method that makes the value once per test, as `PageFixture()`
+    of the harness does, and a test that takes the fixture calls it at its start:
+    `var calls = await Calls();`. What follows `use(value)` upstream is a `[TearDown]` method,
+    named after the fixture with `TearDown` at the end, which also forgets the value.
+  - `{ auto: true }` is a `[SetUp]` method.
+  - A fixture whose value is a function is a method with the parameters of that function.
 - Helper functions of the file are private static methods of the class, at the upstream
   place; a helper that takes a page or a frame has two overloads. A function or a constant
   that a test declares stays in the test, as a lambda, a local function or a local constant
   with the upstream name. A block `{ ... }` inside a test stays a block. A helper or a variable
   that only tests that are not ported use is left out.
-- `test.use({ ... })` at the top of a file or a describe is a `[Fixture]` method that overrides
-  the fixture. A parameter with the name of the fixture itself is the value that it overrides.
-  Context options (`hasTouch`, `viewport`, `locale`, `ignoreHTTPSErrors`, `httpCredentials`,
-  `serviceWorkers`, ...) override `contextOptions`; launch options override `launchOptions`:
+- `test.use({ ... })` at the top of a file or a describe is an override of the method of the
+  harness that gives the options, on top of `base`. Context options (`hasTouch`, `viewport`,
+  `locale`, `ignoreHTTPSErrors`, `httpCredentials`, `serviceWorkers`, ...) override
+  `ContextOptions()`; launch options override `LaunchOptions()`, and the worker starts a
+  browser with them:
 
   ```csharp
   // it.use({ hasTouch: true });
-  [Fixture]
-  public static BrowserNewContextOptions ContextOptions(BrowserNewContextOptions contextOptions) => new(contextOptions) { HasTouch = true };
+  public override BrowserNewContextOptions ContextOptions() => new(base.ContextOptions()) { HasTouch = true };
 
   // it.use({ launchOptions: async ({ launchOptions }, use) => { await use({ ...launchOptions, args: ['--site-per-process'] }); } });
-  [Fixture]
-  public static BrowserTypeLaunchOptions LaunchOptions(BrowserTypeLaunchOptions launchOptions) => new(launchOptions) { Args = ["--site-per-process"] };
+  public override BrowserTypeLaunchOptions LaunchOptions() => new(base.LaunchOptions()) { Args = ["--site-per-process"] };
   ```
 
 - `UpstreamRegistryTests` checks that every test of the registry is ported or listed as not
@@ -160,39 +173,52 @@ test needs something that the harness does not have.
 
 ## 2. Fixtures
 
-Fixtures are parameters of the test method (or of a hook or a `[Fixture]` method), resolved by
-**name**, as upstream destructures them. A fixture is set up when a parameter asks for it:
-a test that takes only `IBrowser browser` has no context and no page. A fixture that upstream
-destructures and does not use stays a parameter. An options object that a fixture gives is a
-copy: a test may change it.
+Fixtures are properties and methods of the base class, with the upstream name in PascalCase:
+`server.EMPTY_PAGE` is `Server.EmptyPage`, `browserName` is `BrowserName`. A test method has
+no parameters for them.
+
+- In a class that derives from `UpstreamPageTest`, `page` is `Page` and `context` is
+  `Context`. Both exist when the test starts.
+- In a class that derives from `UpstreamBrowserTest`, a context and a page are made when a
+  test asks for them, as upstream makes the fixtures that a test destructures. The test starts
+  with `var page = await PageFixture();` (`var context = await ContextFixture();`), in the
+  order of the upstream parameters, and the lines below are the upstream lines with `page.`
+  and `context.`. A second call gives the same object, and the page is a page of that
+  context. A test that takes only `browser` has no context and no page.
+- `request` is `var request = await RequestFixture();` at the start of the test, in every class.
+- A fixture that upstream destructures and does not use is asked for all the same:
+  `await PageFixture();`.
+- An options object that `ContextOptions()` or `LaunchOptions()` gives is a copy: a test may
+  change it.
 
 | Upstream | C# |
 |---|---|
-| `page`, `context`, `browser`, `browserType`, `playwright` | `IPage page`, `IBrowserContext context`, `IBrowser browser`, `IBrowserType browserType`, `IPlaywright playwright` |
-| `request` | `IAPIRequestContext request` |
-| `server`, `httpsServer` | `Server server`, `Server httpsServer` |
-| `browserName`, `channel`, `platform`, `mode` | `string browserName` (`"chromium"`, `"firefox"`, `"webkit"`), `string channel` (null when not set), `string platform` (`"win32"`, `"darwin"`, `"linux"`), `string mode` (`"default"`) |
-| `headless`, `isWindows`, `isMac`, `isLinux`, `isBidi`, `isHeadlessShell`, `isFrozenWebkit`, `allowsThirdParty` | `bool` parameters of the same names |
-| `isAndroid`, `isElectron` | `bool` parameters, always false |
-| `macVersion`, `browserMajorVersion`, `electronMajorVersion` | `int` parameters |
-| `browserVersion`, `defaultSameSiteCookieValue` | `string` parameters (`"Lax"`, `"None"`) |
-| `video`, `trace`, `loopback` | `string video`, `string trace` (always `"off"`), `string loopback` (null) |
-| `nodeVersion` | `(int Major, int Minor, int Patch) nodeVersion`: no test is skipped for it |
-| `launchOptions`, `contextOptions` | `BrowserTypeLaunchOptions launchOptions`, `BrowserNewContextOptions contextOptions` (see below) |
-| `contextFactory(options)` | `ContextFactory contextFactory`: `await contextFactory(new() { ... })` |
-| `launchPersistent(options)` | `LaunchPersistent launchPersistent`: `var (context, page) = await launchPersistent(new() { ... })` |
-| `createUserDataDir()` | `CreateUserDataDir createUserDataDir`: `await createUserDataDir()` |
-| `asset('file')` | `Func<string, string> asset`, or `Asset("file")` of `Utils` |
-| `testInfo`, `test.info()` | `TestInfo testInfo`, `It.Info()`: `OutputPath(...)`, `SnapshotPath(...)`, `Timeout`, `Retry`, `WorkerIndex`, `TestId`, `Project.OutputDir`, `Attach(...)` (does nothing) |
-| `workerInfo` | `WorkerInfo workerInfo`: `WorkerIndex`, `ParallelIndex` |
-| `proxyServer`, `socksPort`, `setupSocksForwardingServer` | `TestProxy proxyServer`, `int socksPort`, `TestProxy.SetupSocksForwardingServer(...)` |
-| `startRemoteServer(kind, options)` | `StartRemoteServer startRemoteServer`: `await startRemoteServer("launchServer", new() { ... })`; `remoteServer.WsEndpoint()`, `Close()`, `Out(key)`, `Child().Id`, `ChildExitCode()` |
-| `childProcess(params)`, `waitForPort(port)` | `ChildProcess childProcess`, `WaitForPort waitForPort` (`TestChildProcess.cs`) |
-| `pageWithHar(options)` | `PageWithHar pageWithHar`: `Page`, `Context`, `GetLog()` (a `JsonElement`), `GetZip()` |
-| `toImpl` | not available: a test that uses it is not ported; one that only destructures it is ported without the parameter |
+| `page`, `context` | `Page`, `Context` of `UpstreamPageTest`, or `await PageFixture()`, `await ContextFixture()` |
+| `browser`, `browserType`, `playwright` | `Browser`, `BrowserType`, `Playwright` |
+| `request` | `await RequestFixture()` |
+| `server`, `httpsServer` | `Server`, `HttpsServer` |
+| `browserName`, `channel`, `platform`, `mode` | `BrowserName` (`"chromium"`, `"firefox"`, `"webkit"`), `Channel` (null when not set), `Platform` (`"win32"`, `"darwin"`, `"linux"`), `Mode` (`"default"`) |
+| `headless`, `isWindows`, `isMac`, `isLinux`, `isBidi`, `isHeadlessShell`, `isFrozenWebkit`, `allowsThirdParty` | `Headless`, `IsWindows`, `IsMac`, `IsLinux`, `IsBidi`, `IsHeadlessShell`, `IsFrozenWebkit`, `AllowsThirdParty` |
+| `isAndroid`, `isElectron` | `IsAndroid`, `IsElectron`, always false |
+| `macVersion`, `browserMajorVersion`, `electronMajorVersion` | `MacVersion`, `BrowserMajorVersion`, `ElectronMajorVersion` |
+| `browserVersion`, `defaultSameSiteCookieValue` | `BrowserVersion`, `DefaultSameSiteCookieValue` (`"Lax"`, `"None"`) |
+| `video`, `trace`, `loopback` | `Video`, `Trace` (always `"off"`), `Loopback` (null) |
+| `nodeVersion` | `NodeVersion`, a `(int Major, int Minor, int Patch)`: no test is skipped for it |
+| `launchOptions`, `contextOptions` | `LaunchOptions()`, `ContextOptions()` (see below) |
+| `contextFactory(options)` | `await ContextFactory(new() { ... })` |
+| `launchPersistent(options)` | `var (context, page) = await LaunchPersistent(new() { ... })` |
+| `createUserDataDir()` | `await CreateUserDataDir()` |
+| `asset('file')` | `Asset("file")` of `Utils` |
+| `testInfo`, `test.info()` | `TestInfo`, `It.Info()`: `OutputPath(...)`, `SnapshotPath(...)`, `Timeout`, `Retry`, `WorkerIndex`, `TestId`, `Project.OutputDir`, `Attach(...)` (does nothing) |
+| `workerInfo` | `TestInfo.WorkerIndex`, `TestInfo.ParallelIndex` |
+| `proxyServer`, `socksPort`, `setupSocksForwardingServer` | `ProxyServer`, `SocksPort`, `TestProxy.SetupSocksForwardingServer(...)` |
+| `startRemoteServer(kind, options)` | `await StartRemoteServer("launchServer", new() { ... })`; `remoteServer.WsEndpoint()`, `Close()`, `Out(key)`, `Child().Id`, `ChildExitCode()` |
+| `childProcess(params)`, `waitForPort(port)` | `ChildProcess(new() { ... })`, `await WaitForPort(port)` (`TestChildProcess.cs`) |
+| `pageWithHar(options)` | `await PageWithHar(new() { ... })`: `Page`, `Context`, `GetLog()` (a `JsonElement`), `GetZip()` |
+| `toImpl` | not available: a test that uses it is not ported; one that only destructures it is ported |
 | `process.execPath`, `process.kill(pid, signal)` | `NodeProcess.ExecPath` (the Node.js of the driver), `NodeProcess.Kill(pid, signal)` |
 | `process.env.X` (read) | `Environment.GetEnvironmentVariable("X")` |
-| `process.env.PWTEST_SERVER_REGISTRY = dir` | `string serverRegistry`: the directory that the driver of the worker got at its start |
+| `process.env.PWTEST_SERVER_REGISTRY = dir` | `ServerRegistry`: the directory that the driver got at its start |
 | `kTargetClosedErrorMessage` | `TargetClosedErrorMessage` (`Utils`) |
 | `attachFrame`, `detachFrame`, `verifyViewport`, `expectedSSLError`, `chromiumVersionLessThan`, `rafraf`, `roundBox`, `unshift`, `stripAnsi`, `waitForTestLog`, `parseHar` | the same names in PascalCase in `Utils` |
 | `parseTraceRaw(file)` | `ParseTraceRaw(file)` (`Utils`): `trace.Events` (`JsonElement`s), `trace.Resources`, `trace.Actions` (the titles), `trace.ActionObjects`, `trace.Stacks`; `const { events, actions } = await parseTraceRaw(file)` is `var (events, _, actions, _, _) = await ParseTraceRaw(file)` |
@@ -205,30 +231,28 @@ copy: a test may change it.
 ### The defaults of Playwright Test
 
 Playwright Test adds defaults to calls of the test without a word. The .NET client does not,
-so a port passes them. The parameters that these rules add to a test come after the fixtures
-of upstream.
+so a port passes them.
 
 - `browserType.launch(options)` gets the headless mode, the channel, the executable and the
-  traces directory of the run. Build the options on the `launchOptions` fixture:
-  `browserType.launch()` is `browserType.LaunchAsync(launchOptions)`,
+  traces directory of the run. Build the options on `LaunchOptions()`:
+  `browserType.launch()` is `BrowserType.LaunchAsync(LaunchOptions())`,
   `browserType.launch({ proxy: { server } })` is
-  `browserType.LaunchAsync(new(launchOptions) { Proxy = new() { Server = server } })`.
+  `BrowserType.LaunchAsync(new(LaunchOptions()) { Proxy = new() { Server = server } })`.
 - `browserType.launchPersistentContext(dir, options)` gets the same, and the context options.
-  Build the options on the `BrowserTypeLaunchPersistentContextOptions launchPersistentContextOptions`
-  fixture: `new(launchPersistentContextOptions) { ... }`. `launchPersistent(options)` does this
-  itself.
+  Build the options on `LaunchPersistentContextOptions()`:
+  `new(LaunchPersistentContextOptions()) { ... }`. `LaunchPersistent(options)` does this itself.
 - `browser.newContext(options)` and `browser.newPage(options)` get `locale: 'en-US'` and the
   context options of `test.use()`, in every test, also in a browser that the test launches or
-  connects to. Build the options on the `contextOptions` fixture: `browser.newContext()` is
-  `browser.NewContextAsync(contextOptions)`, `browser.newContext({ hasTouch: true })` is
-  `browser.NewContextAsync(new(contextOptions) { HasTouch = true })`. For `browser.newPage` the
-  fixture is `BrowserNewPageOptions newPageOptions`. The `context`, `page` and `contextFactory`
-  fixtures do this themselves: `contextFactory({ hasTouch: true })` is
-  `contextFactory(new() { HasTouch = true })`.
+  connects to. Build the options on `ContextOptions()`: `browser.newContext()` is
+  `Browser.NewContextAsync(ContextOptions())`, `browser.newContext({ hasTouch: true })` is
+  `Browser.NewContextAsync(new(ContextOptions()) { HasTouch = true })`. For `browser.newPage`
+  it is `NewPageOptions()`. `Context`, `Page`, `ContextFixture()`, `PageFixture()` and
+  `ContextFactory(options)` do this themselves: `contextFactory({ hasTouch: true })` is
+  `ContextFactory(new() { HasTouch = true })`.
 - A spread of options is `MergeOptions(options, defaults)` (`Utils`), which sets what `options`
   does not set: `browser.newContext({ ...iPhone })` with `playwright.devices['iPhone 6']` is
-  `browser.NewContextAsync(MergeOptions(new BrowserNewContextOptions(iPhone), contextOptions))`.
-- The contexts of the browser of the `browser` fixture have the default timeout 0, as in
+  `Browser.NewContextAsync(MergeOptions(new BrowserNewContextOptions(iPhone), ContextOptions()))`.
+- The contexts of `Browser` have the default timeout 0, as in
   Playwright Test: a call without a timeout waits until the test times out.
 
 ### The test server
@@ -251,7 +275,7 @@ of upstream.
   is `res.WriteHeadRaw(200, "a", "1", "a", "2")`; `res.writeHead(...).end(...)` is two
   statements. `await new Promise(f => res.write(chunk, f))` is `await res.WriteAsync(chunk)`,
   and `res.end(data, f)` is `await res.EndAsync(data)`.
-- `await server.waitForRequest('/x')` is `await server.WaitForRequest("/x")`; create the task
+- `await server.waitForRequest('/x')` is `await Server.WaitForRequest("/x")`; create the task
   before the action that triggers the request, as upstream does.
 - A server WebSocket (`ws` of `OnceWebSocketConnection`) has `Send`, `Close(code, reason)`,
   `OnMessage(message => ...)` (`message.Text`, `message.Data`, `message.IsBinary`),
@@ -267,31 +291,34 @@ of upstream.
 
 ## 3. Skips and marks
 
-- `it.skip(condition, reason)`, `it.fixme(condition, reason)`, `it.fail(condition, reason)` and
-  `it.slow()` inside a test or a hook are `It.Skip(condition, reason)`, `It.Fixme(...)`,
-  `It.Fail(...)` and `It.Slow()`, at the same place, with the same condition; `test.` is `It.`
-  too. The values of the condition are fixture parameters:
-  `it.skip(browserName === 'webkit' && isMac)` is `It.Skip(browserName == "webkit" && isMac)`
-  in a test that takes `string browserName, bool isMac`. A skip upstream is a skip in the port;
-  it is not a deviation. A test after `It.Fail()` runs and must fail.
-- `it.skip('title', ...)`, `it.fixme('title', ...)` and `it.fail('title', ...)` are
-  `[ItSkip]`, `[ItFixme]` and `[ItFail]` on the method, next to `[UpstreamTest]`. The body is
-  ported all the same.
+- `it.skip(condition, reason)`, `it.fixme(condition, reason)` and `it.slow()` inside a test or
+  a hook are `It.Skip(condition, reason)`, `It.Fixme(...)` and `It.Slow()`, at the same place,
+  with the same condition; `test.` is `It.` too. The values of the condition are the fixtures
+  of section 2: `it.skip(browserName === 'webkit' && isMac)` is
+  `It.Skip(BrowserName == "webkit" && IsMac)`. A skip upstream is a skip in the port; it is
+  not a deviation.
+- `it.skip('title', ...)` and `it.fixme('title', ...)` are `[ItSkip]` and `[ItFixme]` on the
+  method, next to `[UpstreamTest]`. The body is ported all the same.
+- The port has no `fail` mark: a test that upstream expects to fail does not run.
+  `it.fail(condition, reason)` is `It.Fixme(condition, reason)`, with the same condition and
+  reason, and `it.fail('title', ...)` is `[ItFixme]`.
 - A modifier at the top of a file or a describe, with a callback
   (`it.skip(({ browserName }) => browserName !== 'chromium', 'reason')`) or with a plain
-  condition, is a static `[BeforeEach]` method before the tests, named after the modifier
-  (`Skip2` for a second one, `Fixme` for a `fixme`):
+  condition, is a `[SetUp]` method before the tests, named after the modifier (`Skip2` for a
+  second one, `Fixme` for a `fixme`). It is a hook of the file or of the describe (section 1):
 
   ```csharp
-  [BeforeEach]
-  public static void Skip(string browserName) => It.Skip(browserName != "chromium", "reason");
+  [SetUp]
+  public void Skip() => It.Skip(BrowserName != "chromium", "reason");
   ```
 
-  `test.slow()` at the top of a file or a describe is `[ItSlow]` on the class.
+  `test.slow()` at the top of a file or a describe is `[ItSlow]` on the class, and an
+  unconditional `test.skip()` or `test.fixme()` there is `[ItSkip]` or `[ItFixme]` on the
+  class. A mark of a class holds for its nested classes too.
 - Upstream runs the files of `library/chromium/` in the Chromium project only, and the files
   of `library/firefox/` in the Firefox project only: its config ignores a file with the name
   of another browser in its path. The class of such a file starts with
-  `[BeforeEach] public static void Skip(string browserName) => It.Skip(browserName != "chromium", "chromium only");`
+  `[SetUp] public void Skip() => It.Skip(BrowserName != "chromium", "chromium only");`
   under a `// .NET:` mark, before the modifiers of the file.
 - `test.setTimeout(ms)` is `It.SetTimeout(ms)`. The timeout of a test is 30 seconds and the
   timeout of `Expect` is 10 seconds, as upstream: the .NET default for `Expect` is 5 seconds,
@@ -542,7 +569,7 @@ is `ExpectToEqual(await page.EvaluateAsync<object>("() => ({ a: 1, b: [1, 2] })"
 | `PNG.sync.read(buffer)`, `utils.decodeWebp(buffer)` | `ImageComparator.Decode("image/png", buffer)` (`Fixtures/ImageComparator.cs`); a test may use `SixLabors.ImageSharp` too |
 | `array.sort()` on strings, `array.find(...)` | `.Order(StringComparer.Ordinal)`, `.FirstOrDefault(...)` |
 | `Math.round(x)`, `Date.now()`, `String(handle)` | `Math.Round(x, MidpointRounding.AwayFromZero)`, `DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()`, `handle.ToString()` |
-| `process.platform`, `os.arch()` | the `platform` fixture, `RuntimeInformation.ProcessArchitecture` |
+| `process.platform`, `os.arch()` | `Platform`, `RuntimeInformation.ProcessArchitecture` |
 | `zlib`, a zip archive | `GZipStream`, `BrotliStream`, `ZLibStream`, `ZipFile`, `ZipArchive` |
 
 ## 5. Marks
@@ -551,7 +578,7 @@ The port has one mark of its own, `// .NET:`, on the line before a statement who
 rules above change in a way that is not obvious: a value that C# can not express as upstream
 does, a helper that stands for a JavaScript construct, a statement that is left out. Do not
 mark a plain rename, a plain `await`, a pattern that this document fixes, or the defaults of
-section 2 (`contextOptions`, `launchOptions`). A mark is not a deviation: the test still does
+section 2 (`ContextOptions()`, `LaunchOptions()`). A mark is not a deviation: the test still does
 what upstream does.
 
 ## 6. Tests that are not ported
@@ -570,15 +597,18 @@ precisely: `The exposeFunctions option of evaluate() is not in the .NET API.`
 
 A reason that starts with `TODO harness:` names a test utility that the harness does not have
 yet; such a test is ported once it does. A test that would end the test process (a stack
-overflow) is listed this way too, not marked `[Fixme]`: a marked test still runs.
+overflow) is not listed: it is ported and marked `[Fixme]`, as any test that the .NET client
+fails. A marked test does not run.
 
 ## 7. The harness
 
 `src/Playwright.Tests/Fixtures/` is the port of `tests/config/`:
 
-- `BuiltinFixtures.cs`, `ProxyFixtures.cs`, `ProcessFixtures.cs`: the fixtures of every test
-  (`browserTest.ts`, `baseTest.ts`, `platformFixtures.ts`, `serverFixtures.ts`,
-  `commonFixtures.ts`, and the fixtures of Playwright Test that they build on).
+- `UpstreamPlaywrightTest.cs`, `UpstreamBrowserTest.cs`, `UpstreamPageTest.cs`: the base
+  classes of the ports, with the fixtures of every test (`browserTest.ts`, `baseTest.ts`,
+  `platformFixtures.ts`, `serverFixtures.ts`, `commonFixtures.ts`, and the fixtures of
+  Playwright Test that they build on). They derive from `WorkerAwareTest` of
+  `Microsoft.Playwright.NUnit`, as the base classes of the old tests do.
 - `Server.cs`, `ServerObjects.cs`: `testserver/index.ts`. `TestProxy.cs`, `MockSocksServer.cs`:
   `proxy.ts`. `RemoteServer.cs`, `TestChildProcess.cs`, `NodeProcess.cs`: `remoteServer.ts`
   and the child processes.
@@ -586,11 +616,17 @@ overflow) is listed this way too, not marked `[Fixme]`: a marked test still runs
   constructs that C# lacks. `ImageComparator.cs`, `Formidable.cs`, `VideoPlayer.cs`: the
   libraries and helper files that the tests import.
 - `It.cs` and `TestInfo.cs`: `test` and `testInfo`.
-- `UpstreamTestAttribute.cs`, `TestRunner.cs`, `TestScope.cs`, `FixtureCatalog.cs`,
-  `Worker.cs`: they run a test as Playwright Test does. A worker (driver, browser, servers)
-  runs one test at a time, goes on to the next test after a pass, and is closed after a
-  failure or a timeout; the contexts that a test leaves open in the browser of the worker are
-  closed when the test ends. The driver of a worker runs with `PWTEST_UNDER_TEST`, as upstream.
+- `MarkAttributes.cs`: `[ItSkip]`, `[ItFixme]`, `[ItSlow]` and `[Fixme]` (section 3).
+- `UpstreamTestAttribute.cs`: the test attribute. It has the timeout of the test, which
+  `It.Slow()` and `It.SetTimeout()` change, and the retries on CI.
+- A worker of `Microsoft.Playwright.NUnit` (`WorkerAwareTest`) has the driver, the browser and
+  the servers. It runs one test at a time, goes on to the next test after a pass, and is
+  closed after a failure or a timeout; the contexts that a test leaves open in its browser are
+  closed when the test ends. `DriverEnvironment.cs` makes every driver of the test process
+  start with `PWTEST_UNDER_TEST`, as upstream.
+- A test that times out is not stopped: its code goes on in the background. It runs in an
+  instance of the test class of its own, also on a retry, and its driver is closed, so its
+  next call of Playwright throws and it can not touch the next test.
 
 When a test needs a fixture or a helper of `tests/config/` that the harness does not have, add
 it to the harness as a port of the upstream one, in a change of its own, then port the test.

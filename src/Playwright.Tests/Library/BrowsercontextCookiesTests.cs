@@ -142,7 +142,7 @@ public class BrowsercontextCookiesTests
     [UpstreamTest("CO-006 should properly report \"Strict\" sameSite cookie")]
     public async Task ShouldProperlyReportStrictSameSiteCookie(IBrowserContext context, IPage page, Server server, string browserName, string platform, string channel)
     {
-        It.Fail(browserName == "webkit" && platform == "win32" && channel != "webkit-wsl");
+        It.Fixme(browserName == "webkit" && platform == "win32" && channel != "webkit-wsl");
 
         server.SetRoute("/empty.html", (req, res) =>
         {
@@ -158,7 +158,7 @@ public class BrowsercontextCookiesTests
     [UpstreamTest("CO-007 should properly report \"Lax\" sameSite cookie")]
     public async Task ShouldProperlyReportLaxSameSiteCookie(IBrowserContext context, IPage page, Server server, string browserName, string platform, string channel)
     {
-        It.Fail(browserName == "webkit" && platform == "win32" && channel != "webkit-wsl");
+        It.Fixme(browserName == "webkit" && platform == "win32" && channel != "webkit-wsl");
 
         server.SetRoute("/empty.html", (req, res) =>
         {

@@ -67,7 +67,7 @@ public class PageSetExtraHttpHeadersTests
     [UpstreamTest("NE-118 should not duplicate referer header")]
     public async Task ShouldNotDuplicateRefererHeader(IPage page, Server server, string browserName, int browserMajorVersion)
     {
-        It.Fail(browserName == "chromium" && browserMajorVersion < 154, "Request has referer and Referer");
+        It.Fixme(browserName == "chromium" && browserMajorVersion < 154, "Request has referer and Referer");
         await page.SetExtraHTTPHeadersAsync(new Dictionary<string, string> { ["referer"] = server.EmptyPage });
         var response = await page.GotoAsync(server.EmptyPage);
         Assert.That(response.Ok, Is.EqualTo(true));

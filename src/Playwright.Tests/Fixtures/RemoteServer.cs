@@ -73,7 +73,7 @@ public sealed class RunServer : PlaywrightServer
     private TestChildProcess _process;
     private string _wsEndpoint;
 
-    public async Task Start(ChildProcess childProcess, RunServerOptions options = null)
+    public async Task Start(Func<TestChildParams, TestChildProcess> childProcess, RunServerOptions options = null)
     {
         var command = new List<string> { NodeProcess.ExecPath, NodeProcess.CliPath, "run-server" };
         if (options?.Mode == "extension")
@@ -180,7 +180,7 @@ public sealed class RemoteServer : PlaywrightServer
     /// <param name="channel">The <c>channel</c> fixture.</param>
     /// <param name="browserOptions">The <c>launchOptions</c> fixture, <c>playwright._defaultLaunchOptions</c> upstream.</param>
     /// <param name="remoteServerOptions">What the server does.</param>
-    public async Task Start(ChildProcess childProcess, IBrowserType browserType, string channel, BrowserTypeLaunchOptions browserOptions, RemoteServerOptions remoteServerOptions = null)
+    public async Task Start(Func<TestChildParams, TestChildProcess> childProcess, IBrowserType browserType, string channel, BrowserTypeLaunchOptions browserOptions, RemoteServerOptions remoteServerOptions = null)
     {
         remoteServerOptions ??= new();
         _browserType = browserType;

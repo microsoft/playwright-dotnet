@@ -157,7 +157,7 @@ public class BrowsercontextViewportTests
     }
 
     [UpstreamTest("VP-011 should keep touch emulation after screenshot beyond viewport")]
-    [Fixme("dotnet: Locator.WithElementAsync makes a negative timeout from the default timeout 0, and the call passes only when it ends before the timer of the driver", Strict = false)]
+    [Fixme("dotnet: Locator.WithElementAsync makes a negative timeout from the default timeout 0, and the call passes only when it ends before the timer of the driver")]
     public async Task ShouldKeepTouchEmulationAfterScreenshotBeyondViewport(IBrowser browser, Server server, BrowserNewContextOptions contextOptions)
     {
         var context = await browser.NewContextAsync(new(contextOptions) { ViewportSize = new() { Width = 393, Height = 727 }, HasTouch = true });

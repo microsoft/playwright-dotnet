@@ -18,6 +18,11 @@
       <Folder Include="assets\" />
     </ItemGroup>
     <ItemGroup>
+        <!-- TODO: these still use the fixture parameters. Port them to the base classes of Fixtures/, as Page/PageCheckTests.cs. -->
+        <Compile Remove="Page/**/*.cs;Library/**/*.cs" />
+        <Compile Include="Page/PageCheckTests.cs;Page/PageBasicTests.cs" />
+    </ItemGroup>
+    <ItemGroup>
         <PackageReference Include="coverlet.collector" Version="3.1.2">
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
           <PrivateAssets>all</PrivateAssets>

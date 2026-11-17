@@ -107,7 +107,7 @@ public class NetworkPostDataTests
     [UpstreamTest("NE-112 should get post data for file/blob")]
     public async Task ShouldGetPostDataForFileBlob(IPage page, Server server, string browserName)
     {
-        It.Fail(browserName == "webkit" || browserName == "chromium");
+        It.Fixme(browserName == "webkit" || browserName == "chromium");
         await page.GotoAsync(server.EmptyPage);
         var (request, _) = await PromiseAll(
             page.WaitForRequestAsync("**/*"),
@@ -129,8 +129,8 @@ public class NetworkPostDataTests
     [Fixme("dotnet: Request.PostDataJSON() throws a NullReferenceException for a request without a content-type header: it calls Contains() on the missing value; upstream reads it with contentType?.includes()", Browsers = "firefox")]
     public async Task ShouldGetPostDataForNavigatorSendBeaconApiCalls(IPage page, Server server, string browserName)
     {
-        It.Fail(browserName == "chromium", "postData is empty");
-        It.Fail(browserName == "webkit", "postData is empty");
+        It.Fixme(browserName == "chromium", "postData is empty");
+        It.Fixme(browserName == "webkit", "postData is empty");
         await page.GotoAsync(server.EmptyPage);
         var (request, _) = await PromiseAll(
             page.WaitForRequestAsync("**/*"),

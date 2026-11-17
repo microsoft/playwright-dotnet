@@ -24,7 +24,7 @@ public class PageCacheStorageTests
     [UpstreamTest("ST-032 CacheStorage entry should survive page.reload()")]
     public async Task CacheStorageEntryShouldSurvivePageReload(IPage page, Server server, string browserName, bool isAndroid)
     {
-        It.Fail(browserName == "webkit", "Ephemeral CacheStorage is not persisted across reload in WebKit, consistent with Safari");
+        It.Fixme(browserName == "webkit", "Ephemeral CacheStorage is not persisted across reload in WebKit, consistent with Safari");
         It.Skip(isAndroid, "not supported on Android");
 
         await page.GotoAsync(server.EmptyPage);

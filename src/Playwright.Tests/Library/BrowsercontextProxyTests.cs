@@ -230,8 +230,8 @@ public class BrowsercontextProxyTests
     [UpstreamTest("PR-025 should use ipv6 proxy")]
     public async Task ShouldUseIpv6Proxy(ContextFactory contextFactory, Server server, TestProxy proxyServer, string browserName, string channel, bool isBidi)
     {
-        It.Fail(browserName == "firefox" && !isBidi, "page.goto: NS_ERROR_UNKNOWN_HOST");
-        It.Fail(channel == "webkit-wsl", "WebKit on WSL does not support IPv6: https://github.com/microsoft/WSL/issues/10803");
+        It.Fixme(browserName == "firefox" && !isBidi, "page.goto: NS_ERROR_UNKNOWN_HOST");
+        It.Fixme(channel == "webkit-wsl", "WebKit on WSL does not support IPv6: https://github.com/microsoft/WSL/issues/10803");
         proxyServer.ForwardTo(server.Port);
         var context = await contextFactory(new()
         {

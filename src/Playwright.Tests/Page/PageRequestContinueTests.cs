@@ -339,7 +339,7 @@ public class PageRequestContinueTests
     [UpstreamTest("RO-074 should work with Cross-Origin-Opener-Policy")]
     public async Task ShouldWorkWithCrossOriginOpenerPolicy(IPage page, Server server, string browserName)
     {
-        It.Fail(browserName == "webkit", "https://github.com/microsoft/playwright/issues/8796");
+        It.Fixme(browserName == "webkit", "https://github.com/microsoft/playwright/issues/8796");
         ServerHeaders serverHeaders = null;
         var serverRequests = new List<string>();
         server.SetRoute("/empty.html", (req, res) =>

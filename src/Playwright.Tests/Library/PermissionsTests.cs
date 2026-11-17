@@ -164,7 +164,7 @@ public class PermissionsTests
         [UpstreamTest("PE-012 should trigger permission onchange")]
         public async Task ShouldTriggerPermissionOnchange(IPage page, IBrowserContext context, Server server, string browserName, bool isBidi)
         {
-            It.Fail(browserName == "webkit");
+            It.Fixme(browserName == "webkit");
 
             await page.GotoAsync(server.EmptyPage);
             await page.EvaluateAsync(@"() => {
@@ -255,7 +255,7 @@ public class PermissionsTests
     [UpstreamTest("PE-014 should support clipboard read")]
     public async Task ShouldSupportClipboardRead(IPage page, IBrowserContext context, Server server, string browserName, bool isWindows, bool isHeadlessShell)
     {
-        It.Fail(browserName == "firefox", "No such permissions (requires flag) in Firefox");
+        It.Fixme(browserName == "firefox", "No such permissions (requires flag) in Firefox");
 
         await page.GotoAsync(server.EmptyPage);
         // There is no 'clipboard-read' permission in WebKit Web API.

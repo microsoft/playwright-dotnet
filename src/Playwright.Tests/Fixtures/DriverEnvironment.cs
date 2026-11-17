@@ -24,12 +24,19 @@
 
 using Microsoft.Playwright.Tests.Fixtures;
 
-/// <summary>Closes the workers of the upstream tests, with their browsers, drivers and servers, at the end of the run.</summary>
+/// <summary>
+/// The driver of the tests runs as the one of the upstream tests, with <c>PWTEST_UNDER_TEST</c>: it gives
+/// the pages <c>window.builtins</c>, among other things.
+/// </summary>
 [SetUpFixture]
 #pragma warning disable CA1050 // A [SetUpFixture] outside of a namespace applies to the whole assembly.
-public class UpstreamTestsGlobalTeardown
+public class DriverEnvironment
 #pragma warning restore CA1050
 {
-    [OneTimeTearDown]
-    public Task CloseWorkers() => WorkerPool.DisposeAllAsync();
+    [OneTimeSetUp]
+    public void SetDriverEnvironment()
+    {
+        Environment.SetEnvironmentVariable("PWTEST_UNDER_TEST", "1");
+        Environment.SetEnvironmentVariable("PWTEST_SERVER_REGISTRY", Env.ServerRegistry);
+    }
 }

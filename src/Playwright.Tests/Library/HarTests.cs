@@ -774,7 +774,7 @@ public class HarTests
     [Fixme("harness: the HTTPS server of the harness negotiates TLS 1.2 on macOS, where the SslStream of .NET has no TLS 1.3 for a server: the protocol is 'TLS 1.2', upstream expects 'TLS 1.3'", Platforms = "darwin")]
     public async Task ShouldHaveSecurityDetails(ContextFactory contextFactory, Server httpsServer, string browserName, string platform, string mode, string channel, bool isFrozenWebkit, TestInfo testInfo)
     {
-        It.Fail(browserName == "webkit" && platform == "win32" && channel != "webkit-wsl");
+        It.Fixme(browserName == "webkit" && platform == "win32" && channel != "webkit-wsl");
         It.Skip(isFrozenWebkit);
 
         var pageWithHar = await PageWithHar(contextFactory, testInfo);

@@ -287,7 +287,7 @@ public class PageEventConsoleTests
     }
 
     [UpstreamTest("CM-014 should have timestamp")]
-    [Fixme("dotnet: ConsoleMessage.Timestamp is a float, which holds the milliseconds since the epoch in steps of 131072 only: the value is up to 65 seconds away from the time of the message, and the test passes only when the rounded value falls in its window by chance", Strict = false)]
+    [Fixme("dotnet: ConsoleMessage.Timestamp is a float, which holds the milliseconds since the epoch in steps of 131072 only: the value is up to 65 seconds away from the time of the message, and the test passes only when the rounded value falls in its window by chance")]
     public async Task ShouldHaveTimestamp(IPage page, bool isAndroid)
     {
         It.Skip(isAndroid, "there is a time difference between android emulator and host machine");
@@ -322,7 +322,7 @@ public class PageEventConsoleTests
     }
 
     [UpstreamTest("CM-016 should have timestamp in consoleMessages")]
-    [Fixme("dotnet: ConsoleMessage.Timestamp is a float, which holds the milliseconds since the epoch in steps of 131072 only: the value is up to 65 seconds away from the time of the message, and the test passes only when the rounded value falls in its window by chance", Strict = false)]
+    [Fixme("dotnet: ConsoleMessage.Timestamp is a float, which holds the milliseconds since the epoch in steps of 131072 only: the value is up to 65 seconds away from the time of the message, and the test passes only when the rounded value falls in its window by chance")]
     public async Task ShouldHaveTimestampInConsoleMessages(IPage page, bool isAndroid)
     {
         It.Skip(isAndroid, "there is a time difference between android emulator and host machine");

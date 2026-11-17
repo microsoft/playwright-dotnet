@@ -75,7 +75,7 @@ public class BrowsercontextFetchTests
     }
 
     [UpstreamTest("FE-090 should return timing")]
-    [Fixme("dotnet: RequestTimingResult.StartTime is a float, which holds a time in milliseconds since the epoch in steps of 131072 only: it is up to 65 seconds away from the time of the request, upstream expects it within 5 seconds of Date.now(). The test passes by chance when the request starts within 5 seconds of such a step, about one run in 13", Strict = false)]
+    [Fixme("dotnet: RequestTimingResult.StartTime is a float, which holds a time in milliseconds since the epoch in steps of 131072 only: it is up to 65 seconds away from the time of the request, upstream expects it within 5 seconds of Date.now(). The test passes by chance when the request starts within 5 seconds of such a step, about one run in 13")]
     public async Task ShouldReturnTiming(IBrowserContext context)
     {
         // Create a fresh server to guarantee a new connection, because keep-alive
@@ -107,7 +107,7 @@ public class BrowsercontextFetchTests
     }
 
     [UpstreamTest("FE-091 should return timing for https")]
-    [Fixme("dotnet: RequestTimingResult.StartTime is a float, which holds a time in milliseconds since the epoch in steps of 131072 only: it is up to 65 seconds away from the time of the request, upstream expects it within 5 seconds of Date.now(). The test passes by chance when the request starts within 5 seconds of such a step, about one run in 13", Strict = false)]
+    [Fixme("dotnet: RequestTimingResult.StartTime is a float, which holds a time in milliseconds since the epoch in steps of 131072 only: it is up to 65 seconds away from the time of the request, upstream expects it within 5 seconds of Date.now(). The test passes by chance when the request starts within 5 seconds of such a step, about one run in 13")]
     public async Task ShouldReturnTimingForHttps(IBrowserContext context)
     {
         // Create a fresh server to guarantee a new connection, because keep-alive

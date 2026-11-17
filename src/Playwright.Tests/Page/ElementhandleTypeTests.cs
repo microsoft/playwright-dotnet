@@ -67,7 +67,7 @@ public class ElementhandleTypeTests
     [UpstreamTest("EH-111 should work with number input")]
     public async Task ShouldWorkWithNumberInput(IPage page, string browserName)
     {
-        It.Fail(browserName == "webkit", "Started failing after https://github.com/WebKit/WebKit/commit/c92a2aea185d63b5e9998608a9c0321a461c496c");
+        It.Fixme(browserName == "webkit", "Started failing after https://github.com/WebKit/WebKit/commit/c92a2aea185d63b5e9998608a9c0321a461c496c");
         await page.SetContentAsync("<input type='number' value=2 />");
         await page.TypeAsync("input", "13");
         Assert.That(await page.EvalOnSelectorAsync<string>("input", "input => input.value"), Is.EqualTo("132"));

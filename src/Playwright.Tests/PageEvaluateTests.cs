@@ -641,7 +641,6 @@ public class PageEvaluateTests : PageTestEx
     {
         {
             var guid = Guid.Parse("{08d15efd-bd4f-4244-b46e-2238964e0e36}");
-            await Page.PauseAsync();
             var result = await Page.EvaluateAsync<Guid>("guid => guid", guid);
             Assert.AreEqual(guid, result);
         }

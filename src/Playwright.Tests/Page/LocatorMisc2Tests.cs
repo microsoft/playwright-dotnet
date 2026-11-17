@@ -33,7 +33,7 @@ public class LocatorMisc2Tests
     }
 
     [UpstreamTest("LO-141 should scroll into view")]
-    [Fixme("dotnet: Locator.WithElementAsync makes a negative timeout from the default timeout 0, and the call passes only when it ends before the timer of the driver", Strict = false)]
+    [Fixme("dotnet: Locator.WithElementAsync makes a negative timeout from the default timeout 0, and the call passes only when it ends before the timer of the driver")]
     public async Task ShouldScrollIntoView(IPage page, Server server, bool isAndroid)
     {
         It.Fixme(isAndroid);
@@ -56,7 +56,7 @@ public class LocatorMisc2Tests
     }
 
     [UpstreamTest("LO-142 should scroll zero-sized element into view")]
-    [Fixme("dotnet: Locator.WithElementAsync makes a negative timeout from the default timeout 0, and the call passes only when it ends before the timer of the driver", Strict = false)]
+    [Fixme("dotnet: Locator.WithElementAsync makes a negative timeout from the default timeout 0, and the call passes only when it ends before the timer of the driver")]
     public async Task ShouldScrollZeroSizedElementIntoView(IPage page, bool isAndroid, bool isElectron)
     {
         It.Fixme(isAndroid || isElectron);
@@ -90,7 +90,7 @@ public class LocatorMisc2Tests
     }
 
     [UpstreamTest("LO-143 should select textarea")]
-    [Fixme("dotnet: Locator.WithElementAsync makes a negative timeout from the default timeout 0, and the call passes only when it ends before the timer of the driver", Strict = false)]
+    [Fixme("dotnet: Locator.WithElementAsync makes a negative timeout from the default timeout 0, and the call passes only when it ends before the timer of the driver")]
     public async Task ShouldSelectTextarea(IPage page, Server server, string browserName)
     {
         await page.GotoAsync(server.Prefix + "/input/textarea.html");
@@ -117,7 +117,7 @@ public class LocatorMisc2Tests
     }
 
     [UpstreamTest("LO-146 should take screenshot")]
-    [Fixme("dotnet: Locator.WithElementAsync makes a negative timeout from the default timeout 0, and the call passes only when it ends before the timer of the driver", Strict = false)]
+    [Fixme("dotnet: Locator.WithElementAsync makes a negative timeout from the default timeout 0, and the call passes only when it ends before the timer of the driver")]
     public async Task ShouldTakeScreenshot(IPage page, Server server, string browserName, bool headless, bool isAndroid, string mode)
     {
         It.Skip(browserName == "firefox" && !headless);

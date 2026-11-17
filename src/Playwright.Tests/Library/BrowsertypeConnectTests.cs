@@ -228,8 +228,8 @@ public class BrowsertypeConnectTests
         [UpstreamTest("BT-040 should be able to visit ipv6")]
         public async Task ShouldBeAbleToVisitIpv6(ConnectFixture connect, StartRemoteServer startRemoteServer, int ipV6ServerPort, string channel, BrowserNewPageOptions newPageOptions)
         {
-            It.Fail(!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("INSIDE_DOCKER")), "docker does not support IPv6 by default");
-            It.Fail(channel == "webkit-wsl", "WebKit on WSL does not support IPv6: https://github.com/microsoft/WSL/issues/10803");
+            It.Fixme(!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("INSIDE_DOCKER")), "docker does not support IPv6 by default");
+            It.Fixme(channel == "webkit-wsl", "WebKit on WSL does not support IPv6: https://github.com/microsoft/WSL/issues/10803");
             var remoteServer = await startRemoteServer(kind);
             var browser = await connect(remoteServer.WsEndpoint());
             var page = await browser.NewPageAsync(newPageOptions);
@@ -242,7 +242,7 @@ public class BrowsertypeConnectTests
         [UpstreamTest("BT-042 should be able to visit ipv6 through localhost")]
         public async Task ShouldBeAbleToVisitIpv6ThroughLocalhost(ConnectFixture connect, StartRemoteServer startRemoteServer, int ipV6ServerPort, string channel, BrowserNewPageOptions newPageOptions)
         {
-            It.Fail(!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("INSIDE_DOCKER")), "docker does not support IPv6 by default");
+            It.Fixme(!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("INSIDE_DOCKER")), "docker does not support IPv6 by default");
             It.Skip(channel == "webkit-wsl", "WebKit on WSL does not support IPv6: https://github.com/microsoft/WSL/issues/10803");
             var remoteServer = await startRemoteServer(kind);
             var browser = await connect(remoteServer.WsEndpoint());

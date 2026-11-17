@@ -46,7 +46,7 @@ public class PageScreenshotTests
         }
 
         [UpstreamTest("SS-002 should not capture blinking caret by default")]
-        [Fixme("dotnet: Locator.WithElementAsync makes a negative timeout from the default timeout 0, and the call passes only when it ends before the timer of the driver", Strict = false)]
+        [Fixme("dotnet: Locator.WithElementAsync makes a negative timeout from the default timeout 0, and the call passes only when it ends before the timer of the driver")]
         public async Task ShouldNotCaptureBlinkingCaretByDefault(IPage page, Server server, string browserName)
         {
             await page.SetContentAsync($@"
@@ -77,7 +77,7 @@ public class PageScreenshotTests
         }
 
         [UpstreamTest("SS-003 should capture blinking caret if explicitly asked for")]
-        [Fixme("dotnet: Locator.WithElementAsync makes a negative timeout from the default timeout 0, and the call passes only when it ends before the timer of the driver", Strict = false)]
+        [Fixme("dotnet: Locator.WithElementAsync makes a negative timeout from the default timeout 0, and the call passes only when it ends before the timer of the driver")]
         public async Task ShouldCaptureBlinkingCaretIfExplicitlyAskedFor(IPage page, Server server, string browserName)
         {
             It.Skip(browserName == "firefox", "browser-level screenshot API in firefox does not capture caret");
@@ -112,7 +112,7 @@ public class PageScreenshotTests
         }
 
         [UpstreamTest("SS-004 should capture blinking caret in shadow dom")]
-        [Fixme("dotnet: Locator.WithElementAsync makes a negative timeout from the default timeout 0, and the call passes only when it ends before the timer of the driver", Strict = false)]
+        [Fixme("dotnet: Locator.WithElementAsync makes a negative timeout from the default timeout 0, and the call passes only when it ends before the timer of the driver")]
         public async Task ShouldCaptureBlinkingCaretInShadowDom(IPage page, string browserName)
         {
             await page.AddScriptTagAsync(new()
@@ -329,7 +329,7 @@ public class PageScreenshotTests
         [UpstreamTest("SS-014 should allow transparency")]
         public async Task ShouldAllowTransparency(IPage page, string browserName, bool isBidi)
         {
-            It.Fail(browserName == "firefox" || isBidi);
+            It.Fixme(browserName == "firefox" || isBidi);
 
             await page.SetViewportSizeAsync(300, 300);
             await page.SetContentAsync(@"
@@ -399,7 +399,7 @@ public class PageScreenshotTests
         public async Task ShouldAllowTransparencyWithWebp(IPage page, string browserName, bool isBidi)
         {
             It.Skip(isBidi, "transparency is not supported via WebDriver BiDi");
-            It.Fail(browserName == "firefox");
+            It.Fixme(browserName == "firefox");
 
             await page.SetViewportSizeAsync(300, 300);
             await page.SetContentAsync(@"

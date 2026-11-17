@@ -67,20 +67,3 @@ public sealed class PageWithHarResult
         return Utils.ParseHar(_harPath);
     }
 }
-
-/// <summary><c>await pageWithHar(options)</c>: a page of a context that records a HAR.</summary>
-public delegate Task<PageWithHarResult> PageWithHar(PageWithHarOptions options = null);
-
-/// <summary>The <c>pageWithHar</c> fixture of <c>tests/config/browserTest.ts</c>.</summary>
-[FixtureProvider(Order = 2)]
-public static class PageWithHarFixtures
-{
-    [Fixture]
-    public static PageWithHar PageWithHar(ContextFactory contextFactory, TestInfo testInfo) => async options =>
-    {
-        var harPath = testInfo.OutputPath(options?.OutputPath ?? "test.har");
-        var context = await contextFactory(new() { RecordHarPath = harPath, RecordHarContent = options?.Content, RecordHarOmitContent = options?.OmitContent, IgnoreHTTPSErrors = true }).ConfigureAwait(false);
-        var page = await context.NewPageAsync().ConfigureAwait(false);
-        return new PageWithHarResult(context, page, harPath);
-    };
-}

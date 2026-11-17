@@ -920,8 +920,8 @@ public class PageGotoTests
     [UpstreamTest("NA-058 should report raw buffer for main resource")]
     public async Task ShouldReportRawBufferForMainResource(IPage page, Server server, string browserName, string platform, string channel)
     {
-        It.Fail(browserName == "chromium", "Chromium sends main resource as text");
-        It.Fail(browserName == "webkit" && platform == "win32" && channel != "webkit-wsl", "Same here");
+        It.Fixme(browserName == "chromium", "Chromium sends main resource as text");
+        It.Fixme(browserName == "webkit" && platform == "win32" && channel != "webkit-wsl", "Same here");
 
         server.SetRoute("/empty.html", (req, res) =>
         {

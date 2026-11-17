@@ -22,8 +22,8 @@
  * SOFTWARE.
  */
 
-using System.Diagnostics;
 using System.Text.RegularExpressions;
+using NUnit.Framework.Interfaces;
 
 namespace Microsoft.Playwright.Tests.Fixtures;
 
@@ -48,17 +48,14 @@ public sealed class TestProject
 /// <summary><c>testInfo</c> upstream: the parameter <c>TestInfo testInfo</c> of a test, a hook or a fixture, and <c>It.Info()</c>.</summary>
 public sealed class TestInfo
 {
-    private readonly Stopwatch _clock = new();
-    private int _pauseDepth;
-
-    internal TestInfo(string title, string id, string file, string testName, int retry, WorkerInfo worker)
+    internal TestInfo(string title, string id, string file, string testName, int retry, int workerIndex, int parallelIndex)
     {
         Title = title;
         Id = id;
         File = file;
         Retry = retry;
-        WorkerIndex = worker.WorkerIndex;
-        ParallelIndex = worker.ParallelIndex;
+        WorkerIndex = workerIndex;
+        ParallelIndex = parallelIndex;
         Timeout = Env.Timeout;
         var directoryName = Regex.Replace($"{(file ?? "test").Replace(".spec.ts", string.Empty)}-{id}-{testName}", @"[^A-Za-z0-9_.-]+", "-");
         if (directoryName.Length > 100)
@@ -67,6 +64,10 @@ public sealed class TestInfo
         }
         OutputDir = Path.Combine(Env.OutputDir, $"{directoryName}-{Env.BrowserName}{(retry > 0 ? $"-retry{retry}" : string.Empty)}");
         TestId = Regex.Replace($"{id}-{testName}-{Env.BrowserName}", @"[^A-Za-z0-9_-]+", "-");
+        if (Directory.Exists(OutputDir))
+        {
+            Directory.Delete(OutputDir, true);
+        }
     }
 
     /// <summary>The upstream title, with the identifier.</summary>
@@ -95,18 +96,16 @@ public sealed class TestInfo
 
     public List<TestAnnotation> Annotations { get; } = [];
 
-    /// <summary>'passed', 'failed', 'timedOut' or 'skipped'. Set when the test body has finished, for the teardown of the fixtures.</summary>
-    public string Status { get; internal set; }
-
-    /// <summary>'passed', or 'failed' after <c>It.Fail()</c>.</summary>
-    public string ExpectedStatus { get; internal set; } = "passed";
+    /// <summary>'passed', 'failed' or 'skipped', for a teardown. A test that timed out has no teardown.</summary>
+    public string Status => TestContext.CurrentContext.Result.Outcome.Status switch
+    {
+        TestStatus.Passed => "passed",
+        TestStatus.Skipped => "skipped",
+        _ => "failed",
+    };
 
     /// <summary>The directory for the files of this test. It is empty when the test starts.</summary>
     public string OutputDir { get; }
-
-    internal string ExpectedFailureReason { get; set; }
-
-    internal bool Started => _clock.IsRunning || _clock.ElapsedTicks > 0;
 
     public void SetTimeout(int timeout) => Timeout = timeout;
 
@@ -138,40 +137,4 @@ public sealed class TestInfo
         return Path.Combine(Env.UpstreamTestsDir, File.Replace('/', Path.DirectorySeparatorChar) + "-snapshots", withBrowser);
     }
 
-    internal void Start()
-    {
-        if (Directory.Exists(OutputDir))
-        {
-            Directory.Delete(OutputDir, true);
-        }
-        _clock.Start();
-    }
-
-    /// <summary>The milliseconds left, or null when there is no timeout.</summary>
-    internal double? Remaining()
-    {
-        if (Timeout <= 0 || Debugger.IsAttached)
-        {
-            return null;
-        }
-        return Timeout - _clock.Elapsed.TotalMilliseconds;
-    }
-
-    internal void RestartTimeout() => _clock.Restart();
-
-    internal void PauseTimeout()
-    {
-        if (Interlocked.Increment(ref _pauseDepth) == 1)
-        {
-            _clock.Stop();
-        }
-    }
-
-    internal void ResumeTimeout()
-    {
-        if (Interlocked.Decrement(ref _pauseDepth) == 0)
-        {
-            _clock.Start();
-        }
-    }
 }

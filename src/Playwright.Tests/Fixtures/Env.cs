@@ -90,6 +90,9 @@ internal static class Env
     /// <summary>The directory of the outputs of the tests, <c>test-results</c> upstream.</summary>
     public static string OutputDir { get; } = Path.Combine(AppContext.BaseDirectory, "test-results");
 
+    /// <summary><c>PWTEST_SERVER_REGISTRY</c> of the driver.</summary>
+    public static string ServerRegistry { get; } = Path.Combine(OutputDir, $"registry-{Environment.ProcessId}");
+
     private static string ReadBrowserName()
     {
         var name = Environment.GetEnvironmentVariable("BROWSER")?.ToLowerInvariant();

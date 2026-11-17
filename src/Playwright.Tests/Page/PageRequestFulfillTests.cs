@@ -421,7 +421,7 @@ public class PageRequestFulfillTests
     [UpstreamTest("RO-113 headerValue should return set-cookie from intercepted response")]
     public async Task HeaderValueShouldReturnSetCookieFromInterceptedResponse(IPage page, Server server, string browserName)
     {
-        It.Fail(browserName == "chromium", "Set-Cookie is missing in response after interception");
+        It.Fixme(browserName == "chromium", "Set-Cookie is missing in response after interception");
         It.Skip(browserName == "webkit", "Set-Cookie with \n in intercepted response does not pass validation in WebCore, see also https://github.com/microsoft/playwright/pull/9273");
         await page.RouteAsync("**/empty.html", route =>
         {

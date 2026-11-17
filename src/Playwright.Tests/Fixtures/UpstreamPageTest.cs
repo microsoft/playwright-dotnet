@@ -22,14 +22,22 @@
  * SOFTWARE.
  */
 
-namespace Microsoft.Playwright.Tests;
+namespace Microsoft.Playwright.Tests.Fixtures;
 
-public class PauseTests : PageTestEx
+/// <summary>
+/// For the tests of <c>tests/page</c>, which all use the <c>page</c> fixture: every test has
+/// <see cref="Context"/> and <see cref="Page"/>.
+/// </summary>
+public class UpstreamPageTest : UpstreamBrowserTest
 {
-    [Test]
-    public async Task ShouldNotFail()
+    public IBrowserContext Context { get; private set; }
+
+    public IPage Page { get; private set; }
+
+    [SetUp]
+    public async Task PageSetup()
     {
-        await Page.GotoAsync(Server.EmptyPage);
-        await Page.PauseAsync();
+        Context = await ContextFixture();
+        Page = await PageFixture();
     }
 }

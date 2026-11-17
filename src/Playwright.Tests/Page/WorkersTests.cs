@@ -86,7 +86,7 @@ public class WorkersTests
     }
 
     [UpstreamTest("WO-005 should have timestamp on worker console messages")]
-    [Fixme("dotnet: ConsoleMessage.Timestamp is a float, which holds the milliseconds since the epoch in steps of 131072 only: the value is up to 65 seconds away from the time of the message, and the test passes only when the rounded value falls in its window by chance", Strict = false)]
+    [Fixme("dotnet: ConsoleMessage.Timestamp is a float, which holds the milliseconds since the epoch in steps of 131072 only: the value is up to 65 seconds away from the time of the message, and the test passes only when the rounded value falls in its window by chance")]
     public async Task ShouldHaveTimestampOnWorkerConsoleMessages(IPage page, bool isAndroid, string channel)
     {
         It.Skip(isAndroid, "there is a time difference between android emulator and host machine");

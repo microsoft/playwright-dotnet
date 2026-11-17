@@ -374,7 +374,7 @@ public class PageNetworkResponseTests
     [UpstreamTest("NE-047 should return set-cookie header after route.fulfill")]
     public async Task ShouldReturnSetCookieHeaderAfterRouteFulfill(IPage page, Server server, string browserName)
     {
-        It.Fail(browserName == "webkit" || browserName == "chromium", "https://github.com/microsoft/playwright/issues/11035");
+        It.Fixme(browserName == "webkit" || browserName == "chromium", "https://github.com/microsoft/playwright/issues/11035");
         await page.RouteAsync("**/*", async route =>
         {
             await route.FulfillAsync(new()

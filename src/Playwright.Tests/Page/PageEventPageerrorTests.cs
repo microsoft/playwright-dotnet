@@ -133,7 +133,7 @@ function c() {
     [UpstreamTest("ER-003 should contain sourceURL")]
     public async Task ShouldContainSourceURL(IPage page, Server server, string browserName)
     {
-        It.Fail(browserName == "webkit");
+        It.Fixme(browserName == "webkit");
 
         var (error, _) = await PromiseAll(
             Once<string>(h => page.PageError += h, h => page.PageError -= h),
