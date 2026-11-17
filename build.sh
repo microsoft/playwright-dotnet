@@ -12,7 +12,9 @@ if [[ ($1 == '--help') || ($1 == '-h') ]]; then
   echo "                          src/Common/Version.props (DriverVersion), and build the driver from it"
   echo "  --generate            - generate the API and the transport channels from .upstream/"
   echo "  --roll <ref>          - roll to a microsoft/playwright branch, tag or commit: set DriverVersion,"
-  echo "                          build the driver and generate"
+  echo "                          roll Node.js, build the driver and generate"
+  echo "  --roll-node           - set DriverNodeVersion to the latest Node.js release of the same major"
+  echo "                          version, and build the driver"
   echo "  --changes [<from>]    - list the upstream commits to port since <from> (default: DriverVersion at HEAD)"
   echo "  --help                - show this help"
   echo
@@ -43,6 +45,24 @@ client_paths=(
 
 function read_driver_version() {
   sed -n 's|.*<DriverVersion>\(.*\)</DriverVersion>.*|\1|p'
+}
+
+# Sets DriverNodeVersion to the latest Node.js release of the same major version.
+function update_node_version() {
+  local old_node_version=$(sed -n 's|.*<DriverNodeVersion>\(.*\)</DriverNodeVersion>.*|\1|p' "${version_props_path}")
+  local node_major_version="${old_node_version%%.*}"
+  # The checksum list of the latest release names every file after the release, e.g.
+  #   d38bd5e5...  node-v26.13.0-darwin-arm64.tar.gz
+  local new_node_version=$(curl -fsSL "https://nodejs.org/dist/latest-v${node_major_version}.x/SHASUMS256.txt" \
+    | sed -nE 's/.*node-v([0-9]+\.[0-9]+\.[0-9]+)-.*/\1/p' | head -1)
+  if [[ -z "${new_node_version}" ]]; then
+    echo "Failed to determine the latest Node.js ${node_major_version}.x version"
+    exit 1
+  fi
+  echo "Rolling Node.js from ${old_node_version} to ${new_node_version}"
+  local xml_file_contents=$(cat "${version_props_path}")
+  xml_file_contents=$(echo "${xml_file_contents}" | sed "s|<DriverNodeVersion>.*</DriverNodeVersion>|<DriverNodeVersion>${new_node_version}</DriverNodeVersion>|")
+  echo "${xml_file_contents}" > "${version_props_path}"
 }
 
 function build_driver() {
@@ -112,19 +132,12 @@ function roll() {
   local old_driver_version=$(read_driver_version < "${version_props_path}")
   local new_driver_version
   new_driver_version=$(resolve_ref "$1")
-  # The driver build bundles the latest release of this major version.
-  local new_node_major_version=$(curl -fsSL "https://nodejs.org/dist/index.json" \
-    | node -e "let s='';process.stdin.on('data',d=>s+=d).on('end',()=>console.log(JSON.parse(s).find(r=>r.lts).version.slice(1).split('.')[0]))")
-  if [[ -z "${new_node_major_version}" ]]; then
-    echo "Failed to determine the Node.js major version for the driver"
-    exit 1
-  fi
-  echo "Rolling from microsoft/playwright ${old_driver_version} to ${new_driver_version} (Node.js ${new_node_major_version})..."
+  echo "Rolling from microsoft/playwright ${old_driver_version} to ${new_driver_version}..."
 
   local xml_file_contents=$(cat "${version_props_path}")
   xml_file_contents=$(echo "${xml_file_contents}" | sed "s|<DriverVersion>.*</DriverVersion>|<DriverVersion>${new_driver_version}</DriverVersion>|")
-  xml_file_contents=$(echo "${xml_file_contents}" | sed "s|<DriverNodeMajorVersion>.*</DriverNodeMajorVersion>|<DriverNodeMajorVersion>${new_node_major_version}</DriverNodeMajorVersion>|")
   echo "${xml_file_contents}" > "${version_props_path}"
+  update_node_version
 
   # The channels generator needs the dependencies that the driver build installs.
   build_driver
@@ -154,6 +167,9 @@ function changes() {
 CMD="$1"
 if [[ ("$CMD" == "--roll") ]]; then
   roll "$2"
+elif [[ ("$CMD" == "--roll-node") ]]; then
+  update_node_version
+  build_driver
 elif [[ ("$CMD" == "--build-driver") ]]; then
   build_driver
 elif [[ ("$CMD" == "--generate") ]]; then
