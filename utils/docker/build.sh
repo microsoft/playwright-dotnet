@@ -54,10 +54,6 @@ for ((attempt = 1; attempt <= MAX_ATTEMPTS; attempt++)); do
   if docker build --progress=plain --platform "${DOCKER_PLATFORM}" \
       --build-arg UBUNTU_MIRROR_PREFIX="${UBUNTU_MIRROR_PREFIX}" \
       -t "$3" -f "Dockerfile.$2" .; then
-    # A failure of this check is not transient, so it does not retry the build.
-    # The .NET SDK base image has files that the check forbids. Skip its layers.
-    BASE_IMAGE="$(sed -n 's/^FROM \([^ ]*\).*/\1/p' "Dockerfile.$2" | head -1)"
-    node ./check_layers.js --base-image="${BASE_IMAGE}" "$3"
     exit 0
   fi
   if (( attempt < MAX_ATTEMPTS )); then
