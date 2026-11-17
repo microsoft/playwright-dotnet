@@ -46,7 +46,7 @@ public class PageNetworkResponseTests
     [UpstreamTest("NE-031 should return multiple header value")]
     public async Task ShouldReturnMultipleHeaderValue(IPage page, Server server, string browserName, string platform)
     {
-        It.Skip(browserName == "webkit" && platform == "win32", "libcurl does not support non-set-cookie multivalue headers");
+        Info.Skip(browserName == "webkit" && platform == "win32", "libcurl does not support non-set-cookie multivalue headers");
 
         server.SetRoute("/headers", (req, res) =>
         {
@@ -85,7 +85,7 @@ public class PageNetworkResponseTests
     [UpstreamTest("NE-034 should return uncompressed text for brotli encoding")]
     public async Task ShouldReturnUncompressedTextForBrotliEncoding(IPage page, Server server, string browserName, bool isAndroid)
     {
-        It.Fixme(isAndroid, "net::ERR_CONTENT_DECODING_FAILED");
+        Info.Fixme(isAndroid, "net::ERR_CONTENT_DECODING_FAILED");
 
         var text = "{\"foo\": \"bar\"}\n";
         // .NET: zlib.brotliCompressSync(Buffer.from(text)) is a BrotliStream.
@@ -209,8 +209,8 @@ public class PageNetworkResponseTests
     [UpstreamTest("NE-041 should return non-utf8 body even when content-type says utf8")]
     public async Task ShouldReturnNonUtf8BodyEvenWhenContentTypeSaysUtf8(IPage page, Server server, string browserName, int browserMajorVersion)
     {
-        It.Fixme(browserName == "webkit", "webkit encodes the response body");
-        It.Fixme(browserName == "chromium" && browserMajorVersion < 151, "older chromium re-encodes the non-utf8 response body and lacks Response.bytes()");
+        Info.Fixme(browserName == "webkit", "webkit encodes the response body");
+        Info.Fixme(browserName == "chromium" && browserMajorVersion < 151, "older chromium re-encodes the non-utf8 response body and lacks Response.bytes()");
 
         // Binary data with bytes that are invalid UTF-8.
         var bytes = new byte[] { 0x80, 0x81, 0x82, 0xFF, 0xFE, 0x00, 0x01, 0x02 };
@@ -248,8 +248,8 @@ public class PageNetworkResponseTests
     [UpstreamTest("NE-043 should report all headers")]
     public async Task ShouldReportAllHeaders(IPage page, Server server, string browserName, string platform, bool isElectron, int browserMajorVersion)
     {
-        It.Skip(isElectron && browserMajorVersion < 99, "This needs Chromium >= 99");
-        It.Skip(browserName == "webkit" && platform == "win32", "libcurl does not support non-set-cookie multivalue headers");
+        Info.Skip(isElectron && browserMajorVersion < 99, "This needs Chromium >= 99");
+        Info.Skip(browserName == "webkit" && platform == "win32", "libcurl does not support non-set-cookie multivalue headers");
 
         var expectedHeaders = new Dictionary<string, object>
         {
@@ -290,7 +290,7 @@ public class PageNetworkResponseTests
     [UpstreamTest("NE-044 should report multiple set-cookie headers")]
     public async Task ShouldReportMultipleSetCookieHeaders(IPage page, Server server, bool isElectron, int browserMajorVersion)
     {
-        It.Skip(isElectron && browserMajorVersion < 99, "This needs Chromium >= 99");
+        Info.Skip(isElectron && browserMajorVersion < 99, "This needs Chromium >= 99");
 
         server.SetRoute("/headers", (req, res) =>
         {
@@ -317,7 +317,7 @@ public class PageNetworkResponseTests
     [UpstreamTest("NE-045 should behave the same way for headers and allHeaders")]
     public async Task ShouldBehaveTheSameWayForHeadersAndAllHeaders(IPage page, Server server, string browserName, string platform)
     {
-        It.Skip(browserName == "webkit" && platform == "win32", "libcurl does not support non-set-cookie multivalue headers");
+        Info.Skip(browserName == "webkit" && platform == "win32", "libcurl does not support non-set-cookie multivalue headers");
         server.SetRoute("/headers", (req, res) =>
         {
             var headers = new Dictionary<string, object>
@@ -354,9 +354,9 @@ public class PageNetworkResponseTests
     [UpstreamTest("NE-046 should provide a Response with a file URL")]
     public async Task ShouldProvideAResponseWithAFileURL(IPage page, Func<string, string> asset, bool isAndroid, bool isElectron, bool isWindows, string browserName, string mode, string channel)
     {
-        It.Skip(isAndroid, "No files on Android");
-        It.Skip(browserName == "firefox", "Firefox does return null for file:// URLs");
-        It.Skip(channel == "webkit-wsl");
+        Info.Skip(isAndroid, "No files on Android");
+        Info.Skip(browserName == "firefox", "Firefox does return null for file:// URLs");
+        Info.Skip(channel == "webkit-wsl");
 
         var fileurl = new Uri(asset("frames/two-frames.html")).AbsoluteUri;
         var response = await page.GotoAsync(fileurl);
@@ -374,7 +374,7 @@ public class PageNetworkResponseTests
     [UpstreamTest("NE-047 should return set-cookie header after route.fulfill")]
     public async Task ShouldReturnSetCookieHeaderAfterRouteFulfill(IPage page, Server server, string browserName)
     {
-        It.Fixme(browserName == "webkit" || browserName == "chromium", "https://github.com/microsoft/playwright/issues/11035");
+        Info.Fixme(browserName == "webkit" || browserName == "chromium", "https://github.com/microsoft/playwright/issues/11035");
         await page.RouteAsync("**/*", async route =>
         {
             await route.FulfillAsync(new()
@@ -423,7 +423,7 @@ public class PageNetworkResponseTests
     [UpstreamTest("NE-049 should report if request was fromServiceWorker")]
     public async Task ShouldReportIfRequestWasFromServiceWorker(IPage page, Server server, bool isAndroid, bool isElectron)
     {
-        It.Skip(isAndroid || isElectron);
+        Info.Skip(isAndroid || isElectron);
         {
             var res = await page.GotoAsync(server.Prefix + "/serviceworkers/fetch/sw.html");
             Assert.That(res.FromServiceWorker, Is.EqualTo(false));
@@ -440,8 +440,8 @@ public class PageNetworkResponseTests
     [UpstreamTest("NE-050 should return body for prefetch script")]
     public async Task ShouldReturnBodyForPrefetchScript(IPage page, Server server, string browserName, int browserMajorVersion)
     {
-        It.Skip(browserName == "webkit", "No prefetch in WebKit: https://caniuse.com/link-rel-prefetch");
-        It.Skip(browserName == "chromium" && browserMajorVersion < 138, "Requires Sec-Purpose header, shipped in Chrome 138");
+        Info.Skip(browserName == "webkit", "No prefetch in WebKit: https://caniuse.com/link-rel-prefetch");
+        Info.Skip(browserName == "chromium" && browserMajorVersion < 138, "Requires Sec-Purpose header, shipped in Chrome 138");
         var (response, _) = await PromiseAll(
             page.WaitForResponseAsync("**/prefetch.js"),
             page.GotoAsync(server.Prefix + "/prefetch.html"));
@@ -452,7 +452,7 @@ public class PageNetworkResponseTests
     [UpstreamTest("NE-051 should return body for image with evicted body")]
     public async Task ShouldReturnBodyForImageWithEvictedBody(IPage page, Server server, bool isMac, string browserName)
     {
-        It.Fixme(isMac && browserName == "webkit", "WebKit on Mac evicts the body and returns empty buffer");
+        Info.Fixme(isMac && browserName == "webkit", "WebKit on Mac evicts the body and returns empty buffer");
         var imageBase64 = "R0lGODlhAQABAAAAACw="; // truncated 1x1 gif, Chromium evicts its body
         server.SetRoute("/pixel.gif", (req, res) =>
         {
@@ -513,7 +513,7 @@ public class PageNetworkResponseTests
             });
             for (var i = 0; i < 3; i++)
             {
-                await It.Step($"main frame iteration {i}", async () =>
+                await Info.Step($"main frame iteration {i}", async () =>
                 {
                     var respPromise = page.WaitForResponseAsync("**/api");
                     await page.EvaluateAsync(@"async () => {
@@ -539,7 +539,7 @@ public class PageNetworkResponseTests
             });
             for (var i = 0; i < 3; i++)
             {
-                await It.Step($"subframe iteration {i}", async () =>
+                await Info.Step($"subframe iteration {i}", async () =>
                 {
                     var respPromise = page.WaitForResponseAsync("**/frame/api");
                     await page.FrameByUrl("**/frame.html").EvaluateAsync(@"async () => {
@@ -636,7 +636,7 @@ public class PageNetworkResponseTests
     [UpstreamTest("NE-057 should give a readable error when response.body() races with navigation")]
     public async Task ShouldGiveAReadableErrorWhenResponseBodyRacesWithNavigation(IPage page, Server server, string browserName)
     {
-        It.Skip(browserName == "firefox", "Firefox keeps the response body available after navigating away, so it never throws");
+        Info.Skip(browserName == "firefox", "Firefox keeps the response body available after navigating away, so it never throws");
         var (response, _) = await PromiseAll(
             page.WaitForResponseAsync(server.Prefix + "/title.html"),
             page.GotoAsync(server.Prefix + "/title.html"));

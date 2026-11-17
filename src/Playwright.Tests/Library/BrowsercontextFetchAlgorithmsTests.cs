@@ -64,7 +64,7 @@ public class BrowsercontextFetchAlgorithmsTests
     }
 
     [BeforeEach]
-    public static void Skip(string mode) => It.Skip(mode != "default");
+    public static void Skip(string mode) => Info.Skip(mode != "default");
 
     public class Algorithms
     {

@@ -22,9 +22,11 @@ using static Microsoft.Playwright.Tests.Fixtures.Utils;
 namespace Microsoft.Playwright.Tests.Library;
 
 /// <summary>Port of tests/library/multiclient.spec.ts.</summary>
-[ItSlow]
 public class MulticlientTests
 {
+    [SetUp]
+    public void Slow() => Info.Slow(true, "All connect tests are slow");
+
     public delegate Task<IBrowser> ConnectFixture(string wsEndpoint, BrowserTypeConnectOptions options = null);
 
     // .NET: browserType.launchServer({ _sharedBrowser: true }) is not in the .NET API. startRemoteServer('launchServer', { sharedBrowser: true }) makes this call in Node.js, and closes the server.
@@ -59,7 +61,7 @@ public class MulticlientTests
     }
 
     [BeforeEach]
-    public static void Skip(string mode) => It.Skip(mode != "default");
+    public static void Skip(string mode) => Info.Skip(mode != "default");
 
     private static async Task Disconnect(IPage page)
     {
@@ -244,7 +246,7 @@ public class MulticlientTests
     }
 
     [UpstreamTest("MC-010 should chain routes with changed url")]
-    [ItFixme]
+    [Ignore("fixme")]
     public async Task ShouldChainRoutesWithChangedUrl((IPage pageA, IPage pageB) twoPages, Server server)
     {
         var (pageA, pageB) = twoPages;
@@ -415,8 +417,8 @@ public class MulticlientTests
     [UpstreamTest("MC-017 screencast should deliver cached last frame to a new client")]
     public async Task ScreencastShouldDeliverCachedLastFrameToANewClient((IPage pageA, IPage pageB) twoPages, Server server, string trace, string video)
     {
-        It.Skip(trace == "on", "trace=on has screencast active on the page already");
-        It.Skip(video == "on", "video=on has screencast active on the page already");
+        Info.Skip(trace == "on", "trace=on has screencast active on the page already");
+        Info.Skip(video == "on", "video=on has screencast active on the page already");
 
         var (pageA, pageB) = twoPages;
         await pageA.GotoAsync(server.EmptyPage);
@@ -456,7 +458,7 @@ public class MulticlientTests
     [UpstreamTest("MC-018 should stop tracing upon disconnect")]
     public async Task ShouldStopTracingUponDisconnect((IPage pageA, IPage pageB) twoPages, string trace)
     {
-        It.Skip(trace == "on");
+        Info.Skip(trace == "on");
 
         var (pageA, pageB) = twoPages;
 

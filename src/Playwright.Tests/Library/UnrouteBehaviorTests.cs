@@ -355,7 +355,7 @@ public class UnrouteBehaviorTests
     }
 
     [UpstreamTest("RO-200 should not continue requests in flight (page)")]
-    [Fixme("dotnet: Page.OnRouteAsync turns the interception off when a handler ends and the routes are empty, also after unrouteAll() replaced them and still waits for the other handlers (upstream checks routeHandlers === this._routes), so the request '/b' in flight is continued: its body is 'File not found: <assets>/b'")]
+    [LocalFixme("dotnet: Page.OnRouteAsync turns the interception off when a handler ends and the routes are empty, also after unrouteAll() replaced them and still waits for the other handlers (upstream checks routeHandlers === this._routes), so the request '/b' in flight is continued: its body is 'File not found: <assets>/b'")]
     public async Task ShouldNotContinueRequestsInFlightPage(IPage page, Server server)
     {
         var routePromise = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
@@ -379,7 +379,7 @@ public class UnrouteBehaviorTests
     }
 
     [UpstreamTest("RO-201 should not continue requests in flight (context)")]
-    [Fixme("dotnet: BrowserContext.OnRouteAsync turns the interception off when a handler ends and the routes are empty, also after unrouteAll() replaced them and still waits for the other handlers (upstream checks routeHandlers === this._routes), so the request '/b' in flight is continued: its body is 'File not found: <assets>/b'")]
+    [LocalFixme("dotnet: BrowserContext.OnRouteAsync turns the interception off when a handler ends and the routes are empty, also after unrouteAll() replaced them and still waits for the other handlers (upstream checks routeHandlers === this._routes), so the request '/b' in flight is continued: its body is 'File not found: <assets>/b'")]
     public async Task ShouldNotContinueRequestsInFlightContext(IPage page, IBrowserContext context, Server server)
     {
         var routePromise = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);

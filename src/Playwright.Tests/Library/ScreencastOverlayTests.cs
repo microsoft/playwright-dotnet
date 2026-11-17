@@ -23,7 +23,7 @@ namespace Microsoft.Playwright.Tests.Library;
 public class ScreencastOverlayTests
 {
     [BeforeEach]
-    public static void Skip(string mode) => It.Skip(mode != "default", "Overlay uses an open shadow root only in default mode");
+    public static void Skip(string mode) => Info.Skip(mode != "default", "Overlay uses an open shadow root only in default mode");
 
     private static int[] Pixel(byte[] screenshot, int x, int y)
     {

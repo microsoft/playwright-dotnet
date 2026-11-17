@@ -147,7 +147,7 @@ public class PageBasicTests : UpstreamPageTest
     [UpstreamTest("PA-012 page.frame should respect name")]
     public async Task PageFrameShouldRespectName()
     {
-        It.Skip(IsBidi, "page.frame({ name }) is racy with BiDi");
+        Info.Skip(IsBidi, "page.frame({ name }) is racy with BiDi");
 
         await Page.SetContentAsync("<iframe name=target></iframe>");
         Assert.That(Page.Frame("bogus"), Is.Null);
@@ -167,8 +167,8 @@ public class PageBasicTests : UpstreamPageTest
     [UpstreamTest("PA-014 should have sane user agent")]
     public async Task ShouldHaveSaneUserAgent()
     {
-        It.Skip(IsAndroid);
-        It.Skip(IsElectron);
+        Info.Skip(IsAndroid);
+        Info.Skip(IsElectron);
 
         var userAgent = await Page.EvaluateAsync<string>("() => navigator.userAgent");
         // .NET: an element that the destructured array does not have is undefined upstream, and null here.
@@ -244,7 +244,7 @@ public class PageBasicTests : UpstreamPageTest
     [UpstreamTest("PA-018 has navigator.webdriver set to true")]
     public async Task HasNavigatorWebdriverSetToTrue()
     {
-        It.Fixme(IsAndroid);
+        Info.Fixme(IsAndroid);
 
         Assert.That(await Page.EvaluateAsync<bool>("() => navigator.webdriver"), Is.EqualTo(true));
     }

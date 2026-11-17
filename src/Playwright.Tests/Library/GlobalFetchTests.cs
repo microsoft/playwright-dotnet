@@ -29,7 +29,7 @@ public class GlobalFetchTests
     public static IBrowserContext Context() => throw new Exception("global fetch tests should not use context");
 
     [BeforeEach]
-    public static void Skip(string mode) => It.Skip(mode != "default");
+    public static void Skip(string mode) => Info.Skip(mode != "default");
 
     [UpstreamTest("FE-001 ${method} should work @smoke")]
     [Case("fetch")]
@@ -91,7 +91,7 @@ public class GlobalFetchTests
     }
 
     [UpstreamTest("FE-004 should support global timeout option")]
-    [Fixme("dotnet: the message is 'Timeout 100ms exceeded.', without the 'apiRequestContext.get: ' prefix of the call")]
+    [LocalFixme("dotnet: the message is 'Timeout 100ms exceeded.', without the 'apiRequestContext.get: ' prefix of the call")]
     public async Task ShouldSupportGlobalTimeoutOption(IPlaywright playwright, Server server)
     {
         var request = await playwright.APIRequest.NewContextAsync(new() { Timeout = 100 });
@@ -365,7 +365,7 @@ public class GlobalFetchTests
     }
 
     [UpstreamTest("FE-021 should return security details from response")]
-    [Fixme("harness: the HTTPS server of the tests speaks TLS 1.2 on macOS, where SslStream of .NET has no TLS 1.3 for a server: the protocol is 'TLSv1.2', upstream expects 'TLSv1.3'", Platforms = "darwin")]
+    [LocalFixme("harness: the HTTPS server of the tests speaks TLS 1.2 on macOS, where SslStream of .NET has no TLS 1.3 for a server: the protocol is 'TLSv1.2', upstream expects 'TLSv1.3' (only on darwin)")]
     public async Task ShouldReturnSecurityDetailsFromResponse(IPlaywright playwright, Server httpsServer)
     {
         var request = await playwright.APIRequest.NewContextAsync(new() { IgnoreHTTPSErrors = true });
@@ -379,7 +379,7 @@ public class GlobalFetchTests
     }
 
     [UpstreamTest("FE-022 should return security details for a resumed TLS session")]
-    [Fixme("harness: the HTTPS server of the tests speaks TLS 1.2 on macOS, where SslStream of .NET has no TLS 1.3 for a server: the protocol is 'TLSv1.2', upstream expects 'TLSv1.3'", Platforms = "darwin")]
+    [LocalFixme("harness: the HTTPS server of the tests speaks TLS 1.2 on macOS, where SslStream of .NET has no TLS 1.3 for a server: the protocol is 'TLSv1.2', upstream expects 'TLSv1.3' (only on darwin)")]
     public async Task ShouldReturnSecurityDetailsForAResumedTLSSession(IPlaywright playwright, Server httpsServer)
     {
         var expected = new { issuer = "playwright-test", protocol = "TLSv1.3", subjectName = "playwright-test", validFrom = 1691708270, validTo = 2007068270 };
@@ -543,8 +543,7 @@ public class GlobalFetchTests
     ];
 
     [UpstreamTest("FE-033 should json stringify ${type} body when content-type is application/json")]
-    [Fixme("dotnet: FetchAsync ignores Data = \"\" (string.IsNullOrEmpty) and posts an empty body, upstream posts '\"\"'", Case = "\"string (falsey)\"")]
-    [Fixme("dotnet: DataObject = null is 'no data': the API can not post the JSON value null and posts an empty body, upstream posts 'null'", Case = "\"null\"")]
+    [LocalFixme("dotnet: FetchAsync ignores Data = \"\" (string.IsNullOrEmpty) and posts an empty body, upstream posts '\"\"' (only for \"string (falsey)\"); dotnet: DataObject = null is 'no data': the API can not post the JSON value null and posts an empty body, upstream posts 'null' (only for \"null\")")]
     [CaseSource(nameof(Serialization))]
     public async Task ShouldJsonStringifyBodyWhenContentTypeIsApplicationJson(string type, object value, IPlaywright playwright, Server server)
     {
@@ -717,7 +716,7 @@ public class GlobalFetchTests
     }
 
     [UpstreamTest("FE-041 should throw an error when maxRedirects is less than 0")]
-    [Fixme("dotnet: the message is \"'MaxRedirects' must be greater than or equal to '0'\", upstream expects \"'maxRedirects' must be greater than or equal to '0'\"")]
+    [LocalFixme("dotnet: the message is \"'MaxRedirects' must be greater than or equal to '0'\", upstream expects \"'maxRedirects' must be greater than or equal to '0'\"")]
     public async Task ShouldThrowAnErrorWhenMaxRedirectsIsLessThan0(IPlaywright playwright, Server server)
     {
         server.SetRedirect("/a/redirect1", "/b/c/redirect2");

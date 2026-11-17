@@ -23,7 +23,7 @@ namespace Microsoft.Playwright.Tests.Library;
 public class BrowsercontextFetchHappyEyeballsTests
 {
     [BeforeEach]
-    public static void Skip(string mode) => It.Skip(mode != "default");
+    public static void Skip(string mode) => Info.Skip(mode != "default");
 
     // .NET: __testHookLookup, the DNS lookup hook of the Node.js client, and interceptedHostnameLookup, the variable that it sets,
     // are left out: the .NET API does not have the option, and the tests that pass it are not ported.
@@ -42,7 +42,7 @@ public class BrowsercontextFetchHappyEyeballsTests
     [UpstreamTest("FE-188 should work with ip6 and port as the host")]
     public async Task ShouldWorkWithIp6AndPortAsTheHost(IAPIRequestContext request, Server server)
     {
-        It.Skip(!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("INSIDE_DOCKER")), "docker does not support IPv6 by default");
+        Info.Skip(!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("INSIDE_DOCKER")), "docker does not support IPv6 by default");
         var response = await request.GetAsync($"http://[::1]:{server.Port}/simple.json");
         Assert.That(response.Url, Is.EqualTo($"http://[::1]:{server.Port}/simple.json"));
         await Expect(response).ToBeOKAsync();

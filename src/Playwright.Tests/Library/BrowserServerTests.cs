@@ -25,7 +25,7 @@ namespace Microsoft.Playwright.Tests.Library;
 public class BrowserServerTests
 {
     [BeforeEach]
-    public static void Skip(string mode) => It.Skip(mode != "default");
+    public static void Skip(string mode) => Info.Skip(mode != "default");
 
     [BeforeEach]
     public void BeforeEach(TestInfo testInfo, string serverRegistry)

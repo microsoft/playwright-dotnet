@@ -25,7 +25,7 @@ namespace Microsoft.Playwright.Tests.Library;
 public class Defaultbrowsercontext2Tests
 {
     [BeforeEach]
-    public static void Skip(string mode) => It.Skip(mode != "default", "Remote persistent contexts are not supported");
+    public static void Skip(string mode) => Info.Skip(mode != "default", "Remote persistent contexts are not supported");
 
     [UpstreamTest("DC-012 should support hasTouch option")]
     public async Task ShouldSupportHasTouchOption(Server server, LaunchPersistent launchPersistent)
@@ -150,8 +150,8 @@ public class Defaultbrowsercontext2Tests
     [UpstreamTest("DC-025 should restore state from userDataDir")]
     public async Task ShouldRestoreStateFromUserDataDir(IBrowserType browserType, Server server, CreateUserDataDir createUserDataDir, string channel, BrowserTypeLaunchPersistentContextOptions launchPersistentContextOptions)
     {
-        It.Slow();
-        It.Fixme(channel == "webkit-wsl", "Pending local storage writes are lost on close, see https://github.com/microsoft/playwright-browsers/issues/2275");
+        Info.Slow();
+        Info.Fixme(channel == "webkit-wsl", "Pending local storage writes are lost on close, see https://github.com/microsoft/playwright-browsers/issues/2275");
 
         var userDataDir = await createUserDataDir();
         var browserContext = await browserType.LaunchPersistentContextAsync(userDataDir, launchPersistentContextOptions);
@@ -189,7 +189,7 @@ public class Defaultbrowsercontext2Tests
     [UpstreamTest("DC-027 should goto about:blank on relaunched persistent context")]
     public async Task ShouldGotoAboutBlankOnRelaunchedPersistentContext(IBrowserType browserType, CreateUserDataDir createUserDataDir, string browserName, bool isBidi, BrowserTypeLaunchPersistentContextOptions launchPersistentContextOptions)
     {
-        It.Fixme(browserName == "firefox" && !isBidi);
+        Info.Fixme(browserName == "firefox" && !isBidi);
 
         var userDataDir = await createUserDataDir();
 
@@ -216,7 +216,7 @@ public class Defaultbrowsercontext2Tests
     [UpstreamTest("DC-029 should throw if page argument is passed")]
     public async Task ShouldThrowIfPageArgumentIsPassed(IBrowserType browserType, Server server, CreateUserDataDir createUserDataDir, string browserName, bool isBidi, BrowserTypeLaunchPersistentContextOptions launchPersistentContextOptions)
     {
-        It.Skip(browserName == "firefox" && !isBidi);
+        Info.Skip(browserName == "firefox" && !isBidi);
 
         var options = new BrowserTypeLaunchPersistentContextOptions(launchPersistentContextOptions) { Args = new[] { server.EmptyPage } };
         var error = await Catch(async () => await browserType.LaunchPersistentContextAsync(await createUserDataDir(), options));

@@ -33,7 +33,7 @@ public class PageWaitForUrlTests
     }
 
     [UpstreamTest("WA-111 should respect timeout")]
-    [Fixme("dotnet: the message is 'Timeout 2500ms exceeded.', without the 'page.waitForURL: ' prefix of the call")]
+    [LocalFixme("dotnet: the message is 'Timeout 2500ms exceeded.', without the 'page.waitForURL: ' prefix of the call")]
     public async Task ShouldRespectTimeout(IPage page, Server server)
     {
         var promise = Catch(() => page.WaitForURLAsync("**/frame.html", new() { Timeout = 2500 }));

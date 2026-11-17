@@ -25,7 +25,7 @@ namespace Microsoft.Playwright.Tests.Page;
 public class PageEventPageerrorTests
 {
     [UpstreamTest("ER-001 should fire")]
-    [Fixme("dotnet: the page error is a string, the stack of the error, which starts with 'Error: Fancy error!\\n    at c (': upstream expects error.message 'Fancy error!'")]
+    [LocalFixme("dotnet: the page error is a string, the stack of the error, which starts with 'Error: Fancy error!\\n    at c (': upstream expects error.message 'Fancy error!'")]
     public async Task ShouldFire(IPage page, Server server, string browserName, int browserMajorVersion, bool isBidi)
     {
         var url = server.Prefix + "/error.html";
@@ -133,7 +133,7 @@ function c() {
     [UpstreamTest("ER-003 should contain sourceURL")]
     public async Task ShouldContainSourceURL(IPage page, Server server, string browserName)
     {
-        It.Fixme(browserName == "webkit");
+        Info.Fixme(browserName == "webkit");
 
         var (error, _) = await PromiseAll(
             Once<string>(h => page.PageError += h, h => page.PageError -= h),
@@ -143,7 +143,7 @@ function c() {
     }
 
     [UpstreamTest("ER-004 should contain the Error.name property")]
-    [Fixme("dotnet: the page error is a string, the stack of the error, which starts with 'my-name: my-message\\n    at ': upstream expects error.message 'my-message'")]
+    [LocalFixme("dotnet: the page error is a string, the stack of the error, which starts with 'my-name: my-message\\n    at ': upstream expects error.message 'my-message'")]
     public async Task ShouldContainTheErrorNameProperty(IPage page)
     {
         var (error, _) = await PromiseAll(
@@ -161,9 +161,7 @@ function c() {
     }
 
     [UpstreamTest("ER-005 should support an empty Error.name property")]
-    [Fixme("dotnet: the page error is a string, the stack of the error, which starts with 'Error: my-message\\n    at eval (': upstream expects error.message 'my-message'", Browsers = "chromium")]
-    [Fixme("dotnet: the page error is a string, the stack of the error, which starts with ': my-message\\n    at  (': upstream expects error.message 'my-message'", Browsers = "firefox")]
-    [Fixme("dotnet: the page error is a string, the stack of the error, 'my-message\\n    at unknown (undefined:3:32)': upstream expects error.message 'my-message'", Browsers = "webkit")]
+    [LocalFixme("dotnet: the page error is a string, the stack of the error, which starts with 'Error: my-message\\n    at eval (': upstream expects error.message 'my-message' (only in chromium); dotnet: the page error is a string, the stack of the error, which starts with ': my-message\\n    at  (': upstream expects error.message 'my-message' (only in firefox); dotnet: the page error is a string, the stack of the error, 'my-message\\n    at unknown (undefined:3:32)': upstream expects error.message 'my-message' (only in webkit)")]
     public async Task ShouldSupportAnEmptyErrorNameProperty(IPage page)
     {
         var (error, _) = await PromiseAll(
@@ -181,9 +179,7 @@ function c() {
     }
 
     [UpstreamTest("ER-006 should handle odd values")]
-    [Fixme("dotnet: the page error is a string, ': null' for a value without a stack (name: message, with an empty name): upstream expects error.message 'null'", Browsers = "chromium")]
-    [Fixme("dotnet: the page error is a string, the stack of the error, which starts with 'uncaught exception: null\\n    at  (': upstream expects error.message 'null'", Browsers = "firefox")]
-    [Fixme("dotnet: the page error is a string, the stack of the error, 'null\\n    at unknown (:2:55)': upstream expects error.message 'null'", Browsers = "webkit")]
+    [LocalFixme("dotnet: the page error is a string, ': null' for a value without a stack (name: message, with an empty name): upstream expects error.message 'null' (only in chromium); dotnet: the page error is a string, the stack of the error, which starts with 'uncaught exception: null\\n    at  (': upstream expects error.message 'null' (only in firefox); dotnet: the page error is a string, the stack of the error, 'null\\n    at unknown (:2:55)': upstream expects error.message 'null' (only in webkit)")]
     public async Task ShouldHandleOddValues(IPage page)
     {
         // .NET: the case [undefined, 'undefined'] is left out: a null argument of EvaluateAsync is null in the page, and .NET has no undefined.
@@ -206,9 +202,7 @@ function c() {
     }
 
     [UpstreamTest("ER-007 should handle object")]
-    [Fixme("dotnet: the page error is a string, ': Object' for a value without a stack (name: message, with an empty name): upstream expects error.message 'Object'", Browsers = "chromium")]
-    [Fixme("dotnet: the page error is a string, the stack of the error, which starts with 'uncaught exception: [object Object]\\n    at  (': upstream expects error.message '[object Object]'", Browsers = "firefox")]
-    [Fixme("dotnet: the page error is a string, the stack of the error, '[object Object]\\n    at unknown (:2:50)': upstream expects error.message '[object Object]'", Browsers = "webkit")]
+    [LocalFixme("dotnet: the page error is a string, ': Object' for a value without a stack (name: message, with an empty name): upstream expects error.message 'Object' (only in chromium); dotnet: the page error is a string, the stack of the error, which starts with 'uncaught exception: [object Object]\\n    at  (': upstream expects error.message '[object Object]' (only in firefox); dotnet: the page error is a string, the stack of the error, '[object Object]\\n    at unknown (:2:50)': upstream expects error.message '[object Object]' (only in webkit)")]
     public async Task ShouldHandleObject(IPage page, string browserName)
     {
         var (error, _) = await PromiseAll(
@@ -221,9 +215,7 @@ function c() {
     }
 
     [UpstreamTest("ER-008 should handle window")]
-    [Fixme("dotnet: the page error is a string, ': Window' for a value without a stack (name: message, with an empty name): upstream expects error.message 'Window'", Browsers = "chromium")]
-    [Fixme("dotnet: the page error is a string, the stack of the error, which starts with 'uncaught exception: [object Window]\\n    at  (': upstream expects error.message '[object Window]'", Browsers = "firefox")]
-    [Fixme("dotnet: the page error is a string, the stack of the error, '[object Window]\\n    at unknown (:2:54)': upstream expects error.message '[object Window]'", Browsers = "webkit")]
+    [LocalFixme("dotnet: the page error is a string, ': Window' for a value without a stack (name: message, with an empty name): upstream expects error.message 'Window' (only in chromium); dotnet: the page error is a string, the stack of the error, which starts with 'uncaught exception: [object Window]\\n    at  (': upstream expects error.message '[object Window]' (only in firefox); dotnet: the page error is a string, the stack of the error, '[object Window]\\n    at unknown (:2:54)': upstream expects error.message '[object Window]' (only in webkit)")]
     public async Task ShouldHandleWindow(IPage page, string browserName)
     {
         var (error, _) = await PromiseAll(
@@ -256,7 +248,7 @@ function c() {
     }
 
     [UpstreamTest("ER-011 pageErrors should work")]
-    [Fixme("dotnet: a page error is a string, the stack of the error, which starts with 'Error: error201\\n    at ': upstream expects error.message 'error201'")]
+    [LocalFixme("dotnet: a page error is a string, the stack of the error, which starts with 'Error: error201\\n    at ': upstream expects error.message 'error201'")]
     public async Task PageErrorsShouldWork(IPage page)
     {
         await page.EvaluateAsync(@"async () => {
@@ -280,7 +272,7 @@ function c() {
     }
 
     [UpstreamTest("ER-012 clearPageErrors should work")]
-    [Fixme("dotnet: a page error is a string, the stack of the error, which starts with 'Error: error1\\n    at ': upstream expects error.message 'error1'")]
+    [LocalFixme("dotnet: a page error is a string, the stack of the error, which starts with 'Error: error1\\n    at ': upstream expects error.message 'error1'")]
     public async Task ClearPageErrorsShouldWork(IPage page)
     {
         await page.EvaluateAsync(@"() => {
@@ -355,7 +347,7 @@ function c() {
     }
 
     [UpstreamTest("ER-022 should not fire for a caught fetch rejected by a pending navigation")]
-    [Fixme("dotnet: the page error is a string, the stack of the error, which starts with 'Error: genuine error\\n    at ': upstream expects error.message 'genuine error'")]
+    [LocalFixme("dotnet: the page error is a string, the stack of the error, which starts with 'Error: genuine error\\n    at ': upstream expects error.message 'genuine error'")]
     public async Task ShouldNotFireForACaughtFetchRejectedByAPendingNavigation(IPage page, Server server)
     {
         await page.GotoAsync(server.EmptyPage);

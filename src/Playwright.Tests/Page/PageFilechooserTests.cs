@@ -26,8 +26,8 @@ public class PageFilechooserTests
     [UpstreamTest("FC-001 should upload multiple large files")]
     public async Task ShouldUploadMultipleLargeFiles(IPage page, Server server, bool isAndroid, string mode, TestInfo testInfo)
     {
-        It.Skip(isAndroid);
-        It.Slow();
+        Info.Skip(isAndroid);
+        Info.Slow();
 
         var filesCount = 10;
         await page.GotoAsync(server.Prefix + "/input/fileupload-multi.html");
@@ -383,7 +383,7 @@ public class PageFilechooserTests
     [UpstreamTest("FC-024 should emit event after navigation")]
     public async Task ShouldEmitEventAfterNavigation(IPage page, Server server, string browserName, int browserMajorVersion)
     {
-        It.Skip(browserName == "chromium" && browserMajorVersion < 99);
+        Info.Skip(browserName == "chromium" && browserMajorVersion < 99);
 
         var logs = new List<string>();
         page.FileChooser += (_, _) => logs.Add("filechooser");
@@ -403,7 +403,7 @@ public class PageFilechooserTests
     [UpstreamTest("FC-025 should trigger listener added before navigation")]
     public async Task ShouldTriggerListenerAddedBeforeNavigation(IPage page, Server server, int browserMajorVersion, bool isElectron)
     {
-        It.Skip(isElectron && browserMajorVersion <= 98);
+        Info.Skip(isElectron && browserMajorVersion <= 98);
         // Add listener before cross process navigation.
         var chooserPromise = Once<IFileChooser>(h => page.FileChooser += h, h => page.FileChooser -= h);
         await page.GotoAsync(server.Prefix + "/empty.html");
@@ -452,8 +452,8 @@ public class PageFilechooserTests
         [UpstreamTest("FC-026 should not open file chooser without user activation")]
         public async Task ShouldNotOpenFileChooserWithoutUserActivation(IPage page, Server server, string browserName)
         {
-            It.Skip(Environment.GetEnvironmentVariable("PW_CLOCK") == "frozen");
-            It.Fixme(browserName == "webkit", "WebKit opens the file chooser from input.click() without user activation");
+            Info.Skip(Environment.GetEnvironmentVariable("PW_CLOCK") == "frozen");
+            Info.Fixme(browserName == "webkit", "WebKit opens the file chooser from input.click() without user activation");
             var choosers = 0;
             page.FileChooser += (_, _) => choosers++;
 
@@ -491,8 +491,8 @@ public class PageFilechooserTests
         [UpstreamTest("FC-028 should consume user activation when opening file chooser")]
         public async Task ShouldConsumeUserActivationWhenOpeningFileChooser(IPage page, Server server, string browserName, bool isElectron, bool isAndroid)
         {
-            It.Fixme(browserName == "webkit", "WebKit does not consume user activation when opening the file chooser");
-            It.Fixme(isElectron || isAndroid, "Chromium 148 in Electron 42 and Chrome on the Android emulator do not consume user activation");
+            Info.Fixme(browserName == "webkit", "WebKit does not consume user activation when opening the file chooser");
+            Info.Fixme(isElectron || isAndroid, "Chromium 148 in Electron 42 and Chrome on the Android emulator do not consume user activation");
             var choosers = 0;
             page.FileChooser += (_, _) => choosers++;
             await page.GotoAsync(server.Prefix + "/activation.html");

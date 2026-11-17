@@ -24,12 +24,12 @@ namespace Microsoft.Playwright.Tests.Library;
 public class LocatorHighlightTests
 {
     [BeforeEach]
-    public static void Skip(string mode) => It.Skip(mode != "default", "Highlight overlay uses an open shadow root only in default mode");
+    public static void Skip(string mode) => Info.Skip(mode != "default", "Highlight overlay uses an open shadow root only in default mode");
 
     [UpstreamTest("LO-193 highlight should accept a CSS string style")]
     public async Task HighlightShouldAcceptACSSStringStyle(IBrowser browser, Server server, bool isFrozenWebkit, BrowserNewContextOptions contextOptions)
     {
-        It.Skip(isFrozenWebkit);
+        Info.Skip(isFrozenWebkit);
 
         var context = await browser.NewContextAsync(contextOptions);
         var page = await context.NewPageAsync();

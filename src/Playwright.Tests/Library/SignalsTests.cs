@@ -23,9 +23,11 @@ using Microsoft.Playwright.Tests.Fixtures;
 namespace Microsoft.Playwright.Tests.Library;
 
 /// <summary>Port of tests/library/signals.spec.ts.</summary>
-[ItSlow]
 public class SignalsTests
 {
+    [SetUp]
+    public void Slow() => Info.Slow();
+
     [UpstreamTest("SI-001 should close the browser when the node process closes")]
     public async Task ShouldCloseTheBrowserWhenTheNodeProcessCloses(StartRemoteServer startRemoteServer, bool isWindows, Server server, string mode)
     {
@@ -64,7 +66,7 @@ public class SignalsTests
     [UpstreamTest("SI-002 should remove temp dir on process.exit")]
     public async Task ShouldRemoveTempDirOnProcessExit(StartRemoteServer startRemoteServer, Server server, string platform, TestInfo testInfo)
     {
-        It.Skip(platform == "win32", "Removing user data dir synchronously is blocked on Windows");
+        Info.Skip(platform == "win32", "Removing user data dir synchronously is blocked on Windows");
 
         var file = testInfo.OutputPath("exit.file");
         var remoteServer = await startRemoteServer("launchServer", new() { Url = server.EmptyPage, ExitOnFile = file });
@@ -80,7 +82,7 @@ public class SignalsTests
     public class Signals
     {
         [BeforeEach]
-        public static void Skip(string platform) => It.Skip(platform == "win32");
+        public static void Skip(string platform) => Info.Skip(platform == "win32");
 
         [UpstreamTest("SI-003 should report browser close signal 2")]
         public async Task ShouldReportBrowserCloseSignal2(StartRemoteServer startRemoteServer, Server server, bool isMac, int macVersion, string browserName)

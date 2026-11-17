@@ -228,7 +228,7 @@ public class BrowsercontextCookiesThirdPartyTests
 
         await checkCookies(page);
 
-        await It.Step("export via cookies/addCookies", async () =>
+        await Info.Step("export via cookies/addCookies", async () =>
         {
             var cookies = await page.Context.CookiesAsync();
             var context2 = await browser.NewContextAsync(contextOptions);
@@ -238,7 +238,7 @@ public class BrowsercontextCookiesThirdPartyTests
             await checkCookies(page2);
         });
 
-        await It.Step("export via storageState", async () =>
+        await Info.Step("export via storageState", async () =>
         {
             var storageState = await page.Context.StorageStateAsync();
             var context3 = await browser.NewContextAsync(new(contextOptions) { StorageState = storageState });
@@ -322,11 +322,11 @@ public class BrowsercontextCookiesThirdPartyTests
     }
 
     [UpstreamTest("CO-055 save/load third party 'Partitioned;' cookies")]
-    [Fixme("dotnet: BrowserContextCookiesResult and Cookie have no _crHasCrossSiteAncestor: a partitioned cookie that goes from CookiesAsync to AddCookiesAsync has a cross-site ancestor for Chromium, and the top-level page does not send it", Browsers = "chromium")]
+    [LocalFixme("dotnet: BrowserContextCookiesResult and Cookie have no _crHasCrossSiteAncestor: a partitioned cookie that goes from CookiesAsync to AddCookiesAsync has a cross-site ancestor for Chromium, and the top-level page does not send it (only in chromium)")]
     public async Task SaveLoadThirdPartyPartitionedCookies(IPage page, string browserName, Server httpsServer, bool isMac, bool webkitPartitions, bool isBidi, IBrowser browser, TestUrls urls, BrowserNewContextOptions contextOptions)
     {
-        It.Fixme(browserName == "firefox" && !isBidi, "Firefox cookie partitioning is disabled in Firefox(Juggler).");
-        It.Fixme(browserName == "webkit" && !isMac, "Linux and Windows WebKit builds do not partition third-party cookies at all.");
+        Info.Fixme(browserName == "firefox" && !isBidi, "Firefox cookie partitioning is disabled in Firefox(Juggler).");
+        Info.Fixme(browserName == "webkit" && !isMac, "Linux and Windows WebKit builds do not partition third-party cookies at all.");
 
         await RunPartitionedTest(page, httpsServer, browserName, isMac, webkitPartitions, isBidi, urls);
 
@@ -388,7 +388,7 @@ public class BrowsercontextCookiesThirdPartyTests
         // .NET: StorageStateAsync gives the JSON text of the storage state.
         checkStorageCookies(JsonSerializer.Deserialize<BrowserContextCookiesResult[]>(JsonDocument.Parse(await page.Context.StorageStateAsync()).RootElement.GetProperty("cookies").GetRawText(), new JsonSerializerOptions { Converters = { new JsonStringEnumConverter() } }));
 
-        await It.Step("export via cookies/addCookies", async () =>
+        await Info.Step("export via cookies/addCookies", async () =>
         {
             var cookies = await page.Context.CookiesAsync();
             var context2 = await browser.NewContextAsync(contextOptions);
@@ -398,7 +398,7 @@ public class BrowsercontextCookiesThirdPartyTests
             await checkCookies(page2);
         });
 
-        await It.Step("export via storageState", async () =>
+        await Info.Step("export via storageState", async () =>
         {
             var storageState = await page.Context.StorageStateAsync();
             var context3 = await browser.NewContextAsync(new(contextOptions) { StorageState = storageState });
@@ -408,7 +408,7 @@ public class BrowsercontextCookiesThirdPartyTests
     }
 
     [UpstreamTest("CO-056 add 'Partitioned;' cookie via API")]
-    [Fixme("dotnet: Cookie has no _crHasCrossSiteAncestor, which upstream sets to false for top-level-partitioned: the cookie has a cross-site ancestor for Chromium, and the top-level page does not send it", Browsers = "chromium")]
+    [LocalFixme("dotnet: Cookie has no _crHasCrossSiteAncestor, which upstream sets to false for top-level-partitioned: the cookie has a cross-site ancestor for Chromium, and the top-level page does not send it (only in chromium)")]
     public async Task AddPartitionedCookieViaAPI(IPage page, IBrowserContext context, string browserName, Server httpsServer, bool isMac, bool webkitPartitions, bool isBidi, TestUrls urls)
     {
         AddCommonCookieHandlers(httpsServer, urls);
@@ -566,7 +566,7 @@ public class BrowsercontextCookiesThirdPartyTests
 
         await checkCookies(page);
 
-        await It.Step("export via cookies/addCookies", async () =>
+        await Info.Step("export via cookies/addCookies", async () =>
         {
             var cookies = await page.Context.CookiesAsync();
             var context2 = await browser.NewContextAsync(contextOptions);
@@ -576,7 +576,7 @@ public class BrowsercontextCookiesThirdPartyTests
             await checkCookies(page2);
         });
 
-        await It.Step("export via storageState", async () =>
+        await Info.Step("export via storageState", async () =>
         {
             var storageState = await page.Context.StorageStateAsync();
             var context3 = await browser.NewContextAsync(new(contextOptions) { StorageState = storageState });
@@ -586,7 +586,7 @@ public class BrowsercontextCookiesThirdPartyTests
     }
 
     [UpstreamTest("CO-058 top level 'Partitioned;' cookie and same origin iframe")]
-    [Fixme("dotnet: BrowserContextCookiesResult and Cookie have no _crHasCrossSiteAncestor: a partitioned cookie that goes from CookiesAsync to AddCookiesAsync has a cross-site ancestor for Chromium, and the top-level page does not send it", Browsers = "chromium")]
+    [LocalFixme("dotnet: BrowserContextCookiesResult and Cookie have no _crHasCrossSiteAncestor: a partitioned cookie that goes from CookiesAsync to AddCookiesAsync has a cross-site ancestor for Chromium, and the top-level page does not send it (only in chromium)")]
     public async Task TopLevelPartitionedCookieAndSameOriginIframe(IPage page, string browserName, Server httpsServer, IBrowser browser, bool isBidi, TestUrls urls, BrowserNewContextOptions contextOptions)
     {
         AddCommonCookieHandlers(httpsServer, urls);
@@ -641,7 +641,7 @@ public class BrowsercontextCookiesThirdPartyTests
 
         await checkCookies(page);
 
-        await It.Step("export via cookies/addCookies", async () =>
+        await Info.Step("export via cookies/addCookies", async () =>
         {
             var cookies = await page.Context.CookiesAsync();
             var context2 = await browser.NewContextAsync(contextOptions);
@@ -651,7 +651,7 @@ public class BrowsercontextCookiesThirdPartyTests
             await checkCookies(page2);
         });
 
-        await It.Step("export via storageState", async () =>
+        await Info.Step("export via storageState", async () =>
         {
             var storageState = await page.Context.StorageStateAsync();
             var context3 = await browser.NewContextAsync(new(contextOptions) { StorageState = storageState });
@@ -663,8 +663,8 @@ public class BrowsercontextCookiesThirdPartyTests
     [UpstreamTest("CO-059 should be able to send third party cookies via an iframe")]
     public async Task ShouldBeAbleToSendThirdPartyCookiesViaAnIframe(IBrowser browser, Server httpsServer, string browserName, bool isMac, bool isBidi, BrowserNewContextOptions contextOptions)
     {
-        It.Fixme(browserName == "webkit" && isMac);
-        It.Skip(browserName == "firefox" && isBidi, "Firefox's Total Cookie Protection blocks this third-party cookie");
+        Info.Fixme(browserName == "webkit" && isMac);
+        Info.Skip(browserName == "firefox" && isBidi, "Firefox's Total Cookie Protection blocks this third-party cookie");
 
         var context = await browser.NewContextAsync(new(contextOptions)
         {
@@ -756,8 +756,8 @@ public class BrowsercontextCookiesThirdPartyTests
     [UpstreamTest("CO-062 should not block third party SameSite=None cookies")]
     public async Task ShouldNotBlockThirdPartySameSiteNoneCookies(ContextFactory contextFactory, Server httpsServer, string browserName)
     {
-        It.Skip(browserName == "webkit", "No third party cookies in WebKit");
-        It.Skip(Environment.GetEnvironmentVariable("PW_CLOCK") == "frozen");
+        Info.Skip(browserName == "webkit", "No third party cookies in WebKit");
+        Info.Skip(Environment.GetEnvironmentVariable("PW_CLOCK") == "frozen");
         var context = await contextFactory(new()
         {
             IgnoreHTTPSErrors = true,

@@ -24,14 +24,14 @@ public class PageClockFrozenTests
     [UpstreamTest("CK-055 clock should be frozen")]
     public async Task ClockShouldBeFrozen(IPage page)
     {
-        It.Skip(Environment.GetEnvironmentVariable("PW_CLOCK") != "frozen");
+        Info.Skip(Environment.GetEnvironmentVariable("PW_CLOCK") != "frozen");
         Assert.That(await page.EvaluateAsync<long>("Date.now()"), Is.EqualTo(1000));
     }
 
     [UpstreamTest("CK-056 clock should be realtime")]
     public async Task ClockShouldBeRealtime(IPage page)
     {
-        It.Skip(Environment.GetEnvironmentVariable("PW_CLOCK") != "realtime");
+        Info.Skip(Environment.GetEnvironmentVariable("PW_CLOCK") != "realtime");
         Assert.That(await page.EvaluateAsync<long>("Date.now()"), Is.LessThan(10000));
     }
 }

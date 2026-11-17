@@ -26,7 +26,7 @@ public class PageEventLoadTests
     [UpstreamTest("NA-087 should fire once")]
     public async Task ShouldFireOnce(IPage page, Server server, string browserName, bool isBidi)
     {
-        It.Fixme(browserName == "firefox" && !isBidi, "Firefox sometimes double fires.");
+        Info.Fixme(browserName == "firefox" && !isBidi, "Firefox sometimes double fires.");
 
         var count = 0;
         page.Load += (_, _) => count++;
@@ -38,7 +38,7 @@ public class PageEventLoadTests
     [UpstreamTest("NA-088 should fire once with iframe navigation")]
     public async Task ShouldFireOnceWithIframeNavigation(IPage page, Server server, string browserName, bool isBidi)
     {
-        It.Fixme(browserName == "firefox" && !isBidi, "Firefox sometimes double fires.");
+        Info.Fixme(browserName == "firefox" && !isBidi, "Firefox sometimes double fires.");
 
         var requestCount = 0;
         server.SetRoute("/tracker", (_, res) =>

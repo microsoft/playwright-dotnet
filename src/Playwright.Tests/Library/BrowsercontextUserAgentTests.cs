@@ -116,7 +116,7 @@ public class BrowsercontextUserAgentTests
     [UpstreamTest("UA-005 custom user agent for download")]
     public async Task CustomUserAgentForDownload(Server server, ContextFactory contextFactory, string browserVersion, string browserName)
     {
-        It.Skip(browserName == "chromium" && ChromiumVersionLessThan(browserVersion, "116.0.0.0"), "https://chromium-review.googlesource.com/c/chromium/src/+/4554578");
+        Info.Skip(browserName == "chromium" && ChromiumVersionLessThan(browserVersion, "116.0.0.0"), "https://chromium-review.googlesource.com/c/chromium/src/+/4554578");
 
         server.SetRoute("/download", (req, res) =>
         {
@@ -138,7 +138,7 @@ public class BrowsercontextUserAgentTests
     [UpstreamTest("UA-006 should work for navigator.userAgentData and sec-ch-ua headers")]
     public async Task ShouldWorkForNavigatorUserAgentDataAndSecChUaHeaders(IPlaywright playwright, string browserName, IBrowser browser, Server server, BrowserNewContextOptions contextOptions)
     {
-        It.Skip(browserName != "chromium", "This API is Chromium-only");
+        Info.Skip(browserName != "chromium", "This API is Chromium-only");
 
         {
             var context = await browser.NewContextAsync(contextOptions);

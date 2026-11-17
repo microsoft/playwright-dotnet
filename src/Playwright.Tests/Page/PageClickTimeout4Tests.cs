@@ -24,7 +24,7 @@ namespace Microsoft.Playwright.Tests.Page;
 public class PageClickTimeout4Tests
 {
     [UpstreamTest("CL-120 should timeout waiting for stable position")]
-    [Fixme("dotnet: the message is 'Timeout 3000ms exceeded.', without the 'elementHandle.click: ' prefix of the call")]
+    [LocalFixme("dotnet: the message is 'Timeout 3000ms exceeded.', without the 'elementHandle.click: ' prefix of the call")]
     public async Task ShouldTimeoutWaitingForStablePosition(IPage page, Server server)
     {
         await page.GotoAsync(server.Prefix + "/input/button.html");
@@ -45,7 +45,7 @@ public class PageClickTimeout4Tests
     [UpstreamTest("CL-122 should fail to click the button behind a large header after scrolling around")]
     public async Task ShouldFailToClickTheButtonBehindALargeHeaderAfterScrollingAround(IPage page, bool isAndroid)
     {
-        It.Skip(isAndroid, "Different viewport size");
+        Info.Skip(isAndroid, "Different viewport size");
         await page.SetViewportSizeAsync(500, 240);
         await page.SetContentAsync(@"
     <style>

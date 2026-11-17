@@ -27,14 +27,6 @@ using NUnit.Framework.Interfaces;
 
 namespace Microsoft.Playwright.Tests.Fixtures;
 
-/// <summary>An entry of <c>testInfo.annotations</c>. The port keeps them, nothing reads them.</summary>
-public sealed class TestAnnotation
-{
-    public string Type { get; set; }
-
-    public string Description { get; set; }
-}
-
 /// <summary><c>testInfo.project</c>.</summary>
 public sealed class TestProject
 {
@@ -45,7 +37,7 @@ public sealed class TestProject
     public string OutputDir => Env.OutputDir;
 }
 
-/// <summary><c>testInfo</c> upstream: the parameter <c>TestInfo testInfo</c> of a test, a hook or a fixture, and <c>It.Info()</c>.</summary>
+/// <summary><c>testInfo</c> upstream: the <c>testInfo</c> parameter of a test, a hook or a fixture, and <c>test.info()</c>. It also has the calls that upstream makes on <c>test</c> inside a test or a hook: <c>test.skip(condition)</c> is <c>Info.Skip(condition)</c>.</summary>
 public sealed class TestInfo
 {
     internal TestInfo(string title, string id, string file, string testName, int retry, int workerIndex, int parallelIndex)
@@ -94,8 +86,6 @@ public sealed class TestInfo
     /// <summary>The timeout of the test in milliseconds, 0 for none.</summary>
     public int Timeout { get; private set; }
 
-    public List<TestAnnotation> Annotations { get; } = [];
-
     /// <summary>'passed', 'failed' or 'skipped', for a teardown. A test that timed out has no teardown.</summary>
     public string Status => TestContext.CurrentContext.Result.Outcome.Status switch
     {
@@ -107,9 +97,47 @@ public sealed class TestInfo
     /// <summary>The directory for the files of this test. It is empty when the test starts.</summary>
     public string OutputDir { get; }
 
+    /// <summary><c>test.skip(condition, description)</c>.</summary>
+    public void Skip(bool condition, string description = null)
+    {
+        if (condition)
+        {
+            Assert.Ignore(description ?? "skip");
+        }
+    }
+
+    /// <summary>
+    /// <c>test.fixme(condition, description)</c>: a skip that upstream has. Also
+    /// <c>test.fail(condition, description)</c>, which the port does not run.
+    /// </summary>
+    public void Fixme(bool condition, string description = null)
+    {
+        if (condition)
+        {
+            Assert.Ignore(description == null ? "fixme" : "fixme: " + description);
+        }
+    }
+
+    /// <summary><c>test.slow()</c>: three times the timeout.</summary>
+    public void Slow() => Timeout *= 3;
+
+    /// <summary><c>test.slow(condition, description)</c>.</summary>
+    public void Slow(bool condition, string description = null)
+    {
+        if (condition)
+        {
+            Slow();
+        }
+    }
+
+    /// <summary><c>test.setTimeout(timeout)</c>.</summary>
     public void SetTimeout(int timeout) => Timeout = timeout;
 
-    public void Slow() => Timeout *= 3;
+    /// <summary><c>await test.step(title, async () => { ... })</c>.</summary>
+    public Task Step(string title, Func<Task> body) => body();
+
+    /// <summary><c>const value = await test.step(title, async () => { ... })</c>.</summary>
+    public Task<T> Step<T>(string title, Func<Task<T>> body) => body();
 
     /// <summary><c>testInfo.attach(name, { body, contentType })</c>: the port has no report to attach to.</summary>
     public Task Attach(string name, object options = null) => Task.CompletedTask;

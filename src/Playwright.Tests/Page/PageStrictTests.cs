@@ -24,7 +24,7 @@ namespace Microsoft.Playwright.Tests.Page;
 public class PageStrictTests
 {
     [UpstreamTest("SM-001 should fail page.textContent in strict mode")]
-    [Fixme("dotnet: the message has the locators in C# form, 'aka GetByText(\"span1\")', upstream expects \"aka getByText('span1')\"")]
+    [LocalFixme("dotnet: the message has the locators in C# form, 'aka GetByText(\"span1\")', upstream expects \"aka getByText('span1')\"")]
     public async Task ShouldFailPageTextContentInStrictMode(IPage page)
     {
         await page.SetContentAsync("<span>span1</span><div><span>target</span></div>");
@@ -44,7 +44,7 @@ public class PageStrictTests
 
     [UpstreamTest("SM-003 should fail page.fill in strict mode")]
 
-    [Fixme("dotnet: the message has the locators in C# form, 'aka GetByRole(AriaRole.Textbox).First', upstream expects \"aka getByRole('textbox').first()\"")]
+    [LocalFixme("dotnet: the message has the locators in C# form, 'aka GetByRole(AriaRole.Textbox).First', upstream expects \"aka getByRole('textbox').first()\"")]
     public async Task ShouldFailPageFillInStrictMode(IPage page)
     {
         await page.SetContentAsync("<input></input><div><input></input></div>");
@@ -72,7 +72,7 @@ public class PageStrictTests
 
     [UpstreamTest("SM-006 should fail page.dispatchEvent in strict mode")]
 
-    [Fixme("dotnet: the message has the locators in C# form, 'aka Locator(\"span\").First', upstream expects \"aka locator('span').first()\"")]
+    [LocalFixme("dotnet: the message has the locators in C# form, 'aka Locator(\"span\").First', upstream expects \"aka locator('span').first()\"")]
     public async Task ShouldFailPageDispatchEventInStrictMode(IPage page)
     {
         await page.SetContentAsync("<span></span><div><span></span></div>");
@@ -136,7 +136,7 @@ public class PageStrictTests
 
     [UpstreamTest("SM-009 should escape tag names")]
 
-    [Fixme("dotnet: the message has the locators in C# form, 'GetByText(\"special test description\").First', upstream expects \"getByText('special test description').first()\"")]
+    [LocalFixme("dotnet: the message has the locators in C# form, 'GetByText(\"special test description\").First', upstream expects \"getByText('special test description').first()\"")]
     public async Task ShouldEscapeTagNames(IPage page)
     {
         await page.SetContentAsync(@"
@@ -154,7 +154,7 @@ public class PageStrictTests
 
     [UpstreamTest("SM-010 should keep the engine name for a \"text=..\" selector in strict mode")]
 
-    [Fixme("dotnet: the message has the locator in C# form, 'Locator(\"text=..loading\")', upstream expects \"locator('text=..loading')\"")]
+    [LocalFixme("dotnet: the message has the locator in C# form, 'Locator(\"text=..loading\")', upstream expects \"locator('text=..loading')\"")]
     public async Task ShouldKeepTheEngineNameForATextSelectorInStrictMode(IPage page)
     {
         await page.SetContentAsync("<div>..loading</div><div>..loading</div>");

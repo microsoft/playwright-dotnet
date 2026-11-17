@@ -106,7 +106,7 @@ public class SelectorsRegisterTests
     }
 
     [UpstreamTest("SE-164 should handle errors")]
-    [Fixme("dotnet: the message is 'Selector engine name may only contain [a-zA-Z0-9_] characters', without the 'selectors.register: ' prefix of the call")]
+    [LocalFixme("dotnet: the message is 'Selector engine name may only contain [a-zA-Z0-9_] characters', without the 'selectors.register: ' prefix of the call")]
     public async Task ShouldHandleErrors(IPlaywright playwright, IBrowser browser, BrowserNewPageOptions newPageOptions)
     {
         var page = await browser.NewPageAsync(newPageOptions);
@@ -138,7 +138,7 @@ public class SelectorsRegisterTests
     }
 
     [UpstreamTest("SE-165 should throw \"already registered\" error when registering")]
-    [Fixme("dotnet: the message is '\"alreadyRegistered\" selector engine has been already registered', without the 'selectors.register: ' prefix of the call")]
+    [LocalFixme("dotnet: the message is '\"alreadyRegistered\" selector engine has been already registered', without the 'selectors.register: ' prefix of the call")]
     public async Task ShouldThrowAlreadyRegisteredErrorWhenRegistering(IPlaywright playwright)
     {
         await playwright.Selectors.RegisterAsync("alreadyRegistered", new() { Script = "(" + createTagSelector + ")()" });

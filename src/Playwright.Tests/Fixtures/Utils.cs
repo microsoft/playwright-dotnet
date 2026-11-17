@@ -44,6 +44,11 @@ public static partial class Utils
 
     private static readonly Lazy<string> _hostPlatform = new(ReadHostPlatform);
 
+    private static readonly JsonSerializerOptions _jsonStringifyOptions = new()
+    {
+        Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
+    };
+
     /// <summary><c>hostPlatform</c> of the driver, as far as the tests need it: 'debian11...', 'ubuntu20.04...', 'mac...', 'win64'.</summary>
     public static string HostPlatform => _hostPlatform.Value;
 
@@ -323,6 +328,16 @@ public static partial class Utils
         var trimmed = expected.Split('\n').Where(a => a.Trim().Length > 0).ToArray();
         var maxPrefixLength = trimmed.Min(line => Regex.Match(line, @"^\s*").Length);
         return string.Join("\n", trimmed.Select(line => line.Substring(maxPrefixLength)));
+    }
+
+    /// <summary><c>JSON.stringify(value)</c>: unlike <c>JsonSerializer.Serialize</c> it does not escape non-ASCII characters, nor &lt;, &gt;, &amp;, ' and +.</summary>
+    public static string JsonStringify(object value) => JsonSerializer.Serialize(value, _jsonStringifyOptions);
+
+    /// <summary><c>string.replace(search, replacement)</c> of JavaScript with a string: replaces the first occurrence only.</summary>
+    public static string ReplaceFirst(string text, string search, string replacement)
+    {
+        var index = text.IndexOf(search, StringComparison.Ordinal);
+        return index == -1 ? text : text.Substring(0, index) + replacement + text.Substring(index + search.Length);
     }
 
     private static string ReadHostPlatform()

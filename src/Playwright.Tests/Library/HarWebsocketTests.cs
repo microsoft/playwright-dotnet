@@ -283,7 +283,7 @@ public class HarWebsocketTests
     [UpstreamTest("HA-107 should record websocket connection failure")]
     public async Task ShouldRecordWebsocketConnectionFailure(ContextFactory contextFactory, Server server, string channel, TestInfo testInfo)
     {
-        It.Skip(channel == "webkit-wsl", "Connection to an unbound localhost port from WSL is not refused in mirrored networking mode");
+        Info.Skip(channel == "webkit-wsl", "Connection to an unbound localhost port from WSL is not refused in mirrored networking mode");
         // Reserve a port and immediately release it so the WebSocket connect attempt is refused.
         var portReservation = new TcpListener(IPAddress.Parse("127.0.0.1"), 0);
         portReservation.Start();

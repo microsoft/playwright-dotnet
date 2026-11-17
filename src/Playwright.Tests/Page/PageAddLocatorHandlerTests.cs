@@ -53,7 +53,7 @@ public class PageAddLocatorHandlerTests
         })
         {
             // .NET: args[2] is undefined when the array has two items.
-            await It.Step($"{args[0]}{((string)args.ElementAtOrDefault(2) == "capture" ? " with capture" : "")} {args[1]} times", async () =>
+            await Info.Step($"{args[0]}{((string)args.ElementAtOrDefault(2) == "capture" ? " with capture" : "")} {args[1]} times", async () =>
             {
                 await page.Locator("#aside").HoverAsync();
                 beforeCount = 0;
@@ -95,7 +95,7 @@ public class PageAddLocatorHandlerTests
         })
         {
             // .NET: args[2] is undefined when the array has two items.
-            await It.Step($"{args[0]}{((string)args.ElementAtOrDefault(2) == "capture" ? " with capture" : "")} {args[1]} times", async () =>
+            await Info.Step($"{args[0]}{((string)args.ElementAtOrDefault(2) == "capture" ? " with capture" : "")} {args[1]} times", async () =>
             {
                 await page.Locator("#aside").HoverAsync();
                 await page.EvaluateAsync(@"args => {
@@ -112,7 +112,7 @@ public class PageAddLocatorHandlerTests
     [UpstreamTest("LH-003 should work with locator.hover()")]
     public async Task ShouldWorkWithLocatorHover(IPage page, Server server, bool headless)
     {
-        It.Skip(!headless, "Stray hovers in headed mode");
+        Info.Skip(!headless, "Stray hovers in headed mode");
 
         await page.GotoAsync(server.Prefix + "/input/handle-locator.html");
 
@@ -306,7 +306,7 @@ public class PageAddLocatorHandlerTests
     }
 
     [UpstreamTest("LH-012 should wait for hidden by default 2")]
-    [Fixme("dotnet: the call log has GetByRole(AriaRole.Button, new() { Name = \"close\" }), upstream expects getByRole('button', { name: 'close' })")]
+    [LocalFixme("dotnet: the call log has GetByRole(AriaRole.Button, new() { Name = \"close\" }), upstream expects getByRole('button', { name: 'close' })")]
     public async Task ShouldWaitForHiddenByDefault2(IPage page, Server server)
     {
         await page.GotoAsync(server.Prefix + "/input/handle-locator.html");

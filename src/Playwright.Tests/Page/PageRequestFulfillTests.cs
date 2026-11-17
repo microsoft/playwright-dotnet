@@ -145,8 +145,8 @@ public class PageRequestFulfillTests
     [UpstreamTest("RO-101 should allow mocking binary responses")]
     public async Task ShouldAllowMockingBinaryResponses(IPage page, Server server, string browserName, bool headless, Func<string, string> asset, bool isAndroid, string mode)
     {
-        It.Skip(browserName == "firefox" && !headless, "Firefox headed produces a different image.");
-        It.Skip(isAndroid);
+        Info.Skip(browserName == "firefox" && !headless, "Firefox headed produces a different image.");
+        Info.Skip(isAndroid);
 
         await page.RouteAsync("**/*", route =>
         {
@@ -170,9 +170,9 @@ public class PageRequestFulfillTests
     [UpstreamTest("RO-102 should allow mocking svg with charset")]
     public async Task ShouldAllowMockingSvgWithCharset(IPage page, Server server, string browserName, bool headless, bool isAndroid, bool isElectron, int electronMajorVersion)
     {
-        It.Skip(browserName == "firefox" && !headless, "Firefox headed produces a different image.");
-        It.Skip(isAndroid);
-        It.Skip(isElectron && electronMajorVersion < 30, "Protocol error (Storage.getCookies): Browser context management is not supported");
+        Info.Skip(browserName == "firefox" && !headless, "Firefox headed produces a different image.");
+        Info.Skip(isAndroid);
+        Info.Skip(isElectron && electronMajorVersion < 30, "Protocol error (Storage.getCookies): Browser context management is not supported");
 
         await page.RouteAsync("**/*", route =>
         {
@@ -195,7 +195,7 @@ public class PageRequestFulfillTests
     [UpstreamTest("RO-103 should work with file path")]
     public async Task ShouldWorkWithFilePath(IPage page, Server server, Func<string, string> asset, string mode, bool isAndroid)
     {
-        It.Skip(isAndroid);
+        Info.Skip(isAndroid);
 
         await page.RouteAsync("**/*", route => route.FulfillAsync(new() { ContentType = "shouldBeIgnored", Path = asset("pptr.png") }));
         await page.EvaluateAsync(@"PREFIX => {
@@ -273,7 +273,7 @@ public class PageRequestFulfillTests
     [UpstreamTest("RO-106 should include the origin header")]
     public async Task ShouldIncludeTheOriginHeader(IPage page, Server server, bool isAndroid)
     {
-        It.Skip(isAndroid, "No cross-process on Android");
+        Info.Skip(isAndroid, "No cross-process on Android");
 
         await page.GotoAsync(server.Prefix + "/empty.html");
         IRequest interceptedRequest = null;
@@ -302,7 +302,7 @@ public class PageRequestFulfillTests
     [UpstreamTest("RO-107 should fulfill with global fetch result")]
     public async Task ShouldFulfillWithGlobalFetchResult(IPlaywright playwright, IPage page, Server server, bool isElectron, int electronMajorVersion, Func<string, string> rewriteAndroidLoopbackURL)
     {
-        It.Skip(isElectron && electronMajorVersion < 30, "error: Browser context management is not supported.");
+        Info.Skip(isElectron && electronMajorVersion < 30, "error: Browser context management is not supported.");
         await page.RouteAsync("**/*", async route =>
         {
             var request = await playwright.APIRequest.NewContextAsync();
@@ -317,7 +317,7 @@ public class PageRequestFulfillTests
     [UpstreamTest("RO-108 should fulfill with fetch result")]
     public async Task ShouldFulfillWithFetchResult(IPage page, Server server, bool isElectron, int electronMajorVersion, Func<string, string> rewriteAndroidLoopbackURL)
     {
-        It.Skip(isElectron && electronMajorVersion < 30, "error: Browser context management is not supported.");
+        Info.Skip(isElectron && electronMajorVersion < 30, "error: Browser context management is not supported.");
         await page.RouteAsync("**/*", async route =>
         {
             var response = await page.APIRequest.GetAsync(rewriteAndroidLoopbackURL(server.Prefix + "/simple.json"));
@@ -331,7 +331,7 @@ public class PageRequestFulfillTests
     [UpstreamTest("RO-109 should fulfill with fetch result and overrides")]
     public async Task ShouldFulfillWithFetchResultAndOverrides(IPage page, Server server, bool isElectron, int electronMajorVersion, Func<string, string> rewriteAndroidLoopbackURL)
     {
-        It.Skip(isElectron && electronMajorVersion < 30, "error: Browser context management is not supported.");
+        Info.Skip(isElectron && electronMajorVersion < 30, "error: Browser context management is not supported.");
         await page.RouteAsync("**/*", async route =>
         {
             var response = await page.APIRequest.GetAsync(rewriteAndroidLoopbackURL(server.Prefix + "/simple.json"));
@@ -355,8 +355,8 @@ public class PageRequestFulfillTests
     [UpstreamTest("RO-110 should fetch original request and fulfill")]
     public async Task ShouldFetchOriginalRequestAndFulfill(IPage page, Server server, bool isElectron, int electronMajorVersion, bool isAndroid)
     {
-        It.Skip(isElectron && electronMajorVersion < 30, "error: Browser context management is not supported.");
-        It.Skip(isAndroid, "The internal Android localhost (10.0.0.2) != the localhost on the host");
+        Info.Skip(isElectron && electronMajorVersion < 30, "error: Browser context management is not supported.");
+        Info.Skip(isAndroid, "The internal Android localhost (10.0.0.2) != the localhost on the host");
         await page.RouteAsync("**/*", async route =>
         {
             var response = await page.APIRequest.FetchAsync(route.Request);
@@ -373,8 +373,8 @@ public class PageRequestFulfillTests
     [UpstreamTest("RO-111 should fulfill with multiple set-cookie")]
     public async Task ShouldFulfillWithMultipleSetCookie(IPage page, Server server, bool isElectron, int electronMajorVersion, bool isAndroid)
     {
-        It.Skip(isElectron && electronMajorVersion < 14, "Electron 14+ is required");
-        It.Skip(isAndroid, "Android does not have an isolated context per test, so we get cookies from other tests");
+        Info.Skip(isElectron && electronMajorVersion < 14, "Electron 14+ is required");
+        Info.Skip(isAndroid, "Android does not have an isolated context per test, so we get cookies from other tests");
 
         var cookies = new[] { "a=b", "c=d" };
         await page.RouteAsync("**/multiple-set-cookie.html", route =>
@@ -400,7 +400,7 @@ public class PageRequestFulfillTests
     [UpstreamTest("RO-112 should fulfill with fetch response that has multiple set-cookie")]
     public async Task ShouldFulfillWithFetchResponseThatHasMultipleSetCookie(IPlaywright playwright, IPage page, Server server, bool isAndroid)
     {
-        It.Fixme(isAndroid);
+        Info.Fixme(isAndroid);
         server.SetRoute("/empty.html", (req, res) =>
         {
             res.SetHeader("Set-Cookie", new[] { "a=b", "c=d" });
@@ -421,8 +421,8 @@ public class PageRequestFulfillTests
     [UpstreamTest("RO-113 headerValue should return set-cookie from intercepted response")]
     public async Task HeaderValueShouldReturnSetCookieFromInterceptedResponse(IPage page, Server server, string browserName)
     {
-        It.Fixme(browserName == "chromium", "Set-Cookie is missing in response after interception");
-        It.Skip(browserName == "webkit", "Set-Cookie with \n in intercepted response does not pass validation in WebCore, see also https://github.com/microsoft/playwright/pull/9273");
+        Info.Fixme(browserName == "chromium", "Set-Cookie is missing in response after interception");
+        Info.Skip(browserName == "webkit", "Set-Cookie with \n in intercepted response does not pass validation in WebCore, see also https://github.com/microsoft/playwright/pull/9273");
         await page.RouteAsync("**/empty.html", route =>
         {
             IgnoreErrors(route.FulfillAsync(new()
@@ -538,8 +538,8 @@ public class PageRequestFulfillTests
     [UpstreamTest("RO-117 should fulfill with gzip and readback")]
     public async Task ShouldFulfillWithGzipAndReadback(IPage page, Server server, bool isAndroid, bool isElectron, int electronMajorVersion)
     {
-        It.Skip(isAndroid, "The internal Android localhost (10.0.0.2) != the localhost on the host");
-        It.Skip(isElectron && electronMajorVersion < 30, "error: Browser context management is not supported.");
+        Info.Skip(isAndroid, "The internal Android localhost (10.0.0.2) != the localhost on the host");
+        Info.Skip(isElectron && electronMajorVersion < 30, "error: Browser context management is not supported.");
         server.EnableGzip("/one-style.html");
         await page.RouteAsync("**/one-style.html", async route =>
         {
@@ -588,7 +588,7 @@ public class PageRequestFulfillTests
     {
         foreach (var status in new[] { 100, 200, 404, 500 })
         {
-            await It.Step($"status {status}", async () =>
+            await Info.Step($"status {status}", async () =>
             {
                 var bodyOverride = $"Custom body {status}";
                 await page.RouteAsync("**/one-style.css", async route =>

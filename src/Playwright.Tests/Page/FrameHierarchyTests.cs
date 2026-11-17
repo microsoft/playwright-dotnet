@@ -51,8 +51,8 @@ public class FrameHierarchyTests
     [UpstreamTest("FR-024 should handle nested frames @smoke")]
     public async Task ShouldHandleNestedFrames(IPage page, Server server, bool isAndroid, bool isBidi)
     {
-        It.Skip(isAndroid, "No cross-process on Android");
-        It.Skip(isBidi, "frame.name() is racy with BiDi");
+        Info.Skip(isAndroid, "No cross-process on Android");
+        Info.Skip(isBidi, "frame.name() is racy with BiDi");
 
         await page.GotoAsync(server.Prefix + "/frames/nested-frames.html");
         Assert.That(DumpFrames(page.MainFrame), Is.EqualTo(new[]
@@ -187,7 +187,7 @@ public class FrameHierarchyTests
     [UpstreamTest("FR-032 should report frame.name()")]
     public async Task ShouldReportFrameName(IPage page, Server server, bool isBidi)
     {
-        It.Skip(isBidi, "frame.name() is racy with BiDi");
+        Info.Skip(isBidi, "frame.name() is racy with BiDi");
 
         await AttachFrame(page, "theFrameId", server.EmptyPage);
         await page.EvaluateAsync(@"url => {
@@ -232,7 +232,7 @@ public class FrameHierarchyTests
     [UpstreamTest("FR-035 should refuse to display x-frame-options:deny iframe")]
     public async Task ShouldRefuseToDisplayXFrameOptionsDenyIframe(IPage page, Server server, string browserName)
     {
-        It.Skip(browserName == "firefox");
+        Info.Skip(browserName == "firefox");
 
         server.SetRoute("/x-frame-options-deny.html", async (req, res) =>
         {

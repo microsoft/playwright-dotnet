@@ -151,7 +151,7 @@ public class BrowsercontextProxyTests
     [UpstreamTest("PR-023 should set cookie for top-level domain")]
     public async Task ShouldSetCookieForTopLevelDomain(ContextFactory contextFactory, Server server, TestProxy proxyServer, string browserName, bool isLinux, string channel)
     {
-        It.Fixme(browserName == "webkit" && (isLinux || channel == "webkit-wsl"));
+        Info.Fixme(browserName == "webkit" && (isLinux || channel == "webkit-wsl"));
 
         proxyServer.ForwardTo(server.Port, new() { AllowConnectRequests = true });
         var context = await contextFactory(new()
@@ -192,7 +192,7 @@ public class BrowsercontextProxyTests
             [Case("169.254.3.4", "link-local")]
             public async Task Test(string target, string description, string platform, string browserName, ContextFactory contextFactory, Server server, TestProxy proxyServer)
             {
-                It.Skip(browserName == "webkit" && platform == "darwin" && new[] { "localhost", "127.0.0.1" }.Contains(target) && additionalBypass, "Mac webkit does not proxy localhost when bypass rules are set");
+                Info.Skip(browserName == "webkit" && platform == "darwin" && new[] { "localhost", "127.0.0.1" }.Contains(target) && additionalBypass, "Mac webkit does not proxy localhost when bypass rules are set");
 
                 var path = $"/target-{(additionalBypass ? "true" : "false")}-{target}.html";
                 server.SetRoute(path, (req, res) =>
@@ -230,8 +230,8 @@ public class BrowsercontextProxyTests
     [UpstreamTest("PR-025 should use ipv6 proxy")]
     public async Task ShouldUseIpv6Proxy(ContextFactory contextFactory, Server server, TestProxy proxyServer, string browserName, string channel, bool isBidi)
     {
-        It.Fixme(browserName == "firefox" && !isBidi, "page.goto: NS_ERROR_UNKNOWN_HOST");
-        It.Fixme(channel == "webkit-wsl", "WebKit on WSL does not support IPv6: https://github.com/microsoft/WSL/issues/10803");
+        Info.Fixme(browserName == "firefox" && !isBidi, "page.goto: NS_ERROR_UNKNOWN_HOST");
+        Info.Fixme(channel == "webkit-wsl", "WebKit on WSL does not support IPv6: https://github.com/microsoft/WSL/issues/10803");
         proxyServer.ForwardTo(server.Port);
         var context = await contextFactory(new()
         {

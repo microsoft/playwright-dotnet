@@ -21,33 +21,33 @@ using static Microsoft.Playwright.Tests.Fixtures.Utils;
 namespace Microsoft.Playwright.Tests.Page;
 
 /// <summary>Port of tests/page/elementhandle-screenshot.spec.ts.</summary>
-public class ElementhandleScreenshotTests
+public class ElementhandleScreenshotTests : UpstreamPageTest
 {
-    public class ElementScreenshot
+    public class ElementScreenshot : UpstreamPageTest
     {
-        [BeforeEach]
-        public static void Skip(string browserName, bool headless) => It.Skip(browserName == "firefox" && !headless);
+        [SetUp]
+        public void Skip() => Info.Skip(BrowserName == "firefox" && !Headless);
 
-        [BeforeEach]
-        public static void Skip2(bool isAndroid) => It.Skip(isAndroid, "Different dpr. Remove after using 1x scale for screenshots.");
+        [SetUp]
+        public void Skip2() => Info.Skip(IsAndroid, "Different dpr. Remove after using 1x scale for screenshots.");
 
         [UpstreamTest("EH-074 should work")]
-        public async Task ShouldWork(IPage page, Server server)
+        public async Task ShouldWork()
         {
-            await page.SetViewportSizeAsync(500, 500);
-            await page.GotoAsync(server.Prefix + "/grid.html");
-            await page.EvaluateAsync("() => window.scrollBy(50, 100)");
-            var elementHandle = await page.QuerySelectorAsync(".box:nth-of-type(3)");
+            await Page.SetViewportSizeAsync(500, 500);
+            await Page.GotoAsync(Server.Prefix + "/grid.html");
+            await Page.EvaluateAsync("() => window.scrollBy(50, 100)");
+            var elementHandle = await Page.QuerySelectorAsync(".box:nth-of-type(3)");
             var screenshot = await elementHandle.ScreenshotAsync();
             ExpectToMatchSnapshot(screenshot, "screenshot-element-bounding-box.png");
         }
 
         [UpstreamTest("EH-075 should work with webp")]
-        public async Task ShouldWorkWithWebp(IPage page, Server server)
+        public async Task ShouldWorkWithWebp()
         {
-            await page.SetViewportSizeAsync(500, 500);
-            await page.GotoAsync(server.Prefix + "/grid.html");
-            var elementHandle = await page.QuerySelectorAsync(".box:nth-of-type(3)");
+            await Page.SetViewportSizeAsync(500, 500);
+            await Page.GotoAsync(Server.Prefix + "/grid.html");
+            var elementHandle = await Page.QuerySelectorAsync(".box:nth-of-type(3)");
             var webpImage = ImageComparator.Decode("image/webp", await elementHandle.ScreenshotAsync(new() { Type = ScreenshotType.Webp }));
             // The default webp screenshot is lossless, so it must decode to the exact same pixels as png.
             var pngImage = ImageComparator.Decode("image/png", await elementHandle.ScreenshotAsync(new() { Type = ScreenshotType.Png }));
@@ -57,24 +57,24 @@ public class ElementhandleScreenshotTests
         }
 
         [UpstreamTest("EH-076 should work when main world busts JSON.stringify")]
-        public async Task ShouldWorkWhenMainWorldBustsJSONStringify(IPage page, Server server)
+        public async Task ShouldWorkWhenMainWorldBustsJSONStringify()
         {
-            await page.SetViewportSizeAsync(500, 500);
-            await page.GotoAsync(server.Prefix + "/grid.html");
-            await page.EvaluateAsync(@"() => {
+            await Page.SetViewportSizeAsync(500, 500);
+            await Page.GotoAsync(Server.Prefix + "/grid.html");
+            await Page.EvaluateAsync(@"() => {
       window.scrollBy(50, 100);
       JSON.stringify = () => undefined;
     }");
-            var elementHandle = await page.QuerySelectorAsync(".box:nth-of-type(3)");
+            var elementHandle = await Page.QuerySelectorAsync(".box:nth-of-type(3)");
             var screenshot = await elementHandle.ScreenshotAsync();
             ExpectToMatchSnapshot(screenshot, "screenshot-element-bounding-box.png");
         }
 
         [UpstreamTest("EH-077 should take into account padding and border")]
-        public async Task ShouldTakeIntoAccountPaddingAndBorder(IPage page, bool isLinux, bool headless, string browserName)
+        public async Task ShouldTakeIntoAccountPaddingAndBorder()
         {
-            await page.SetViewportSizeAsync(500, 500);
-            await page.SetContentAsync(@"
+            await Page.SetViewportSizeAsync(500, 500);
+            await Page.SetContentAsync(@"
       <div style=""height: 14px"">oooo</div>
       <style>div {
         border: 2px solid blue;
@@ -85,17 +85,17 @@ public class ElementhandleScreenshotTests
       </style>
       <div id=""d""></div>
     ");
-            var elementHandle = await page.QuerySelectorAsync("div#d");
+            var elementHandle = await Page.QuerySelectorAsync("div#d");
             var screenshot = await elementHandle.ScreenshotAsync();
             ExpectToMatchSnapshot(screenshot, "screenshot-element-padding-border.png");
         }
 
         [UpstreamTest("EH-078 should capture full element when larger than viewport in parallel")]
-        public async Task ShouldCaptureFullElementWhenLargerThanViewportInParallel(IPage page, string browserName)
+        public async Task ShouldCaptureFullElementWhenLargerThanViewportInParallel()
         {
-            await page.SetViewportSizeAsync(500, 500);
+            await Page.SetViewportSizeAsync(500, 500);
 
-            await page.SetContentAsync(@"
+            await Page.SetContentAsync(@"
       <div style=""height: 14px"">oooo</div>
       <style>
       div.to-screenshot {
@@ -112,20 +112,20 @@ public class ElementhandleScreenshotTests
       <div class=""to-screenshot""></div>
       <div class=""to-screenshot""></div>
     ");
-            var elementHandles = await page.QuerySelectorAllAsync("div.to-screenshot");
+            var elementHandles = await Page.QuerySelectorAllAsync("div.to-screenshot");
             var promises = elementHandles.Select(handle => handle.ScreenshotAsync()).ToArray();
             var screenshots = await PromiseAll(promises);
             ExpectToMatchSnapshot(screenshots[2], "screenshot-element-larger-than-viewport.png");
 
-            await VerifyViewport(page, 500, 500);
+            await VerifyViewport(Page, 500, 500);
         }
 
         [UpstreamTest("EH-079 should capture full element when larger than viewport")]
-        public async Task ShouldCaptureFullElementWhenLargerThanViewport(IPage page)
+        public async Task ShouldCaptureFullElementWhenLargerThanViewport()
         {
-            await page.SetViewportSizeAsync(500, 500);
+            await Page.SetViewportSizeAsync(500, 500);
 
-            await page.SetContentAsync(@"
+            await Page.SetContentAsync(@"
       <div style=""height: 14px"">oooo</div>
       <style>
       div.to-screenshot {
@@ -142,18 +142,18 @@ public class ElementhandleScreenshotTests
       <div class=""to-screenshot""></div>
       <div class=""to-screenshot""></div>
     ");
-            var elementHandle = await page.QuerySelectorAsync("div.to-screenshot");
+            var elementHandle = await Page.QuerySelectorAsync("div.to-screenshot");
             var screenshot = await elementHandle.ScreenshotAsync();
             ExpectToMatchSnapshot(screenshot, "screenshot-element-larger-than-viewport.png");
 
-            await VerifyViewport(page, 500, 500);
+            await VerifyViewport(Page, 500, 500);
         }
 
         [UpstreamTest("EH-080 should scroll element into view")]
-        public async Task ShouldScrollElementIntoView(IPage page)
+        public async Task ShouldScrollElementIntoView()
         {
-            await page.SetViewportSizeAsync(500, 500);
-            await page.SetContentAsync(@"
+            await Page.SetViewportSizeAsync(500, 500);
+            await Page.SetContentAsync(@"
       <div style=""height: 14px"">oooo</div>
       <style>div.above {
         border: 2px solid blue;
@@ -170,16 +170,16 @@ public class ElementhandleScreenshotTests
       <div class=""above""></div>
       <div class=""to-screenshot""></div>
     ");
-            var elementHandle = await page.QuerySelectorAsync("div.to-screenshot");
+            var elementHandle = await Page.QuerySelectorAsync("div.to-screenshot");
             var screenshot = await elementHandle.ScreenshotAsync();
             ExpectToMatchSnapshot(screenshot, "screenshot-element-scrolled-into-view.png");
         }
 
         [UpstreamTest("EH-081 should scroll 15000px into view")]
-        public async Task ShouldScroll15000pxIntoView(IPage page)
+        public async Task ShouldScroll15000pxIntoView()
         {
-            await page.SetViewportSizeAsync(500, 500);
-            await page.SetContentAsync(@"
+            await Page.SetViewportSizeAsync(500, 500);
+            await Page.SetContentAsync(@"
       <div style=""height: 14px"">oooo</div>
       <style>div.above {
         border: 2px solid blue;
@@ -196,55 +196,55 @@ public class ElementhandleScreenshotTests
       <div class=""above""></div>
       <div class=""to-screenshot""></div>
     ");
-            var elementHandle = await page.QuerySelectorAsync("div.to-screenshot");
+            var elementHandle = await Page.QuerySelectorAsync("div.to-screenshot");
             var screenshot = await elementHandle.ScreenshotAsync();
             ExpectToMatchSnapshot(screenshot, "screenshot-element-scrolled-into-view.png");
         }
 
         [UpstreamTest("EH-082 should work with a rotated element")]
-        public async Task ShouldWorkWithARotatedElement(IPage page)
+        public async Task ShouldWorkWithARotatedElement()
         {
-            await page.SetViewportSizeAsync(500, 500);
-            await page.SetContentAsync(@"<div style=""position:absolute;
+            await Page.SetViewportSizeAsync(500, 500);
+            await Page.SetContentAsync(@"<div style=""position:absolute;
                                       top: 100px;
                                       left: 100px;
                                       width: 100px;
                                       height: 100px;
                                       background: green;
                                       transform: rotateZ(200deg);"">&nbsp;</div>");
-            var elementHandle = await page.QuerySelectorAsync("div");
+            var elementHandle = await Page.QuerySelectorAsync("div");
             var screenshot = await elementHandle.ScreenshotAsync();
             ExpectToMatchSnapshot(screenshot, "screenshot-element-rotate.png");
         }
 
         [UpstreamTest("EH-083 should fail to screenshot a detached element")]
-        public async Task ShouldFailToScreenshotADetachedElement(IPage page, Server server)
+        public async Task ShouldFailToScreenshotADetachedElement()
         {
-            await page.SetContentAsync("<h1>remove this</h1>");
-            var elementHandle = await page.QuerySelectorAsync("h1");
-            await page.EvaluateAsync("element => element.remove()", elementHandle);
+            await Page.SetContentAsync("<h1>remove this</h1>");
+            var elementHandle = await Page.QuerySelectorAsync("h1");
+            await Page.EvaluateAsync("element => element.remove()", elementHandle);
             var screenshotError = await Catch(() => elementHandle.ScreenshotAsync());
             Assert.That(screenshotError.Message, Does.Contain("Element is not attached to the DOM"));
         }
 
         [UpstreamTest("EH-084 should timeout waiting for visible")]
-        [Fixme("dotnet: the message is 'Timeout 3000ms exceeded.', without the 'elementHandle.screenshot: ' prefix of the call")]
-        public async Task ShouldTimeoutWaitingForVisible(IPage page, Server server)
+        [LocalFixme("dotnet: the message is 'Timeout 3000ms exceeded.', without the 'elementHandle.screenshot: ' prefix of the call")]
+        public async Task ShouldTimeoutWaitingForVisible()
         {
-            await page.SetContentAsync("<div style=\"width: 50px; height: 0\"></div>");
-            var div = await page.QuerySelectorAsync("div");
+            await Page.SetContentAsync("<div style=\"width: 50px; height: 0\"></div>");
+            var div = await Page.QuerySelectorAsync("div");
             var error = await Catch(() => div.ScreenshotAsync(new() { Timeout = 3000 }));
             Assert.That(error.Message, Does.Contain("elementHandle.screenshot: Timeout 3000ms exceeded"));
             Assert.That(error.Message, Does.Contain("element is not visible"));
         }
 
         [UpstreamTest("EH-085 should wait for visible")]
-        public async Task ShouldWaitForVisible(IPage page, Server server)
+        public async Task ShouldWaitForVisible()
         {
-            await page.SetViewportSizeAsync(500, 500);
-            await page.GotoAsync(server.Prefix + "/grid.html");
-            await page.EvaluateAsync("() => window.scrollBy(50, 100)");
-            var elementHandle = await page.QuerySelectorAsync(".box:nth-of-type(3)");
+            await Page.SetViewportSizeAsync(500, 500);
+            await Page.GotoAsync(Server.Prefix + "/grid.html");
+            await Page.EvaluateAsync("() => window.scrollBy(50, 100)");
+            var elementHandle = await Page.QuerySelectorAsync(".box:nth-of-type(3)");
             await elementHandle.EvaluateAsync("e => e.style.visibility = 'hidden'");
             var done = false;
             async Task<byte[]> Then()
@@ -254,7 +254,7 @@ public class ElementhandleScreenshotTests
                 return buffer;
             }
             var promise = Then();
-            await Rafraf(page, 10);
+            await Rafraf(Page, 10);
             Assert.That(done, Is.EqualTo(false));
             await elementHandle.EvaluateAsync("e => e.style.visibility = 'visible'");
             var screenshot = await promise;
@@ -262,82 +262,82 @@ public class ElementhandleScreenshotTests
         }
 
         [UpstreamTest("EH-086 should work for an element with fractional dimensions")]
-        public async Task ShouldWorkForAnElementWithFractionalDimensions(IPage page)
+        public async Task ShouldWorkForAnElementWithFractionalDimensions()
         {
-            await page.SetContentAsync("<div style=\"width:48.51px;height:19.8px;border:1px solid black;\"></div>");
-            var elementHandle = await page.QuerySelectorAsync("div");
+            await Page.SetContentAsync("<div style=\"width:48.51px;height:19.8px;border:1px solid black;\"></div>");
+            var elementHandle = await Page.QuerySelectorAsync("div");
             var screenshot = await elementHandle.ScreenshotAsync();
             ExpectToMatchSnapshot(screenshot, "screenshot-element-fractional.png");
         }
 
         [UpstreamTest("EH-087 should work for an element with an offset")]
-        public async Task ShouldWorkForAnElementWithAnOffset(IPage page)
+        public async Task ShouldWorkForAnElementWithAnOffset()
         {
-            await page.SetContentAsync("<div style=\"position:absolute; top: 10.3px; left: 20.4px;width:50.3px;height:20.2px;border:1px solid black;\"></div>");
-            var elementHandle = await page.QuerySelectorAsync("div");
+            await Page.SetContentAsync("<div style=\"position:absolute; top: 10.3px; left: 20.4px;width:50.3px;height:20.2px;border:1px solid black;\"></div>");
+            var elementHandle = await Page.QuerySelectorAsync("div");
             var screenshot = await elementHandle.ScreenshotAsync();
             ExpectToMatchSnapshot(screenshot, "screenshot-element-fractional-offset.png");
         }
 
         [UpstreamTest("EH-088 should wait for element to stop moving")]
-        public async Task ShouldWaitForElementToStopMoving(IPage page, Server server)
+        public async Task ShouldWaitForElementToStopMoving()
         {
-            await page.SetViewportSizeAsync(500, 500);
-            await page.GotoAsync(server.Prefix + "/grid.html");
-            var elementHandle = await page.QuerySelectorAsync(".box:nth-of-type(3)");
+            await Page.SetViewportSizeAsync(500, 500);
+            await Page.GotoAsync(Server.Prefix + "/grid.html");
+            var elementHandle = await Page.QuerySelectorAsync(".box:nth-of-type(3)");
             await elementHandle.EvaluateAsync("e => e.classList.add('animation')");
-            await Rafraf(page);
+            await Rafraf(Page);
             var screenshot = await elementHandle.ScreenshotAsync();
             ExpectToMatchSnapshot(screenshot, "screenshot-element-bounding-box.png");
         }
 
         [UpstreamTest("EH-089 should take screenshot of disabled button")]
-        public async Task ShouldTakeScreenshotOfDisabledButton(IPage page)
+        public async Task ShouldTakeScreenshotOfDisabledButton()
         {
-            await page.SetViewportSizeAsync(500, 500);
-            await page.SetContentAsync("<button disabled>Click me</button>");
-            var button = await page.QuerySelectorAsync("button");
+            await Page.SetViewportSizeAsync(500, 500);
+            await Page.SetContentAsync("<button disabled>Click me</button>");
+            var button = await Page.QuerySelectorAsync("button");
             var screenshot = await button.ScreenshotAsync();
             Assert.That(screenshot, Is.InstanceOf<byte[]>());
         }
 
         [UpstreamTest("EH-090 path option should create subdirectories")]
-        public async Task PathOptionShouldCreateSubdirectories(IPage page, Server server, TestInfo testInfo)
+        public async Task PathOptionShouldCreateSubdirectories()
         {
-            await page.SetViewportSizeAsync(500, 500);
-            await page.GotoAsync(server.Prefix + "/grid.html");
-            await page.EvaluateAsync("() => window.scrollBy(50, 100)");
-            var elementHandle = await page.QuerySelectorAsync(".box:nth-of-type(3)");
-            var outputPath = testInfo.OutputPath(Path.Combine("these", "are", "directories", "screenshot.png"));
+            await Page.SetViewportSizeAsync(500, 500);
+            await Page.GotoAsync(Server.Prefix + "/grid.html");
+            await Page.EvaluateAsync("() => window.scrollBy(50, 100)");
+            var elementHandle = await Page.QuerySelectorAsync(".box:nth-of-type(3)");
+            var outputPath = Info.OutputPath(Path.Combine("these", "are", "directories", "screenshot.png"));
             await elementHandle.ScreenshotAsync(new() { Path = outputPath });
             ExpectToMatchSnapshot(await File.ReadAllBytesAsync(outputPath), "screenshot-element-bounding-box.png");
         }
 
         [UpstreamTest("EH-091 should prefer type over extension")]
-        public async Task ShouldPreferTypeOverExtension(IPage page, Server server, TestInfo testInfo)
+        public async Task ShouldPreferTypeOverExtension()
         {
-            await page.SetViewportSizeAsync(500, 500);
-            await page.GotoAsync(server.Prefix + "/grid.html");
-            await page.EvaluateAsync("() => window.scrollBy(50, 100)");
-            var elementHandle = await page.QuerySelectorAsync(".box:nth-of-type(3)");
-            var outputPath = testInfo.OutputPath("file.png");
+            await Page.SetViewportSizeAsync(500, 500);
+            await Page.GotoAsync(Server.Prefix + "/grid.html");
+            await Page.EvaluateAsync("() => window.scrollBy(50, 100)");
+            var elementHandle = await Page.QuerySelectorAsync(".box:nth-of-type(3)");
+            var outputPath = Info.OutputPath("file.png");
             var buffer = await elementHandle.ScreenshotAsync(new() { Path = outputPath, Type = ScreenshotType.Jpeg });
             Assert.That(new[] { buffer[0], buffer[1], buffer[2] }, Is.EqualTo(new byte[] { 0xFF, 0xD8, 0xFF }));
         }
 
         [UpstreamTest("EH-092 should not issue resize event")]
-        public async Task ShouldNotIssueResizeEvent(IPage page, Server server)
+        public async Task ShouldNotIssueResizeEvent()
         {
-            await page.GotoAsync(server.Prefix + "/grid.html");
+            await Page.GotoAsync(Server.Prefix + "/grid.html");
             var resizeTriggered = false;
-            await page.ExposeFunctionAsync("resize", () =>
+            await Page.ExposeFunctionAsync("resize", () =>
             {
                 resizeTriggered = true;
             });
-            await page.EvaluateAsync(@"() => {
+            await Page.EvaluateAsync(@"() => {
       window.addEventListener('resize', () => window.resize());
     }");
-            var elementHandle = await page.QuerySelectorAsync(".box:nth-of-type(3)");
+            var elementHandle = await Page.QuerySelectorAsync(".box:nth-of-type(3)");
             await elementHandle.ScreenshotAsync();
             Assert.That(resizeTriggered, Is.False);
         }

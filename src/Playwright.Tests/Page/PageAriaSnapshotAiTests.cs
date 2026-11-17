@@ -116,7 +116,7 @@ public class PageAriaSnapshotAiTests
     }
 
     [UpstreamTest("AR-052 should stitch all frame snapshots")]
-    [Fixme("dotnet: locator.ToString() after NormalizeAsync() is the C# form Locator(\"body\"), upstream expects locator('body')")]
+    [LocalFixme("dotnet: locator.ToString() after NormalizeAsync() is the C# form Locator(\"body\"), upstream expects locator('body')")]
     public async Task ShouldStitchAllFrameSnapshots(IPage page, Server server)
     {
         await page.GotoAsync(server.Prefix + "/frames/nested-frames.html");
@@ -858,7 +858,7 @@ public class PageAriaSnapshotAiTests
     }
 
     [UpstreamTest("AR-083 should snapshot a locator inside a frameset frame")]
-    [Fixme("dotnet: locator.ToString() after NormalizeAsync() is the C# form Locator(\"frame\").First.ContentFrame.Locator(\"body\"), upstream expects locator('frame').first().contentFrame().locator('body')")]
+    [LocalFixme("dotnet: locator.ToString() after NormalizeAsync() is the C# form Locator(\"frame\").First.ContentFrame.Locator(\"body\"), upstream expects locator('frame').first().contentFrame().locator('body')")]
     public async Task ShouldSnapshotALocatorInsideAFramesetFrame(IPage page, Server server)
     {
         await page.GotoAsync(server.Prefix + "/frames/frameset.html");
@@ -874,7 +874,7 @@ public class PageAriaSnapshotAiTests
     }
 
     [UpstreamTest("AR-084 should stitch iframes inside a frameset frame")]
-    [Fixme("dotnet: locator.ToString() after NormalizeAsync() is the C# form Locator(\"frame\").ContentFrame.Locator(\"iframe\").ContentFrame.GetByRole(AriaRole.Button, new() { Name = \"In iframe\" }), upstream expects locator('frame').contentFrame().locator('iframe').contentFrame().getByRole('button', { name: 'In iframe' })")]
+    [LocalFixme("dotnet: locator.ToString() after NormalizeAsync() is the C# form Locator(\"frame\").ContentFrame.Locator(\"iframe\").ContentFrame.GetByRole(AriaRole.Button, new() { Name = \"In iframe\" }), upstream expects locator('frame').contentFrame().locator('iframe').contentFrame().getByRole('button', { name: 'In iframe' })")]
     public async Task ShouldStitchIframesInsideAFramesetFrame(IPage page, Server server)
     {
         server.SetRoute("/frameset-with-iframe.html", (req, res) =>

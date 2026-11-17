@@ -115,13 +115,15 @@ public class VideoTests
     }
 
     [BeforeEach]
-    public static void Skip(string video) => It.Skip(video == "on", "conflicts with built-in video recording");
+    public static void Skip(string video) => Info.Skip(video == "on", "conflicts with built-in video recording");
 
-    [ItSlow]
     public class Screencast
     {
+        [SetUp]
+        public void Slow() => Info.Slow();
+
         [BeforeEach]
-        public static void Skip(string mode) => It.Skip(mode != "default", "video.path() is not available in remote mode");
+        public static void Skip(string mode) => Info.Skip(mode != "default", "video.path() is not available in remote mode");
 
         [UpstreamTest("VI-001 should not have video by default")]
         public async Task ShouldNotHaveVideoByDefault(IPage page)
@@ -351,8 +353,8 @@ public class VideoTests
         [UpstreamTest("VI-013 should capture css transformation")]
         public async Task ShouldCaptureCssTransformation(IBrowser browser, Server server, bool headless, string browserName, string platform, string trace, TestInfo testInfo, BrowserNewContextOptions contextOptions)
         {
-            It.Fixme(!headless, "Fails on headed");
-            It.Fixme(browserName == "webkit" && platform == "win32");
+            Info.Fixme(!headless, "Fails on headed");
+            Info.Fixme(browserName == "webkit" && platform == "win32");
 
             var size = (width: 600, height: 400);
             // Set viewport equal to screencast frame size to avoid scaling.
@@ -382,7 +384,7 @@ public class VideoTests
         [UpstreamTest("VI-014 should work for popups")]
         public async Task ShouldWorkForPopups(IBrowser browser, Server server, string browserName, bool isBidi, TestInfo testInfo, BrowserNewContextOptions contextOptions)
         {
-            It.Fixme(browserName == "firefox" && !isBidi, "https://github.com/microsoft/playwright/issues/14557");
+            Info.Fixme(browserName == "firefox" && !isBidi, "https://github.com/microsoft/playwright/issues/14557");
             var videosPath = testInfo.OutputPath("");
             var size = (width: 600, height: 400);
             var context = await browser.NewContextAsync(new(contextOptions)
@@ -415,8 +417,8 @@ public class VideoTests
         [UpstreamTest("VI-015 should scale frames down to the requested size ")]
         public async Task ShouldScaleFramesDownToTheRequestedSize(IBrowser browser, string browserName, Server server, bool headless, bool isHeadlessShell, TestInfo testInfo, BrowserNewContextOptions contextOptions)
         {
-            It.Fixme(!headless, "Fails on headed");
-            It.Fixme(browserName == "chromium" && !isHeadlessShell, "Chromium (but not headless shell) has a min width issue");
+            Info.Fixme(!headless, "Fails on headed");
+            Info.Fixme(browserName == "chromium" && !isHeadlessShell, "Chromium (but not headless shell) has a min width issue");
 
             var context = await browser.NewContextAsync(new(contextOptions)
             {
@@ -531,7 +533,7 @@ public class VideoTests
         [UpstreamTest("VI-020 should be 800x600 with null viewport")]
         public async Task ShouldBe800x600WithNullViewport(IBrowser browser, bool headless, string browserName, bool isBidi, TestInfo testInfo, BrowserNewContextOptions contextOptions)
         {
-            It.Fixme(browserName == "firefox" && headless && !isBidi, "Fails in headless on bots");
+            Info.Fixme(browserName == "firefox" && headless && !isBidi, "Fails in headless on bots");
 
             var context = await browser.NewContextAsync(new(contextOptions)
             {
@@ -552,7 +554,7 @@ public class VideoTests
         [UpstreamTest("VI-021 should capture static page in persistent context @smoke")]
         public async Task ShouldCaptureStaticPageInPersistentContext(LaunchPersistent launchPersistent, string browserName, string trace, bool isMac, TestInfo testInfo)
         {
-            It.Skip(browserName == "webkit" && isMac && RuntimeInformation.ProcessArchitecture == Architecture.Arm64, "Is only failing on self-hosted github actions runner on M1 mac; not reproducible locally");
+            Info.Skip(browserName == "webkit" && isMac && RuntimeInformation.ProcessArchitecture == Architecture.Arm64, "Is only failing on self-hosted github actions runner on M1 mac; not reproducible locally");
             var size = (width: 600, height: 400);
             var (context, page) = await launchPersistent(new()
             {
@@ -704,8 +706,8 @@ public class VideoTests
         [UpstreamTest("VI-028 should capture full viewport")]
         public async Task ShouldCaptureFullViewport(IBrowserType browserType, string browserName, bool isWindows, bool headless, bool isHeadlessShell, TestInfo testInfo, BrowserTypeLaunchOptions launchOptions, BrowserNewContextOptions contextOptions)
         {
-            It.Fixme(browserName == "chromium" && !isHeadlessShell, "The square is not on the video");
-            It.Fixme(browserName == "firefox" && isWindows, "https://github.com/microsoft/playwright/issues/14405");
+            Info.Fixme(browserName == "chromium" && !isHeadlessShell, "The square is not on the video");
+            Info.Fixme(browserName == "firefox" && isWindows, "https://github.com/microsoft/playwright/issues/14405");
             var size = (width: 600, height: 400);
             var browser = await browserType.LaunchAsync(launchOptions);
 
@@ -739,9 +741,9 @@ public class VideoTests
         [UpstreamTest("VI-029 should capture full viewport on hidpi")]
         public async Task ShouldCaptureFullViewportOnHidpi(IBrowserType browserType, string browserName, bool headless, bool isWindows, bool isLinux, bool isHeadlessShell, string channel, TestInfo testInfo, BrowserTypeLaunchOptions launchOptions, BrowserNewContextOptions contextOptions)
         {
-            It.Fixme(browserName == "chromium" && !isHeadlessShell, "The square is not on the video");
-            It.Fixme(browserName == "firefox" && isWindows, "https://github.com/microsoft/playwright/issues/14405");
-            It.Fixme(browserName == "webkit" && !headless && (isLinux || (isWindows && channel == "webkit-wsl")), "https://github.com/microsoft/playwright/issues/22617");
+            Info.Fixme(browserName == "chromium" && !isHeadlessShell, "The square is not on the video");
+            Info.Fixme(browserName == "firefox" && isWindows, "https://github.com/microsoft/playwright/issues/14405");
+            Info.Fixme(browserName == "webkit" && !headless && (isLinux || (isWindows && channel == "webkit-wsl")), "https://github.com/microsoft/playwright/issues/22617");
             var size = (width: 600, height: 400);
             var browser = await browserType.LaunchAsync(launchOptions);
 
@@ -776,9 +778,9 @@ public class VideoTests
         [UpstreamTest("VI-030 should work with video+trace")]
         public async Task ShouldWorkWithVideoTrace(IBrowser browser, string trace, bool headless, string browserName, bool isHeadlessShell, TestInfo testInfo, BrowserNewContextOptions contextOptions)
         {
-            It.Skip(trace == "on");
-            It.Fixme(!headless, "different trace screencast image size on all browsers");
-            It.Fixme(browserName == "chromium" && !isHeadlessShell, "different trace screencast image size");
+            Info.Skip(trace == "on");
+            Info.Fixme(!headless, "different trace screencast image size on all browsers");
+            Info.Fixme(browserName == "chromium" && !isHeadlessShell, "different trace screencast image size");
 
             var size = (width: 500, height: 400);
             var traceFile = testInfo.OutputPath("trace.zip");
@@ -820,7 +822,7 @@ public class VideoTests
     [UpstreamTest("VI-031 should saveAs video")]
     public async Task ShouldSaveAsVideo(IBrowser browser, TestInfo testInfo, BrowserNewContextOptions contextOptions)
     {
-        It.Slow();
+        Info.Slow();
 
         var videosPath = testInfo.OutputPath("");
         var size = (width: 320, height: 240);

@@ -76,10 +76,10 @@ public sealed class UpstreamTestAttribute : TestAttribute, IApplyToTest, IRepeat
     /// </summary>
     public TestCommand Wrap(TestCommand command)
     {
-        // It.Slow() and It.SetTimeout() change the timeout while the test runs.
+        // Info.Slow() and Info.SetTimeout() change the timeout while the test runs.
         command = new PlaywrightTestAttribute.TimeoutCommand(command, () =>
         {
-            var timeout = (TestExecutionContext.CurrentContext.TestObject as UpstreamPlaywrightTest)?.TestInfo?.Timeout ?? Env.Timeout;
+            var timeout = (TestExecutionContext.CurrentContext.TestObject as UpstreamPlaywrightTest)?.Info?.Timeout ?? Env.Timeout;
             return timeout <= 0 || Debugger.IsAttached ? int.MaxValue : timeout;
         });
         if (Env.CI)

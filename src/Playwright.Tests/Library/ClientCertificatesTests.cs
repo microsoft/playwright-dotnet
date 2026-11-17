@@ -315,7 +315,7 @@ public class ClientCertificatesTests
             var serverPort = new Uri(serverURL).Port;
             // .NET: connectHosts of upstream is a list that the server keeps adding to: here it is read from the server each time.
             var socksForwardingServer = await TestProxy.SetupSocksForwardingServer(
-                port: It.Info().WorkerIndex + 2048 + 2,
+                port: Info.WorkerIndex + 2048 + 2,
                 forwardPort: serverPort,
                 allowedTargetPort: serverPort);
             var proxyServerAddr = socksForwardingServer.ProxyServerAddr;
@@ -693,7 +693,7 @@ public class ClientCertificatesTests
             var serverPort = new Uri(serverURL).Port;
             // .NET: connectHosts of upstream is a list that the server keeps adding to: here it is read from the server each time.
             var socksForwardingServer = await TestProxy.SetupSocksForwardingServer(
-                port: It.Info().WorkerIndex + 2048 + 2,
+                port: Info.WorkerIndex + 2048 + 2,
                 forwardPort: serverPort,
                 allowedTargetPort: serverPort);
             var proxyServerAddr = socksForwardingServer.ProxyServerAddr;
@@ -726,7 +726,7 @@ public class ClientCertificatesTests
         {
             foreach (var tlsVersion in new[] { "TLSv1.3", "TLSv1.2" })
             {
-                await It.Step($"TLS version: {tlsVersion}", async () =>
+                await Info.Step($"TLS version: {tlsVersion}", async () =>
                 {
                     var server = CreateTlsServer(new()
                     {
@@ -943,7 +943,7 @@ public class ClientCertificatesTests
         [UpstreamTest("CC-036 support http2")]
         public async Task SupportHttp2(IBrowser browser, StartCCServerFixture startCCServer, Func<string, string> asset, string browserName, bool isMac, BrowserNewPageOptions newPageOptions)
         {
-            It.Skip(browserName == "webkit" && isMac, "WebKit on macOS doesn\n proxy localhost");
+            Info.Skip(browserName == "webkit" && isMac, "WebKit on macOS doesn\n proxy localhost");
             var serverURL = await startCCServer(new() { Http2 = true });
             var page = await browser.NewPageAsync(new(newPageOptions)
             {
@@ -975,7 +975,7 @@ public class ClientCertificatesTests
         [UpstreamTest("CC-037 support http2 if the browser only supports http1.1")]
         public async Task SupportHttp2IfTheBrowserOnlySupportsHttp11(IBrowserType browserType, string browserName, StartCCServerFixture startCCServer, Func<string, string> asset, BrowserTypeLaunchOptions launchOptions, BrowserNewPageOptions newPageOptions)
         {
-            It.Skip(browserName != "chromium");
+            Info.Skip(browserName != "chromium");
             var serverURL = await startCCServer(new() { Http2 = true, EnableHTTP1FallbackWhenUsingHttp2 = true });
             var browser = await browserType.LaunchAsync(new(launchOptions) { Args = ["--disable-http2"] });
             var page = await browser.NewPageAsync(new(newPageOptions)
@@ -1007,8 +1007,8 @@ public class ClientCertificatesTests
         [UpstreamTest("CC-038 should return target connection errors when using http2")]
         public async Task ShouldReturnTargetConnectionErrorsWhenUsingHttp2(IBrowser browser, StartCCServerFixture startCCServer, Func<string, string> asset, string browserName, bool isMac, (int Major, int Minor, int Patch) nodeVersion, BrowserNewPageOptions newPageOptions)
         {
-            It.Skip(browserName == "webkit" && isMac, "WebKit on macOS does not proxy localhost");
-            It.Skip(nodeVersion.Major < 20, "http2.performServerHandshake is not supported in older Node.js versions");
+            Info.Skip(browserName == "webkit" && isMac, "WebKit on macOS does not proxy localhost");
+            Info.Skip(nodeVersion.Major < 20, "http2.performServerHandshake is not supported in older Node.js versions");
 
             var serverURL = await startCCServer(new() { Http2 = true });
             var page = await browser.NewPageAsync(new(newPageOptions)
@@ -1075,7 +1075,7 @@ public class ClientCertificatesTests
             [UpstreamTest("CC-040 validate input")]
             public async Task ValidateInput(LaunchPersistent launchPersistent)
             {
-                It.Slow();
+                Info.Slow();
                 foreach (var (clientCertificates, expected) in kValidationSubTests)
                 {
                     var error = await ThrowsAsync<PlaywrightException>(() => launchPersistent(new() { ClientCertificates = clientCertificates }));

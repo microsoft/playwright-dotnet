@@ -24,7 +24,7 @@ namespace Microsoft.Playwright.Tests.Page;
 public class PageClickTimeout2Tests
 {
     [UpstreamTest("CL-114 should timeout waiting for display:none to be gone")]
-    [Fixme("dotnet: the message is 'Timeout 5000ms exceeded.', without the 'page.click: ' prefix of the call")]
+    [LocalFixme("dotnet: the message is 'Timeout 5000ms exceeded.', without the 'page.click: ' prefix of the call")]
     public async Task ShouldTimeoutWaitingForDisplayNoneToBeGone(IPage page, Server server)
     {
         await page.GotoAsync(server.Prefix + "/input/button.html");
@@ -37,7 +37,7 @@ public class PageClickTimeout2Tests
     }
 
     [UpstreamTest("CL-115 should timeout waiting for visibility:hidden to be gone")]
-    [Fixme("dotnet: the message is 'Timeout 5000ms exceeded.', without the 'page.click: ' prefix of the call")]
+    [LocalFixme("dotnet: the message is 'Timeout 5000ms exceeded.', without the 'page.click: ' prefix of the call")]
     public async Task ShouldTimeoutWaitingForVisibilityHiddenToBeGone(IPage page, Server server)
     {
         await page.GotoAsync(server.Prefix + "/input/button.html");

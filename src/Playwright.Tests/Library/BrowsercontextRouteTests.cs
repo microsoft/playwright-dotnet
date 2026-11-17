@@ -173,7 +173,7 @@ public class BrowsercontextRouteTests
     [UpstreamTest("RO-170 should ignore secure Set-Cookie header for insecure requests")]
     public async Task ShouldIgnoreSecureSetCookieHeaderForInsecureRequests(ContextFactory contextFactory, Server server, string browserName, bool isMac)
     {
-        It.Fixme(browserName == "webkit" && !isMac);
+        Info.Fixme(browserName == "webkit" && !isMac);
 
         var context = await contextFactory();
         var page = await context.NewPageAsync();
@@ -505,7 +505,7 @@ public class BrowsercontextRouteTests
             });
             for (var i = 0; i < 3; i++)
             {
-                await It.Step($"main frame iteration {i}", async () =>
+                await Info.Step($"main frame iteration {i}", async () =>
                 {
                     var respPromise = page.WaitForResponseAsync("**/api");
                     await page.EvaluateAsync(@"async () => {
@@ -523,8 +523,8 @@ public class BrowsercontextRouteTests
     [UpstreamTest("RO-184 should fulfill popup main request using alias")]
     public async Task ShouldFulfillPopupMainRequestUsingAlias(IPage page, Server server, bool isElectron, int electronMajorVersion, bool isAndroid)
     {
-        It.Skip(isElectron && electronMajorVersion < 30, "error: Browser context management is not supported.");
-        It.Skip(isAndroid, "The internal Android localhost (10.0.0.2) != the localhost on the host");
+        Info.Skip(isElectron && electronMajorVersion < 30, "error: Browser context management is not supported.");
+        Info.Skip(isAndroid, "The internal Android localhost (10.0.0.2) != the localhost on the host");
 
         await page.Context.RouteAsync("**/*", async route =>
         {

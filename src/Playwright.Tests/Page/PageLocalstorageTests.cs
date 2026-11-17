@@ -23,7 +23,7 @@ namespace Microsoft.Playwright.Tests.Page;
 public class PageLocalstorageTests
 {
     [BeforeEach]
-    public static void Skip(bool isElectron) => It.Skip(isElectron, "Electron shares a single context between tests");
+    public static void Skip(bool isElectron) => Info.Skip(isElectron, "Electron shares a single context between tests");
 
     [UpstreamTest("ST-023 localStorage.items returns empty array on fresh origin")]
     public async Task LocalStorageItemsReturnsEmptyArrayOnFreshOrigin(IPage page, Server server)
@@ -126,7 +126,7 @@ public class PageLocalstorageTests
     [UpstreamTest("ST-031 storage methods are scoped to the current origin")]
     public async Task StorageMethodsAreScopedToTheCurrentOrigin(IPage page, Server server, bool isAndroid)
     {
-        It.Skip(isAndroid, "these are same origins on Android due to our test server limitation");
+        Info.Skip(isAndroid, "these are same origins on Android due to our test server limitation");
 
         await page.GotoAsync(server.Prefix + "/empty.html");
         await page.LocalStorage.SetItemAsync("k", "origin-1");

@@ -179,8 +179,8 @@ public class PageEventPopupTests
     [UpstreamTest("PO-030 should finish loading after opening a popup while a cross-site iframe is loading")]
     public async Task ShouldFinishLoadingAfterOpeningAPopupWhileACrossSiteIframeIsLoading(IPage page, Server server, bool isHeadlessShell, bool isElectron, bool isAndroid)
     {
-        It.Skip(isElectron || isAndroid, "No defined site-isolation policy");
-        It.Fixme(isHeadlessShell, "Without site isolation, which is the default in headless shell, the opener never fires the load event");
+        Info.Skip(isElectron || isAndroid, "No defined site-isolation policy");
+        Info.Fixme(isHeadlessShell, "Without site isolation, which is the default in headless shell, the opener never fires the load event");
 
         var frameMayFinish = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
         server.SetRoute("/frame.html", async (req, res) =>

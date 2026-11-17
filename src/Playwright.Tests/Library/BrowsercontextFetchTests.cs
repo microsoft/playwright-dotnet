@@ -29,7 +29,7 @@ namespace Microsoft.Playwright.Tests.Library;
 public class BrowsercontextFetchTests
 {
     [BeforeEach]
-    public static void Skip(string mode) => It.Skip(mode != "default");
+    public static void Skip(string mode) => Info.Skip(mode != "default");
 
     // .NET: context.request[method](url, options).
     private static Task<IAPIResponse> CallMethod(IAPIRequestContext request, string method, string url, APIRequestContextOptions options) => method switch
@@ -75,7 +75,7 @@ public class BrowsercontextFetchTests
     }
 
     [UpstreamTest("FE-090 should return timing")]
-    [Fixme("dotnet: RequestTimingResult.StartTime is a float, which holds a time in milliseconds since the epoch in steps of 131072 only: it is up to 65 seconds away from the time of the request, upstream expects it within 5 seconds of Date.now(). The test passes by chance when the request starts within 5 seconds of such a step, about one run in 13")]
+    [LocalFixme("dotnet: RequestTimingResult.StartTime is a float, which holds a time in milliseconds since the epoch in steps of 131072 only: it is up to 65 seconds away from the time of the request, upstream expects it within 5 seconds of Date.now(). The test passes by chance when the request starts within 5 seconds of such a step, about one run in 13")]
     public async Task ShouldReturnTiming(IBrowserContext context)
     {
         // Create a fresh server to guarantee a new connection, because keep-alive
@@ -107,7 +107,7 @@ public class BrowsercontextFetchTests
     }
 
     [UpstreamTest("FE-091 should return timing for https")]
-    [Fixme("dotnet: RequestTimingResult.StartTime is a float, which holds a time in milliseconds since the epoch in steps of 131072 only: it is up to 65 seconds away from the time of the request, upstream expects it within 5 seconds of Date.now(). The test passes by chance when the request starts within 5 seconds of such a step, about one run in 13")]
+    [LocalFixme("dotnet: RequestTimingResult.StartTime is a float, which holds a time in milliseconds since the epoch in steps of 131072 only: it is up to 65 seconds away from the time of the request, upstream expects it within 5 seconds of Date.now(). The test passes by chance when the request starts within 5 seconds of such a step, about one run in 13")]
     public async Task ShouldReturnTimingForHttps(IBrowserContext context)
     {
         // Create a fresh server to guarantee a new connection, because keep-alive
@@ -138,7 +138,7 @@ public class BrowsercontextFetchTests
     }
 
     [UpstreamTest("FE-092 should throw on network error")]
-    [Fixme("dotnet: the message is 'socket hang up (ECONNRESET)', without the 'apiRequestContext.get: ' prefix of the call")]
+    [LocalFixme("dotnet: the message is 'socket hang up (ECONNRESET)', without the 'apiRequestContext.get: ' prefix of the call")]
     public async Task ShouldThrowOnNetworkError(IBrowserContext context, Server server)
     {
         server.SetRoute("/test", (req, res) =>
@@ -150,7 +150,7 @@ public class BrowsercontextFetchTests
     }
 
     [UpstreamTest("FE-093 should throw on network error after redirect")]
-    [Fixme("dotnet: the message is 'socket hang up (ECONNRESET)', without the 'apiRequestContext.get: ' prefix of the call")]
+    [LocalFixme("dotnet: the message is 'socket hang up (ECONNRESET)', without the 'apiRequestContext.get: ' prefix of the call")]
     public async Task ShouldThrowOnNetworkErrorAfterRedirect(IBrowserContext context, Server server)
     {
         server.SetRedirect("/redirect", "/test");
@@ -163,7 +163,7 @@ public class BrowsercontextFetchTests
     }
 
     [UpstreamTest("FE-094 should throw on network error when sending body")]
-    [Fixme("dotnet: the message is 'aborted', without the 'apiRequestContext.get: ' prefix of the call")]
+    [LocalFixme("dotnet: the message is 'aborted', without the 'apiRequestContext.get: ' prefix of the call")]
     public async Task ShouldThrowOnNetworkErrorWhenSendingBody(IBrowserContext context, Server server)
     {
         server.SetRoute("/test", (req, res) =>
@@ -182,7 +182,7 @@ public class BrowsercontextFetchTests
     }
 
     [UpstreamTest("FE-095 should throw on network error when sending body after redirect")]
-    [Fixme("dotnet: the message is 'aborted', without the 'apiRequestContext.get: ' prefix of the call")]
+    [LocalFixme("dotnet: the message is 'aborted', without the 'apiRequestContext.get: ' prefix of the call")]
     public async Task ShouldThrowOnNetworkErrorWhenSendingBodyAfterRedirect(IBrowserContext context, Server server)
     {
         server.SetRedirect("/redirect", "/test");
@@ -239,7 +239,7 @@ public class BrowsercontextFetchTests
     }
 
     [UpstreamTest("FE-099 ${method} should support params passed as URLSearchParams")]
-    [Fixme("dotnet: Params with the same name twice throws 'ArgumentException: An item with the same key has already been added. Key: param1': APIRequestContext.FetchAsync makes a dictionary of the params; upstream sends param1=value1&param1=value2")]
+    [LocalFixme("dotnet: Params with the same name twice throws 'ArgumentException: An item with the same key has already been added. Key: param1': APIRequestContext.FetchAsync makes a dictionary of the params; upstream sends param1=value1&param1=value2")]
     [Case("fetch")]
     [Case("delete")]
     [Case("get")]
@@ -1114,7 +1114,7 @@ public class BrowsercontextFetchTests
     }
 
     [UpstreamTest("FE-148 should support timeout option")]
-    [Fixme("dotnet: the message is 'Timeout 10ms exceeded.', without the 'apiRequestContext.get: ' prefix of the call")]
+    [LocalFixme("dotnet: the message is 'Timeout 10ms exceeded.', without the 'apiRequestContext.get: ' prefix of the call")]
     public async Task ShouldSupportTimeoutOption(IBrowserContext context, Server server)
     {
         server.SetRoute("/slow", (req, res) =>
@@ -1156,7 +1156,7 @@ public class BrowsercontextFetchTests
     }
 
     [UpstreamTest("FE-150 should respect timeout after redirects")]
-    [Fixme("dotnet: the message is 'Timeout 100ms exceeded.', without the 'apiRequestContext.get: ' prefix of the call")]
+    [LocalFixme("dotnet: the message is 'Timeout 100ms exceeded.', without the 'apiRequestContext.get: ' prefix of the call")]
     public async Task ShouldRespectTimeoutAfterRedirects(IBrowserContext context, Server server)
     {
         server.SetRedirect("/redirect", "/slow");
@@ -1177,7 +1177,7 @@ public class BrowsercontextFetchTests
     [UpstreamTest("FE-151 should not hang on a brotli encoded Range request")]
     public async Task ShouldNotHangOnABrotliEncodedRangeRequest(IBrowserContext context, Server server, (int Major, int Minor, int Patch) nodeVersion)
     {
-        It.Skip(nodeVersion.Major < 18);
+        Info.Skip(nodeVersion.Major < 18);
 
         // .NET: zlib.brotliCompressSync(Buffer.from('A')) is a BrotliStream.
         byte[] encodedRequestPayload;
@@ -1428,7 +1428,7 @@ public class BrowsercontextFetchTests
     [UpstreamTest("FE-162 should support repeating names in multipart/form-data")]
     public async Task ShouldSupportRepeatingNamesInMultipartFormData(IBrowserContext context, Server server, (int Major, int Minor, int Patch) nodeVersion)
     {
-        It.Skip(nodeVersion.Major < 20, "File is not available in Node.js < 20. FormData is not available in Node.js < 18");
+        Info.Skip(nodeVersion.Major < 20, "File is not available in Node.js < 20. FormData is not available in Node.js < 18");
         var postBodyPromise = new TaskCompletionSource<string>(TaskCreationOptions.RunContinuationsAsynchronously);
         server.SetRoute("/empty.html", async (req, res) =>
         {
@@ -1507,7 +1507,7 @@ public class BrowsercontextFetchTests
     [UpstreamTest("FE-166 should send secure cookie over http for localhost")]
     public async Task ShouldSendSecureCookieOverHttpForLocalhost(IPage page, Server server, string channel)
     {
-        It.Skip(channel == "webkit-wsl");
+        Info.Skip(channel == "webkit-wsl");
         server.SetRoute("/setcookie.html", (req, res) =>
         {
             res.SetHeader("Set-Cookie", new[] { "a=v; secure" });
@@ -1521,7 +1521,7 @@ public class BrowsercontextFetchTests
     }
 
     [UpstreamTest("FE-167 should accept bool and numeric params and filter out undefined")]
-    [Fixme("dotnet: a null value in Params throws NullReferenceException: APIRequestContext.FetchAsync calls ToString() on each value, which also makes 'True' and 'False' of the bools; upstream leaves the param out and sends bool=true&bool2=false")]
+    [LocalFixme("dotnet: a null value in Params throws NullReferenceException: APIRequestContext.FetchAsync calls ToString() on each value, which also makes 'True' and 'False' of the bools; upstream leaves the param out and sends bool=true&bool2=false")]
     public async Task ShouldAcceptBoolAndNumericParamsAndFilterOutUndefined(IPage page, Server server)
     {
         ServerRequest request = null;
@@ -1583,7 +1583,7 @@ public class BrowsercontextFetchTests
     [UpstreamTest("FE-169 should work with connectOverCDP")]
     public async Task ShouldWorkWithConnectOverCDP(string browserName, IBrowserType browserType, Server server, TestInfo testInfo, BrowserTypeLaunchOptions launchOptions)
     {
-        It.Skip(browserName != "chromium");
+        Info.Skip(browserName != "chromium");
         var port = 9339 + testInfo.WorkerIndex;
         var browserServer = await browserType.LaunchAsync(new(launchOptions)
         {
@@ -1615,7 +1615,7 @@ public class BrowsercontextFetchTests
         // .NET: sameSite of a cookie is an enum; the names of its values are the texts 'None', 'Lax' and 'Strict'.
         foreach (var value in new[] { SameSiteAttribute.None, SameSiteAttribute.Lax, SameSiteAttribute.Strict })
         {
-            await It.Step($"SameSite={value}", async () =>
+            await Info.Step($"SameSite={value}", async () =>
             {
                 httpsServer.SetRoute("/empty.html", (req, res) =>
                 {
@@ -1670,7 +1670,7 @@ public class BrowsercontextFetchTests
         // .NET: sameSite of a cookie is an enum; the names of its values are the texts 'None', 'Lax' and 'Strict'.
         foreach (var value in new[] { SameSiteAttribute.None, SameSiteAttribute.Lax, SameSiteAttribute.Strict })
         {
-            await It.Step($"SameSite={value}", async () =>
+            await Info.Step($"SameSite={value}", async () =>
             {
                 server.SetRoute("/empty.html", (req, res) =>
                 {

@@ -25,7 +25,7 @@ namespace Microsoft.Playwright.Tests.Page;
 public class ElementhandleBoundingBoxTests
 {
     [BeforeEach]
-    public static void Skip(bool isAndroid) => It.Skip(isAndroid);
+    public static void Skip(bool isAndroid) => Info.Skip(isAndroid);
 
     [UpstreamTest("EH-001 should work")]
     public async Task ShouldWork(IPage page, Server server, string browserName, bool headless, bool isLinux)

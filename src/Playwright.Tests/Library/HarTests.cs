@@ -308,7 +308,7 @@ public class HarTests
     [UpstreamTest("HA-018 should include set-cookies with comma")]
     public async Task ShouldIncludeSetCookiesWithComma(ContextFactory contextFactory, Server server, string browserName, TestInfo testInfo)
     {
-        It.Fixme(browserName == "webkit", "We get \"name1=val, ue1, name2=val, ue2\" as a header value");
+        Info.Fixme(browserName == "webkit", "We get \"name1=val, ue1, name2=val, ue2\" as a header value");
         var pageWithHar = await PageWithHar(contextFactory, testInfo);
         var page = pageWithHar.Page;
         server.SetRoute("/empty.html", (req, res) =>
@@ -408,7 +408,7 @@ public class HarTests
     [UpstreamTest("HA-113 should store binary content with a textual mime type as base64")]
     public async Task ShouldStoreBinaryContentWithATextualMimeTypeAsBase64(ContextFactory contextFactory, Server server, string browserName, TestInfo testInfo)
     {
-        It.Fixme(browserName == "webkit", "WebKit decodes the body of a textual resource before it gets to us");
+        Info.Fixme(browserName == "webkit", "WebKit decodes the body of a textual resource before it gets to us");
         var body = new byte[] { 0x80, 0xc3, 0x28, 0xff, 0x41 };
         server.SetRoute("/binary.js", (req, res) =>
         {
@@ -771,11 +771,11 @@ public class HarTests
     }
 
     [UpstreamTest("HA-042 should have security details")]
-    [Fixme("harness: the HTTPS server of the harness negotiates TLS 1.2 on macOS, where the SslStream of .NET has no TLS 1.3 for a server: the protocol is 'TLS 1.2', upstream expects 'TLS 1.3'", Platforms = "darwin")]
+    [LocalFixme("harness: the HTTPS server of the harness negotiates TLS 1.2 on macOS, where the SslStream of .NET has no TLS 1.3 for a server: the protocol is 'TLS 1.2', upstream expects 'TLS 1.3' (only on darwin)")]
     public async Task ShouldHaveSecurityDetails(ContextFactory contextFactory, Server httpsServer, string browserName, string platform, string mode, string channel, bool isFrozenWebkit, TestInfo testInfo)
     {
-        It.Fixme(browserName == "webkit" && platform == "win32" && channel != "webkit-wsl");
-        It.Skip(isFrozenWebkit);
+        Info.Fixme(browserName == "webkit" && platform == "win32" && channel != "webkit-wsl");
+        Info.Skip(isFrozenWebkit);
 
         var pageWithHar = await PageWithHar(contextFactory, testInfo);
         var page = pageWithHar.Page;
@@ -864,10 +864,10 @@ public class HarTests
     }
 
     [UpstreamTest("HA-046 should return security details directly from response")]
-    [Fixme("harness: the HTTPS server of the harness negotiates TLS 1.2 on macOS, where the SslStream of .NET has no TLS 1.3 for a server: the protocol is 'TLS 1.2', upstream expects 'TLS 1.3'", Platforms = "darwin")]
+    [LocalFixme("harness: the HTTPS server of the harness negotiates TLS 1.2 on macOS, where the SslStream of .NET has no TLS 1.3 for a server: the protocol is 'TLS 1.2', upstream expects 'TLS 1.3' (only on darwin)")]
     public async Task ShouldReturnSecurityDetailsDirectlyFromResponse(ContextFactory contextFactory, Server httpsServer, string browserName, string platform, bool isFrozenWebkit)
     {
-        It.Skip(isFrozenWebkit);
+        Info.Skip(isFrozenWebkit);
 
         var context = await contextFactory(new() { IgnoreHTTPSErrors = true });
         var page = await context.NewPageAsync();
@@ -923,8 +923,8 @@ public class HarTests
     [UpstreamTest("HA-048 should filter favicon and favicon redirects")]
     public async Task ShouldFilterFaviconAndFaviconRedirects(Server server, string browserName, bool headless, Func<string, string> asset, ContextFactory contextFactory, string channel, TestInfo testInfo)
     {
-        It.Skip(headless && browserName != "firefox", "headless browsers, except firefox, do not request favicons");
-        It.Skip(!headless && browserName == "webkit", "headed webkit does not have a favicon feature");
+        Info.Skip(headless && browserName != "firefox", "headless browsers, except firefox, do not request favicons");
+        Info.Skip(!headless && browserName == "webkit", "headed webkit does not have a favicon feature");
 
         var pageWithHar = await PageWithHar(contextFactory, testInfo);
         var page = pageWithHar.Page;
@@ -1193,8 +1193,8 @@ public class HarTests
     [UpstreamTest("HA-058 should support HAR larger than 512MB")]
     public async Task ShouldSupportHARLargerThan512MB(ContextFactory contextFactory, Server server, string browserName, TestInfo testInfo)
     {
-        It.Skip(browserName != "chromium", "serializer is browser-agnostic; one browser is enough");
-        It.Slow();
+        Info.Skip(browserName != "chromium", "serializer is browser-agnostic; one browser is enough");
+        Info.Slow();
 
         var harPath = testInfo.OutputPath("test.har");
         var context = await contextFactory();

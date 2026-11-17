@@ -22,20 +22,22 @@ using static Microsoft.Playwright.Tests.Fixtures.Utils;
 namespace Microsoft.Playwright.Tests.Library;
 
 /// <summary>Port of tests/library/screencast.spec.ts.</summary>
-[ItSlow]
 public class ScreencastTests
 {
-    [BeforeEach]
-    public static void Skip(string mode) => It.Skip(mode != "default", "screencast is not available in remote mode");
+    [SetUp]
+    public void Slow() => Info.Slow();
 
     [BeforeEach]
-    public static void Skip2(string video) => It.Skip(video == "on", "conflicts with built-in video recording");
+    public static void Skip(string mode) => Info.Skip(mode != "default", "screencast is not available in remote mode");
+
+    [BeforeEach]
+    public static void Skip2(string video) => Info.Skip(video == "on", "conflicts with built-in video recording");
 
     [UpstreamTest("SC-001 screencast.start delivers frames via onFrame callback")]
     public async Task ScreencastStartDeliversFramesViaOnFrameCallback(IBrowser browser, Server server, string trace, string browserName, bool isMac, bool headless, BrowserNewContextOptions contextOptions)
     {
-        It.Skip(trace == "on", "trace=on has different screencast image configuration");
-        It.Fixme(browserName == "firefox" && isMac && !headless, "wrong frame size in headed Firefox on Mac");
+        Info.Skip(trace == "on", "trace=on has different screencast image configuration");
+        Info.Fixme(browserName == "firefox" && isMac && !headless, "wrong frame size in headed Firefox on Mac");
 
         var context = await browser.NewContextAsync(new(contextOptions) { ViewportSize = new() { Width = 1000, Height = 400 } });
         var page = await context.NewPageAsync();
@@ -73,10 +75,10 @@ public class ScreencastTests
     }
 
     [UpstreamTest("SC-002 applies backpressure while async onFrame callback is pending")]
-    [Fixme("dotnet: the client never sends screencastFrameAck after the OnFrame callback (Screencast.OnScreencastFrame), so the driver stops sending frames: no frame comes after the test releases the callback")]
+    [LocalFixme("dotnet: the client never sends screencastFrameAck after the OnFrame callback (Screencast.OnScreencastFrame), so the driver stops sending frames: no frame comes after the test releases the callback")]
     public async Task AppliesBackpressureWhileAsyncOnFrameCallbackIsPending(IBrowser browser, Server server, string trace, BrowserNewContextOptions contextOptions)
     {
-        It.Skip(trace == "on", "trace recording acknowledges screencast frames independently");
+        Info.Skip(trace == "on", "trace recording acknowledges screencast frames independently");
 
         var context = await browser.NewContextAsync(new(contextOptions) { ViewportSize = new() { Width = 500, Height = 400 } });
         var page = await context.NewPageAsync();
@@ -127,8 +129,8 @@ public class ScreencastTests
     [UpstreamTest("SC-003 onFrame receives viewport size")]
     public async Task OnFrameReceivesViewportSize(IBrowser browser, Server server, string trace, string browserName, bool isMac, bool headless, BrowserNewContextOptions contextOptions)
     {
-        It.Skip(trace == "on", "trace=on has different screencast image configuration");
-        It.Fixme(browserName == "firefox" && isMac && !headless, "wrong frame size in headed Firefox on Mac");
+        Info.Skip(trace == "on", "trace=on has different screencast image configuration");
+        Info.Fixme(browserName == "firefox" && isMac && !headless, "wrong frame size in headed Firefox on Mac");
 
         var context = await browser.NewContextAsync(new(contextOptions) { ViewportSize = new() { Width = 1000, Height = 400 } });
         var page = await context.NewPageAsync();
@@ -175,7 +177,7 @@ public class ScreencastTests
     [UpstreamTest("SC-005 start allows restart with different options after stop")]
     public async Task StartAllowsRestartWithDifferentOptionsAfterStop(IBrowser browser, string trace, BrowserNewContextOptions contextOptions)
     {
-        It.Skip(trace == "on", "trace=on enables screencast with different options");
+        Info.Skip(trace == "on", "trace=on enables screencast with different options");
 
         var context = await browser.NewContextAsync(new(contextOptions) { ViewportSize = new() { Width = 500, Height = 400 } });
         var page = await context.NewPageAsync();
@@ -191,7 +193,7 @@ public class ScreencastTests
     [UpstreamTest("SC-006 start returns a disposable that stops screencast")]
     public async Task StartReturnsADisposableThatStopsScreencast(IBrowser browser, Server server, string trace, BrowserNewContextOptions contextOptions)
     {
-        It.Skip(trace == "on", "trace=on has different screencast image configuration");
+        Info.Skip(trace == "on", "trace=on has different screencast image configuration");
         var context = await browser.NewContextAsync(new(contextOptions) { ViewportSize = new() { Width = 500, Height = 400 } });
         var page = await context.NewPageAsync();
 
@@ -224,7 +226,7 @@ public class ScreencastTests
     [UpstreamTest("SC-007 start/stop twice without path creates two files in artifactsDir")]
     public async Task StartStopTwiceWithoutPathCreatesTwoFilesInArtifactsDir(IBrowserType browserType, TestInfo testInfo, BrowserTypeLaunchOptions launchOptions, BrowserNewContextOptions contextOptions)
     {
-        It.Slow();
+        Info.Slow();
         var artifactsDir = testInfo.OutputPath("artifacts");
         var browser = await browserType.LaunchAsync(new(launchOptions) { ArtifactsDir = artifactsDir });
         var size = new ScreencastSize { Width = 800, Height = 800 };
@@ -251,7 +253,7 @@ public class ScreencastTests
     [UpstreamTest("SC-008 start should work when recordVideo is set")]
     public async Task StartShouldWorkWhenRecordVideoIsSet(IBrowser browser, TestInfo testInfo, BrowserNewContextOptions contextOptions)
     {
-        It.Slow();
+        Info.Slow();
 
         var autoDir = testInfo.OutputPath("auto");
         var manualDir = testInfo.OutputPath("manual");
@@ -296,7 +298,7 @@ public class ScreencastTests
     [UpstreamTest("SC-011 start should fail when another recording is in progress")]
     public async Task StartShouldFailWhenAnotherRecordingIsInProgress(IPage page, string trace, TestInfo testInfo)
     {
-        It.Skip(trace == "on", "trace=on has different screencast image configuration");
+        Info.Skip(trace == "on", "trace=on has different screencast image configuration");
         await page.Screencast.StartAsync(new() { Path = testInfo.OutputPath("video.webm") });
         var error = await Catch(() => page.Screencast.StartAsync(new() { Path = testInfo.OutputPath("video2.webm") }));
         Assert.That(error.Message, Does.Contain("Screencast is already started"));
@@ -343,7 +345,7 @@ public class ScreencastTests
     [UpstreamTest("SC-015 start dispose stops recording")]
     public async Task StartDisposeStopsRecording(IBrowser browser, TestInfo testInfo, BrowserNewContextOptions contextOptions)
     {
-        It.Slow();
+        Info.Slow();
         var size = (width: 800, height: 800);
         var context = await browser.NewContextAsync(new(contextOptions) { ViewportSize = new() { Width = size.width, Height = size.height } });
         var page = await context.NewPageAsync();

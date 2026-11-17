@@ -53,7 +53,7 @@ public class PageWaitForRequestTests
     }
 
     [UpstreamTest("WA-123 should respect timeout")]
-    [Fixme("dotnet: the message is 'Timeout 1ms exceeded while waiting for event \"Request\"', upstream expects 'event \"request\"'")]
+    [LocalFixme("dotnet: the message is 'Timeout 1ms exceeded while waiting for event \"Request\"', upstream expects 'event \"request\"'")]
     public async Task ShouldRespectTimeout(IPage page, IPlaywright playwright)
     {
         Exception error = null;
@@ -76,7 +76,7 @@ public class PageWaitForRequestTests
     }
 
     [UpstreamTest("WA-125 should log the url")]
-    [Fixme("dotnet: WaitForRequestAsync(url) does not log 'waiting for request \"<url>\"' on its waiter as upstream does, the message is only 'Timeout 1000ms exceeded while waiting for event \"Request\"'")]
+    [LocalFixme("dotnet: WaitForRequestAsync(url) does not log 'waiting for request \"<url>\"' on its waiter as upstream does, the message is only 'Timeout 1000ms exceeded while waiting for event \"Request\"'")]
     public async Task ShouldLogTheUrl(IPage page)
     {
         var error = await Catch(() => page.WaitForRequestAsync("long-long-long-long-long-long-long-long-long-long-long-long-long-long.css", new() { Timeout = 1000 }));

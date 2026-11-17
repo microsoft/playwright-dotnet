@@ -474,7 +474,7 @@ public class PageClickTests
     [UpstreamTest("CL-035 should click the button with fixed position inside an iframe")]
     public async Task ShouldClickTheButtonWithFixedPositionInsideAnIframe(IPage page, Server server, string browserName)
     {
-        It.Fixme(browserName == "chromium");
+        Info.Fixme(browserName == "chromium");
 
         // @see https://github.com/GoogleChrome/puppeteer/issues/4110
         // @see https://bugs.chromium.org/p/chromium/issues/detail?id=986390
@@ -579,7 +579,7 @@ public class PageClickTests
     [UpstreamTest("CL-038 should click the button with px border with offset")]
     public async Task ShouldClickTheButtonWithPxBorderWithOffset(IPage page, Server server, bool isFrozenWebkit)
     {
-        It.Skip(isFrozenWebkit, "needs recent webkit");
+        Info.Skip(isFrozenWebkit, "needs recent webkit");
         await page.GotoAsync(server.Prefix + "/input/button.html");
         await page.EvalOnSelectorAsync("button", "button => button.style.borderWidth = '8px'");
         await page.ClickAsync("button", new() { Position = new() { X = 20, Y = 10 } });
@@ -592,7 +592,7 @@ public class PageClickTests
     [UpstreamTest("CL-039 should click the button with em border with offset")]
     public async Task ShouldClickTheButtonWithEmBorderWithOffset(IPage page, Server server, bool isFrozenWebkit)
     {
-        It.Skip(isFrozenWebkit, "needs recent webkit");
+        Info.Skip(isFrozenWebkit, "needs recent webkit");
         await page.GotoAsync(server.Prefix + "/input/button.html");
         await page.EvalOnSelectorAsync("button", "button => button.style.borderWidth = '2em'");
         await page.EvalOnSelectorAsync("button", "button => button.style.fontSize = '12px'");
@@ -606,8 +606,8 @@ public class PageClickTests
     [UpstreamTest("CL-040 should click a very large button with offset")]
     public async Task ShouldClickAVeryLargeButtonWithOffset(IPage page, Server server, bool isFrozenWebkit, bool isAndroid)
     {
-        It.Fixme(isAndroid, "Failed to scroll to a particular point");
-        It.Skip(isFrozenWebkit, "needs recent webkit");
+        Info.Fixme(isAndroid, "Failed to scroll to a particular point");
+        Info.Skip(isFrozenWebkit, "needs recent webkit");
         await page.GotoAsync(server.Prefix + "/input/button.html");
         await page.EvalOnSelectorAsync("button", "button => button.style.borderWidth = '8px'");
         await page.EvalOnSelectorAsync("button", "button => button.style.height = button.style.width = '2000px'");
@@ -621,8 +621,8 @@ public class PageClickTests
     [UpstreamTest("CL-041 should click a button in scrolling container with offset")]
     public async Task ShouldClickAButtonInScrollingContainerWithOffset(IPage page, Server server, bool isFrozenWebkit, bool isAndroid)
     {
-        It.Fixme(isAndroid, "Failed to scroll to a particular point");
-        It.Skip(isFrozenWebkit, "needs recent webkit");
+        Info.Fixme(isAndroid, "Failed to scroll to a particular point");
+        Info.Skip(isFrozenWebkit, "needs recent webkit");
         await page.GotoAsync(server.Prefix + "/input/button.html");
         await page.EvalOnSelectorAsync("button", @"button => {
     const container = document.createElement('div');
@@ -1203,7 +1203,7 @@ public class PageClickTests
     [UpstreamTest("CL-076 should not retain removed iframe after clicking inside it")]
     public async Task ShouldNotRetainRemovedIframeAfterClickingInsideIt(IPage page, bool isAndroid)
     {
-        It.Skip(isAndroid, "requesting gc is not enough");
+        Info.Skip(isAndroid, "requesting gc is not enough");
 
         await page.SetContentAsync("<iframe srcdoc=\"<button>Click</button>\"></iframe>");
         var button = page.FrameLocator("iframe").GetByRole(AriaRole.Button);
@@ -1468,7 +1468,7 @@ public class PageClickTests
     [UpstreamTest("CL-086 should set PointerEvent.pressure on pointermove")]
     public async Task ShouldSetPointerEventPressureOnPointermove(IPage page, bool isLinux, bool headless, bool isWindows, string browserName, bool isAndroid)
     {
-        It.Fixme(isAndroid, "Android coordinates seem to have rounding issues.");
+        Info.Fixme(isAndroid, "Android coordinates seem to have rounding issues.");
         await page.SetContentAsync(@"
     <body style=""margin: 0; padding: 0;"">
       <div id=""target"" style=""width: 500px; height: 500px; background-color: red;""></div>
@@ -1526,8 +1526,8 @@ public class PageClickTests
     [UpstreamTest("CL-089 should click with tweened mouse movement")]
     public async Task ShouldClickWithTweenedMouseMovement(IPage page, string browserName, bool isAndroid, bool headless)
     {
-        It.Skip(isAndroid, "Bad rounding");
-        It.Skip(!headless, "System cursor tends to interfere with this test");
+        Info.Skip(isAndroid, "Bad rounding");
+        Info.Skip(!headless, "System cursor tends to interfere with this test");
 
         await page.SetContentAsync(@"
     <body style=""margin: 0; padding: 0; height: 500px; width: 500px;"">

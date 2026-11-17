@@ -26,7 +26,7 @@ public class ElementhandleScrollIntoViewTests
     [UpstreamTest("EH-093 should work @smoke")]
     public async Task ShouldWork(IPage page, Server server, bool isAndroid)
     {
-        It.Fixme(isAndroid);
+        Info.Fixme(isAndroid);
 
         await page.GotoAsync(server.Prefix + "/offscreenbuttons.html");
         for (var i = 0; i < 11; ++i)
@@ -83,7 +83,7 @@ public class ElementhandleScrollIntoViewTests
     [UpstreamTest("EH-096 should scroll display:contents into view")]
     public async Task ShouldScrollDisplayContentsIntoView(IPage page, string browserName, int browserMajorVersion)
     {
-        It.Skip(browserName == "chromium" && browserMajorVersion < 105, "Needs https://chromium-review.googlesource.com/c/chromium/src/+/3758670");
+        Info.Skip(browserName == "chromium" && browserMajorVersion < 105, "Needs https://chromium-review.googlesource.com/c/chromium/src/+/3758670");
 
         await page.SetContentAsync(@"
     <style>

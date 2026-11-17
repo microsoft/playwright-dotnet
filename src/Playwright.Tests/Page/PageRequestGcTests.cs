@@ -44,8 +44,8 @@ public class PageRequestGcTests
     [UpstreamTest("RO-150 should collect element retained by locator hit-target interceptor after detach")]
     public async Task ShouldCollectElementRetainedByLocatorHitTargetInterceptorAfterDetach(IPage page, string browserName)
     {
-        It.Fixme(browserName == "firefox", "Firefox hit-target interceptor does not release its element reference on detach");
-        It.Fixme(browserName == "chromium", "Chromium retains a native reference to the last hit-tested element; fix pending upstream discussion, see #41575");
+        Info.Fixme(browserName == "firefox", "Firefox hit-target interceptor does not release its element reference on detach");
+        Info.Fixme(browserName == "chromium", "Chromium retains a native reference to the last hit-tested element; fix pending upstream discussion, see #41575");
         await page.SetContentAsync("<button id=\"btn\">click me</button>");
         await page.Locator("#btn").ClickAsync();
         await page.EvaluateAsync(@"() => {

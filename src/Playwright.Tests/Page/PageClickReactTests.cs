@@ -24,7 +24,7 @@ namespace Microsoft.Playwright.Tests.Page;
 public class PageClickReactTests
 {
     [UpstreamTest("CL-106 should timeout when click opens alert")]
-    [Fixme("dotnet: the message is 'Timeout 3000ms exceeded.', without the 'page.click: ' prefix of the call")]
+    [LocalFixme("dotnet: the message is 'Timeout 3000ms exceeded.', without the 'page.click: ' prefix of the call")]
     public async Task ShouldTimeoutWhenClickOpensAlert(IPage page, Server server)
     {
         var dialogPromise = Once<IDialog>(h => page.Dialog += h, h => page.Dialog -= h);

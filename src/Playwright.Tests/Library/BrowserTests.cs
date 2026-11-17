@@ -46,7 +46,7 @@ public class BrowserTests
     }
 
     [UpstreamTest("BR-003 should throw upon second create new page")]
-    [Fixme("dotnet: the message is \"Please use Browser.NewContextAsync()\", upstream expects \"Please use browser.newContext()\"")]
+    [LocalFixme("dotnet: the message is \"Please use Browser.NewContextAsync()\", upstream expects \"Please use browser.newContext()\"")]
     public async Task ShouldThrowUponSecondCreateNewPage(IBrowser browser, BrowserNewPageOptions newPageOptions)
     {
         var page = await browser.NewPageAsync(newPageOptions);

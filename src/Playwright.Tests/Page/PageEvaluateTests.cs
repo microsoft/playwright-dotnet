@@ -126,7 +126,7 @@ public class PageEvaluateTests
     }
 
     [UpstreamTest("EV-011 should transfer typed arrays")]
-    [Fixme("dotnet: a .NET array is not sent as a typed array: the elements of sbyte[], byte[], ushort[], uint[], float[] and ulong[] arrive as empty objects ([{}, {}, {}]), and short[], int[], long[] and double[] arrive as a plain Array")]
+    [LocalFixme("dotnet: a .NET array is not sent as a typed array: the elements of sbyte[], byte[], ushort[], uint[], float[] and ulong[] arrive as empty objects ([{}, {}, {}]), and short[], int[], long[] and double[] arrive as a plain Array")]
     public async Task ShouldTransferTypedArrays(IPage page)
     {
         var testCases = new object[]
@@ -159,7 +159,7 @@ public class PageEvaluateTests
     }
 
     [UpstreamTest("EV-013 should transfer maps as empty objects")]
-    [Fixme("dotnet: there is no Map: a Dictionary<int, int> is sent as an Array of { Key, Value } objects, 'Array [{\"Key\":1,\"Value\":2}]', not as an empty object")]
+    [LocalFixme("dotnet: there is no Map: a Dictionary<int, int> is sent as an Array of { Key, Value } objects, 'Array [{\"Key\":1,\"Value\":2}]', not as an empty object")]
     public async Task ShouldTransferMapsAsEmptyObjects(IPage page)
     {
         var result = await page.EvaluateAsync<string>("a => a.x.constructor.name + ' ' + JSON.stringify(a.x)", new { x = new Dictionary<int, int> { [1] = 2 } });
@@ -168,7 +168,7 @@ public class PageEvaluateTests
     }
 
     [UpstreamTest("EV-014 should transfer sets as empty objects")]
-    [Fixme("dotnet: there is no Set: a HashSet<int> is sent as an Array, 'Array [1,2]', not as an empty object")]
+    [LocalFixme("dotnet: there is no Set: a HashSet<int> is sent as an Array, 'Array [1,2]', not as an empty object")]
     public async Task ShouldTransferSetsAsEmptyObjects(IPage page)
     {
         var result = await page.EvaluateAsync<string>("a => a.x.constructor.name + ' ' + JSON.stringify(a.x)", new { x = new HashSet<int> { 1, 2 } });
@@ -209,7 +209,7 @@ public class PageEvaluateTests
     }
 
     [UpstreamTest("EV-018 should work with function shorthands")]
-    [Fixme("dotnet: evaluate does not send isFunction, so the driver evaluates the text as an expression, and a method shorthand is a SyntaxError there")]
+    [LocalFixme("dotnet: evaluate does not send isFunction, so the driver evaluates the text as an expression, and a method shorthand is a SyntaxError there")]
     public async Task ShouldWorkWithFunctionShorthands(IPage page)
     {
         var a = new
@@ -231,7 +231,7 @@ public class PageEvaluateTests
     [UpstreamTest("EV-020 should work with large strings")]
     public async Task ShouldWorkWithLargeStrings(IPage page, bool isAndroid)
     {
-        It.Skip(isAndroid, "string is too long :(");
+        Info.Skip(isAndroid, "string is too long :(");
 
         var expected = string.Concat(Enumerable.Repeat("x", 40000));
         Assert.That(await page.EvaluateAsync<string>("data => data", expected), Is.EqualTo(expected));
@@ -240,7 +240,7 @@ public class PageEvaluateTests
     [UpstreamTest("EV-021 should work with large unicode strings")]
     public async Task ShouldWorkWithLargeUnicodeStrings(IPage page, string browserName, string platform, bool isAndroid)
     {
-        It.Skip(isAndroid, "string is too long :(");
+        Info.Skip(isAndroid, "string is too long :(");
 
         var expected = string.Concat(Enumerable.Repeat("🎭", 10000));
         Assert.That(await page.EvaluateAsync<string>("data => data", expected), Is.EqualTo(expected));
@@ -353,7 +353,7 @@ public class PageEvaluateTests
     }
 
     [UpstreamTest("EV-032 should return complex objects")]
-    [Fixme("dotnet: an argument that is 200 objects deep does not leave the client: the connection serializes the message with the default MaxDepth of System.Text.Json, 64, and throws a JsonException")]
+    [LocalFixme("dotnet: an argument that is 200 objects deep does not leave the client: the connection serializes the message with the default MaxDepth of System.Text.Json, 64, and throws a JsonException")]
     public async Task ShouldReturnComplexObjects(IPage page)
     {
         var @object = new { foo = "bar!" };
@@ -510,7 +510,7 @@ public class PageEvaluateTests
     [UpstreamTest("EV-046 should properly serialize window.performance object")]
     public async Task ShouldProperlySerializeWindowPerformanceObject(IPage page)
     {
-        It.Skip(!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("PW_CLOCK")));
+        Info.Skip(!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("PW_CLOCK")));
 
         ExpectToEqual(await page.EvaluateAsync<object>("() => performance"), ObjectContaining(new
         {
@@ -556,7 +556,7 @@ public class PageEvaluateTests
     [UpstreamTest("EV-048 should throw for too deep reference chain")]
     public async Task ShouldThrowForTooDeepReferenceChain(IPage page, string browserName, bool isBidi)
     {
-        It.Fixme(browserName == "firefox" && !isBidi, "Firefox Juggler -> Playwright serialiser does not throw for deep references.\nThis causes large objects to get serialised back to the Playwright client.\nThere our validators throw 'Maximum call stack size exceeded'.");
+        Info.Fixme(browserName == "firefox" && !isBidi, "Firefox Juggler -> Playwright serialiser does not throw for deep references.\nThis causes large objects to get serialised back to the Playwright client.\nThere our validators throw 'Maximum call stack size exceeded'.");
         var error = await ThrowsAsync<PlaywrightException>(() => page.EvaluateAsync(
             @"depth => {
     const obj = {};
@@ -574,8 +574,8 @@ public class PageEvaluateTests
     [UpstreamTest("EV-049 should throw for too deep reference chain 2")]
     public async Task ShouldThrowForTooDeepReferenceChain2(IPage page, string browserName, bool isAndroid)
     {
-        It.Skip(browserName != "chromium", "this is a chromium-only limitation");
-        It.Skip(isAndroid, "something fails there");
+        Info.Skip(browserName != "chromium", "this is a chromium-only limitation");
+        Info.Skip(isAndroid, "something fails there");
 
         var error = await ThrowsAsync<PlaywrightException>(() => page.EvaluateAsync(
             @"depth => {
@@ -686,7 +686,7 @@ public class PageEvaluateTests
     [UpstreamTest("EV-063 should throw a nice error after a navigation")]
     public async Task ShouldThrowANiceErrorAfterANavigation(IPage page)
     {
-        It.Skip(Environment.GetEnvironmentVariable("PW_CLOCK") == "frozen");
+        Info.Skip(Environment.GetEnvironmentVariable("PW_CLOCK") == "frozen");
         var navigationPromise = page.WaitForNavigationAsync();
         var error = await Catch(() => page.EvaluateAsync(@"() => new Promise(f => setTimeout(() => {
     window.location.reload();
@@ -732,7 +732,7 @@ public class PageEvaluateTests
     [UpstreamTest("EV-067 should transfer 100Mb of data from page to node.js")]
     public async Task ShouldTransfer100MbOfDataFromPageToNodeJs(string mode, IPage page)
     {
-        It.Skip(mode != "default");
+        Info.Skip(mode != "default");
 
         // This is too slow with wire.
         var a = await page.EvaluateAsync<string>("() => Array(100 * 1024 * 1024 + 1).join('a')");
@@ -810,7 +810,7 @@ public class PageEvaluateTests
     }
 
     [UpstreamTest("EV-075 should not leak handles")]
-    [Fixme("dotnet: the message is 'handles is not defined', without the 'page.evaluate: ' prefix of the call", Browsers = "firefox")]
+    [LocalFixme("dotnet: the message is 'handles is not defined', without the 'page.evaluate: ' prefix of the call (only in firefox)")]
     public async Task ShouldNotLeakHandles(IPage page)
     {
         var error = await Catch(() => page.EvaluateAsync("handles.length"));
@@ -826,7 +826,7 @@ public class PageEvaluateTests
     }
 
     [UpstreamTest("EV-077 should evaluate exception with a function on the stack")]
-    [Fixme("dotnet: an Error in the result is an Exception whose Message is the stack of the error, and whose StackTrace is null")]
+    [LocalFixme("dotnet: an Error in the result is an Exception whose Message is the stack of the error, and whose StackTrace is null")]
     public async Task ShouldEvaluateExceptionWithAFunctionOnTheStack(IPage page)
     {
         var error = await page.EvaluateAsync<Exception>(@"() => {
@@ -839,7 +839,7 @@ public class PageEvaluateTests
     }
 
     [UpstreamTest("EV-078 should evaluate exception")]
-    [Fixme("dotnet: an Error in the result is an Exception whose Message is the stack of the error, and whose StackTrace is null; the name is lost")]
+    [LocalFixme("dotnet: an Error in the result is an Exception whose Message is the stack of the error, and whose StackTrace is null; the name is lost")]
     public async Task ShouldEvaluateException(IPage page)
     {
         var error = await page.EvaluateAsync<object>(@"() => {
@@ -969,7 +969,7 @@ public class PageEvaluateTests
     }
 
     [UpstreamTest("EV-093 should throw when frame is detached")]
-    [Fixme("dotnet: the message is 'Frame was detached', without the 'frame.evaluate: ' prefix of the call")]
+    [LocalFixme("dotnet: the message is 'Frame was detached', without the 'frame.evaluate: ' prefix of the call")]
     public async Task ShouldThrowWhenFrameIsDetached(IPage page, Server server)
     {
         await AttachFrame(page, "frame1", server.EmptyPage);
@@ -1039,7 +1039,7 @@ public class PageEvaluateTests
         };
         foreach (var testCase in testCases)
         {
-            await It.Step(testCase, async () =>
+            await Info.Step(testCase, async () =>
             {
                 await page.GotoAsync(server.EmptyPage);
                 await page.EvaluateAsync(testCase);
@@ -1063,7 +1063,7 @@ public class PageEvaluateTests
         };
         foreach (var testCase in testCases)
         {
-            await It.Step(testCase, async () =>
+            await Info.Step(testCase, async () =>
             {
                 await page.GotoAsync(server.EmptyPage);
                 await page.EvaluateAsync(testCase);
@@ -1087,9 +1087,9 @@ public class PageEvaluateTests
     [UpstreamTest("EV-099 should work with a using declaration")]
     public async Task ShouldWorkWithAUsingDeclaration(IPage page, (int Major, int Minor, int Patch) nodeVersion, string browserName, int browserMajorVersion)
     {
-        It.Skip(nodeVersion.Major < 24, "using is lowered to a module-scope helper that does not survive evaluate serialization on Node < 24");
-        It.Skip(browserName == "webkit", "WebKit does not support using declarations");
-        It.Skip(browserName == "chromium" && browserMajorVersion < 134, "Chromium supports using declarations since 134");
+        Info.Skip(nodeVersion.Major < 24, "using is lowered to a module-scope helper that does not survive evaluate serialization on Node < 24");
+        Info.Skip(browserName == "webkit", "WebKit does not support using declarations");
+        Info.Skip(browserName == "chromium" && browserMajorVersion < 134, "Chromium supports using declarations since 134");
         var disposed = await page.EvaluateAsync<bool>(@"() => {
     let disposed = false;
     {

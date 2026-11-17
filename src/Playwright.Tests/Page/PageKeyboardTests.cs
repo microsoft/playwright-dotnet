@@ -26,7 +26,7 @@ namespace Microsoft.Playwright.Tests.Page;
 public class PageKeyboardTests
 {
     [BeforeEach]
-    public static void Skip(bool isAndroid) => It.Skip(isAndroid);
+    public static void Skip(bool isAndroid) => Info.Skip(isAndroid);
 
     [UpstreamTest("KB-001 should type into a textarea @smoke")]
     public async Task ShouldTypeIntoATextarea(IPage page)
@@ -144,7 +144,7 @@ public class PageKeyboardTests
     [UpstreamTest("KB-008 should dispatch key events in separate tasks")]
     public async Task ShouldDispatchKeyEventsInSeparateTasks(IPage page, string browserName, bool isBidi)
     {
-        It.Skip(browserName == "firefox" && !isBidi, "Firefox/Juggler dispatches keydown and keypress in the same task");
+        Info.Skip(browserName == "firefox" && !isBidi, "Firefox/Juggler dispatches keydown and keypress in the same task");
         await page.SetContentAsync("<input>");
         var log = await page.EvaluateHandleAsync(@"() => {
     const log = [];
@@ -569,9 +569,9 @@ public class PageKeyboardTests
     [UpstreamTest("KB-033 should support MacOS shortcuts")]
     public async Task ShouldSupportMacOSShortcuts(IPage page, Server server, string platform, string browserName)
     {
-        It.Skip(platform != "darwin");
+        Info.Skip(platform != "darwin");
         // @see https://github.com/microsoft/playwright/issues/5721
-        It.Fixme(browserName == "firefox" && platform == "darwin");
+        Info.Fixme(browserName == "firefox" && platform == "darwin");
 
         await page.GotoAsync(server.Prefix + "/input/textarea.html");
         var textarea = await page.QuerySelectorAsync("textarea");
@@ -618,7 +618,7 @@ public class PageKeyboardTests
     [UpstreamTest("KB-037 should expose keyIdentifier in webkit")]
     public async Task ShouldExposeKeyIdentifierInWebkit(IPage page, string browserName)
     {
-        It.Skip(browserName != "webkit", "event.keyIdentifier has been removed from all browsers except WebKit");
+        Info.Skip(browserName != "webkit", "event.keyIdentifier has been removed from all browsers except WebKit");
 
         var lastEvent = await CaptureLastKeydown(page);
         var keyMap = new Dictionary<string, string>
@@ -670,7 +670,7 @@ public class PageKeyboardTests
     [UpstreamTest("KB-040 should move to the start of the document")]
     public async Task ShouldMoveToTheStartOfTheDocument(IPage page, bool isMac)
     {
-        It.Skip(!isMac);
+        Info.Skip(!isMac);
         await page.SetContentAsync("<div contenteditable></div>");
         await page.FocusAsync("div");
         await page.Keyboard.TypeAsync("1\n2\n3\n");
@@ -733,7 +733,7 @@ public class PageKeyboardTests
     [UpstreamTest("KB-045 should support undo-redo")]
     public async Task ShouldSupportUndoRedo(IPage page, string browserName, bool isLinux, string channel)
     {
-        It.Fixme((browserName == "webkit" && isLinux) || channel == "webkit-wsl", "https://github.com/microsoft/playwright/issues/12000");
+        Info.Fixme((browserName == "webkit" && isLinux) || channel == "webkit-wsl", "https://github.com/microsoft/playwright/issues/12000");
         await page.SetContentAsync("<div contenteditable></div>");
         var div = page.Locator("div");
         await Expect(div).ToHaveTextAsync("");
@@ -912,7 +912,7 @@ public class PageKeyboardTests
     [UpstreamTest("KB-050 should dispatch insertText after context menu was opened")]
     public async Task ShouldDispatchInsertTextAfterContextMenuWasOpened(Server server, IPage page, string browserName, bool isWindows)
     {
-        It.Skip(browserName == "chromium" && isWindows, "context menu support is best-effort for Linux and MacOS");
+        Info.Skip(browserName == "chromium" && isWindows, "context menu support is best-effort for Linux and MacOS");
         await page.GotoAsync(server.Prefix + "/input/textarea.html");
         await page.EvaluateAsync(@"() => {
     window['contextMenuPromise'] = new Promise(x => {
@@ -933,7 +933,7 @@ public class PageKeyboardTests
     [UpstreamTest("KB-051 should type after context menu was opened")]
     public async Task ShouldTypeAfterContextMenuWasOpened(Server server, IPage page, string browserName, bool isWindows)
     {
-        It.Skip(browserName == "chromium" && isWindows, "context menu support is best-effort for Linux and MacOS");
+        Info.Skip(browserName == "chromium" && isWindows, "context menu support is best-effort for Linux and MacOS");
         await page.EvaluateAsync(@"() => {
     window['keys'] = [];
     window.addEventListener('keydown', event => window['keys'].push(event.key));
@@ -965,7 +965,7 @@ Keyup: Escape Escape STANDARD []
     [UpstreamTest("KB-053 should close dialog on Escape key press in contenteditable")]
     public async Task ShouldCloseDialogOnEscapeKeyPressInContenteditable(IPage page, bool isFrozenWebkit)
     {
-        It.Skip(isFrozenWebkit);
+        Info.Skip(isFrozenWebkit);
 
         await page.SetContentAsync(@"
     <dialog>

@@ -68,7 +68,7 @@ public class PageWaitForFunctionTests
 
     [UpstreamTest("WA-005 should avoid side effects after timeout")]
 
-    [Fixme("dotnet: the message is 'Timeout 1000ms exceeded.', without the 'page.waitForFunction: ' prefix of the call")]
+    [LocalFixme("dotnet: the message is 'Timeout 1000ms exceeded.', without the 'page.waitForFunction: ' prefix of the call")]
     public async Task ShouldAvoidSideEffectsAfterTimeout(IPage page)
     {
         var counter = 0;
@@ -179,7 +179,7 @@ public class PageWaitForFunctionTests
 
     [UpstreamTest("WA-017 should respect timeout")]
 
-    [Fixme("dotnet: the message is 'Timeout 10ms exceeded.', without the 'page.waitForFunction: ' prefix of the call")]
+    [LocalFixme("dotnet: the message is 'Timeout 10ms exceeded.', without the 'page.waitForFunction: ' prefix of the call")]
     public async Task ShouldRespectTimeout(IPage page, IPlaywright playwright)
     {
         Exception error = null;
@@ -191,7 +191,7 @@ public class PageWaitForFunctionTests
 
     [UpstreamTest("WA-018 should respect default timeout")]
 
-    [Fixme("dotnet: the message is 'Timeout 1ms exceeded.', without the 'page.waitForFunction: ' prefix of the call")]
+    [LocalFixme("dotnet: the message is 'Timeout 1ms exceeded.', without the 'page.waitForFunction: ' prefix of the call")]
     public async Task ShouldRespectDefaultTimeout(IPage page, IPlaywright playwright)
     {
         page.SetDefaultTimeout(1);
@@ -326,7 +326,7 @@ public class PageWaitForFunctionTests
 
     [UpstreamTest("WA-026 should throw when frame is detached")]
 
-    [Fixme("dotnet: the message is 'Frame was detached', without the 'frame.waitForFunction: ' prefix of the call")]
+    [LocalFixme("dotnet: the message is 'Frame was detached', without the 'frame.waitForFunction: ' prefix of the call")]
     public async Task ShouldThrowWhenFrameIsDetached(IPage page, Server server)
     {
         await AttachFrame(page, "frame1", server.EmptyPage);

@@ -25,7 +25,7 @@ public class PageFocusTests
     [UpstreamTest("FO-001 should work @smoke")]
     public async Task ShouldWork(IPage page, string browserName, bool isBidi)
     {
-        It.Skip(browserName == "firefox" && !isBidi);
+        Info.Skip(browserName == "firefox" && !isBidi);
 
         await page.SetContentAsync("<div id=d1 tabIndex=0></div>");
         Assert.That(await page.EvaluateAsync<string>("() => document.activeElement.nodeName"), Is.EqualTo("BODY"));
@@ -97,7 +97,7 @@ public class PageFocusTests
     [UpstreamTest("FO-006 should traverse only form elements")]
     public async Task ShouldTraverseOnlyFormElements(IPage page, string browserName, string platform)
     {
-        It.Skip(
+        Info.Skip(
             platform != "darwin" || browserName != "webkit",
             "Chromium and WebKit both have settings for tab traversing all links, but it is only on by default in WebKit.");
 
@@ -130,7 +130,7 @@ public class PageFocusTests
     [UpstreamTest("FO-007 clicking checkbox should activate it")]
     public async Task ClickingCheckboxShouldActivateIt(IPage page, string browserName, bool headless, string platform)
     {
-        It.Skip(browserName == "webkit", "Safari does not focus on click");
+        Info.Skip(browserName == "webkit", "Safari does not focus on click");
 
         await page.SetContentAsync("<input type=checkbox></input>");
         await page.ClickAsync("input");
@@ -141,8 +141,8 @@ public class PageFocusTests
     [UpstreamTest("FO-008 tab should cycle between single input and browser")]
     public async Task TabShouldCycleBetweenSingleInputAndBrowser(IPage page, string browserName, bool isHeadlessShell)
     {
-        It.Skip(browserName == "chromium" && !isHeadlessShell, "Chromium keeps input focused.");
-        It.Fixme(browserName == "firefox");
+        Info.Skip(browserName == "chromium" && !isHeadlessShell, "Chromium keeps input focused.");
+        Info.Fixme(browserName == "firefox");
         await page.SetContentAsync(@"<label for=""input1"">input1</label>
     <input id=""input1"">
     <script>
@@ -168,8 +168,8 @@ public class PageFocusTests
     [UpstreamTest("FO-009 tab should cycle between document elements and browser")]
     public async Task TabShouldCycleBetweenDocumentElementsAndBrowser(IPage page, string browserName, bool isHeadlessShell)
     {
-        It.Skip(browserName == "chromium" && !isHeadlessShell, "Chromium keeps last input focused.");
-        It.Fixme(browserName == "firefox");
+        Info.Skip(browserName == "chromium" && !isHeadlessShell, "Chromium keeps last input focused.");
+        Info.Fixme(browserName == "firefox");
         await page.SetContentAsync(@"
     <input id=""input1"">
     <input id=""input2"">

@@ -149,7 +149,7 @@ public class UpstreamBrowserTest : UpstreamPlaywrightTest
     /// <summary><c>await pageWithHar(options)</c>: a page of a context that records a HAR.</summary>
     public async Task<PageWithHarResult> PageWithHar(PageWithHarOptions options = null)
     {
-        var harPath = TestInfo.OutputPath(options?.OutputPath ?? "test.har");
+        var harPath = Info.OutputPath(options?.OutputPath ?? "test.har");
         var context = await ContextFactory(new() { RecordHarPath = harPath, RecordHarContent = options?.Content, RecordHarOmitContent = options?.OmitContent, IgnoreHTTPSErrors = true });
         var page = await context.NewPageAsync();
         return new PageWithHarResult(context, page, harPath);

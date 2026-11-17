@@ -27,7 +27,7 @@ public class BrowsercontextViewportMobileTests
     public class MobileViewport
     {
         [BeforeEach]
-        public static void Skip(string browserName, bool isBidi) => It.Skip(browserName == "firefox" && !isBidi);
+        public static void Skip(string browserName, bool isBidi) => Info.Skip(browserName == "firefox" && !isBidi);
 
         [UpstreamTest("DV-011 should support mobile emulation")]
         public async Task ShouldSupportMobileEmulation(IPlaywright playwright, IBrowser browser, Server server, BrowserNewContextOptions contextOptions)
@@ -119,7 +119,7 @@ public class BrowsercontextViewportMobileTests
         [UpstreamTest("DV-017 should preserve window.orientation override after navigation")]
         public async Task ShouldPreserveWindowOrientationOverrideAfterNavigation(IBrowser browser, Server server, bool isFrozenWebkit, BrowserNewContextOptions contextOptions)
         {
-            It.Skip(isFrozenWebkit);
+            Info.Skip(isFrozenWebkit);
 
             var context = await browser.NewContextAsync(new(contextOptions) { ViewportSize = new() { Width = 400, Height = 300 }, IsMobile = true });
             var page = await context.NewPageAsync();
@@ -133,7 +133,7 @@ public class BrowsercontextViewportMobileTests
         [UpstreamTest("DV-018 should preserve screen.orientation.type override after navigation")]
         public async Task ShouldPreserveScreenOrientationTypeOverrideAfterNavigation(IBrowser browser, Server server, bool isFrozenWebkit, BrowserNewContextOptions contextOptions)
         {
-            It.Skip(isFrozenWebkit);
+            Info.Skip(isFrozenWebkit);
 
             var context = await browser.NewContextAsync(new(contextOptions) { ViewportSize = new() { Width = 300, Height = 400 }, IsMobile = true });
             var page = await context.NewPageAsync();

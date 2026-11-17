@@ -122,8 +122,8 @@ public class BrowsercontextNetworkEventTests
     [UpstreamTest("NE-126 should not fire events for favicon or favicon redirects")]
     public async Task ShouldNotFireEventsForFaviconOrFaviconRedirects(IBrowserContext context, IPage page, Server server, string browserName, bool headless, string channel)
     {
-        It.Skip(headless && browserName != "firefox", "headless browsers, except firefox, do not request favicons");
-        It.Skip(!headless && browserName == "webkit", "headed webkit does not have a favicon feature");
+        Info.Skip(headless && browserName != "firefox", "headless browsers, except firefox, do not request favicons");
+        Info.Skip(!headless && browserName == "webkit", "headed webkit does not have a favicon feature");
         var favicon = "/no-cache/favicon.ico";
         var hashedFaviconUrl = "/favicon-hashed.ico";
         var imagePath = "/fakeimage.png";

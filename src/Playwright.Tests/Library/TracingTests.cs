@@ -28,7 +28,7 @@ namespace Microsoft.Playwright.Tests.Library;
 public class TracingTests
 {
     [BeforeEach]
-    public static void Skip(string trace) => It.Skip(trace == "on");
+    public static void Skip(string trace) => Info.Skip(trace == "on");
 
     [UpstreamTest("TR-002 should use the correct title for event driven callbacks")]
     public async Task ShouldUseTheCorrectTitleForEventDrivenCallbacks(IBrowserContext context, IPage page, Server server, TestInfo testInfo)
@@ -527,11 +527,11 @@ public class TracingTests
     [Case("scale", 1024, 768)]
     public async Task ShouldProduceScreencastFrames(string id, int width, int height, string video, ContextFactory contextFactory, string browserName, string platform, bool headless, bool isHeadlessShell, TestInfo testInfo)
     {
-        It.Skip(video == "on", "Same screencast resolution conflicts");
-        It.Fixme(browserName == "chromium" && !isHeadlessShell, "Chromium (but not headless-shell) screencast has a min width issue");
-        It.Fixme(id == "fit" && browserName == "chromium" && platform == "darwin", "High DPI maxes image at 600x600");
-        It.Fixme(id == "fit" && browserName == "webkit" && platform == "linux", "Image size is flaky");
-        It.Fixme(browserName == "firefox" && !headless, "Image size is different");
+        Info.Skip(video == "on", "Same screencast resolution conflicts");
+        Info.Fixme(browserName == "chromium" && !isHeadlessShell, "Chromium (but not headless-shell) screencast has a min width issue");
+        Info.Fixme(id == "fit" && browserName == "chromium" && platform == "darwin", "High DPI maxes image at 600x600");
+        Info.Fixme(id == "fit" && browserName == "webkit" && platform == "linux", "Image size is flaky");
+        Info.Fixme(browserName == "firefox" && !headless, "Image size is different");
 
         var scale = Math.Min(Math.Min(800d / width, 800d / height), 1);
         var previewWidth = width * scale;
@@ -883,7 +883,7 @@ public class TracingTests
     [UpstreamTest("TR-039 should not flush console events")]
     public async Task ShouldNotFlushConsoleEvents(IBrowserContext context, IPage page, string mode, TestInfo testInfo)
     {
-        var testId = It.Info().TestId;
+        var testId = Info.TestId;
         await context.Tracing.StartAsync(new() { Name = testId });
         var promise = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
         {
@@ -960,7 +960,7 @@ public class TracingTests
     }
 
     [UpstreamTest("TR-041 should not emit after w/o before")]
-    [Fixme("dotnet: Page.WaitForConsoleMessageAsync names its wait 'page.WaitForEventAsync(\"Microsoft.Playwright.IConsoleMessage\")' (Page.InnerWaitForEventAsync), so the title in the trace is 'Wait for event \"page.WaitForEventAsync(\"Microsoft.Playwright.IConsoleMessage\")\"', upstream expects 'Wait for event \"console\"'")]
+    [LocalFixme("dotnet: Page.WaitForConsoleMessageAsync names its wait 'page.WaitForEventAsync(\"Microsoft.Playwright.IConsoleMessage\")' (Page.InnerWaitForEventAsync), so the title in the trace is 'Wait for event \"page.WaitForEventAsync(\"Microsoft.Playwright.IConsoleMessage\")\"', upstream expects 'Wait for event \"console\"'")]
     public async Task ShouldNotEmitAfterWOBefore(IBrowserType browserType, string mode, TestInfo testInfo, BrowserTypeLaunchOptions launchOptions, BrowserNewContextOptions contextOptions)
     {
         var tracesDir = testInfo.OutputPath("traces");

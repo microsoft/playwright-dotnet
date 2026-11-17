@@ -36,7 +36,7 @@ public class GlobalFetchCookieTests
     }
 
     [BeforeEach]
-    public static void Skip(string mode) => It.Skip(mode != "default");
+    public static void Skip(string mode) => Info.Skip(mode != "default");
 
     [UpstreamTest("FE-055 addCookies should add cookies to the cookie jar")]
     public async Task AddCookiesShouldAddCookiesToTheCookieJar(IAPIRequestContext request, Server server)
@@ -538,7 +538,7 @@ public class GlobalFetchCookieTests
     }
 
     [UpstreamTest("FE-086 storage state should round-trip through file")]
-    [Fixme("dotnet: StorageStateAsync writes the JSON to Path on one line, upstream writes JSON.stringify(state, undefined, 2)")]
+    [LocalFixme("dotnet: StorageStateAsync writes the JSON to Path on one line, upstream writes JSON.stringify(state, undefined, 2)")]
     public async Task StorageStateShouldRoundTripThroughFile(IPlaywright playwright, Server server, TestInfo testInfo)
     {
         var storageState = new

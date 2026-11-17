@@ -83,7 +83,7 @@ public class BrowsercontextBasicTests
     [UpstreamTest("BC-003 should be able to hover across browser contexts in parallel")]
     public async Task ShouldBeAbleToHoverAcrossBrowserContextsInParallel(IBrowser browser, string browserName, bool headless, BrowserNewContextOptions contextOptions)
     {
-        It.Fixme(browserName == "firefox" && !headless, "Hover is flaky in headed Firefox");
+        Info.Fixme(browserName == "firefox" && !headless, "Hover is flaky in headed Firefox");
 
         var html = @"
     <style>
@@ -343,7 +343,7 @@ public class BrowsercontextBasicTests
     [UpstreamTest("BC-020 should not hang on promises after disabling javascript")]
     public async Task ShouldNotHangOnPromisesAfterDisablingJavascript(string browserName, ContextFactory contextFactory, bool isBidi)
     {
-        It.Fixme(browserName == "firefox" && !isBidi);
+        Info.Fixme(browserName == "firefox" && !isBidi);
         var context = await contextFactory(new() { JavaScriptEnabled = false });
         var page = await context.NewPageAsync();
         Assert.That(await page.EvaluateAsync<int>("() => 1"), Is.EqualTo(1));
@@ -455,7 +455,7 @@ public class BrowsercontextBasicTests
     [UpstreamTest("BC-026 should emulate navigator.onLine across navigations")]
     public async Task ShouldEmulateNavigatorOnLineAcrossNavigations(IBrowser browser, Server server, string browserName, int browserMajorVersion, BrowserNewContextOptions contextOptions)
     {
-        It.Skip(browserName == "chromium" && browserMajorVersion < 155, "does not survive cross-process navgiation");
+        Info.Skip(browserName == "chromium" && browserMajorVersion < 155, "does not survive cross-process navgiation");
 
         var context = await browser.NewContextAsync(contextOptions);
         var page = await context.NewPageAsync();

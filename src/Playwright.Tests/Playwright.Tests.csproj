@@ -20,7 +20,7 @@
     <ItemGroup>
         <!-- TODO: these still use the fixture parameters. Port them to the base classes of Fixtures/, as Page/PageCheckTests.cs. -->
         <Compile Remove="Page/**/*.cs;Library/**/*.cs" />
-        <Compile Include="Page/PageCheckTests.cs;Page/PageBasicTests.cs" />
+        <Compile Include="Page/PageCheckTests.cs;Page/PageBasicTests.cs;Page/ElementhandleScreenshotTests.cs" />
     </ItemGroup>
     <ItemGroup>
         <PackageReference Include="coverlet.collector" Version="3.1.2">

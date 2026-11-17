@@ -44,12 +44,12 @@ public class PageSetInputFilesTests
     [UpstreamTest("IF-002 should upload a folder")]
     public async Task ShouldUploadAFolder(IPage page, Server server, bool isFrozenWebkit, bool isAndroid)
     {
-        It.Skip(isAndroid);
-        It.Skip(isFrozenWebkit);
+        Info.Skip(isAndroid);
+        Info.Skip(isFrozenWebkit);
 
         await page.GotoAsync(server.Prefix + "/input/folderupload.html");
         var input = await page.QuerySelectorAsync("input");
-        var dir = Path.Combine(It.Info().OutputDir, "file-upload-test");
+        var dir = Path.Combine(Info.OutputDir, "file-upload-test");
         {
             Directory.CreateDirectory(dir);
             await File.WriteAllTextAsync(Path.Combine(dir, "file1.txt"), "file1 content");
@@ -82,11 +82,11 @@ public class PageSetInputFilesTests
     [UpstreamTest("IF-003 should upload a folder via label")]
     public async Task ShouldUploadAFolderViaLabel(IPage page, bool isFrozenWebkit, bool isAndroid)
     {
-        It.Skip(isAndroid);
-        It.Skip(isFrozenWebkit);
+        Info.Skip(isAndroid);
+        Info.Skip(isFrozenWebkit);
 
         await page.SetContentAsync("<label for=\"folder\">Folder</label><input id=\"folder\" type=\"file\" webkitdirectory>");
-        var dir = Path.Combine(It.Info().OutputDir, "file-upload-test");
+        var dir = Path.Combine(Info.OutputDir, "file-upload-test");
         Directory.CreateDirectory(dir);
         await File.WriteAllTextAsync(Path.Combine(dir, "file1.txt"), "file1 content");
         await page.GetByText("Folder").SetInputFilesAsync(dir);
@@ -96,12 +96,12 @@ public class PageSetInputFilesTests
     [UpstreamTest("IF-004 should upload a folder and throw for multiple directories")]
     public async Task ShouldUploadAFolderAndThrowForMultipleDirectories(IPage page, Server server, bool isAndroid, bool isFrozenWebkit)
     {
-        It.Skip(isAndroid);
-        It.Skip(isFrozenWebkit);
+        Info.Skip(isAndroid);
+        Info.Skip(isFrozenWebkit);
 
         await page.GotoAsync(server.Prefix + "/input/folderupload.html");
         var input = await page.QuerySelectorAsync("input");
-        var dir = Path.Combine(It.Info().OutputDir, "file-upload-test");
+        var dir = Path.Combine(Info.OutputDir, "file-upload-test");
         {
             Directory.CreateDirectory(Path.Combine(dir, "folder1"));
             await File.WriteAllTextAsync(Path.Combine(dir, "folder1", "file1.txt"), "file1 content");
@@ -119,12 +119,12 @@ public class PageSetInputFilesTests
     [UpstreamTest("IF-005 should throw if a directory and files are passed")]
     public async Task ShouldThrowIfADirectoryAndFilesArePassed(IPage page, Server server, bool isAndroid, bool isFrozenWebkit)
     {
-        It.Skip(isAndroid);
-        It.Skip(isFrozenWebkit);
+        Info.Skip(isAndroid);
+        Info.Skip(isFrozenWebkit);
 
         await page.GotoAsync(server.Prefix + "/input/folderupload.html");
         var input = await page.QuerySelectorAsync("input");
-        var dir = Path.Combine(It.Info().OutputDir, "file-upload-test");
+        var dir = Path.Combine(Info.OutputDir, "file-upload-test");
         {
             Directory.CreateDirectory(Path.Combine(dir, "folder1"));
             await File.WriteAllTextAsync(Path.Combine(dir, "folder1", "file1.txt"), "file1 content");
@@ -140,12 +140,12 @@ public class PageSetInputFilesTests
     [UpstreamTest("IF-006 should throw when uploading a folder in a normal file upload input")]
     public async Task ShouldThrowWhenUploadingAFolderInANormalFileUploadInput(IPage page, Server server, bool isAndroid, bool isFrozenWebkit)
     {
-        It.Skip(isAndroid);
-        It.Skip(isFrozenWebkit);
+        Info.Skip(isAndroid);
+        Info.Skip(isFrozenWebkit);
 
         await page.GotoAsync(server.Prefix + "/input/fileupload.html");
         var input = await page.QuerySelectorAsync("input");
-        var dir = Path.Combine(It.Info().OutputDir, "file-upload-test");
+        var dir = Path.Combine(Info.OutputDir, "file-upload-test");
         {
             Directory.CreateDirectory(Path.Combine(dir));
             await File.WriteAllTextAsync(Path.Combine(dir, "file1.txt"), "file1 content");
@@ -157,8 +157,8 @@ public class PageSetInputFilesTests
     [UpstreamTest("IF-007 should throw when uploading a file in a directory upload input")]
     public async Task ShouldThrowWhenUploadingAFileInADirectoryUploadInput(IPage page, Server server, bool isAndroid, Func<string, string> asset, bool isFrozenWebkit)
     {
-        It.Skip(isAndroid);
-        It.Skip(isFrozenWebkit);
+        Info.Skip(isAndroid);
+        Info.Skip(isFrozenWebkit);
 
         await page.GotoAsync(server.Prefix + "/input/folderupload.html");
         var input = await page.QuerySelectorAsync("input");
@@ -185,8 +185,8 @@ public class PageSetInputFilesTests
     [UpstreamTest("IF-009 should upload large file")]
     public async Task ShouldUploadLargeFile(IPage page, Server server, bool isAndroid, string mode, TestInfo testInfo)
     {
-        It.Skip(isAndroid);
-        It.Slow();
+        Info.Skip(isAndroid);
+        Info.Slow();
 
         await page.GotoAsync(server.Prefix + "/input/fileupload.html");
         var uploadFile = testInfo.OutputPath("200MB.zip");
@@ -227,7 +227,7 @@ public class PageSetInputFilesTests
 
     [UpstreamTest("IF-010 should throw an error if the file does not exist")]
 
-    [Fixme("dotnet: the message is \"Could not find file '<path>/i actually do not exist.txt'.\", the FileNotFoundException of .NET, upstream expects 'ENOENT: no such file or directory'")]
+    [LocalFixme("dotnet: the message is \"Could not find file '<path>/i actually do not exist.txt'.\", the FileNotFoundException of .NET, upstream expects 'ENOENT: no such file or directory'")]
     public async Task ShouldThrowAnErrorIfTheFileDoesNotExist(IPage page, Server server, Func<string, string> asset)
     {
         await page.GotoAsync(server.Prefix + "/input/fileupload.html");
@@ -240,8 +240,8 @@ public class PageSetInputFilesTests
     [UpstreamTest("IF-011 should upload large file with relative path")]
     public async Task ShouldUploadLargeFileWithRelativePath(IPage page, Server server, bool isAndroid, string mode, TestInfo testInfo)
     {
-        It.Skip(isAndroid);
-        It.Slow();
+        Info.Skip(isAndroid);
+        Info.Slow();
 
         await page.GotoAsync(server.Prefix + "/input/fileupload.html");
         var uploadFile = testInfo.OutputPath("200MB.zip");
@@ -493,7 +493,7 @@ public class PageSetInputFilesTests
     [UpstreamTest("IF-022 should store an uploaded file in IndexedDB")]
     public async Task ShouldStoreAnUploadedFileInIndexedDB(IPage page, Server server, Func<string, string> asset, string browserName)
     {
-        It.Fixme(browserName == "webkit", "WebKit does not support storing files in IndexedDB in private browsing.");
+        Info.Fixme(browserName == "webkit", "WebKit does not support storing files in IndexedDB in private browsing.");
 
         await page.GotoAsync(server.Prefix + "/input/fileupload.html");
         var input = page.Locator("input[type=file]");

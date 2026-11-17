@@ -45,9 +45,9 @@ public class ModernizrTests
     [UpstreamTest("CA-030 Safari Desktop")]
     public async Task SafariDesktop(IBrowser browser, string browserName, string platform, Server httpsServer, string channel, bool isFrozenWebkit, BrowserNewContextOptions contextOptions)
     {
-        It.Skip(browserName != "webkit");
-        It.Skip(browserName == "webkit" && platform == "darwin" && RuntimeInformation.ProcessArchitecture == Architecture.X64, "Modernizr uses WebGL which is not available on Intel macOS - https://bugs.webkit.org/show_bug.cgi?id=278277");
-        It.Skip(isFrozenWebkit);
+        Info.Skip(browserName != "webkit");
+        Info.Skip(browserName == "webkit" && platform == "darwin" && RuntimeInformation.ProcessArchitecture == Architecture.X64, "Modernizr uses WebGL which is not available on Intel macOS - https://bugs.webkit.org/show_bug.cgi?id=278277");
+        Info.Skip(isFrozenWebkit);
         var context = await browser.NewContextAsync(new(contextOptions)
         {
             DeviceScaleFactor = 2,
@@ -108,9 +108,9 @@ public class ModernizrTests
     [UpstreamTest("CA-031 Mobile Safari")]
     public async Task MobileSafari(IPlaywright playwright, IBrowser browser, string browserName, string platform, Server httpsServer, string channel, bool isFrozenWebkit, BrowserNewContextOptions contextOptions)
     {
-        It.Skip(browserName != "webkit");
-        It.Skip(browserName == "webkit" && platform == "darwin" && RuntimeInformation.ProcessArchitecture == Architecture.X64, "Modernizr uses WebGL which is not available on Intel macOS - https://bugs.webkit.org/show_bug.cgi?id=278277");
-        It.Skip(isFrozenWebkit);
+        Info.Skip(browserName != "webkit");
+        Info.Skip(browserName == "webkit" && platform == "darwin" && RuntimeInformation.ProcessArchitecture == Architecture.X64, "Modernizr uses WebGL which is not available on Intel macOS - https://bugs.webkit.org/show_bug.cgi?id=278277");
+        Info.Skip(isFrozenWebkit);
         var iPhone = playwright.Devices["iPhone 12"];
         var context = await browser.NewContextAsync(MergeOptions(
             new BrowserNewContextOptions(iPhone)

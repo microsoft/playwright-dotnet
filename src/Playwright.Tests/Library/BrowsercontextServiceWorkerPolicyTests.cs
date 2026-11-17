@@ -43,9 +43,9 @@ public class BrowsercontextServiceWorkerPolicyTests
   })()")]
     public async Task ShouldAllowServiceWorkerNavigationWhileOffline(string mode, string workerResponse, IBrowserContext context, IPage page, Server server, string browserName, bool isElectron, bool isFrozenWebkit)
     {
-        It.Skip(isElectron);
-        It.Skip(isFrozenWebkit, "Requires offline emulation in the network process.");
-        It.Fixme(browserName == "firefox" && (mode == "network-fallback" || mode == "preload-fallback"), "Firefox does not apply offline emulation to service worker requests.");
+        Info.Skip(isElectron);
+        Info.Skip(isFrozenWebkit, "Requires offline emulation in the network process.");
+        Info.Fixme(browserName == "firefox" && (mode == "network-fallback" || mode == "preload-fallback"), "Firefox does not apply offline emulation to service worker requests.");
 
         var networkRequests = 0;
         server.SetRoute("/target.html", (request, response) =>

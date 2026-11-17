@@ -133,7 +133,7 @@ public class BrowsercontextLocaleTests
     [UpstreamTest("LC-008 should be isolated between contexts")]
     public async Task ShouldBeIsolatedBetweenContexts(IBrowser browser, Server server, BrowserNewContextOptions contextOptions)
     {
-        It.Slow();
+        Info.Slow();
 
         var context1 = await browser.NewContextAsync(new(contextOptions) { Locale = "en-US" });
         var promises = new List<Task<IPage>>();
@@ -268,7 +268,7 @@ public class BrowsercontextLocaleTests
     [UpstreamTest("LC-013 should send Accept-Language header on WebSocket handshake")]
     public async Task ShouldSendAcceptLanguageHeaderOnWebSocketHandshake(IBrowser browser, Server server, string browserName, int browserMajorVersion, BrowserNewContextOptions contextOptions)
     {
-        It.Fixme(browserName == "chromium" && browserMajorVersion < 151, "Chromium before 151 sends the browser Accept-Language instead of the emulated locale on WebSocket handshake");
+        Info.Fixme(browserName == "chromium" && browserMajorVersion < 151, "Chromium before 151 sends the browser Accept-Language instead of the emulated locale on WebSocket handshake");
 
         var context = await browser.NewContextAsync(new(contextOptions) { Locale = "en-GB" });
         var page = await context.NewPageAsync();
@@ -283,7 +283,7 @@ public class BrowsercontextLocaleTests
     [UpstreamTest("LC-014 should send Accept-Language header on WebSocket handshake from a worker")]
     public async Task ShouldSendAcceptLanguageHeaderOnWebSocketHandshakeFromAWorker(IBrowser browser, Server server, string browserName, int browserMajorVersion, BrowserNewContextOptions contextOptions)
     {
-        It.Fixme(browserName == "chromium" && browserMajorVersion < 151, "Chromium before 151 sends the browser Accept-Language instead of the emulated locale on WebSocket handshake");
+        Info.Fixme(browserName == "chromium" && browserMajorVersion < 151, "Chromium before 151 sends the browser Accept-Language instead of the emulated locale on WebSocket handshake");
 
         var context = await browser.NewContextAsync(new(contextOptions) { Locale = "en-GB" });
         var page = await context.NewPageAsync();

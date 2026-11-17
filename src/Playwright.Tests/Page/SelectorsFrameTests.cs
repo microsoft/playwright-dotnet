@@ -137,7 +137,7 @@ public class SelectorsFrameTests
     }
 
     [UpstreamTest("SE-105 $eval should throw for missing frame")]
-    [Fixme("dotnet: the message is 'Failed to find element matching selector \"iframe >> internal:control=enter-frame >> canvas\"', without the 'page.$eval: ' and 'elementHandle.$eval: ' prefixes of the calls")]
+    [LocalFixme("dotnet: the message is 'Failed to find element matching selector \"iframe >> internal:control=enter-frame >> canvas\"', without the 'page.$eval: ' and 'elementHandle.$eval: ' prefixes of the calls")]
     public async Task EvalShouldThrowForMissingFrame(IPage page, Server server)
     {
         await page.GotoAsync(server.EmptyPage);

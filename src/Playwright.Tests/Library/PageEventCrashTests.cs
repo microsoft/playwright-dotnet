@@ -53,14 +53,14 @@ public class PageEventCrashTests
     [BeforeEach]
     public static void BeforeEach(string platform, string browserName, string channel)
     {
-        It.Slow(platform == "linux" && (browserName == "webkit"), "WebKit/Linux tests are consistently slower on some Linux environments. Most likely WebContent process is not getting terminated properly and is causing the slowdown.");
-        It.Skip(!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("CI")) && platform == "linux" && browserName == "webkit", "crash event takes about a minute to arrive and often exceeds the test timeout");
-        It.Skip(channel == "webkit-wsl", "WebKit on WSL is even slower than above ^^ - skipping for now");
-        It.Skip(browserName == "chromium" && HostPlatform.StartsWith("ubuntu24.04", StringComparison.Ordinal), "never dispatches the crash event");
+        Info.Slow(platform == "linux" && (browserName == "webkit"), "WebKit/Linux tests are consistently slower on some Linux environments. Most likely WebContent process is not getting terminated properly and is causing the slowdown.");
+        Info.Skip(!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("CI")) && platform == "linux" && browserName == "webkit", "crash event takes about a minute to arrive and often exceeds the test timeout");
+        Info.Skip(channel == "webkit-wsl", "WebKit on WSL is even slower than above ^^ - skipping for now");
+        Info.Skip(browserName == "chromium" && HostPlatform.StartsWith("ubuntu24.04", StringComparison.Ordinal), "never dispatches the crash event");
     }
 
     [UpstreamTest("ER-014 should emit crash event when page crashes")]
-    [Fixme("harness: the crash fixture crashes a page of Firefox and WebKit with toImpl(page).delegate._session.send('Page.crash', {}), and toImpl is not available", Browsers = "firefox,webkit")]
+    [LocalFixme("harness: the crash fixture crashes a page of Firefox and WebKit with toImpl(page).delegate._session.send('Page.crash', {}), and toImpl is not available (only in firefox and webkit)")]
     public async Task ShouldEmitCrashEventWhenPageCrashes(IPage page, Action crash)
     {
         await page.SetContentAsync("<div>This page should crash</div>");
@@ -70,7 +70,7 @@ public class PageEventCrashTests
     }
 
     [UpstreamTest("ER-015 should throw on any action after page crashes")]
-    [Fixme("harness: the crash fixture crashes a page of Firefox and WebKit with toImpl(page).delegate._session.send('Page.crash', {}), and toImpl is not available", Browsers = "firefox,webkit")]
+    [LocalFixme("harness: the crash fixture crashes a page of Firefox and WebKit with toImpl(page).delegate._session.send('Page.crash', {}), and toImpl is not available (only in firefox and webkit)")]
     public async Task ShouldThrowOnAnyActionAfterPageCrashes(IPage page, Action crash, Server server, string browserName)
     {
         await page.SetContentAsync("<div>This page should crash</div>");
@@ -95,7 +95,7 @@ public class PageEventCrashTests
     }
 
     [UpstreamTest("ER-016 expect should not hang when page crashed")]
-    [Fixme("harness: the crash fixture crashes a page of Firefox and WebKit with toImpl(page).delegate._session.send('Page.crash', {}), and toImpl is not available", Browsers = "firefox,webkit")]
+    [LocalFixme("harness: the crash fixture crashes a page of Firefox and WebKit with toImpl(page).delegate._session.send('Page.crash', {}), and toImpl is not available (only in firefox and webkit)")]
     public async Task ExpectShouldNotHangWhenPageCrashed(IPage page, Action crash)
     {
         var expectPromise = Expect(page.GetByText("child")).ToBeVisibleAsync();
@@ -104,7 +104,7 @@ public class PageEventCrashTests
     }
 
     [UpstreamTest("ER-017 should cancel waitForEvent when page crashes")]
-    [Fixme("harness: the crash fixture crashes a page of Firefox and WebKit with toImpl(page).delegate._session.send('Page.crash', {}), and toImpl is not available", Browsers = "firefox,webkit")]
+    [LocalFixme("harness: the crash fixture crashes a page of Firefox and WebKit with toImpl(page).delegate._session.send('Page.crash', {}), and toImpl is not available (only in firefox and webkit)")]
     public async Task ShouldCancelWaitForEventWhenPageCrashes(IPage page, Action crash)
     {
         await page.SetContentAsync("<div>This page should crash</div>");
@@ -115,8 +115,7 @@ public class PageEventCrashTests
     }
 
     [UpstreamTest("ER-018 should cancel navigation when page crashes")]
-    [Fixme("dotnet: the message is 'Page crashed\\nCall log: ...', without the 'page.goto: ' prefix of the call", Browsers = "chromium")]
-    [Fixme("harness: the crash fixture crashes a page of Firefox and WebKit with toImpl(page).delegate._session.send('Page.crash', {}), and toImpl is not available", Browsers = "firefox,webkit")]
+    [LocalFixme("dotnet: the message is 'Page crashed\\nCall log: ...', without the 'page.goto: ' prefix of the call (only in chromium); harness: the crash fixture crashes a page of Firefox and WebKit with toImpl(page).delegate._session.send('Page.crash', {}), and toImpl is not available (only in firefox and webkit)")]
     public async Task ShouldCancelNavigationWhenPageCrashes(Server server, IPage page, Action crash)
     {
         await page.SetContentAsync("<div>This page should crash</div>");
@@ -129,10 +128,10 @@ public class PageEventCrashTests
     }
 
     [UpstreamTest("ER-019 should be able to close context when page crashes")]
-    [Fixme("harness: the crash fixture crashes a page of Firefox and WebKit with toImpl(page).delegate._session.send('Page.crash', {}), and toImpl is not available", Browsers = "firefox,webkit")]
+    [LocalFixme("harness: the crash fixture crashes a page of Firefox and WebKit with toImpl(page).delegate._session.send('Page.crash', {}), and toImpl is not available (only in firefox and webkit)")]
     public async Task ShouldBeAbleToCloseContextWhenPageCrashes(bool isAndroid, IPage page, Action crash)
     {
-        It.Skip(isAndroid);
+        Info.Skip(isAndroid);
 
         await page.SetContentAsync("<div>This page should crash</div>");
         crash();
@@ -141,7 +140,7 @@ public class PageEventCrashTests
     }
 
     [UpstreamTest("ER-020 should be able to close page after crash")]
-    [Fixme("harness: the crash fixture crashes a page of Firefox and WebKit with toImpl(page).delegate._session.send('Page.crash', {}), and toImpl is not available", Browsers = "firefox,webkit")]
+    [LocalFixme("harness: the crash fixture crashes a page of Firefox and WebKit with toImpl(page).delegate._session.send('Page.crash', {}), and toImpl is not available (only in firefox and webkit)")]
     public async Task ShouldBeAbleToClosePageAfterCrash(IPage page, Action crash)
     {
         await page.SetContentAsync("<div>This page should crash</div>");
@@ -157,7 +156,7 @@ public class PageEventCrashTests
     }
 
     [UpstreamTest("ER-021 should reject in-flight worker.evaluate when page crashes")]
-    [Fixme("harness: the crash fixture crashes a page of Firefox and WebKit with toImpl(page).delegate._session.send('Page.crash', {}), and toImpl is not available", Browsers = "firefox,webkit")]
+    [LocalFixme("harness: the crash fixture crashes a page of Firefox and WebKit with toImpl(page).delegate._session.send('Page.crash', {}), and toImpl is not available (only in firefox and webkit)")]
     public async Task ShouldRejectInFlightWorkerEvaluateWhenPageCrashes(IPage page, Action crash, Server server)
     {
         await page.GotoAsync(server.EmptyPage);

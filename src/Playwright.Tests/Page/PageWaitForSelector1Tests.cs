@@ -71,7 +71,7 @@ public class PageWaitForSelector1Tests
 
     [UpstreamTest("WA-033 elementHandle.waitForSelector should throw on navigation")]
 
-    [Fixme("dotnet: the call log has Locator(\"span\"), upstream expects locator('span')")]
+    [LocalFixme("dotnet: the call log has Locator(\"span\"), upstream expects locator('span')")]
     public async Task ElementHandleWaitForSelectorShouldThrowOnNavigation(IPage page, Server server)
     {
         await page.SetContentAsync("<div></div>");
@@ -112,7 +112,7 @@ public class PageWaitForSelector1Tests
 
     [UpstreamTest("WA-036 should report logs while waiting for visible")]
 
-    [Fixme("dotnet: the message is 'Timeout 5000ms exceeded.', without the 'frame.waitForSelector: ' prefix of the call, and the call log has Locator(\"div\"), upstream expects locator('div')")]
+    [LocalFixme("dotnet: the message is 'Timeout 5000ms exceeded.', without the 'frame.waitForSelector: ' prefix of the call, and the call log has Locator(\"div\"), upstream expects locator('div')")]
     public async Task ShouldReportLogsWhileWaitingForVisible(IPage page, Server server)
     {
         await page.GotoAsync(server.EmptyPage);
@@ -150,7 +150,7 @@ public class PageWaitForSelector1Tests
 
     [UpstreamTest("WA-037 should report logs while waiting for hidden")]
 
-    [Fixme("dotnet: the message is 'Timeout 5000ms exceeded.', without the 'frame.waitForSelector: ' prefix of the call, and the call log has Locator(\"div\"), upstream expects locator('div')")]
+    [LocalFixme("dotnet: the message is 'Timeout 5000ms exceeded.', without the 'frame.waitForSelector: ' prefix of the call, and the call log has Locator(\"div\"), upstream expects locator('div')")]
     public async Task ShouldReportLogsWhileWaitingForHidden(IPage page, Server server)
     {
         await page.GotoAsync(server.EmptyPage);
@@ -256,7 +256,7 @@ public class PageWaitForSelector1Tests
 
     [UpstreamTest("WA-043 should throw when frame is detached")]
 
-    [Fixme("dotnet: the message is 'Frame was detached', without the 'frame.waitForSelector: ' prefix of the call")]
+    [LocalFixme("dotnet: the message is 'Frame was detached', without the 'frame.waitForSelector: ' prefix of the call")]
     public async Task ShouldThrowWhenFrameIsDetached(IPage page, Server server)
     {
         await AttachFrame(page, "frame1", server.EmptyPage);

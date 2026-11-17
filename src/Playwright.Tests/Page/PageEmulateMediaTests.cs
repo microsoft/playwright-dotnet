@@ -211,7 +211,7 @@ public class PageEmulateMediaTests
     [UpstreamTest("EM-012 should report hover and fine pointer for desktop")]
     public async Task ShouldReportHoverAndFinePointerForDesktop(IPage page, bool isAndroid)
     {
-        It.Skip(isAndroid);
+        Info.Skip(isAndroid);
 
         await ExpectToMatchMedia(page, "(hover: hover)");
         await ExpectToMatchMedia(page, "(pointer: fine)");

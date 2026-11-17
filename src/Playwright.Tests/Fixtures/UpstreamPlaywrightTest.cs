@@ -75,7 +75,8 @@ public class UpstreamPlaywrightTest : WorkerAwareTest
 
     public int SocksPort { get; private set; }
 
-    public TestInfo TestInfo { get; private set; }
+    /// <summary><c>testInfo</c> and <c>test.info()</c>, and the calls on <c>test</c>: <c>Info.Skip(condition)</c>.</summary>
+    public TestInfo Info { get; private set; }
 
     /// <summary><c>PWTEST_SERVER_REGISTRY</c>: where the driver keeps the descriptors of the servers of <c>browser.bind()</c>.</summary>
     public string ServerRegistry => Env.ServerRegistry;
@@ -163,30 +164,7 @@ public class UpstreamPlaywrightTest : WorkerAwareTest
 
         var method = test.Method.MethodInfo;
         var attribute = method.GetCustomAttribute<UpstreamTestAttribute>(false);
-        TestInfo = new TestInfo(attribute.Title, attribute.Id, UpstreamRegistry.Find(attribute.Id)?.File, test.Name, retry, WorkerIndex, servers.ParallelIndex);
-
-        // The marks of a class apply to the classes that are nested in it, as the ones of a describe.
-        var marked = new List<MemberInfo> { method };
-        for (var type = GetType(); type != null; type = type.DeclaringType)
-        {
-            marked.Add(type);
-        }
-        if (marked.Select(member => member.GetCustomAttribute<ItSkipAttribute>(false)).FirstOrDefault(mark => mark != null) is { } skip)
-        {
-            It.Skip(true, skip.Reason);
-        }
-        if (marked.Select(member => member.GetCustomAttribute<ItFixmeAttribute>(false)).FirstOrDefault(mark => mark != null) is { } fixme)
-        {
-            It.Fixme(true, fixme.Reason);
-        }
-        if (method.GetCustomAttributes<FixmeAttribute>(false).FirstOrDefault(mark => mark.AppliesTo(test.FullName)) is { } portFixme)
-        {
-            It.Fixme(true, portFixme.Reason);
-        }
-        if (marked.Any(member => member.IsDefined(typeof(ItSlowAttribute), false)))
-        {
-            It.Slow();
-        }
+        Info = new TestInfo(attribute.Title, attribute.Id, UpstreamRegistry.Find(attribute.Id)?.File, test.Name, retry, WorkerIndex, servers.ParallelIndex);
 
         // expect: { timeout: 10000 } upstream.
         Microsoft.Playwright.Assertions.SetDefaultExpectTimeout(Env.ExpectTimeout);
@@ -242,7 +220,7 @@ public class UpstreamPlaywrightTest : WorkerAwareTest
         }
         _childProcesses.Clear();
         Microsoft.Playwright.Assertions.SetDefaultExpectTimeout(DefaultExpectTimeout);
-        Log($"end   {TestContext.CurrentContext.Test.FullName} {TestInfo?.Status}");
+        Log($"end   {TestContext.CurrentContext.Test.FullName} {Info?.Status}");
     }
 
     /// <summary>

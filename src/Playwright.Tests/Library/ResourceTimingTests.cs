@@ -43,7 +43,7 @@ public class ResourceTimingTests
     [UpstreamTest("NE-132 should work for subresource")]
     public async Task ShouldWorkForSubresource(ContextFactory contextFactory, Server server, string browserName, string platform)
     {
-        It.Fixme(browserName == "webkit" && platform == "win32", "responseStart is wrong due upstream webkit/libcurl bug");
+        Info.Fixme(browserName == "webkit" && platform == "win32", "responseStart is wrong due upstream webkit/libcurl bug");
         var context = await contextFactory();
         var page = await context.NewPageAsync();
         var requests = new List<IRequest>();
@@ -78,7 +78,7 @@ public class ResourceTimingTests
     [UpstreamTest("NE-134 should work for redirect")]
     public async Task ShouldWorkForRedirect(ContextFactory contextFactory, string browserName, Server server)
     {
-        It.Fixme(browserName == "webkit", "In WebKit, redirects don't carry the timing info");
+        Info.Fixme(browserName == "webkit", "In WebKit, redirects don't carry the timing info");
 
         var context = await contextFactory();
         var page = await context.NewPageAsync();
@@ -112,7 +112,7 @@ public class ResourceTimingTests
     [UpstreamTest("NE-135 should work when serving from memory cache")]
     public async Task ShouldWorkWhenServingFromMemoryCache(ContextFactory contextFactory, Server server, string browserName, bool isBidi)
     {
-        It.Fixme(browserName == "firefox" && !isBidi, "Response event is not fired in Firefox");
+        Info.Fixme(browserName == "firefox" && !isBidi, "Response event is not fired in Firefox");
         server.SetRoute("/one-style.css", (req, res) =>
         {
             res.WriteHead(200, new()

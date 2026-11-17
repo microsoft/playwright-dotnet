@@ -54,7 +54,7 @@ public class PageRequestContinueTests
     [UpstreamTest("RO-059 should not allow to override unsafe HTTP headers")]
     public async Task ShouldNotAllowToOverrideUnsafeHTTPHeaders(IPage page, Server server, string browserName, bool isAndroid, bool isElectron)
     {
-        It.Skip(isAndroid);
+        Info.Skip(isAndroid);
         var routePromise = new TaskCompletionSource<IRoute>(TaskCreationOptions.RunContinuationsAsynchronously);
         await page.RouteAsync("**/*", route => routePromise.TrySetResult(route));
         var serverRequestPromise = server.WaitForRequest("/empty.html");
@@ -74,7 +74,7 @@ public class PageRequestContinueTests
     }
 
     [UpstreamTest("RO-060 should delete header with undefined value")]
-    [Fixme("dotnet: route.ContinueAsync() with a null header value fails with \"headers[N].value: expected string, got undefined\"; the Node.js client leaves out a header whose value is undefined")]
+    [LocalFixme("dotnet: route.ContinueAsync() with a null header value fails with \"headers[N].value: expected string, got undefined\"; the Node.js client leaves out a header whose value is undefined")]
     public async Task ShouldDeleteHeaderWithUndefinedValue(IPage page, Server server, string browserName)
     {
         await page.GotoAsync(server.Prefix + "/empty.html");
@@ -168,7 +168,7 @@ public class PageRequestContinueTests
     [UpstreamTest("RO-064 should not throw if request was cancelled by the page")]
     public async Task ShouldNotThrowIfRequestWasCancelledByThePage(IPage page, Server server, bool isAndroid)
     {
-        It.Fixme(isAndroid, "net::ERR_CONNECTION_RESET");
+        Info.Fixme(isAndroid, "net::ERR_CONNECTION_RESET");
 
         var interceptPromise = new TaskCompletionSource<IRoute>(TaskCreationOptions.RunContinuationsAsynchronously);
         await page.RouteAsync("**/data.json", route => interceptPromise.TrySetResult(route));
@@ -339,7 +339,7 @@ public class PageRequestContinueTests
     [UpstreamTest("RO-074 should work with Cross-Origin-Opener-Policy")]
     public async Task ShouldWorkWithCrossOriginOpenerPolicy(IPage page, Server server, string browserName)
     {
-        It.Fixme(browserName == "webkit", "https://github.com/microsoft/playwright/issues/8796");
+        Info.Fixme(browserName == "webkit", "https://github.com/microsoft/playwright/issues/8796");
         ServerHeaders serverHeaders = null;
         var serverRequests = new List<string>();
         server.SetRoute("/empty.html", (req, res) =>
@@ -411,7 +411,7 @@ public class PageRequestContinueTests
     [UpstreamTest("RO-075 should not delete the origin header")]
     public async Task ShouldNotDeleteTheOriginHeader(IPage page, Server server, bool isAndroid)
     {
-        It.Skip(isAndroid, "No cross-process on Android");
+        Info.Skip(isAndroid, "No cross-process on Android");
 
         await page.GotoAsync(server.Prefix + "/empty.html");
         server.SetRoute("/something", (request, response) =>
@@ -700,7 +700,7 @@ public class PageRequestContinueTests
     }
 
     [UpstreamTest("RO-086 continue should delete headers on redirects")]
-    [Fixme("dotnet: route.ContinueAsync() with a null header value fails with \"headers[N].value: expected string, got undefined\"; the Node.js client leaves out a header whose value is undefined")]
+    [LocalFixme("dotnet: route.ContinueAsync() with a null header value fails with \"headers[N].value: expected string, got undefined\"; the Node.js client leaves out a header whose value is undefined")]
     public async Task ContinueShouldDeleteHeadersOnRedirects(IPage page, Server server)
     {
         await page.GotoAsync(server.Prefix + "/empty.html");
@@ -822,7 +822,7 @@ public class PageRequestContinueTests
     [UpstreamTest("RO-089 propagate headers cross origin redirect")]
     public async Task PropagateHeadersCrossOriginRedirect(IPage page, Server server, bool isAndroid)
     {
-        It.Fixme(isAndroid, "receives authorization:credentials header");
+        Info.Fixme(isAndroid, "receives authorization:credentials header");
 
         await page.GotoAsync(server.Prefix + "/empty.html");
         var serverRequestPromise = new TaskCompletionSource<ServerRequest>(TaskCreationOptions.RunContinuationsAsynchronously);
@@ -875,7 +875,7 @@ public class PageRequestContinueTests
     [UpstreamTest("RO-090 propagate headers cross origin redirect after interception")]
     public async Task PropagateHeadersCrossOriginRedirectAfterInterception(IPage page, Server server, string browserName, bool isAndroid)
     {
-        It.Skip(isAndroid, "No cross-process on Android");
+        Info.Skip(isAndroid, "No cross-process on Android");
 
         await page.GotoAsync(server.Prefix + "/empty.html");
         var serverRequestPromise = new TaskCompletionSource<ServerRequest>(TaskCreationOptions.RunContinuationsAsynchronously);
@@ -944,7 +944,7 @@ public class PageRequestContinueTests
     [UpstreamTest("RO-091 continue should pass on 307 cross-origin redirect")]
     public async Task ContinueShouldPassOn307CrossOriginRedirect(IPage page, Server server, bool isAndroid)
     {
-        It.Skip(isAndroid, "No cross-process on Android");
+        Info.Skip(isAndroid, "No cross-process on Android");
 
         server.SetRoute("/final", (request, response) =>
         {

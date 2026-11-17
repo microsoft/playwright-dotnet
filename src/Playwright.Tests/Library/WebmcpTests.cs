@@ -56,10 +56,10 @@ public class WebmcpTests
     }
 
     [BeforeEach]
-    public static void Skip(string browserName) => It.Skip(browserName == "webkit", "WebKit does not implement WebMCP");
+    public static void Skip(string browserName) => Info.Skip(browserName == "webkit", "WebKit does not implement WebMCP");
 
     [BeforeEach]
-    public static void Skip2(bool isBidi) => It.Skip(isBidi, "WebMCP is not implemented over BiDi");
+    public static void Skip2(bool isBidi) => Info.Skip(isBidi, "WebMCP is not implemented over BiDi");
 
     private static string RegisterScript(string tools)
     {
@@ -248,7 +248,7 @@ public class WebmcpTests
     [UpstreamTest("WM-011 should list declarative tools")]
     public async Task ShouldListDeclarativeTools(IPage page, Server server, string browserName)
     {
-        It.Skip(browserName != "chromium", "Only Chromium implements declarative tools");
+        Info.Skip(browserName != "chromium", "Only Chromium implements declarative tools");
         Serve(server, "/", @"
     <form toolname=""subscribe"" tooldescription=""Subscribes to the newsletter"">
       <input name=""email"" type=""email"">
@@ -275,7 +275,7 @@ public class WebmcpTests
     [UpstreamTest("WM-012 should scope tools to their frame")]
     public async Task ShouldScopeToolsToTheirFrame(IPage page, Server server, string browserName)
     {
-        It.Skip(browserName == "firefox", "Firefox does not support registering WebMCP tools in iframes yet, https://bugzilla.mozilla.org/show_bug.cgi?id=2019743");
+        Info.Skip(browserName == "firefox", "Firefox does not support registering WebMCP tools in iframes yet, https://bugzilla.mozilla.org/show_bug.cgi?id=2019743");
         Serve(server, "/", RegisterScript(kAdd) + "<iframe src=\"/frame.html\"></iframe>");
         Serve(server, "/frame.html", RegisterScript(@"
     modelContext.registerTool({
@@ -299,7 +299,7 @@ public class WebmcpTests
     [UpstreamTest("WM-013 should call same-name tools in their own frame")]
     public async Task ShouldCallSameNameToolsInTheirOwnFrame(IPage page, Server server, string browserName)
     {
-        It.Skip(browserName == "firefox", "Firefox does not support registering WebMCP tools in iframes yet, https://bugzilla.mozilla.org/show_bug.cgi?id=2019743");
+        Info.Skip(browserName == "firefox", "Firefox does not support registering WebMCP tools in iframes yet, https://bugzilla.mozilla.org/show_bug.cgi?id=2019743");
         string registerEcho(string text) => RegisterScript($@"
     modelContext.registerTool({{
       name: 'echo',
@@ -319,7 +319,7 @@ public class WebmcpTests
     [UpstreamTest("WM-014 should list and call tools in cross-origin and nested frames")]
     public async Task ShouldListAndCallToolsInCrossOriginAndNestedFrames(IPage page, Server server, string browserName)
     {
-        It.Skip(browserName == "firefox", "Firefox does not support registering WebMCP tools in iframes yet, https://bugzilla.mozilla.org/show_bug.cgi?id=2019743");
+        Info.Skip(browserName == "firefox", "Firefox does not support registering WebMCP tools in iframes yet, https://bugzilla.mozilla.org/show_bug.cgi?id=2019743");
         string registerEcho(string text) => RegisterScript($@"
     modelContext.registerTool({{
       name: 'echo-{text}',

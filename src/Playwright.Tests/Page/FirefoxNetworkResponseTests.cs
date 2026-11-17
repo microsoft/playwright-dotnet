@@ -23,7 +23,7 @@ namespace Microsoft.Playwright.Tests.Page;
 public class FirefoxNetworkResponseTests
 {
     [BeforeEach]
-    public static void Skip(string browserName, bool isBidi) => It.Skip(browserName != "firefox" || isBidi, "Tests the Firefox network observer.");
+    public static void Skip(string browserName, bool isBidi) => Info.Skip(browserName != "firefox" || isBidi, "Tests the Firefox network observer.");
 
     private static async Task ExpectHeaderFields(IResponse response, Header[] expected)
     {

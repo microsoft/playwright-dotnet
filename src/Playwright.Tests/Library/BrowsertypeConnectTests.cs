@@ -28,9 +28,11 @@ using static Microsoft.Playwright.Tests.Fixtures.Utils;
 namespace Microsoft.Playwright.Tests.Library;
 
 /// <summary>Port of tests/library/browsertype-connect.spec.ts.</summary>
-[ItSlow]
 public class BrowsertypeConnectTests
 {
+    [SetUp]
+    public void Slow() => Info.Slow(true, "All connect tests are slow");
+
     public sealed class ConnectTestOptions
     {
         // .NET: redirectPortForTest sets the __testHookRedirectPortForwarding option of connect(), which is not in the .NET API.
@@ -84,7 +86,7 @@ public class BrowsertypeConnectTests
     [Fixture]
     public static async Task IpV6ServerPort(Func<int, Task> use)
     {
-        It.Skip(!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("INSIDE_DOCKER")), "docker does not support IPv6 by default");
+        Info.Skip(!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("INSIDE_DOCKER")), "docker does not support IPv6 by default");
         var server = CreateHttpServer("::1", "<html><body>from-ipv6-server</body></html>");
         var address = (IPEndPoint)server.LocalEndpoint;
         await use(address.Port);
@@ -164,7 +166,7 @@ public class BrowsertypeConnectTests
         }
 
         [UpstreamTest("BT-037 should print custom ws close error")]
-        [Fixme("dotnet: the message is 'Oh my!', without the 'browserType.connect: ' prefix of the call")]
+        [LocalFixme("dotnet: the message is 'Oh my!', without the 'browserType.connect: ' prefix of the call")]
         public async Task ShouldPrintCustomWsCloseError(ConnectFixture connect, Server server)
         {
             server.OnceWebSocketConnection((ws, request) =>
@@ -228,8 +230,8 @@ public class BrowsertypeConnectTests
         [UpstreamTest("BT-040 should be able to visit ipv6")]
         public async Task ShouldBeAbleToVisitIpv6(ConnectFixture connect, StartRemoteServer startRemoteServer, int ipV6ServerPort, string channel, BrowserNewPageOptions newPageOptions)
         {
-            It.Fixme(!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("INSIDE_DOCKER")), "docker does not support IPv6 by default");
-            It.Fixme(channel == "webkit-wsl", "WebKit on WSL does not support IPv6: https://github.com/microsoft/WSL/issues/10803");
+            Info.Fixme(!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("INSIDE_DOCKER")), "docker does not support IPv6 by default");
+            Info.Fixme(channel == "webkit-wsl", "WebKit on WSL does not support IPv6: https://github.com/microsoft/WSL/issues/10803");
             var remoteServer = await startRemoteServer(kind);
             var browser = await connect(remoteServer.WsEndpoint());
             var page = await browser.NewPageAsync(newPageOptions);
@@ -242,8 +244,8 @@ public class BrowsertypeConnectTests
         [UpstreamTest("BT-042 should be able to visit ipv6 through localhost")]
         public async Task ShouldBeAbleToVisitIpv6ThroughLocalhost(ConnectFixture connect, StartRemoteServer startRemoteServer, int ipV6ServerPort, string channel, BrowserNewPageOptions newPageOptions)
         {
-            It.Fixme(!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("INSIDE_DOCKER")), "docker does not support IPv6 by default");
-            It.Skip(channel == "webkit-wsl", "WebKit on WSL does not support IPv6: https://github.com/microsoft/WSL/issues/10803");
+            Info.Fixme(!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("INSIDE_DOCKER")), "docker does not support IPv6 by default");
+            Info.Skip(channel == "webkit-wsl", "WebKit on WSL does not support IPv6: https://github.com/microsoft/WSL/issues/10803");
             var remoteServer = await startRemoteServer(kind);
             var browser = await connect(remoteServer.WsEndpoint());
             var page = await browser.NewPageAsync(newPageOptions);
@@ -278,7 +280,7 @@ public class BrowsertypeConnectTests
         }
 
         [UpstreamTest("BT-044 should timeout in socket while connecting")]
-        [Fixme("dotnet: the message is 'Timeout 1000ms exceeded.', without the 'browserType.connect: ' prefix of the call")]
+        [LocalFixme("dotnet: the message is 'Timeout 1000ms exceeded.', without the 'browserType.connect: ' prefix of the call")]
         public async Task ShouldTimeoutInSocketWhileConnecting(ConnectFixture connect, Server server)
         {
             var e = await Catch(() => connect($"ws://localhost:{server.Port}/ws-slow", new()
@@ -289,7 +291,7 @@ public class BrowsertypeConnectTests
         }
 
         [UpstreamTest("BT-045 should timeout in connect while connecting")]
-        [Fixme("dotnet: the message is 'BrowserType.ConnectAsync: Timeout 100ms exceeded', upstream expects 'browserType.connect: Timeout 100ms exceeded'")]
+        [LocalFixme("dotnet: the message is 'BrowserType.ConnectAsync: Timeout 100ms exceeded', upstream expects 'browserType.connect: Timeout 100ms exceeded'")]
         public async Task ShouldTimeoutInConnectWhileConnecting(ConnectFixture connect, Server server)
         {
             var e = await Catch(() => connect($"ws://localhost:{server.Port}/ws", new()
@@ -320,7 +322,7 @@ public class BrowsertypeConnectTests
         [UpstreamTest("BT-048 should send default User-Agent and X-Playwright-Browser headers with connect request")]
         public async Task ShouldSendDefaultUserAgentAndXPlaywrightBrowserHeadersWithConnectRequest(ConnectFixture connect, string browserName, Server server, bool isFrozenWebkit)
         {
-            It.Skip(isFrozenWebkit);
+            Info.Skip(isFrozenWebkit);
 
             var (request, _) = await PromiseAll(
                 server.WaitForWebSocketConnectionRequest(),
@@ -494,7 +496,7 @@ public class BrowsertypeConnectTests
         }
 
         [UpstreamTest("BT-060 should reject waitForEvent before browser.close finishes")]
-        [Fixme("dotnet: Browser.CloseAsync() of a connected browser returns before the waiters of its pages are rejected: Browser.DidClose runs when the connection is closed locally (Connection.Close), and the pages are closed later, when the pipe reports that it closed")]
+        [LocalFixme("dotnet: Browser.CloseAsync() of a connected browser returns before the waiters of its pages are rejected: Browser.DidClose runs when the connection is closed locally (Connection.Close), and the pages are closed later, when the pipe reports that it closed")]
         public async Task ShouldRejectWaitForEventBeforeBrowserCloseFinishes(ConnectFixture connect, StartRemoteServer startRemoteServer, Server server, BrowserNewPageOptions newPageOptions)
         {
             var remoteServer = await startRemoteServer(kind);
@@ -519,7 +521,7 @@ public class BrowsertypeConnectTests
         }
 
         [UpstreamTest("BT-061 should reject waitForEvent before browser.onDisconnect fires")]
-        [Fixme("dotnet: the log is ['disconnected', 'rejected']: when the pipe closes, BrowserType.ConnectAsync closes the pages and raises Browser.Disconnected in one turn (OnPipeClosed), before the rejected waiter resumes; upstream calls browser._didClose() in a setTimeout", Browsers = "firefox")]
+        [LocalFixme("dotnet: the log is ['disconnected', 'rejected']: when the pipe closes, BrowserType.ConnectAsync closes the pages and raises Browser.Disconnected in one turn (OnPipeClosed), before the rejected waiter resumes; upstream calls browser._didClose() in a setTimeout (only in firefox)")]
         public async Task ShouldRejectWaitForEventBeforeBrowserOnDisconnectFires(ConnectFixture connect, StartRemoteServer startRemoteServer, Server server, BrowserNewPageOptions newPageOptions)
         {
             var remoteServer = await startRemoteServer(kind);
@@ -653,7 +655,7 @@ public class BrowsertypeConnectTests
         }
 
         [UpstreamTest("BT-068 should save download")]
-        [Fixme("dotnet: the message is 'Path is not available when connecting remotely. Use SaveAsAsync() to save a local copy.', upstream expects 'Use saveAs() to save a local copy.'")]
+        [LocalFixme("dotnet: the message is 'Path is not available when connecting remotely. Use SaveAsAsync() to save a local copy.', upstream expects 'Use saveAs() to save a local copy.'")]
         public async Task ShouldSaveDownload(Server server, ConnectFixture connect, StartRemoteServer startRemoteServer, TestInfo testInfo, BrowserNewPageOptions newPageOptions)
         {
             server.SetRoute("/download", (req, res) =>
@@ -744,7 +746,7 @@ public class BrowsertypeConnectTests
         [UpstreamTest("BT-074 should record trace with sources")]
         public async Task ShouldRecordTraceWithSources(ConnectFixture connect, StartRemoteServer startRemoteServer, Server server, string trace, TestInfo testInfo, BrowserNewContextOptions contextOptions)
         {
-            It.Skip(trace == "on");
+            Info.Skip(trace == "on");
             var remoteServer = await startRemoteServer(kind);
             var browser = await connect(remoteServer.WsEndpoint());
             var context = await browser.NewContextAsync(contextOptions);
@@ -793,7 +795,7 @@ public class BrowsertypeConnectTests
         {
             if (isMac)
             {
-                It.SetTimeout(It.Info().Timeout * 3);  // Extra slow!
+                Info.SetTimeout(Info.Timeout * 3);  // Extra slow!
             }
 
             var remoteServer = await startRemoteServer(kind);
@@ -841,7 +843,7 @@ public class BrowsertypeConnectTests
         [UpstreamTest("BT-077 should upload a folder")]
         public async Task ShouldUploadAFolder(ConnectFixture connect, StartRemoteServer startRemoteServer, Server server, TestInfo testInfo, BrowserNewContextOptions contextOptions)
         {
-            It.Slow();
+            Info.Slow();
             var remoteServer = await startRemoteServer(kind);
             var browser = await connect(remoteServer.WsEndpoint());
             var context = await browser.NewContextAsync(contextOptions);
@@ -927,7 +929,7 @@ public class BrowsertypeConnectTests
             }
 
             [BeforeEach]
-            public void Skip() => It.Skip(kind == "launchServer", "not supported yet");
+            public void Skip() => Info.Skip(kind == "launchServer", "not supported yet");
 
             [UpstreamTest("BT-080 should forward non-forwarded requests")]
             public async Task ShouldForwardNonForwardedRequests(Server server, StartRemoteServer startRemoteServer, ConnectFixture connect, BrowserNewPageOptions newPageOptions)
@@ -984,7 +986,7 @@ public class BrowsertypeConnectTests
         [UpstreamTest("BT-090 should properly disconnect when connection closes from the server side")]
         public async Task ShouldProperlyDisconnectWhenConnectionClosesFromTheServerSide(ConnectFixture connect, StartRemoteServer startRemoteServer, Server server, string platform, BrowserNewPageOptions newPageOptions)
         {
-            It.Skip(platform == "win32", "Cannot send signals");
+            Info.Skip(platform == "win32", "Cannot send signals");
 
             server.SetRoute("/one-style.css", (req, res) => { });
             var remoteServer = await startRemoteServer("launchServer", new() { DisconnectOnSIGHUP = true });
@@ -1008,11 +1010,11 @@ public class BrowsertypeConnectTests
         [UpstreamTest("BT-091 should be able to reconnect to a browser 12 times without warnings")]
         public async Task ShouldBeAbleToReconnectToABrowser12TimesWithoutWarnings(ConnectFixture connect, StartRemoteServer startRemoteServer, Server server, BrowserNewContextOptions contextOptions)
         {
-            It.Slow();
+            Info.Slow();
             var remoteServer = await startRemoteServer("launchServer", new() { ExitOnWarning = true });
             for (var i = 0; i < 12; i++)
             {
-                await It.Step("connect #" + i, async () =>
+                await Info.Step("connect #" + i, async () =>
                 {
                     var browser = await connect(remoteServer.WsEndpoint());
                     var browserContext = await browser.NewContextAsync(contextOptions);
@@ -1041,7 +1043,7 @@ public class BrowsertypeConnectTests
     [UpstreamTest("BT-094 should filter local paths from unsafe launch options")]
     public async Task ShouldFilterLocalPathsFromUnsafeLaunchOptions(ConnectFixture connect, StartRemoteServer startRemoteServer, Server server, string trace, TestInfo testInfo, BrowserNewContextOptions contextOptions)
     {
-        It.Skip(trace == "on", "the test starts its own tracing");
+        Info.Skip(trace == "on", "the test starts its own tracing");
 
         server.SetRoute("/download", (req, res) =>
         {

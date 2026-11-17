@@ -157,7 +157,7 @@ public class BrowsercontextViewportTests
     }
 
     [UpstreamTest("VP-011 should keep touch emulation after screenshot beyond viewport")]
-    [Fixme("dotnet: Locator.WithElementAsync makes a negative timeout from the default timeout 0, and the call passes only when it ends before the timer of the driver")]
+    [LocalFixme("dotnet: Locator.WithElementAsync makes a negative timeout from the default timeout 0, and the call passes only when it ends before the timer of the driver")]
     public async Task ShouldKeepTouchEmulationAfterScreenshotBeyondViewport(IBrowser browser, Server server, BrowserNewContextOptions contextOptions)
     {
         var context = await browser.NewContextAsync(new(contextOptions) { ViewportSize = new() { Width = 393, Height = 727 }, HasTouch = true });
@@ -207,7 +207,7 @@ public class BrowsercontextViewportTests
     [UpstreamTest("VP-014 should drag with high dpi")]
     public async Task ShouldDragWithHighDpi(IBrowser browser, Server server, bool headless, BrowserNewPageOptions newPageOptions)
     {
-        It.Skip(!headless, "Stray mouse events mess up the test");
+        Info.Skip(!headless, "Stray mouse events mess up the test");
 
         var page = await browser.NewPageAsync(new(newPageOptions) { DeviceScaleFactor = 2 });
         await page.GotoAsync(server.Prefix + "/drag-n-drop.html");
@@ -222,7 +222,7 @@ public class BrowsercontextViewportTests
     [UpstreamTest("VP-015 WebKit Windows headed should have a minimal viewport")]
     public async Task WebKitWindowsHeadedShouldHaveAMinimalViewport(ContextFactory contextFactory, string browserName, bool headless, bool isWindows)
     {
-        It.Skip(browserName != "webkit" || headless || !isWindows, "Not relevant for this browser");
+        Info.Skip(browserName != "webkit" || headless || !isWindows, "Not relevant for this browser");
 
         var error = await ThrowsAsync<PlaywrightException>(() => contextFactory(new()
         {
@@ -240,7 +240,7 @@ public class BrowsercontextViewportTests
     [UpstreamTest("VP-016 should be able to get correct orientation angle on non-mobile devices")]
     public async Task ShouldBeAbleToGetCorrectOrientationAngleOnNonMobileDevices(IBrowser browser, string browserName, Server server, BrowserNewContextOptions contextOptions)
     {
-        It.Skip(browserName == "webkit", "Desktop webkit dont support orientation API");
+        Info.Skip(browserName == "webkit", "Desktop webkit dont support orientation API");
 
         var context = await browser.NewContextAsync(new(contextOptions) { ViewportSize = new() { Width = 300, Height = 400 }, IsMobile = false });
         var page = await context.NewPageAsync();

@@ -86,7 +86,7 @@ public class FrameEvaluateTests
     [UpstreamTest("FR-008 should not allow cross-frame element handles when frames do not script each other")]
     public async Task ShouldNotAllowCrossFrameElementHandlesWhenFramesDoNotScriptEachOther(IPage page, Server server, bool isAndroid)
     {
-        It.Skip(isAndroid, "No cross-process on Android");
+        Info.Skip(isAndroid, "No cross-process on Android");
 
         await page.GotoAsync(server.EmptyPage);
         var frame = await AttachFrame(page, "frame1", server.CrossProcessPrefix + "/empty.html");
@@ -96,7 +96,7 @@ public class FrameEvaluateTests
     }
 
     [UpstreamTest("FR-009 should throw for detached frames")]
-    [Fixme("dotnet: the message is 'Frame was detached', without the 'frame.evaluate: ' prefix of the call")]
+    [LocalFixme("dotnet: the message is 'Frame was detached', without the 'frame.evaluate: ' prefix of the call")]
     public async Task ShouldThrowForDetachedFrames(IPage page, Server server)
     {
         var frame1 = await AttachFrame(page, "frame1", server.EmptyPage);

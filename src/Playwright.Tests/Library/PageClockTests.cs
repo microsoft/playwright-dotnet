@@ -23,7 +23,7 @@ namespace Microsoft.Playwright.Tests.Library;
 public class PageClockTests
 {
     [BeforeEach]
-    public static void Skip() => It.Skip(!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("PW_CLOCK")));
+    public static void Skip() => Info.Skip(!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("PW_CLOCK")));
 
     [Fixture]
     public static async Task Calls(IPage page, Func<List<object>, Task> use)
@@ -48,7 +48,7 @@ public class PageClockTests
         }
 
         [UpstreamTest("CK-001 triggers immediately without specified delay")]
-        [Fixme("dotnet: a callback of ExposeFunctionAsync has a fixed number of parameters, not (...params): the page calls stub() without arguments, BindingCall.CallAsync throws ArgumentOutOfRangeException for the missing argument, and the callback does not run")]
+        [LocalFixme("dotnet: a callback of ExposeFunctionAsync has a fixed number of parameters, not (...params): the page calls stub() without arguments, BindingCall.CallAsync throws ArgumentOutOfRangeException for the missing argument, and the callback does not run")]
         public async Task TriggersImmediatelyWithoutSpecifiedDelay(IPage page, List<object> calls)
         {
             await page.EvaluateAsync(@"async () => {
@@ -70,7 +70,7 @@ public class PageClockTests
         }
 
         [UpstreamTest("CK-003 triggers after sufficient delay")]
-        [Fixme("dotnet: a callback of ExposeFunctionAsync has a fixed number of parameters, not (...params): the page calls stub() without arguments, BindingCall.CallAsync throws ArgumentOutOfRangeException for the missing argument, and the callback does not run")]
+        [LocalFixme("dotnet: a callback of ExposeFunctionAsync has a fixed number of parameters, not (...params): the page calls stub() without arguments, BindingCall.CallAsync throws ArgumentOutOfRangeException for the missing argument, and the callback does not run")]
         public async Task TriggersAfterSufficientDelay(IPage page, List<object> calls)
         {
             await page.EvaluateAsync(@"async () => {
@@ -81,7 +81,7 @@ public class PageClockTests
         }
 
         [UpstreamTest("CK-004 triggers simultaneous timers")]
-        [Fixme("dotnet: a callback of ExposeFunctionAsync has a fixed number of parameters, not (...params): the page calls stub() without arguments, BindingCall.CallAsync throws ArgumentOutOfRangeException for the missing argument, and the callback does not run")]
+        [LocalFixme("dotnet: a callback of ExposeFunctionAsync has a fixed number of parameters, not (...params): the page calls stub() without arguments, BindingCall.CallAsync throws ArgumentOutOfRangeException for the missing argument, and the callback does not run")]
         public async Task TriggersSimultaneousTimers(IPage page, List<object> calls)
         {
             await page.EvaluateAsync(@"async () => {
@@ -93,7 +93,7 @@ public class PageClockTests
         }
 
         [UpstreamTest("CK-005 triggers multiple simultaneous timers")]
-        [Fixme("dotnet: a callback of ExposeFunctionAsync has a fixed number of parameters, not (...params): the page calls stub() without arguments, BindingCall.CallAsync throws ArgumentOutOfRangeException for the missing argument, and the callback does not run")]
+        [LocalFixme("dotnet: a callback of ExposeFunctionAsync has a fixed number of parameters, not (...params): the page calls stub() without arguments, BindingCall.CallAsync throws ArgumentOutOfRangeException for the missing argument, and the callback does not run")]
         public async Task TriggersMultipleSimultaneousTimers(IPage page, List<object> calls)
         {
             await page.EvaluateAsync(@"async () => {
@@ -107,7 +107,7 @@ public class PageClockTests
         }
 
         [UpstreamTest("CK-006 waits after setTimeout was called")]
-        [Fixme("dotnet: a callback of ExposeFunctionAsync has a fixed number of parameters, not (...params): the page calls stub() without arguments, BindingCall.CallAsync throws ArgumentOutOfRangeException for the missing argument, and the callback does not run")]
+        [LocalFixme("dotnet: a callback of ExposeFunctionAsync has a fixed number of parameters, not (...params): the page calls stub() without arguments, BindingCall.CallAsync throws ArgumentOutOfRangeException for the missing argument, and the callback does not run")]
         public async Task WaitsAfterSetTimeoutWasCalled(IPage page, List<object> calls)
         {
             await page.EvaluateAsync(@"async () => {
@@ -120,7 +120,7 @@ public class PageClockTests
         }
 
         [UpstreamTest("CK-007 triggers event when some throw")]
-        [Fixme("dotnet: a callback of ExposeFunctionAsync has a fixed number of parameters, not (...params): the page calls stub() without arguments, BindingCall.CallAsync throws ArgumentOutOfRangeException for the missing argument, and the callback does not run")]
+        [LocalFixme("dotnet: a callback of ExposeFunctionAsync has a fixed number of parameters, not (...params): the page calls stub() without arguments, BindingCall.CallAsync throws ArgumentOutOfRangeException for the missing argument, and the callback does not run")]
         public async Task TriggersEventWhenSomeThrow(IPage page, List<object> calls)
         {
             await page.EvaluateAsync(@"async () => {
@@ -157,7 +157,7 @@ public class PageClockTests
         }
 
         [UpstreamTest("CK-009 passes 8 seconds")]
-        [Fixme("dotnet: a callback of ExposeFunctionAsync has a fixed number of parameters, not (...params): the page calls stub() without arguments, BindingCall.CallAsync throws ArgumentOutOfRangeException for the missing argument, and the callback does not run")]
+        [LocalFixme("dotnet: a callback of ExposeFunctionAsync has a fixed number of parameters, not (...params): the page calls stub() without arguments, BindingCall.CallAsync throws ArgumentOutOfRangeException for the missing argument, and the callback does not run")]
         public async Task Passes8Seconds(IPage page, List<object> calls)
         {
             await page.EvaluateAsync(@"async () => {
@@ -169,7 +169,7 @@ public class PageClockTests
         }
 
         [UpstreamTest("CK-010 passes 1 minute")]
-        [Fixme("dotnet: a callback of ExposeFunctionAsync has a fixed number of parameters, not (...params): the page calls stub() without arguments, BindingCall.CallAsync throws ArgumentOutOfRangeException for the missing argument, and the callback does not run")]
+        [LocalFixme("dotnet: a callback of ExposeFunctionAsync has a fixed number of parameters, not (...params): the page calls stub() without arguments, BindingCall.CallAsync throws ArgumentOutOfRangeException for the missing argument, and the callback does not run")]
         public async Task Passes1Minute(IPage page, List<object> calls)
         {
             await page.EvaluateAsync(@"async () => {
@@ -181,7 +181,7 @@ public class PageClockTests
         }
 
         [UpstreamTest("CK-011 passes 2 hours, 34 minutes and 10 seconds")]
-        [Fixme("dotnet: a callback of ExposeFunctionAsync has a fixed number of parameters, not (...params): the page calls stub() without arguments, BindingCall.CallAsync throws ArgumentOutOfRangeException for the missing argument, and the callback does not run")]
+        [LocalFixme("dotnet: a callback of ExposeFunctionAsync has a fixed number of parameters, not (...params): the page calls stub() without arguments, BindingCall.CallAsync throws ArgumentOutOfRangeException for the missing argument, and the callback does not run")]
         public async Task Passes2Hours34MinutesAnd10Seconds(IPage page, List<object> calls)
         {
             await page.EvaluateAsync(@"async () => {
@@ -285,7 +285,7 @@ public class PageClockTests
         }
 
         [UpstreamTest("CK-018 should throw for invalid date")]
-        [Fixme("dotnet: the message is 'Invalid date: invalid', without the 'clock.setSystemTime: ' prefix of the call")]
+        [LocalFixme("dotnet: the message is 'Invalid date: invalid', without the 'clock.setSystemTime: ' prefix of the call")]
         public async Task ShouldThrowForInvalidDate(IPage page)
         {
             // .NET: await expect(page.clock.setSystemTime(new Date('invalid'))).rejects.toThrow('Invalid date: Invalid Date') is left out: a DateTime is never an invalid date.
@@ -294,7 +294,7 @@ public class PageClockTests
         }
 
         [UpstreamTest("CK-019 replaces global setTimeout")]
-        [Fixme("dotnet: a callback of ExposeFunctionAsync has a fixed number of parameters, not (...params): the page calls stub() without arguments, BindingCall.CallAsync throws ArgumentOutOfRangeException for the missing argument, and the callback does not run")]
+        [LocalFixme("dotnet: a callback of ExposeFunctionAsync has a fixed number of parameters, not (...params): the page calls stub() without arguments, BindingCall.CallAsync throws ArgumentOutOfRangeException for the missing argument, and the callback does not run")]
         public async Task ReplacesGlobalSetTimeout(IPage page, List<object> calls)
         {
             await page.EvaluateAsync(@"async () => {
@@ -324,7 +324,7 @@ public class PageClockTests
         }
 
         [UpstreamTest("CK-022 replaces global setInterval")]
-        [Fixme("dotnet: a callback of ExposeFunctionAsync has a fixed number of parameters, not (...params): the page calls stub() without arguments, BindingCall.CallAsync throws ArgumentOutOfRangeException for the missing argument, and the callback does not run")]
+        [LocalFixme("dotnet: a callback of ExposeFunctionAsync has a fixed number of parameters, not (...params): the page calls stub() without arguments, BindingCall.CallAsync throws ArgumentOutOfRangeException for the missing argument, and the callback does not run")]
         public async Task ReplacesGlobalSetInterval(IPage page, List<object> calls)
         {
             var interval = await page.EvaluateAsync<long>(@"() => {
@@ -715,7 +715,7 @@ public class PageClockTests
         [BeforeEach]
         public static async Task BeforeEach(IPage page)
         {
-            It.Skip(!await page.EvaluateAsync<bool>("() => 'Temporal' in globalThis"), "Temporal is not supported");
+            Info.Skip(!await page.EvaluateAsync<bool>("() => 'Temporal' in globalThis"), "Temporal is not supported");
         }
 
         [UpstreamTest("CK-049 should follow fixed time")]

@@ -79,7 +79,7 @@ public class JshandleToStringTests
     }
 
     [UpstreamTest("JH-022 should work with different subtypes @smoke")]
-    [Fixme("dotnet: EvaluateHandleAsync(\"(function(){})\") calls the function and gives a handle of 'undefined': the client does not send isFunction, so the driver calls an expression whose value is a function; upstream sends isFunction: false for a string and gets a handle of the function")]
+    [LocalFixme("dotnet: EvaluateHandleAsync(\"(function(){})\") calls the function and gives a handle of 'undefined': the client does not send isFunction, so the driver calls an expression whose value is a function; upstream sends isFunction: false for a string and gets a handle of the function")]
     public async Task ShouldWorkWithDifferentSubtypes(IPage page, string browserName, string channel)
     {
         var isBiDi = channel?.StartsWith("bidi-chrom", StringComparison.Ordinal) == true || channel?.StartsWith("moz-firefox", StringComparison.Ordinal) == true;
@@ -112,7 +112,7 @@ public class JshandleToStringTests
     public async Task ShouldWorkWithPreviewableSubtypes(IPage page, string browserName, string channel)
     {
         var isBiDi = channel?.StartsWith("bidi-chrom", StringComparison.Ordinal) == true || channel?.StartsWith("moz-firefox", StringComparison.Ordinal) == true;
-        It.Skip(browserName == "firefox" && !isBiDi);
+        Info.Skip(browserName == "firefox" && !isBiDi);
         Assert.That((await page.EvaluateHandleAsync("/foo/")).ToString(), Is.EqualTo("/foo/"));
         Assert.That((await page.EvaluateHandleAsync("new Date(0)")).ToString(), Does.Contain("GMT"));
         if (!isBiDi)

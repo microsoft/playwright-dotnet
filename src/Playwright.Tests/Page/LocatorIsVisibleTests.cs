@@ -112,7 +112,7 @@ public class LocatorIsVisibleTests
     [UpstreamTest("LO-121 isVisible and isHidden should work with list box options")]
     public async Task IsVisibleAndIsHiddenShouldWorkWithListBoxOptions(IPage page, bool isAndroid)
     {
-        It.Skip(isAndroid, "Android Chrome renders list boxes as popups, so options are not visible in the page");
+        Info.Skip(isAndroid, "Android Chrome renders list boxes as popups, so options are not visible in the page");
         await page.SetContentAsync(@"
     <select multiple>
       <option>visible 1</option>

@@ -27,8 +27,8 @@ public class FaviconTests
     [UpstreamTest("FA-001 should load svg favicon with prefer-color-scheme")]
     public async Task ShouldLoadSvgFaviconWithPreferColorScheme(IPage page, Server server, string browserName, bool headless, Func<string, string> asset, string channel)
     {
-        It.Skip(headless && browserName != "firefox", "headless browsers, except firefox, do not request favicons");
-        It.Skip(!headless && browserName == "webkit", "headed webkit does not have a favicon feature");
+        Info.Skip(headless && browserName != "firefox", "headless browsers, except firefox, do not request favicons");
+        Info.Skip(!headless && browserName == "webkit", "headed webkit does not have a favicon feature");
 
         // Browsers aggressively cache favicons, so force bust with the
         // `d` parameter to make iterating on this test more predictable and isolated.

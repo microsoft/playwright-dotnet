@@ -67,7 +67,7 @@ public class LocatorAnyFrameTests
     }
 
     [UpstreamTest("LO-003 should fail click when elements match in multiple frames")]
-    [Fixme("dotnet: the call log has FrameLocator().Locator(\"button\"), upstream expects frameLocator().locator('button')")]
+    [LocalFixme("dotnet: the call log has FrameLocator().Locator(\"button\"), upstream expects frameLocator().locator('button')")]
     public async Task ShouldFailClickWhenElementsMatchInMultipleFrames(IPage page, Server server)
     {
         await RoutePage(page, "empty.html", "<iframe src=\"a.html\"></iframe><iframe src=\"b.html\"></iframe>");
@@ -81,7 +81,7 @@ public class LocatorAnyFrameTests
     }
 
     [UpstreamTest("LO-004 should fail click upon strict mode violation inside a single frame")]
-    [Fixme("dotnet: the call log has FrameLocator().Locator(\"button\"), upstream expects frameLocator().locator('button')")]
+    [LocalFixme("dotnet: the call log has FrameLocator().Locator(\"button\"), upstream expects frameLocator().locator('button')")]
     public async Task ShouldFailClickUponStrictModeViolationInsideASingleFrame(IPage page, Server server)
     {
         await RoutePage(page, "empty.html", "<iframe src=\"a.html\"></iframe>");
@@ -94,7 +94,7 @@ public class LocatorAnyFrameTests
     }
 
     [UpstreamTest("LO-005 should time out on click when there are no matches")]
-    [Fixme("dotnet: the call log has FrameLocator().Locator(\"button\"), upstream expects frameLocator().locator('button')")]
+    [LocalFixme("dotnet: the call log has FrameLocator().Locator(\"button\"), upstream expects frameLocator().locator('button')")]
     public async Task ShouldTimeOutOnClickWhenThereAreNoMatches(IPage page, Server server)
     {
         await RoutePage(page, "empty.html", "<iframe src=\"a.html\"></iframe>");
@@ -154,7 +154,7 @@ public class LocatorAnyFrameTests
     }
 
     [UpstreamTest("LO-010 should fail toHaveCount when elements match in multiple frames")]
-    [Fixme("dotnet: the message of ToHaveCountAsync is \"Locator expected to have count\\nError: frameLocator() matched elements in multiple frames. '2'\\nBut was: 'null'\", with FrameLocator().Locator(\"span\") in the call log; upstream expects the line \"Locator: frameLocator().locator('span')\"")]
+    [LocalFixme("dotnet: the message of ToHaveCountAsync is \"Locator expected to have count\\nError: frameLocator() matched elements in multiple frames. '2'\\nBut was: 'null'\", with FrameLocator().Locator(\"span\") in the call log; upstream expects the line \"Locator: frameLocator().locator('span')\"")]
     public async Task ShouldFailToHaveCountWhenElementsMatchInMultipleFrames(IPage page, Server server)
     {
         await RoutePage(page, "empty.html", "<iframe src=\"a.html\"></iframe><iframe src=\"b.html\"></iframe>");
@@ -186,7 +186,7 @@ public class LocatorAnyFrameTests
     }
 
     [UpstreamTest("LO-013 should fail toHaveText when elements match in multiple frames")]
-    [Fixme("dotnet: the message of ToHaveTextAsync is \"Locator expected to have text\\nError: frameLocator() matched elements in multiple frames. 'one'\\nBut was: 'null'\", with FrameLocator().Locator(\"div\") in the call log; upstream expects the line \"Locator: frameLocator().locator('div')\"")]
+    [LocalFixme("dotnet: the message of ToHaveTextAsync is \"Locator expected to have text\\nError: frameLocator() matched elements in multiple frames. 'one'\\nBut was: 'null'\", with FrameLocator().Locator(\"div\") in the call log; upstream expects the line \"Locator: frameLocator().locator('div')\"")]
     public async Task ShouldFailToHaveTextWhenElementsMatchInMultipleFrames(IPage page, Server server)
     {
         await RoutePage(page, "empty.html", "<iframe src=\"a.html\"></iframe><iframe src=\"b.html\"></iframe>");
@@ -212,7 +212,7 @@ public class LocatorAnyFrameTests
     }
 
     [UpstreamTest("LO-015 should fail toHaveText upon strict mode violation inside a single frame")]
-    [Fixme("dotnet: the message of ToHaveTextAsync is \"Locator expected to have text\\nError: strict mode violation: Locator(\\\"div\\\") resolved to 2 elements: ... 'one'\\nBut was: 'null'\", with FrameLocator().Locator(\"div\") in the call log; upstream expects the line \"Locator: frameLocator().locator('div')\"")]
+    [LocalFixme("dotnet: the message of ToHaveTextAsync is \"Locator expected to have text\\nError: strict mode violation: Locator(\\\"div\\\") resolved to 2 elements: ... 'one'\\nBut was: 'null'\", with FrameLocator().Locator(\"div\") in the call log; upstream expects the line \"Locator: frameLocator().locator('div')\"")]
     public async Task ShouldFailToHaveTextUponStrictModeViolationInsideASingleFrame(IPage page, Server server)
     {
         await RoutePage(page, "empty.html", "<iframe src=\"a.html\"></iframe>");
@@ -246,7 +246,7 @@ public class LocatorAnyFrameTests
     }
 
     [UpstreamTest("LO-018 should time out on evaluate when there are no matches")]
-    [Fixme("dotnet: the call log has FrameLocator().Locator(\"button\"), upstream expects frameLocator().locator('button')")]
+    [LocalFixme("dotnet: the call log has FrameLocator().Locator(\"button\"), upstream expects frameLocator().locator('button')")]
     public async Task ShouldTimeOutOnEvaluateWhenThereAreNoMatches(IPage page, Server server)
     {
         await RoutePage(page, "empty.html", "<iframe src=\"a.html\"></iframe>");
@@ -535,7 +535,7 @@ public class LocatorAnyFrameTests
     }
 
     [UpstreamTest("LO-041 should render frameLocator() in the locator description")]
-    [Fixme("dotnet: Locator.ToString() is the C# form, 'FrameLocator().Locator(\"#x\").ContentFrame.Locator(\"button\")'; upstream expects \"frameLocator().locator('#x').contentFrame().locator('button')\"")]
+    [LocalFixme("dotnet: Locator.ToString() is the C# form, 'FrameLocator().Locator(\"#x\").ContentFrame.Locator(\"button\")'; upstream expects \"frameLocator().locator('#x').contentFrame().locator('button')\"")]
     public async Task ShouldRenderFrameLocatorInTheLocatorDescription(IPage page)
     {
         Assert.That(page.FrameLocator().FrameLocator("#x").Locator("button").ToString(), Is.EqualTo("frameLocator().locator('#x').contentFrame().locator('button')"));
@@ -543,7 +543,7 @@ public class LocatorAnyFrameTests
     }
 
     [UpstreamTest("LO-042 should not allow frameLocator() inside a composite locator")]
-    [Fixme("dotnet: the message names the locator in the C# form, 'while querying \"Locator(\"button\").Or(FrameLocator().Locator(\"a\"))\"'; upstream expects 'while querying \"locator('button').or(frameLocator().locator('a'))\"'")]
+    [LocalFixme("dotnet: the message names the locator in the C# form, 'while querying \"Locator(\"button\").Or(FrameLocator().Locator(\"a\"))\"'; upstream expects 'while querying \"locator('button').or(frameLocator().locator('a'))\"'")]
     public async Task ShouldNotAllowFrameLocatorInsideACompositeLocator(IPage page, Server server)
     {
         await RoutePage(page, "empty.html", "<button>main</button><iframe src=\"a.html\"></iframe>");

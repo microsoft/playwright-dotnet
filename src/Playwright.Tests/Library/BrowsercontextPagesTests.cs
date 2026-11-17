@@ -100,7 +100,7 @@ public class BrowsercontextPagesTests
     [UpstreamTest("BC-057 should click the button with offset with page scale")]
     public async Task ShouldClickTheButtonWithOffsetWithPageScale(IBrowser browser, Server server, string browserName, bool isBidi, BrowserNewContextOptions contextOptions)
     {
-        It.Skip(browserName == "firefox" && !isBidi);
+        Info.Skip(browserName == "firefox" && !isBidi);
 
         var context = await browser.NewContextAsync(new(contextOptions) { ViewportSize = new() { Width = 400, Height = 400 }, IsMobile = true });
         var page = await context.NewPageAsync();
@@ -128,7 +128,7 @@ public class BrowsercontextPagesTests
     [UpstreamTest("BC-058 should return bounding box with page scale")]
     public async Task ShouldReturnBoundingBoxWithPageScale(IBrowser browser, Server server, string browserName, bool isBidi, BrowserNewContextOptions contextOptions)
     {
-        It.Skip(browserName == "firefox" && !isBidi);
+        Info.Skip(browserName == "firefox" && !isBidi);
 
         var context = await browser.NewContextAsync(new(contextOptions) { ViewportSize = new() { Width = 400, Height = 400 }, IsMobile = true });
         var page = await context.NewPageAsync();
@@ -153,7 +153,7 @@ public class BrowsercontextPagesTests
     [UpstreamTest("BC-060 should close page while a reload is committing")]
     public async Task ShouldClosePageWhileAReloadIsCommitting(IBrowserContext context, string browserName)
     {
-        It.Fixme(browserName == "chromium", "Chromium loses the close when the reload commits into a new RenderFrameHost; fix is not rolled yet");
+        Info.Fixme(browserName == "chromium", "Chromium loses the close when the reload commits into a new RenderFrameHost; fix is not rolled yet");
         // The evaluate never settles on its own, so it only rejects once the reload
         // commits. Closing right after that races the commit. Repeat a few times,
         // since whether the close or the commit wins is timing-dependent.

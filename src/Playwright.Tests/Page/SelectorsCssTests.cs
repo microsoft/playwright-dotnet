@@ -325,7 +325,7 @@ public class SelectorsCssTests
     [UpstreamTest("SE-016 should work with :nth-child(of) notation with nested functions")]
     public async Task ShouldWorkWithNthChildOfNotationWithNestedFunctions(IPage page, string browserName, int browserMajorVersion)
     {
-        It.Skip(browserName == "chromium" && browserMajorVersion < 111, "https://caniuse.com/css-nth-child-of");
+        Info.Skip(browserName == "chromium" && browserMajorVersion < 111, "https://caniuse.com/css-nth-child-of");
 
         await page.SetContentAsync(@"
     <div>

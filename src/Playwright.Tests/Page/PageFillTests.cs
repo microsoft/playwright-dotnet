@@ -123,8 +123,8 @@ public class PageFillTests
     [Case("week", "2020-W50")]
     public async Task InputEventComposedShouldBeTrueAndCrossShadowDomBoundary(string type, string value, IPage page, Server server, string browserName, bool isWindows)
     {
-        It.Skip(browserName != "chromium" && new[] { "month", "week" }.Contains(type), "Some browser/platforms do not implement certain input types");
-        It.Skip(browserName == "webkit" && isWindows && new[] { "color", "date", "time", "datetime-local" }.Contains(type), "Some browser/platforms do not implement certain input types");
+        Info.Skip(browserName != "chromium" && new[] { "month", "week" }.Contains(type), "Some browser/platforms do not implement certain input types");
+        Info.Skip(browserName == "webkit" && isWindows && new[] { "color", "date", "time", "datetime-local" }.Contains(type), "Some browser/platforms do not implement certain input types");
         await page.GotoAsync(server.EmptyPage);
         await page.SetContentAsync($@"<body><script>
     const div = document.createElement('div');
@@ -208,7 +208,7 @@ public class PageFillTests
     [UpstreamTest("FI-015 should fill contenteditable with new lines")]
     public async Task ShouldFillContenteditableWithNewLines(IPage page, Server server, string browserName, bool isBidi)
     {
-        It.Fixme(browserName == "firefox" && !isBidi, "Firefox does not handle new lines in contenteditable");
+        Info.Fixme(browserName == "firefox" && !isBidi, "Firefox does not handle new lines in contenteditable");
 
         await page.GotoAsync(server.EmptyPage);
         await page.SetContentAsync("<div contenteditable=\"true\"></div>");
@@ -219,7 +219,7 @@ public class PageFillTests
     [UpstreamTest("FI-016 should not double-fill in contenteditable with beforeinput handler in Firefox")]
     public async Task ShouldNotDoubleFillInContenteditableWithBeforeinputHandlerInFirefox(IPage page, string browserName, bool isBidi)
     {
-        It.Fixme(browserName == "firefox" && !isBidi, "https://github.com/microsoft/playwright/issues/36715");
+        Info.Fixme(browserName == "firefox" && !isBidi, "https://github.com/microsoft/playwright/issues/36715");
 
         await page.SetContentAsync(@"
     <div id=""editor"" contenteditable=""true""></div>
@@ -267,7 +267,7 @@ public class PageFillTests
     }
 
     [UpstreamTest("FI-018 should throw nice error without injected script stack when element is not an <input>")]
-    [Fixme("dotnet: the message is 'Error: Element is not an <input>, <textarea> or [contenteditable] element\\nCall log: ...', without the 'page.fill: ' prefix of the call")]
+    [LocalFixme("dotnet: the message is 'Error: Element is not an <input>, <textarea> or [contenteditable] element\\nCall log: ...', without the 'page.fill: ' prefix of the call")]
     public async Task ShouldThrowNiceErrorWithoutInjectedScriptStackWhenElementIsNotAnInput(IPage page, Server server)
     {
         Exception error = null;

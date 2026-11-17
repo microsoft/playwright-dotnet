@@ -53,7 +53,7 @@ public class BrowsercontextEventsTests
     [UpstreamTest("BC-035 console event should work in popup 2")]
     public async Task ConsoleEventShouldWorkInPopup2(IPage page, string browserName, bool isBidi)
     {
-        It.Fixme(browserName == "firefox" && !isBidi, "console message from javascript: url is not reported at all");
+        Info.Fixme(browserName == "firefox" && !isBidi, "console message from javascript: url is not reported at all");
 
         var (_, message, popup) = await PromiseAll(
             page.EvaluateAsync(@"async () => {
@@ -71,7 +71,7 @@ public class BrowsercontextEventsTests
     [UpstreamTest("BC-036 console event should work in immediately closed popup")]
     public async Task ConsoleEventShouldWorkInImmediatelyClosedPopup(IPage page, string browserName, bool isBidi)
     {
-        It.Fixme(browserName == "firefox" && !isBidi, "console message is not reported at all");
+        Info.Fixme(browserName == "firefox" && !isBidi, "console message is not reported at all");
 
         var (_, message, popup) = await PromiseAll(
             page.EvaluateAsync(@"async () => {
@@ -136,7 +136,7 @@ public class BrowsercontextEventsTests
     [UpstreamTest("BC-040 dialog event should work in popup 2")]
     public async Task DialogEventShouldWorkInPopup2(IPage page, string browserName)
     {
-        It.Fixme(browserName == "firefox", "dialog from javascript: url is not reported at all");
+        Info.Fixme(browserName == "firefox", "dialog from javascript: url is not reported at all");
 
         var promise = page.EvaluateAsync(@"async () => {
     window.open('javascript:prompt(""hey?"")');

@@ -307,7 +307,7 @@ public class BrowsercontextAddCookiesTests
     [UpstreamTest("CO-029 should isolate cookies between launches")]
     public async Task ShouldIsolateCookiesBetweenLaunches(IBrowserType browserType, Server server, BrowserTypeLaunchOptions launchOptions, BrowserNewContextOptions contextOptions)
     {
-        It.Slow();
+        Info.Slow();
 
         var browser1 = await browserType.LaunchAsync(launchOptions);
         var context1 = await browser1.NewContextAsync(contextOptions);

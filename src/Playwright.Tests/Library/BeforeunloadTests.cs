@@ -215,7 +215,7 @@ public class BeforeunloadTests
     }
 
     [UpstreamTest("BU-012 does not get stalled by beforeUnload")]
-    [Fixme("dotnet: Page.CloseAsync sets CloseWasCalled also with RunBeforeUnload (the Node.js client does not), so the routes of the page that stays open are not handled any more and the second fetch never ends")]
+    [LocalFixme("dotnet: Page.CloseAsync sets CloseWasCalled also with RunBeforeUnload (the Node.js client does not), so the routes of the page that stays open are not handled any more and the second fetch never ends")]
     public async Task DoesNotGetStalledByBeforeUnload(IPage page, Server server)
     {
         await page.GotoAsync(server.HelloWorld);

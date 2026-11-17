@@ -19,17 +19,17 @@ not flakiness. A port that fails shows a bug in the .NET client, the driver, the
 or the environment: first read the upstream test again and check that the port is faithful,
 then report it with the evidence.
 
-The one allowed mark is `[Fixme("dotnet: <reason>")]` for a bug or a gap of the .NET client
-that is not fixed yet, or `[Fixme("harness: <reason>")]` for a missing piece of the test
-harness. The test does not run: it is skipped, with the reason, as a test with `[ItFixme]`.
-Remove the mark when the bug is fixed.
+The one allowed mark is `[LocalFixme("dotnet: <reason>")]` for a bug or a gap of the .NET
+client that is not fixed yet, or `[LocalFixme("harness: <reason>")]` for a missing piece of the
+test harness. The test does not run: it is skipped, with the reason. Remove the mark when the
+bug is fixed.
 
-- `Browsers = "webkit"` limits the mark to some browsers, `Platforms = "darwin"` to some
-  platforms (`win32`, `darwin`, `linux`), `Case = "..."` to the copies of a looped test or of a
-  looped describe whose full name contains the text (`ShouldWork("a")`, `Describe("launch")`).
-- The reason says what .NET does and what upstream expects. It holds for every browser of the
-  mark: a text that only one browser gives goes in a mark with `Browsers`. A line break in a
-  reason is written `\\n`.
+- The mark has no condition: the test is skipped in every browser, on every platform and for
+  every copy of a looped test, also where it passes. A test has one mark.
+- The reason says what .NET does and what upstream expects. When the test fails only in some
+  browsers, on some platforms or for some copies of a looped test, the reason says so:
+  `(only in webkit)`, `(only on darwin)`, `(only for "null")`. Two failures of one test are two
+  such texts in one reason, with `; ` between them. A line break in a reason is written `\\n`.
 - A test that fails only sometimes for another reason is reported as flaky, not marked.
 
 To tell a bug of the client from a bug of the driver or of the machine, run the same calls
@@ -46,6 +46,12 @@ their structure, their skips or their helpers (`TestConstants`, `TestUtils`, `Pl
 The harness (base classes, test server, helpers) is `src/Playwright.Tests/Fixtures/`, the port
 of `tests/config/`. A port of a test file does not change it. Section 7 says what to do when a
 test needs something that the harness does not have.
+
+Most files of `Page/` and `Library/` are not converted to these rules yet. They are in an older
+form, with the fixtures as parameters of the test, static `[BeforeEach]` hooks, `[Case]` and
+`[Fixture]`, and `Playwright.Tests.csproj` leaves them out of the build: `Compile Remove` takes
+all of them out, and `Compile Include` lists the converted ones. To convert a file, rewrite it
+by these rules, add it to `Compile Include`, and run it in the three browsers.
 
 ## 1. Files and names
 
@@ -71,7 +77,8 @@ test needs something that the harness does not have.
   ```
 
   The tests keep the upstream order, and they run in that order. `PageCheckTests.cs` is the
-  model. A file without a test that can be ported has no C# file.
+  model; `PageBasicTests.cs` has skips, and `ElementhandleScreenshotTests.cs` has a describe,
+  modifiers and screenshots. A file without a test that can be ported has no C# file.
 - The class derives from a base class of the harness, which has the fixtures as properties
   (section 2). A file of `tests/page`, and a file of `tests/library` whose tests all take
   `page`, derives from `UpstreamPageTest`: every test has `Page` and `Context`. Another file
@@ -149,7 +156,8 @@ test needs something that the harness does not have.
   - `{ auto: true }` is a `[SetUp]` method.
   - A fixture whose value is a function is a method with the parameters of that function.
 - Helper functions of the file are private static methods of the class, at the upstream
-  place; a helper that takes a page or a frame has two overloads. A function or a constant
+  place; a helper that takes a page or a frame has two overloads. A helper that uses a fixture
+  (`Server`, `Info`) is not static. A function or a constant
   that a test declares stays in the test, as a lambda, a local function or a local constant
   with the upstream name. A block `{ ... }` inside a test stays a block. A helper or a variable
   that only tests that are not ported use is left out.
@@ -209,8 +217,8 @@ no parameters for them.
 | `launchPersistent(options)` | `var (context, page) = await LaunchPersistent(new() { ... })` |
 | `createUserDataDir()` | `await CreateUserDataDir()` |
 | `asset('file')` | `Asset("file")` of `Utils` |
-| `testInfo`, `test.info()` | `TestInfo`, `It.Info()`: `OutputPath(...)`, `SnapshotPath(...)`, `Timeout`, `Retry`, `WorkerIndex`, `TestId`, `Project.OutputDir`, `Attach(...)` (does nothing) |
-| `workerInfo` | `TestInfo.WorkerIndex`, `TestInfo.ParallelIndex` |
+| `testInfo`, `test.info()` | `Info`: `OutputPath(...)`, `SnapshotPath(...)`, `Timeout`, `Retry`, `WorkerIndex`, `TestId`, `Project.OutputDir`, `Attach(...)` (does nothing) |
+| `workerInfo` | `Info.WorkerIndex`, `Info.ParallelIndex` |
 | `proxyServer`, `socksPort`, `setupSocksForwardingServer` | `ProxyServer`, `SocksPort`, `TestProxy.SetupSocksForwardingServer(...)` |
 | `startRemoteServer(kind, options)` | `await StartRemoteServer("launchServer", new() { ... })`; `remoteServer.WsEndpoint()`, `Close()`, `Out(key)`, `Child().Id`, `ChildExitCode()` |
 | `childProcess(params)`, `waitForPort(port)` | `ChildProcess(new() { ... })`, `await WaitForPort(port)` (`TestChildProcess.cs`) |
@@ -224,7 +232,7 @@ no parameters for them.
 | `parseTraceRaw(file)` | `ParseTraceRaw(file)` (`Utils`): `trace.Events` (`JsonElement`s), `trace.Resources`, `trace.Actions` (the titles), `trace.ActionObjects`, `trace.Stacks`; `const { events, actions } = await parseTraceRaw(file)` is `var (events, _, actions, _, _) = await ParseTraceRaw(file)` |
 | `artifactsFolderName(workerIndex)` | `ArtifactsFolderName(workerIndex)` (`Utils`) |
 | `expect(received).toContainYaml(expected)` | `ExpectToContainYaml(received, expected)` (`Utils`) |
-| `expect(buffer).toMatchSnapshot('x.png')`, `comparePNGs` | `ExpectToMatchSnapshot(buffer, "x.png", new() { ... })`, `ComparePNGs` (`Utils`) |
+| `expect(buffer).toMatchSnapshot('x.png')`, `comparePNGs` | `ExpectToMatchSnapshot(buffer, "x.png", new() { ... })`, `ComparePNGs` (`Utils`), for images: the harness does not compare snapshots of text |
 | `new VideoPlayer(file)` of `tests/library/videoPlayer.ts` | `new VideoPlayer(file)` (`Fixtures/VideoPlayer.cs`): `Duration`, `Frames`, `VideoWidth`, `VideoHeight`, `Fps`, `SeekLastFrame((x: 95, y: 45)).Data`, `FindFrame(pixels => ...)` |
 | `formidable` | `IncomingForm` (`Fixtures/Formidable.cs`): `new formidable.IncomingForm({ uploadDir })` is `new IncomingForm(new() { UploadDir = ... })`; `form.parse(req, (err, fields, files) => { ... })` is `var (err, fields, files) = await form.Parse(req);` and the body of the callback; `files.file1.originalFilename` is `files["file1"].OriginalFilename` (`Mimetype`, `Size`, `Filepath`), `fields['name']` is `fields["name"]`; a body that the test holds is `form.Parse(contentType, body)` |
 
@@ -292,41 +300,44 @@ so a port passes them.
 ## 3. Skips and marks
 
 - `it.skip(condition, reason)`, `it.fixme(condition, reason)` and `it.slow()` inside a test or
-  a hook are `It.Skip(condition, reason)`, `It.Fixme(...)` and `It.Slow()`, at the same place,
-  with the same condition; `test.` is `It.` too. The values of the condition are the fixtures
-  of section 2: `it.skip(browserName === 'webkit' && isMac)` is
-  `It.Skip(BrowserName == "webkit" && IsMac)`. A skip upstream is a skip in the port; it is
-  not a deviation.
-- `it.skip('title', ...)` and `it.fixme('title', ...)` are `[ItSkip]` and `[ItFixme]` on the
-  method, next to `[UpstreamTest]`. The body is ported all the same.
+  a hook are `Info.Skip(condition, reason)`, `Info.Fixme(...)` and `Info.Slow()`, at the same
+  place, with the same condition; `test.skip` is the same. `Info` is the `testInfo` of the
+  test. The values of the condition are the fixtures of section 2:
+  `it.skip(browserName === 'webkit' && isMac)` is `Info.Skip(BrowserName == "webkit" && IsMac)`.
+  A skip upstream is a skip in the port; it is not a deviation.
+- `it.skip('title', ...)` and `it.fixme('title', ...)` are the `[Ignore("skip")]` and
+  `[Ignore("fixme")]` of NUnit on the method, next to `[UpstreamTest]`. The body is ported all
+  the same.
 - The port has no `fail` mark: a test that upstream expects to fail does not run.
-  `it.fail(condition, reason)` is `It.Fixme(condition, reason)`, with the same condition and
-  reason, and `it.fail('title', ...)` is `[ItFixme]`.
+  `it.fail(condition, reason)` is `Info.Fixme(condition, reason)`, with the same condition and
+  reason, and `it.fail('title', ...)` is `[Ignore("fixme")]`.
 - A modifier at the top of a file or a describe, with a callback
   (`it.skip(({ browserName }) => browserName !== 'chromium', 'reason')`) or with a plain
   condition, is a `[SetUp]` method before the tests, named after the modifier (`Skip2` for a
-  second one, `Fixme` for a `fixme`). It is a hook of the file or of the describe (section 1):
+  second one, `Fixme` for a `fixme`, `Slow` for a `slow`). It is a hook of the file or of the
+  describe (section 1):
 
   ```csharp
+  // it.skip(({ browserName }) => browserName !== 'chromium', 'reason');
   [SetUp]
-  public void Skip() => It.Skip(BrowserName != "chromium", "reason");
-  ```
+  public void Skip() => Info.Skip(BrowserName != "chromium", "reason");
 
-  `test.slow()` at the top of a file or a describe is `[ItSlow]` on the class, and an
-  unconditional `test.skip()` or `test.fixme()` there is `[ItSkip]` or `[ItFixme]` on the
-  class. A mark of a class holds for its nested classes too.
+  // test.slow();
+  [SetUp]
+  public void Slow() => Info.Slow();
+  ```
 - Upstream runs the files of `library/chromium/` in the Chromium project only, and the files
   of `library/firefox/` in the Firefox project only: its config ignores a file with the name
   of another browser in its path. The class of such a file starts with
-  `[SetUp] public void Skip() => It.Skip(BrowserName != "chromium", "chromium only");`
+  `[SetUp] public void Skip() => Info.Skip(BrowserName != "chromium", "chromium only");`
   under a `// .NET:` mark, before the modifiers of the file.
-- `test.setTimeout(ms)` is `It.SetTimeout(ms)`. The timeout of a test is 30 seconds and the
+- `test.setTimeout(ms)` is `Info.SetTimeout(ms)`. The timeout of a test is 30 seconds and the
   timeout of `Expect` is 10 seconds, as upstream: the .NET default for `Expect` is 5 seconds,
   and the harness sets 10 for a ported test.
 - `test.info().annotations` and `{ annotation: ... }` are left out, without a comment.
-  `await test.step('name', async () => { ... })` is `await It.Step("name", async () => { ... })`.
-- Do not add `[Fixme]`, `[ItSkip]`, an `It.Skip` or an NUnit `[Ignore]` that upstream does not
-  have, except the `[Fixme]` of the rule at the top.
+  `await test.step('name', async () => { ... })` is `await Info.Step("name", async () => { ... })`.
+- Do not add `[LocalFixme]`, an `Info.Skip` or an `[Ignore]` that upstream does not
+  have, except the `[LocalFixme]` of the rule at the top.
 
 ## 4. Statements
 
@@ -387,7 +398,7 @@ is `ExpectToEqual(await page.EvaluateAsync<object>("() => ({ a: 1, b: [1, 2] })"
   is `Exception`. A target closed error is a `PlaywrightException` whose message contains
   `TargetClosedErrorMessage`. `error.stack` as a text is `error.ToString()`.
 - Compare messages as upstream does. When the .NET message differs from the one upstream
-  checks, the test gets `[Fixme("dotnet: ...")]`, with the .NET text in the reason. This is so
+  checks, the test gets `[LocalFixme("dotnet: ...")]`, with the .NET text in the reason. This is so
   for the missing prefix with the name of the call (`page.click: Timeout ...`), for the
   messages of the `Expect` matchers, and for the C# form of a locator in a message or a call
   log (`Locator("option")` for `locator('option')`): the port shows the difference, it does
@@ -424,7 +435,9 @@ is `ExpectToEqual(await page.EvaluateAsync<object>("() => ({ a: 1, b: [1, 2] })"
   `framenavigated`, `requestfailed`, every event of a context but the two above, of a worker
   and of a WebSocket) and `new Promise(f => page.once('dialog', f))` are
   `Once<IDialog>(h => page.Dialog += h, h => page.Dialog -= h)` (`Utils`), which gives the task
-  of the next event; a predicate is its third argument. An event of `EventHandler` without an
+  of the next event; a predicate is its third argument. `new Promise(f => page.once(...))` is
+  `Once` also for an event that has a wait method (`filechooser`): unlike `waitForEvent`, it
+  does not fail when the page closes. An event of `EventHandler` without an
   argument is `Once(h => x.Changed += h, h => x.Changed -= h)`.
 - In JavaScript the code after an `await` runs before the next event of the driver. In .NET it
   does not: the driver thread can raise the next event first.
@@ -461,9 +474,9 @@ is `ExpectToEqual(await page.EvaluateAsync<object>("() => ({ a: 1, b: [1, 2] })"
 - `new Promise(f => setTimeout(f, 100))` is `await Task.Delay(100)`.
   `setTimeout(() => { ... }, 100)` that upstream does not await is
   `SetTimeout(() => { ... }, 100)` (`Utils`), whose result goes to `ClearTimeout`;
-  `setInterval` and `clearInterval` are `SetInterval` and `ClearInterval`. `ClearTimeout` runs
-  a callback that is due first, as Node.js runs the due timers before the code that waited for
-  the driver.
+  `setInterval` and `clearInterval` are `SetInterval` and `ClearInterval`, in the same way.
+  `ClearTimeout` runs a callback that is due first, as Node.js runs the due timers before the
+  code that waited for the driver. A callback of `SetInterval` never runs twice at a time.
 
 ### Page functions and values
 
@@ -537,7 +550,7 @@ is `ExpectToEqual(await page.EvaluateAsync<object>("() => ({ a: 1, b: [1, 2] })"
 
   | Upstream | .NET |
   |---|---|
-  | the error of a `pageerror` event, `webError.error()` | a string, the stack of the error or `name: message`: `error.message` and `error.stack` are that string, a check that fails on it gets `[Fixme("dotnet: ...")]`, and a statement on `error.name` is left out |
+  | the error of a `pageerror` event, `webError.error()` | a string, the stack of the error or `name: message`: `error.message` and `error.stack` are that string, a check that fails on it gets `[LocalFixme("dotnet: ...")]`, and a statement on `error.name` is left out |
   | `page.addInitScript(fn)`, `selectors.register(name, fn)` | the text of a script, as the Node.js client sends it: `"(" + fn + ")()"` for an init script, `"(" + fn + ")(undefined)"` for a selector engine |
   | `frame.payload` of a WebSocket frame | `frame.Text` or `frame.Binary` |
   | `request.failure().errorText` | the string `request.Failure` |
@@ -597,7 +610,7 @@ precisely: `The exposeFunctions option of evaluate() is not in the .NET API.`
 
 A reason that starts with `TODO harness:` names a test utility that the harness does not have
 yet; such a test is ported once it does. A test that would end the test process (a stack
-overflow) is not listed: it is ported and marked `[Fixme]`, as any test that the .NET client
+overflow) is not listed: it is ported and marked `[LocalFixme]`, as any test that the .NET client
 fails. A marked test does not run.
 
 ## 7. The harness
@@ -614,11 +627,14 @@ fails. A marked test does not run.
   and the child processes.
 - `Utils*.cs`: `utils.ts`, the matchers of `expect` that NUnit lacks, and the JavaScript
   constructs that C# lacks. `ImageComparator.cs`, `Formidable.cs`, `VideoPlayer.cs`: the
-  libraries and helper files that the tests import.
-- `It.cs` and `TestInfo.cs`: `test` and `testInfo`.
-- `MarkAttributes.cs`: `[ItSkip]`, `[ItFixme]`, `[ItSlow]` and `[Fixme]` (section 3).
+  libraries and helper files that the tests import. `ImageComparator.cs` compares images as
+  upstream does, with ports of `pixelmatch` and of the `ssim-cie94` comparator, so that the
+  screenshots of upstream match without a tolerance.
+- `TestInfo.cs`: `testInfo`, the `Info` of a test, with the calls on `test` too (`test.skip()`,
+  `test.step()`).
+- `LocalFixmeAttribute.cs`: `[LocalFixme]` (the top of this document).
 - `UpstreamTestAttribute.cs`: the test attribute. It has the timeout of the test, which
-  `It.Slow()` and `It.SetTimeout()` change, and the retries on CI.
+  `Info.Slow()` and `Info.SetTimeout()` change, and the retries on CI.
 - A worker of `Microsoft.Playwright.NUnit` (`WorkerAwareTest`) has the driver, the browser and
   the servers. It runs one test at a time, goes on to the next test after a pass, and is
   closed after a failure or a timeout; the contexts that a test leaves open in its browser are
@@ -648,13 +664,16 @@ BROWSER=chromium dotnet test ./src/Playwright.Tests/Playwright.Tests.csproj -c D
   that. Add `-- NUnit.AssemblySelectLimit=10000` at the end of the command for such a filter.
 - `FullyQualifiedName~UpstreamRegistryTests` runs the registry check.
   `PWTEST_REGISTRY_REPORT=1` prints the coverage per subsystem, and
-  `PWTEST_REGISTRY_FILES=page/page-check` limits the check for missing tests to some files.
+  `PWTEST_REGISTRY_FILES=page/page-check,page/page-basic` limits the check for missing tests to
+  some files. While some files are not converted, the check passes only with the converted
+  files in this variable.
 - `BROWSER` is `chromium`, `firefox` or `webkit`; `HEADED=1` runs headed (the tests of
   `library/headful` run only so); `PWTEST_CHANNEL` sets the channel; `PWTEST_TIMEOUT=0` turns
   the test timeout off.
 - `PWTEST_LOG=file` appends a line to the file when a test starts and when it ends. The test
   runner prints the results of a long run late, so this shows which test a run hangs in.
-- When `CI` is set, a failed test runs up to 3 more times. The files of a test
+- When `CI` is set, a failed test runs up to 3 times, each time in a new instance of the test
+  class and with a new worker. The files of a test
   (`testInfo.OutputPath`) are in `bin/Debug/net8.0/test-results/`, which a run empties when it
   starts.
 - Run a port in the three browsers before you call it done. Mouse, focus and popup tests can

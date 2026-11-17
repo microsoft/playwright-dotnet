@@ -24,7 +24,7 @@ namespace Microsoft.Playwright.Tests.Page;
 public class PageClickTimeout1Tests
 {
     [UpstreamTest("CL-111 should timeout waiting for button to be enabled")]
-    [Fixme("dotnet: the message is 'Timeout 3000ms exceeded.', without the 'page.click: ' prefix of the call")]
+    [LocalFixme("dotnet: the message is 'Timeout 3000ms exceeded.', without the 'page.click: ' prefix of the call")]
     public async Task ShouldTimeoutWaitingForButtonToBeEnabled(IPage page)
     {
         await page.SetContentAsync("<button onclick=\"javascript:window.__CLICKED=true;\" disabled><span>Click target</span></button>");
@@ -36,7 +36,7 @@ public class PageClickTimeout1Tests
     }
 
     [UpstreamTest("CL-112 should timeout waiting for inert element to become non-inert")]
-    [Fixme("dotnet: the message is 'Timeout 3000ms exceeded.', without the 'page.click: ' prefix of the call")]
+    [LocalFixme("dotnet: the message is 'Timeout 3000ms exceeded.', without the 'page.click: ' prefix of the call")]
     public async Task ShouldTimeoutWaitingForInertElementToBecomeNonInert(IPage page)
     {
         await page.SetContentAsync("<div inert><button onclick=\"javascript:window.__CLICKED=true;\">Click target</button></div>");

@@ -25,7 +25,7 @@ public class DownloadsPathTests
     public class DownloadsPath
     {
         [BeforeEach]
-        public static void Skip(string mode) => It.Skip(mode != "default", "download.path() is not available in remote mode");
+        public static void Skip(string mode) => Info.Skip(mode != "default", "download.path() is not available in remote mode");
 
         [BeforeEach]
         public void BeforeEach(Server server)

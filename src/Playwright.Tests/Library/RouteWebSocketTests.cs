@@ -150,7 +150,7 @@ public class RouteWebSocketTests
         }
 
         [UpstreamTest("WS-016 should work with binaryType=blob")]
-        [Fixme("dotnet: IWebSocketFrame.Text is not null for a binary frame (WebSocketFrame.Text decodes Binary), so a handler can not tell a binary message from a text one and the pass-through route forwards 'hi' as text: the page logs 'data=hi', not 'data=blob:hi'", Case = "pass-through")]
+        [LocalFixme("dotnet: IWebSocketFrame.Text is not null for a binary frame (WebSocketFrame.Text decodes Binary), so a handler can not tell a binary message from a text one and the pass-through route forwards 'hi' as text: the page logs 'data=hi', not 'data=blob:hi' (only for pass-through)")]
         public async Task ShouldWorkWithBinaryTypeBlob(IPage page, Server server)
         {
             var wsPromise = server.WaitForWebSocket();
@@ -169,7 +169,7 @@ public class RouteWebSocketTests
         }
 
         [UpstreamTest("WS-017 should work with binaryType=arraybuffer")]
-        [Fixme("dotnet: IWebSocketFrame.Text is not null for a binary frame (WebSocketFrame.Text decodes Binary), so a handler can not tell a binary message from a text one and the pass-through route forwards 'hi' as text: the page logs 'data=hi', not 'data=arraybuffer:hi'", Case = "pass-through")]
+        [LocalFixme("dotnet: IWebSocketFrame.Text is not null for a binary frame (WebSocketFrame.Text decodes Binary), so a handler can not tell a binary message from a text one and the pass-through route forwards 'hi' as text: the page logs 'data=hi', not 'data=arraybuffer:hi' (only for pass-through)")]
         public async Task ShouldWorkWithBinaryTypeArraybuffer(IPage page, Server server)
         {
             var wsPromise = server.WaitForWebSocket();
@@ -190,7 +190,7 @@ public class RouteWebSocketTests
         [UpstreamTest("WS-018 should work when connection errors out")]
         public async Task ShouldWorkWhenConnectionErrorsOut(IPage page, Server server, string browserName)
         {
-            It.Skip(browserName == "webkit", "WebKit ignores the connection error and fires no events!");
+            Info.Skip(browserName == "webkit", "WebKit ignores the connection error and fires no events!");
 
             var upgradePromise = server.WaitForUpgrade();
             await SetupWS(page, server, "blob");
@@ -209,9 +209,9 @@ public class RouteWebSocketTests
         [UpstreamTest("WS-019 should work with error after successful open")]
         public async Task ShouldWorkWithErrorAfterSuccessfulOpen(IPage page, Server server, string browserName, bool isLinux, bool isWindows)
         {
-            It.Skip(browserName == "firefox", "Firefox does not close the websocket upon a bad frame");
-            It.Skip(browserName == "webkit" && isLinux, "WebKit linux does not close the websocket upon a bad frame");
-            It.Skip(browserName == "webkit" && isWindows, "WebKit Windows does not close the websocket upon a bad frame");
+            Info.Skip(browserName == "firefox", "Firefox does not close the websocket upon a bad frame");
+            Info.Skip(browserName == "webkit" && isLinux, "WebKit linux does not close the websocket upon a bad frame");
+            Info.Skip(browserName == "webkit" && isWindows, "WebKit Windows does not close the websocket upon a bad frame");
 
             var upgradePromise = server.WaitForUpgrade();
             await SetupWS(page, server, "blob");
@@ -271,7 +271,7 @@ public class RouteWebSocketTests
         }
 
         [UpstreamTest("WS-022 should work with relative WebSocket URL")]
-        [Fixme("dotnet: IWebSocketFrame.Text is not null for a binary frame (WebSocketFrame.Text decodes Binary), so a handler can not tell a binary message from a text one and the pass-through route forwards 'hi' as text: the page logs 'data=hi', not 'data=blob:hi'", Case = "pass-through")]
+        [LocalFixme("dotnet: IWebSocketFrame.Text is not null for a binary frame (WebSocketFrame.Text decodes Binary), so a handler can not tell a binary message from a text one and the pass-through route forwards 'hi' as text: the page logs 'data=hi', not 'data=blob:hi' (only for pass-through)")]
         public async Task ShouldWorkWithRelativeWebSocketURL(IPage page, Server server)
         {
             var wsPromise = server.WaitForWebSocket();
@@ -870,7 +870,7 @@ public class RouteWebSocketTests
     }
 
     [UpstreamTest("WS-038 should work with baseURL regardless of scheme casing")]
-    [Fixme("dotnet: URLMatch.ToWebSocketBaseURL makes 'ws://' only from a lower-case 'http://' of the baseURL, upstream ignores the case of the scheme, so the route '/ws' does not match with the baseURL 'HTTP://localhost:<port>'")]
+    [LocalFixme("dotnet: URLMatch.ToWebSocketBaseURL makes 'ws://' only from a lower-case 'http://' of the baseURL, upstream ignores the case of the scheme, so the route '/ws' does not match with the baseURL 'HTTP://localhost:<port>'")]
     public async Task ShouldWorkWithBaseURLRegardlessOfSchemeCasing(ContextFactory contextFactory, Server server)
     {
         // baseURL schemes are case-insensitive, same as everywhere else in URL matching.

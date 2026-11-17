@@ -23,10 +23,10 @@ namespace Microsoft.Playwright.Tests.Library;
 public class HeadfulTests
 {
     [BeforeEach]
-    public static void Skip(bool headless) => It.Skip(headless, "avoid popping windows in headless mode");
+    public static void Skip(bool headless) => Info.Skip(headless, "avoid popping windows in headless mode");
 
     [BeforeEach]
-    public static void Skip2(string channel) => It.Skip(channel == "chromium-headless-shell", "shell is never headed");
+    public static void Skip2(string channel) => Info.Skip(channel == "chromium-headless-shell", "shell is never headed");
 
     [UpstreamTest("HE-001 should have default url when launching browser @smoke")]
     public async Task ShouldHaveDefaultUrlWhenLaunchingBrowser(LaunchPersistent launchPersistent)
@@ -39,7 +39,7 @@ public class HeadfulTests
     [UpstreamTest("HE-002 should close browser with beforeunload page")]
     public async Task ShouldCloseBrowserWithBeforeunloadPage(LaunchPersistent launchPersistent, Server server)
     {
-        It.Slow();
+        Info.Slow();
 
         var (context, _) = await launchPersistent();
         var page = await context.NewPageAsync();
@@ -182,8 +182,8 @@ public class HeadfulTests
     [UpstreamTest("HE-010 should not block third party SameSite=None cookies")]
     public async Task ShouldNotBlockThirdPartySameSiteNoneCookies(Server httpsServer, string browserName, IBrowser browser, BrowserNewPageOptions newPageOptions)
     {
-        It.Skip(browserName == "webkit", "No third party cookies in WebKit");
-        It.Skip(Environment.GetEnvironmentVariable("PW_CLOCK") == "frozen");
+        Info.Skip(browserName == "webkit", "No third party cookies in WebKit");
+        Info.Skip(Environment.GetEnvironmentVariable("PW_CLOCK") == "frozen");
         var page = await browser.NewPageAsync(new(newPageOptions)
         {
             IgnoreHTTPSErrors = true,
@@ -226,7 +226,7 @@ public class HeadfulTests
     [UpstreamTest("HE-011 should not override viewport size when passed null")]
     public async Task ShouldNotOverrideViewportSizeWhenPassedNull(string browserName, Server server, IBrowser browser, BrowserNewContextOptions contextOptions)
     {
-        It.Skip(browserName == "webkit", "Our WebKit embedder does not respect window features");
+        Info.Skip(browserName == "webkit", "Our WebKit embedder does not respect window features");
 
         var context = await browser.NewContextAsync(new(contextOptions) { ViewportSize = ViewportSize.NoViewport });
         var page = await context.NewPageAsync();
@@ -333,7 +333,7 @@ public class HeadfulTests
     [UpstreamTest("HE-015 headless and headful should use same default fonts")]
     public async Task HeadlessAndHeadfulShouldUseSameDefaultFonts(IPage page, string browserName, IBrowserType browserType, bool isBidi, BrowserTypeLaunchOptions launchOptions, BrowserNewPageOptions newPageOptions)
     {
-        It.Skip(browserName == "firefox" && !isBidi, "Text is misaligned in headed vs headless");
+        Info.Skip(browserName == "firefox" && !isBidi, "Text is misaligned in headed vs headless");
 
         var genericFontFamilies = new[]
         {

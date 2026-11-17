@@ -25,7 +25,7 @@ public class PageTransitionTests
     [UpstreamTest("PA-038 should not crash when filter transition completes")]
     public async Task ShouldNotCrashWhenFilterTransitionCompletes(IPage page, string browserName)
     {
-        It.Fixme(browserName == "webkit", "Web process crashes on the compositor thread when a filter transitions to none");
+        Info.Fixme(browserName == "webkit", "Web process crashes on the compositor thread when a filter transitions to none");
 
         await page.SetContentAsync($@"
     <style>

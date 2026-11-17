@@ -33,8 +33,8 @@ public class LauncherTests
     [UpstreamTest("BT-021 should throw a friendly error if its headed and there is no xserver on linux running")]
     public async Task ShouldThrowAFriendlyErrorIfItsHeadedAndThereIsNoXserverOnLinuxRunning(string mode, IBrowserType browserType, string platform, string channel, BrowserTypeLaunchOptions launchOptions)
     {
-        It.Skip(platform != "linux");
-        It.Skip(channel == "chromium-headless-shell", "shell is never headed");
+        Info.Skip(platform != "linux");
+        Info.Skip(channel == "chromium-headless-shell", "shell is never headed");
 
         var error = await Catch(() => browserType.LaunchAsync(new(launchOptions)
         {

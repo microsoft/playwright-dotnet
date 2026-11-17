@@ -28,7 +28,7 @@ public class ConnectOverCdpTests
 {
     // .NET: upstream runs the files of tests/library/chromium only in the Chromium project.
     [BeforeEach]
-    public static void Skip(string browserName) => It.Skip(browserName != "chromium", "chromium only");
+    public static void Skip(string browserName) => Info.Skip(browserName != "chromium", "chromium only");
 
     [UpstreamTest("CD-001 should connect to an existing cdp session")]
     public async Task ShouldConnectToAnExistingCdpSession(IBrowserType browserType, CreateUserDataDir createUserDataDir, ChildProcess childProcess, TestInfo testInfo, BrowserTypeLaunchPersistentContextOptions launchPersistentContextOptions)
@@ -452,7 +452,7 @@ public class ConnectOverCdpTests
     }
 
     [UpstreamTest("CD-020 should report an expected error when the endpointURL returns a non-expected status code")]
-    [Fixme("dotnet: the message is 'Unexpected status 404 when connecting to <server.PREFIX>/json/version/.', without the 'browserType.connectOverCDP: ' prefix of the call")]
+    [LocalFixme("dotnet: the message is 'Unexpected status 404 when connecting to <server.PREFIX>/json/version/.', without the 'browserType.connectOverCDP: ' prefix of the call")]
     public async Task ShouldReportAnExpectedErrorWhenTheEndpointURLReturnsANonExpectedStatusCode(IBrowserType browserType, Server server)
     {
         server.SetRoute("/json/version/", (req, resp) =>
@@ -468,7 +468,7 @@ public class ConnectOverCdpTests
     }
 
     [UpstreamTest("CD-021 should report an expected error when the endpoint URL JSON webSocketDebuggerUrl is undefined")]
-    [Fixme("dotnet: the message is 'Invalid URL: undefined', without the 'browserType.connectOverCDP: ' prefix of the call")]
+    [LocalFixme("dotnet: the message is 'Invalid URL: undefined', without the 'browserType.connectOverCDP: ' prefix of the call")]
     public async Task ShouldReportAnExpectedErrorWhenTheEndpointURLJSONWebSocketDebuggerUrlIsUndefined(IBrowserType browserType, Server server)
     {
         server.SetRoute("/json/version/", (req, resp) =>
@@ -589,7 +589,7 @@ public class ConnectOverCdpTests
     [UpstreamTest("CD-028 should allow tracing over cdp session")]
     public async Task ShouldAllowTracingOverCdpSession(IBrowserType browserType, string trace, TestInfo testInfo, BrowserTypeLaunchOptions launchOptions)
     {
-        It.Skip(trace == "on");
+        Info.Skip(trace == "on");
 
         var port = 9339 + testInfo.WorkerIndex;
         var browserServer = await browserType.LaunchAsync(new(launchOptions)
@@ -617,7 +617,7 @@ public class ConnectOverCdpTests
     [UpstreamTest("CD-029 setInputFiles should preserve lastModified timestamp")]
     public async Task SetInputFilesShouldPreserveLastModifiedTimestamp(IBrowserType browserType, Func<string, string> asset, BrowserTypeLaunchOptions launchOptions)
     {
-        var port = 9339 + It.Info().WorkerIndex;
+        var port = 9339 + Info.WorkerIndex;
         var browserServer = await browserType.LaunchAsync(new(launchOptions)
         {
             Args = ["--remote-debugging-port=" + port],
@@ -773,7 +773,7 @@ public class ConnectOverCdpTests
     }
 
     [UpstreamTest("CD-053 should connect when another client inspects a terminated shared worker")]
-    [ItFixme]
+    [Ignore("fixme")]
     public async Task ShouldConnectWhenAnotherClientInspectsATerminatedSharedWorker(IBrowserType browserType, Server server, TestInfo testInfo, BrowserTypeLaunchOptions launchOptions, BrowserNewPageOptions newPageOptions)
     {
         var port = 9339 + testInfo.WorkerIndex;

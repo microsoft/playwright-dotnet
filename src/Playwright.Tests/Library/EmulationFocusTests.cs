@@ -117,9 +117,9 @@ public class EmulationFocusTests
     [UpstreamTest("EM-019 should not affect screenshots")]
     public async Task ShouldNotAffectScreenshots(IPage page, Server server, string browserName, bool headless, bool isWindows, bool isLinux, bool isHeadlessShell, string channel)
     {
-        It.Skip(browserName == "webkit" && isWindows && !headless, "WebKit/Windows/headed has a larger minimal viewport. See https://github.com/microsoft/playwright/issues/22616");
-        It.Skip(browserName == "webkit" && isLinux && !headless, "WebKit headed has a larger minimal viewport on gtk4.");
-        It.Skip(browserName == "firefox" && !headless, "Firefox headed produces a different image");
+        Info.Skip(browserName == "webkit" && isWindows && !headless, "WebKit/Windows/headed has a larger minimal viewport. See https://github.com/microsoft/playwright/issues/22616");
+        Info.Skip(browserName == "webkit" && isLinux && !headless, "WebKit headed has a larger minimal viewport on gtk4.");
+        Info.Skip(browserName == "firefox" && !headless, "Firefox headed produces a different image");
 
         var page2 = await page.Context.NewPageAsync();
         await PromiseAll(
@@ -142,7 +142,7 @@ public class EmulationFocusTests
     [UpstreamTest("EM-020 should change focused iframe")]
     public async Task ShouldChangeFocusedIframe(IPage page, Server server, string browserName, bool headless)
     {
-        It.Skip(browserName == "firefox" && !headless, "Headed FF might lose focus");
+        Info.Skip(browserName == "firefox" && !headless, "Headed FF might lose focus");
         await page.GotoAsync(server.EmptyPage);
         var (frame1, frame2) = await PromiseAll(
             AttachFrame(page, "frame1", server.Prefix + "/input/textarea.html"),
@@ -225,7 +225,7 @@ public class EmulationFocusTests
     [UpstreamTest("EM-023 should not blur iframe when interacting with another page/context")]
     public async Task ShouldNotBlurIframeWhenInteractingWithAnotherPageContext(ContextFactory contextFactory, string browserName)
     {
-        It.Fixme(browserName == "firefox", "https://github.com/microsoft/playwright/issues/43280");
+        Info.Fixme(browserName == "firefox", "https://github.com/microsoft/playwright/issues/43280");
 
         var page1 = await (await contextFactory()).NewPageAsync();
         var page2 = await (await contextFactory()).NewPageAsync();
@@ -243,7 +243,7 @@ public class EmulationFocusTests
     [UpstreamTest("EM-024 should trigger hover state concurrently")]
     public async Task ShouldTriggerHoverStateConcurrently(IBrowserType browserType, bool headless, BrowserTypeLaunchOptions launchOptions, BrowserNewContextOptions contextOptions, BrowserNewPageOptions newPageOptions)
     {
-        It.Skip(!headless, "headed messes up with hover");
+        Info.Skip(!headless, "headed messes up with hover");
 
         var browser1 = await browserType.LaunchAsync(launchOptions);
         var context1 = await browser1.NewContextAsync(contextOptions);

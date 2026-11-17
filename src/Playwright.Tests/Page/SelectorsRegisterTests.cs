@@ -23,7 +23,7 @@ namespace Microsoft.Playwright.Tests.Page;
 public class SelectorsRegisterTests
 {
     [BeforeEach]
-    public static void Skip() => It.Skip(!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("PW_TEST_CONNECT_WS_ENDPOINT")), "selectors.register does not support reuse");
+    public static void Skip() => Info.Skip(!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("PW_TEST_CONNECT_WS_ENDPOINT")), "selectors.register does not support reuse");
 
     [UpstreamTest("SE-154 textContent should be atomic")]
     public async Task TextContentShouldBeAtomic(IPlaywright playwright, IPage page)

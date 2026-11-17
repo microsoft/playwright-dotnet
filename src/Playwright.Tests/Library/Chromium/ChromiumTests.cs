@@ -25,7 +25,7 @@ public class ChromiumTests
 {
     // .NET: upstream runs the files of tests/library/chromium only in the Chromium project.
     [BeforeEach]
-    public static void Skip(string browserName) => It.Skip(browserName != "chromium", "chromium only");
+    public static void Skip(string browserName) => Info.Skip(browserName != "chromium", "chromium only");
 
     [UpstreamTest("CR-009 should pass args with spaces")]
     public async Task ShouldPassArgsWithSpaces(IBrowserType browserType, CreateUserDataDir createUserDataDir, TestInfo testInfo, BrowserTypeLaunchPersistentContextOptions launchPersistentContextOptions)
@@ -43,7 +43,7 @@ public class ChromiumTests
     [UpstreamTest("CR-012 should report failure (due to content-type) of main service worker request")]
     public async Task ShouldReportFailureDueToContentTypeOfMainServiceWorkerRequest(Server server, IPage page, IBrowserContext context, int browserMajorVersion)
     {
-        It.Skip(browserMajorVersion < 104, "Requires http://crrev.com/1012503 or later.");
+        Info.Skip(browserMajorVersion < 104, "Requires http://crrev.com/1012503 or later.");
         server.SetRoute("/serviceworkers/fetch/sw.js", (req, res) =>
         {
             res.WriteHead(200, "OK", new() { ["Content-Type"] = "text/html" });
@@ -61,7 +61,7 @@ public class ChromiumTests
     [UpstreamTest("CR-013 should report failure (due to redirect) of main service worker request")]
     public async Task ShouldReportFailureDueToRedirectOfMainServiceWorkerRequest(Server server, IPage page, IBrowserContext context, int browserMajorVersion)
     {
-        It.Skip(browserMajorVersion < 104, "Requires http://crrev.com/1012503 or later.");
+        Info.Skip(browserMajorVersion < 104, "Requires http://crrev.com/1012503 or later.");
         server.SetRedirect("/serviceworkers/empty/sw.js", "/dev/null");
         var (_, main, _) = await PromiseAll(
             server.WaitForRequest("/serviceworkers/empty/sw.js"),
@@ -75,9 +75,9 @@ public class ChromiumTests
     [UpstreamTest("CR-022 should throw when connecting twice to an already running persistent context (--remote-debugging-port)")]
     public async Task ShouldThrowWhenConnectingTwiceToAnAlreadyRunningPersistentContextRemoteDebuggingPort(IBrowserType browserType, CreateUserDataDir createUserDataDir, string platform, bool isHeadlessShell, string channel, BrowserTypeLaunchPersistentContextOptions launchPersistentContextOptions)
     {
-        It.Skip(isHeadlessShell, "Headless shell does not create a ProcessSingleton");
-        It.Fixme(platform == "win32", "Windows does not print something to the console when the profile is already in use by another instance of Chromium.");
-        It.Skip(channel?.StartsWith("msedge", StringComparison.Ordinal) == true, "Edge does not print the ProcessSingleton line");
+        Info.Skip(isHeadlessShell, "Headless shell does not create a ProcessSingleton");
+        Info.Fixme(platform == "win32", "Windows does not print something to the console when the profile is already in use by another instance of Chromium.");
+        Info.Skip(channel?.StartsWith("msedge", StringComparison.Ordinal) == true, "Edge does not print the ProcessSingleton line");
         var userDataDir = await createUserDataDir();
         var browser = await browserType.LaunchPersistentContextAsync(userDataDir, new(launchPersistentContextOptions)
         {
@@ -100,9 +100,9 @@ public class ChromiumTests
     [UpstreamTest("CR-023 should throw when connecting twice to an already running persistent context (--remote-debugging-pipe)")]
     public async Task ShouldThrowWhenConnectingTwiceToAnAlreadyRunningPersistentContextRemoteDebuggingPipe(IBrowserType browserType, CreateUserDataDir createUserDataDir, string platform, bool isHeadlessShell, string channel, BrowserTypeLaunchPersistentContextOptions launchPersistentContextOptions)
     {
-        It.Skip(isHeadlessShell, "Headless shell does not create a ProcessSingleton");
-        It.Fixme(platform == "win32", "Windows does not print something to the console when the profile is already in use by another instance of Chromium.");
-        It.Skip(channel?.StartsWith("msedge", StringComparison.Ordinal) == true, "Edge does not print the ProcessSingleton line");
+        Info.Skip(isHeadlessShell, "Headless shell does not create a ProcessSingleton");
+        Info.Fixme(platform == "win32", "Windows does not print something to the console when the profile is already in use by another instance of Chromium.");
+        Info.Skip(channel?.StartsWith("msedge", StringComparison.Ordinal) == true, "Edge does not print the ProcessSingleton line");
         var userDataDir = await createUserDataDir();
         var browser = await browserType.LaunchPersistentContextAsync(userDataDir, launchPersistentContextOptions);
         try
@@ -136,7 +136,7 @@ public class ChromiumTests
         [UpstreamTest("CR-027 should refuse WebUI pages that crash the browser in an isolated context")]
         public async Task ShouldRefuseWebUIPagesThatCrashTheBrowserInAnIsolatedContext(IBrowser browser, IPage page, string channel)
         {
-            It.Skip(IsEdge(channel), "Edge only disallows chrome://history");
+            Info.Skip(IsEdge(channel), "Edge only disallows chrome://history");
 
             var hosts = new[] { "apps", "extensions", "help", "history", "password-manager", "settings" };
             foreach (var url in (string[])[.. hosts.Select(host => $"chrome://{host}"), "chrome://extensions/", "chrome://settings/help", "chrome://SETTINGS", "chrome:settings", "chrome:///settings", "view-source:chrome://settings"])
@@ -151,7 +151,7 @@ public class ChromiumTests
         [UpstreamTest("CR-028 should refuse WebUI pages that crash Edge in an isolated context")]
         public async Task ShouldRefuseWebUIPagesThatCrashEdgeInAnIsolatedContext(IBrowser browser, IPage page, string channel)
         {
-            It.Skip(!IsEdge(channel), "Edge has its own list of pages disallowed in InPrivate");
+            Info.Skip(!IsEdge(channel), "Edge has its own list of pages disallowed in InPrivate");
 
             foreach (var url in new[] { "edge://history", "chrome://history", "view-source:edge://history" })
             {
@@ -168,7 +168,7 @@ public class ChromiumTests
         [UpstreamTest("CR-029 should navigate to WebUI pages that work in an isolated context")]
         public async Task ShouldNavigateToWebUIPagesThatWorkInAnIsolatedContext(IPage page, bool headless)
         {
-            It.Skip(headless, "WebUI pages are not available in headless");
+            Info.Skip(headless, "WebUI pages are not available in headless");
 
             var response = await page.GotoAsync("chrome://version");
             Assert.That(response.Status, Is.EqualTo(200));
@@ -177,7 +177,7 @@ public class ChromiumTests
         [UpstreamTest("CR-030 should navigate to any WebUI page in a persistent context")]
         public async Task ShouldNavigateToAnyWebUIPageInAPersistentContext(IBrowserType browserType, CreateUserDataDir createUserDataDir, bool headless, BrowserTypeLaunchPersistentContextOptions launchPersistentContextOptions)
         {
-            It.Skip(headless, "WebUI pages are not available in headless");
+            Info.Skip(headless, "WebUI pages are not available in headless");
 
             var context = await browserType.LaunchPersistentContextAsync(await createUserDataDir(), launchPersistentContextOptions);
             try

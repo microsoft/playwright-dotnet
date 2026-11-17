@@ -94,7 +94,7 @@ public class ExpectToHaveValueTests
         }
 
         [UpstreamTest("EX-308 exact match with text failure")]
-        [Fixme("dotnet: the message of ToHaveValuesAsync is \"Locator expected to have values '['R', 'G']'\\nBut was: '['RR', 'GG']'\"; upstream expects the diff lines '-   \"R\"' and '+   \"RR\"'")]
+        [LocalFixme("dotnet: the message of ToHaveValuesAsync is \"Locator expected to have values '['R', 'G']'\\nBut was: '['RR', 'GG']'\"; upstream expects the diff lines '-   \"R\"' and '+   \"RR\"'")]
         public async Task ExactMatchWithTextFailure(IPage page)
         {
             await page.SetContentAsync(@"
@@ -126,7 +126,7 @@ public class ExpectToHaveValueTests
         }
 
         [UpstreamTest("EX-310 fails when items not selected")]
-        [Fixme("dotnet: the message of ToHaveValuesAsync is \"Locator expected to have matching regex '['R', 'G']'\\nBut was: '['B']'\"; upstream expects the diff line '+   \"B\"'")]
+        [LocalFixme("dotnet: the message of ToHaveValuesAsync is \"Locator expected to have matching regex '['R', 'G']'\\nBut was: '['B']'\"; upstream expects the diff line '+   \"B\"'")]
         public async Task FailsWhenItemsNotSelected(IPage page)
         {
             await page.SetContentAsync(@"

@@ -43,7 +43,7 @@ public class ElementhandleEvalOnSelectorTests
     }
 
     [UpstreamTest("EH-041 should throw in case of missing selector")]
-    [Fixme("dotnet: the message is 'Failed to find element matching selector \".a\"', without the 'elementHandle.$eval: ' prefix of the call")]
+    [LocalFixme("dotnet: the message is 'Failed to find element matching selector \".a\"', without the 'elementHandle.$eval: ' prefix of the call")]
     public async Task ShouldThrowInCaseOfMissingSelector(IPage page, Server server)
     {
         const string htmlContent = "<div class=\"a\">not-a-child-div</div><div id=\"myId\"></div>";

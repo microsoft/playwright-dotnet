@@ -24,7 +24,6 @@
 
 
 using System.Globalization;
-using System.Text;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Formats;
 using SixLabors.ImageSharp.Formats.Jpeg;
@@ -34,26 +33,25 @@ using SixLabors.ImageSharp.PixelFormats;
 
 namespace Microsoft.Playwright.Tests.Fixtures;
 
-/// <summary><c>ComparatorResult</c>: what a comparator returns for two snapshots that differ. It returns null when they match.</summary>
+/// <summary><c>ComparatorResult</c>: what a comparison returns for two images that differ. It returns null when they match.</summary>
 public sealed class ComparatorResult
 {
     public string ErrorMessage { get; set; }
 
-    /// <summary>The diff image as a PNG, for the image comparators.</summary>
+    /// <summary>The diff image as a PNG.</summary>
     public byte[] Diff { get; set; }
 }
 
-/// <summary><c>Comparator</c>: the actual value is a <c>byte[]</c> or a <c>string</c>.</summary>
-internal delegate ComparatorResult SnapshotComparator(object actual, byte[] expected, SnapshotOptions options);
-
-/// <summary>The port of <c>packages/utils/comparators.ts</c>.</summary>
+/// <summary>
+/// The port of the image comparators of <c>packages/utils/comparators.ts</c>. The comparators of text and
+/// of other files are not ported: no ported test has such a snapshot.
+/// </summary>
 internal static class ImageComparator
 {
     private static readonly byte[] _pngMagicNumber = [137, 80, 78, 71, 13, 10, 26, 10];
     private static readonly byte[] _jpegMagicNumber = [255, 216];
-    private static readonly string[] _textExtensions = ["conf", "def", "in", "ini", "list", "log", "text", "txt"];
 
-    /// <summary><c>getMimeTypeForPath(path)</c>, for the types that have a comparator of their own.</summary>
+    /// <summary><c>getMimeTypeForPath(path)</c> for an image, null for another file.</summary>
     public static string GetMimeTypeForPath(string path)
     {
         var extension = Path.GetExtension(path).TrimStart('.').ToLowerInvariant();
@@ -62,44 +60,16 @@ internal static class ImageComparator
             "png" => "image/png",
             "jpg" or "jpeg" => "image/jpeg",
             "webp" => "image/webp",
-            _ => _textExtensions.Contains(extension) ? "text/plain" : null,
+            _ => null,
         };
     }
 
-    public static SnapshotComparator GetComparator(string mimeType) => mimeType switch
-    {
-        "image/png" or "image/jpeg" or "image/webp" => (actual, expected, options) => CompareImages(mimeType, actual, expected, options),
-        "text/plain" => (actual, expected, _) => CompareText(actual, expected),
-        _ => (actual, expected, _) => CompareBuffersOrStrings(actual, expected),
-    };
-
-    public static ComparatorResult CompareBuffersOrStrings(object actualBuffer, byte[] expectedBuffer)
-    {
-        if (actualBuffer is string)
-        {
-            return CompareText(actualBuffer, expectedBuffer);
-        }
-        if (actualBuffer is not byte[] actualBytes)
-        {
-            return new() { ErrorMessage = "Actual result should be a Buffer or a string." };
-        }
-        if (!actualBytes.AsSpan().SequenceEqual(expectedBuffer))
-        {
-            return new() { ErrorMessage = "Buffers differ" };
-        }
-        return null;
-    }
-
-    public static ComparatorResult CompareImages(string mimeType, object actualBuffer, byte[] expectedBuffer, SnapshotOptions options = null)
+    public static ComparatorResult CompareImages(string mimeType, byte[] actualBuffer, byte[] expectedBuffer, SnapshotOptions options = null)
     {
         options ??= new();
-        if (actualBuffer is not byte[] actualBytes)
-        {
-            return new() { ErrorMessage = "Actual result should be a Buffer." };
-        }
         ValidateBuffer(expectedBuffer, mimeType);
 
-        var actual = Decode(mimeType, actualBytes);
+        var actual = Decode(mimeType, actualBuffer);
         var expected = Decode(mimeType, expectedBuffer);
         var width = Math.Max(expected.Width, actual.Width);
         var height = Math.Max(expected.Height, actual.Height);
@@ -146,30 +116,6 @@ internal static class ImageComparator
             return new() { ErrorMessage = sizesMismatchError + pixelsMismatchError, Diff = EncodePng(new ImageData(width, height, diff)) };
         }
         return null;
-    }
-
-    public static ComparatorResult CompareText(object actualValue, byte[] expectedBuffer)
-    {
-        if (actualValue is not string actual)
-        {
-            return new() { ErrorMessage = "Actual result should be a string" };
-        }
-        var expected = Encoding.UTF8.GetString(expectedBuffer);
-        // Eliminate '\\ No newline at end of file'
-        if (!actual.EndsWith('\n'))
-        {
-            actual += '\n';
-        }
-        if (!expected.EndsWith('\n'))
-        {
-            expected += '\n';
-        }
-        if (expected == actual)
-        {
-            return null;
-        }
-        // Upstream colors the lines for the terminal, the port does not.
-        return new() { ErrorMessage = string.Join("\n", TextDiff.CreatePatch(expected, actual, context: 5)) + "\n" };
     }
 
     /// <summary>The RGBA pixels of an encoded image, as <c>PNG.sync.read</c> and <c>jpegjs.decode</c> give them.</summary>
@@ -849,137 +795,5 @@ internal static class ImageTools
             }
             return result;
         }
-    }
-}
-
-/// <summary>
-/// <c>diff.createPatch('file', expected, actual, undefined, undefined, { context })</c> without the four
-/// lines of the file header: the hunks of a unified diff by lines, as the package 'diff' formats them.
-/// The lines are aligned by a longest common subsequence, so among the alignments of the same length
-/// the port can pick another one than the package does.
-/// </summary>
-internal static class TextDiff
-{
-    public static List<string> CreatePatch(string oldText, string newText, int context)
-    {
-        var oldLines = SplitLines(oldText);
-        var newLines = SplitLines(newText);
-
-        // The longest common subsequence of the lines: lcs[i, j] is its length for oldLines[i..] and newLines[j..].
-        var lcs = new int[oldLines.Length + 1, newLines.Length + 1];
-        for (var i = oldLines.Length - 1; i >= 0; i--)
-        {
-            for (var j = newLines.Length - 1; j >= 0; j--)
-            {
-                lcs[i, j] = oldLines[i] == newLines[j] ? lcs[i + 1, j + 1] + 1 : Math.Max(lcs[i + 1, j], lcs[i, j + 1]);
-            }
-        }
-
-        // Runs of lines that are common (' '), removed ('-') or added ('+'), a removal before an addition.
-        var changes = new List<(char Kind, List<string> Lines)>();
-        var removed = new List<string>();
-        var added = new List<string>();
-        void FlushChange()
-        {
-            if (removed.Count > 0)
-            {
-                changes.Add(('-', removed));
-                removed = [];
-            }
-            if (added.Count > 0)
-            {
-                changes.Add(('+', added));
-                added = [];
-            }
-        }
-        for (int i = 0, j = 0; i < oldLines.Length || j < newLines.Length;)
-        {
-            if (i < oldLines.Length && j < newLines.Length && oldLines[i] == newLines[j])
-            {
-                FlushChange();
-                if (changes.Count == 0 || changes[^1].Kind != ' ')
-                {
-                    changes.Add((' ', []));
-                }
-                changes[^1].Lines.Add(oldLines[i]);
-                i++;
-                j++;
-            }
-            else if (i < oldLines.Length && (j == newLines.Length || lcs[i + 1, j] >= lcs[i, j + 1]))
-            {
-                removed.Add(oldLines[i++]);
-            }
-            else
-            {
-                added.Add(newLines[j++]);
-            }
-        }
-        FlushChange();
-        changes.Add((' ', []));
-
-        var result = new List<string>();
-        var oldRangeStart = 0;
-        var newRangeStart = 0;
-        var curRange = new List<string>();
-        var oldLine = 1;
-        var newLine = 1;
-        for (var i = 0; i < changes.Count; i++)
-        {
-            var (kind, lines) = changes[i];
-            if (kind != ' ')
-            {
-                if (oldRangeStart == 0)
-                {
-                    oldRangeStart = oldLine;
-                    newRangeStart = newLine;
-                    if (i > 0)
-                    {
-                        curRange = changes[i - 1].Lines.TakeLast(context).Select(line => " " + line).ToList();
-                        oldRangeStart -= curRange.Count;
-                        newRangeStart -= curRange.Count;
-                    }
-                }
-                curRange.AddRange(lines.Select(line => kind + line));
-                if (kind == '+')
-                {
-                    newLine += lines.Count;
-                }
-                else
-                {
-                    oldLine += lines.Count;
-                }
-                continue;
-            }
-            if (oldRangeStart != 0)
-            {
-                if (lines.Count <= context * 2 && i < changes.Count - 2)
-                {
-                    curRange.AddRange(lines.Select(line => " " + line));
-                }
-                else
-                {
-                    var contextSize = Math.Min(lines.Count, context);
-                    curRange.AddRange(lines.Take(contextSize).Select(line => " " + line));
-                    var oldCount = oldLine - oldRangeStart + contextSize;
-                    var newCount = newLine - newRangeStart + contextSize;
-                    var oldStart = oldCount == 0 ? oldRangeStart - 1 : oldRangeStart;
-                    var newStart = newCount == 0 ? newRangeStart - 1 : newRangeStart;
-                    result.Add(string.Create(CultureInfo.InvariantCulture, $"@@ -{oldStart},{oldCount} +{newStart},{newCount} @@"));
-                    result.AddRange(curRange);
-                    oldRangeStart = 0;
-                    newRangeStart = 0;
-                    curRange = [];
-                }
-            }
-            oldLine += lines.Count;
-            newLine += lines.Count;
-        }
-        return result;
-    }
-
-    private static string[] SplitLines(string text)
-    {
-        var lines = text.Split('\n');
-        return lines[^1].Length == 0 ? lines[..^1] : lines;
     }
 }

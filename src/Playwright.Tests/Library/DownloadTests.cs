@@ -27,7 +27,7 @@ public class DownloadTests
     public class DownloadEvent
     {
         [BeforeEach]
-        public static void Skip(string mode) => It.Skip(mode != "default", "download.path() is not available in remote mode");
+        public static void Skip(string mode) => Info.Skip(mode != "default", "download.path() is not available in remote mode");
 
         [BeforeEach]
         public void BeforeEach(Server server)
@@ -65,7 +65,7 @@ public class DownloadTests
         [UpstreamTest("DO-001 should report download when navigation turns into download @smoke")]
         public async Task ShouldReportDownloadWhenNavigationTurnsIntoDownload(IBrowser browser, Server server, string browserName, int browserMajorVersion, bool isBidi, BrowserNewPageOptions newPageOptions)
         {
-            It.Skip(browserName == "chromium" && browserMajorVersion < 140, "old chromium throws net::ERR_ABORTED, depends on https://chromium-review.googlesource.com/c/chromium/src/+/6696011");
+            Info.Skip(browserName == "chromium" && browserMajorVersion < 140, "old chromium throws net::ERR_ABORTED, depends on https://chromium-review.googlesource.com/c/chromium/src/+/6696011");
             var page = await browser.NewPageAsync(newPageOptions);
             var (download, responseOrError) = await PromiseAll(
                 page.WaitForDownloadAsync(),
@@ -89,7 +89,7 @@ public class DownloadTests
         [UpstreamTest("DO-002 should work with Cross-Origin-Opener-Policy")]
         public async Task ShouldWorkWithCrossOriginOpenerPolicy(IBrowser browser, Server server, string browserName, int browserMajorVersion, bool isBidi, BrowserNewPageOptions newPageOptions)
         {
-            It.Skip(browserName == "chromium" && browserMajorVersion < 140, "old chromium throws net::ERR_ABORTED, depends on https://chromium-review.googlesource.com/c/chromium/src/+/6696011");
+            Info.Skip(browserName == "chromium" && browserMajorVersion < 140, "old chromium throws net::ERR_ABORTED, depends on https://chromium-review.googlesource.com/c/chromium/src/+/6696011");
             var page = await browser.NewPageAsync(newPageOptions);
             var (download, responseOrError) = await PromiseAll(
                 page.WaitForDownloadAsync(),
@@ -330,7 +330,7 @@ public class DownloadTests
         [UpstreamTest("DO-016 should report alt-click downloads")]
         public async Task ShouldReportAltClickDownloads(IBrowser browser, Server server, string browserName, BrowserNewPageOptions newPageOptions)
         {
-            It.Skip(browserName == "firefox", "Firefox does not download on alt-click.");
+            Info.Skip(browserName == "firefox", "Firefox does not download on alt-click.");
 
             server.SetRoute("/download", (req, res) =>
             {
@@ -440,7 +440,7 @@ public class DownloadTests
         [UpstreamTest("DO-022 should save downloads to artifactsDir")]
         public async Task ShouldSaveDownloadsToArtifactsDir(Server server, IBrowserType browserType, bool isFrozenWebkit, TestInfo testInfo, BrowserTypeLaunchOptions launchOptions, BrowserNewPageOptions newPageOptions)
         {
-            It.Skip(isFrozenWebkit, "needs recent webkit");
+            Info.Skip(isFrozenWebkit, "needs recent webkit");
             var artifactsDir = testInfo.OutputPath("artifacts");
             var browser = await browserType.LaunchAsync(new(launchOptions) { ArtifactsDir = artifactsDir });
             var page = await browser.NewPageAsync(newPageOptions);
@@ -457,10 +457,10 @@ public class DownloadTests
         }
 
         [UpstreamTest("DO-023 should close the context without awaiting the failed download")]
-        [Fixme("dotnet: the message is 'canceled', without the 'download.path: ' prefix of the call")]
+        [LocalFixme("dotnet: the message is 'canceled', without the 'download.path: ' prefix of the call")]
         public async Task ShouldCloseTheContextWithoutAwaitingTheFailedDownload(IBrowser browser, Server server, Server httpsServer, string browserName, bool headless, TestInfo testInfo, BrowserNewPageOptions newPageOptions)
         {
-            It.Skip(browserName != "chromium", "Only Chromium downloads on alt-click");
+            Info.Skip(browserName != "chromium", "Only Chromium downloads on alt-click");
 
             var page = await browser.NewPageAsync(newPageOptions);
             await page.GotoAsync(server.EmptyPage);
@@ -485,11 +485,10 @@ public class DownloadTests
         }
 
         [UpstreamTest("DO-024 should close the context without awaiting the download")]
-        [Fixme("dotnet: the message is 'canceled', without the 'download.path: ' prefix of the call", Browsers = "chromium,firefox")]
-        [Fixme("dotnet: the message is 'Target page, context or browser has been closed', without the 'download.path: ' prefix of the call", Browsers = "webkit")]
+        [LocalFixme("dotnet: the message is 'canceled', without the 'download.path: ' prefix of the call (only in chromium and firefox); dotnet: the message is 'Target page, context or browser has been closed', without the 'download.path: ' prefix of the call (only in webkit)")]
         public async Task ShouldCloseTheContextWithoutAwaitingTheDownload(IBrowser browser, Server server, string browserName, string platform, string channel, TestInfo testInfo, BrowserNewPageOptions newPageOptions)
         {
-            It.Skip(browserName == "webkit" && (platform == "linux" || channel == "webkit-wsl"), "WebKit on linux does not convert to the download immediately upon receiving headers");
+            Info.Skip(browserName == "webkit" && (platform == "linux" || channel == "webkit-wsl"), "WebKit on linux does not convert to the download immediately upon receiving headers");
 
             server.SetRoute("/downloadStall", (req, res) =>
             {
@@ -653,7 +652,7 @@ public class DownloadTests
     [UpstreamTest("DO-032 should be able to download a inline PDF file via response interception")]
     public async Task ShouldBeAbleToDownloadAInlinePDFFileViaResponseInterception(IBrowser browser, Server server, Func<string, string> asset, string browserName, BrowserNewPageOptions newPageOptions)
     {
-        It.Fixme(browserName == "webkit");
+        Info.Fixme(browserName == "webkit");
         var page = await browser.NewPageAsync(newPageOptions);
         await page.GotoAsync(server.EmptyPage);
         await page.RouteAsync("**/empty.pdf", async route =>
@@ -681,8 +680,8 @@ public class DownloadTests
     [UpstreamTest("DO-033 should be able to download a inline PDF file via navigation")]
     public async Task ShouldBeAbleToDownloadAInlinePDFFileViaNavigation(IBrowser browser, Server server, Func<string, string> asset, string browserName, bool isHeadlessShell, bool isBidi, BrowserNewPageOptions newPageOptions)
     {
-        It.Skip(browserName == "chromium" && !isHeadlessShell, "We expect PDF Viewer to open up in headed Chromium");
-        It.Skip(browserName == "firefox" && isBidi, "We expect PDF Viewer to open up in Firefox with Bidi");
+        Info.Skip(browserName == "chromium" && !isHeadlessShell, "We expect PDF Viewer to open up in headed Chromium");
+        Info.Skip(browserName == "firefox" && isBidi, "We expect PDF Viewer to open up in Firefox with Bidi");
 
         var page = await browser.NewPageAsync(newPageOptions);
         await page.GotoAsync(server.EmptyPage);

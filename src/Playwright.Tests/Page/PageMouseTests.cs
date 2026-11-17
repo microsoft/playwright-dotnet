@@ -248,7 +248,7 @@ public class PageMouseTests
     [UpstreamTest("MO-008 should trigger hover state")]
     public async Task ShouldTriggerHoverState(IPage page, Server server, bool headless)
     {
-        It.Skip(!headless, "headed messes up with hover");
+        Info.Skip(!headless, "headed messes up with hover");
 
         await page.GotoAsync(server.Prefix + "/input/scrollable.html");
         await page.HoverAsync("#button-6");
@@ -262,7 +262,7 @@ public class PageMouseTests
     [UpstreamTest("MO-009 should trigger hover state on disabled button")]
     public async Task ShouldTriggerHoverStateOnDisabledButton(IPage page, Server server, bool headless)
     {
-        It.Skip(!headless, "headed messes up with hover");
+        Info.Skip(!headless, "headed messes up with hover");
 
         await page.GotoAsync(server.Prefix + "/input/scrollable.html");
         await page.EvalOnSelectorAsync("#button-6", "button => button.disabled = true");
@@ -273,7 +273,7 @@ public class PageMouseTests
     [UpstreamTest("MO-010 should trigger hover state with removed window.Node")]
     public async Task ShouldTriggerHoverStateWithRemovedWindowNode(IPage page, Server server, bool headless)
     {
-        It.Skip(!headless, "headed messes up with hover");
+        Info.Skip(!headless, "headed messes up with hover");
 
         await page.GotoAsync(server.Prefix + "/input/scrollable.html");
         await page.EvaluateAsync("() => delete window.Node");
@@ -315,8 +315,8 @@ public class PageMouseTests
     [UpstreamTest("MO-012 should tween mouse movement")]
     public async Task ShouldTweenMouseMovement(IPage page, string browserName, bool isAndroid, bool headless)
     {
-        It.Skip(isAndroid, "Bad rounding");
-        It.Skip(!headless, "actual mouse interferes with the exact mousemove events");
+        Info.Skip(isAndroid, "Bad rounding");
+        Info.Skip(!headless, "actual mouse interferes with the exact mousemove events");
 
         // The test becomes flaky on WebKit without next line.
         if (browserName == "webkit")
@@ -371,7 +371,7 @@ public class PageMouseTests
     [UpstreamTest("MO-015 should dispatch mouse move after context menu was opened")]
     public async Task ShouldDispatchMouseMoveAfterContextMenuWasOpened(IPage page, string browserName, bool isWindows)
     {
-        It.Fixme(browserName == "chromium" && isWindows, "context menu support is best-effort for Linux and MacOS");
+        Info.Fixme(browserName == "chromium" && isWindows, "context menu support is best-effort for Linux and MacOS");
         await page.EvaluateAsync(@"() => {
     window['contextMenuPromise'] = new Promise(x => {
       window.addEventListener('contextmenu', x, false);
@@ -398,7 +398,7 @@ public class PageMouseTests
     [UpstreamTest("MO-016 should track hover across iframe boundaries")]
     public async Task ShouldTrackHoverAcrossIframeBoundaries(IPage page, bool headless)
     {
-        It.Skip(!headless, "headed messes up with hover");
+        Info.Skip(!headless, "headed messes up with hover");
 
         await page.SetContentAsync(@"
     <style>

@@ -29,11 +29,6 @@ namespace Microsoft.Playwright.Tests.Fixtures;
 /// <summary>The constructs of JavaScript promises and event emitters that the upstream tests use.</summary>
 public static partial class Utils
 {
-    private static readonly System.Text.Json.JsonSerializerOptions _jsonStringifyOptions = new()
-    {
-        Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
-    };
-
     /// <summary>
     /// <c>await Promise.all([a, b])</c>. Unlike <c>Task.WhenAll</c> it fails as soon as one of the tasks fails,
     /// as <c>Promise.all</c> does, and does not wait for the others.
@@ -203,28 +198,44 @@ public static partial class Utils
     /// </summary>
     public static void ClearTimeout(TimeoutHandle timer) => timer?.Clear();
 
-    /// <summary>The result of <see cref="SetTimeout(Action, int)"/>.</summary>
+    /// <summary>
+    /// <c>setInterval(() => { ... }, interval)</c>: the callback runs again and again, <paramref name="interval"/>
+    /// milliseconds after its last run ended, never twice at the same time. The result goes to <see cref="ClearInterval"/>.
+    /// </summary>
+    public static TimeoutHandle SetInterval(Action callback, int interval) => new(
+        () =>
+        {
+            callback();
+            return Task.CompletedTask;
+        },
+        // Node.js makes an interval of 0 an interval of 1.
+        Math.Max(interval, 1),
+        repeat: true);
+
+    /// <summary><c>clearInterval(timer)</c>.</summary>
+    public static void ClearInterval(TimeoutHandle timer) => timer?.Clear();
+
+    /// <summary>The result of <see cref="SetTimeout(Action, int)"/> and of <see cref="SetInterval"/>.</summary>
     public sealed class TimeoutHandle
     {
         private readonly Func<Task> _callback;
-        private readonly long _due;
+        private readonly int _timeout;
+        private readonly bool _repeat;
         private readonly CancellationTokenSource _cancellation = new();
+        private long _due;
         private int _done;
 
-        internal TimeoutHandle(Func<Task> callback, int timeout)
+        internal TimeoutHandle(Func<Task> callback, int timeout, bool repeat = false)
         {
             _callback = callback;
-            _due = Stopwatch.GetTimestamp() + (timeout * Stopwatch.Frequency / 1000);
-            _ = Task.Delay(timeout, _cancellation.Token).ContinueWith(
-                _ => Fire(),
-                CancellationToken.None,
-                TaskContinuationOptions.OnlyOnRanToCompletion,
-                TaskScheduler.Default);
+            _timeout = timeout;
+            _repeat = repeat;
+            Schedule();
         }
 
         internal void Clear()
         {
-            if (Stopwatch.GetTimestamp() >= _due)
+            if (!_repeat && Stopwatch.GetTimestamp() >= Interlocked.Read(ref _due))
             {
                 Fire();
             }
@@ -232,9 +243,20 @@ public static partial class Utils
             _cancellation.Cancel();
         }
 
+        private void Schedule()
+        {
+            Interlocked.Exchange(ref _due, Stopwatch.GetTimestamp() + (_timeout * Stopwatch.Frequency / 1000));
+            // After Clear() the delay is cancelled, and nothing runs.
+            _ = Task.Delay(_timeout, _cancellation.Token).ContinueWith(
+                _ => Fire(),
+                CancellationToken.None,
+                TaskContinuationOptions.OnlyOnRanToCompletion,
+                TaskScheduler.Default);
+        }
+
         private void Fire()
         {
-            if (Interlocked.Exchange(ref _done, 1) == 0)
+            if (_repeat ? !_cancellation.IsCancellationRequested : Interlocked.Exchange(ref _done, 1) == 0)
             {
                 _ = RunAsync();
             }
@@ -248,19 +270,13 @@ public static partial class Utils
             }
             catch (Exception e)
             {
-                await Console.Error.WriteLineAsync($"A setTimeout callback failed: {e}").ConfigureAwait(false);
+                await Console.Error.WriteLineAsync($"A {(_repeat ? "setInterval" : "setTimeout")} callback failed: {e}").ConfigureAwait(false);
+            }
+            if (_repeat)
+            {
+                Schedule();
             }
         }
-    }
-
-    /// <summary><c>JSON.stringify(value)</c>: unlike <c>JsonSerializer.Serialize</c> it does not escape non-ASCII characters, nor &lt;, &gt;, &amp;, ' and +.</summary>
-    public static string JsonStringify(object value) => System.Text.Json.JsonSerializer.Serialize(value, _jsonStringifyOptions);
-
-    /// <summary><c>string.replace(search, replacement)</c> of JavaScript with a string: replaces the first occurrence only.</summary>
-    public static string ReplaceFirst(string text, string search, string replacement)
-    {
-        var index = text.IndexOf(search, StringComparison.Ordinal);
-        return index == -1 ? text : text.Substring(0, index) + replacement + text.Substring(index + search.Length);
     }
 
     /// <summary>

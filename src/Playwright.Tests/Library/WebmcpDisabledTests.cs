@@ -23,10 +23,10 @@ namespace Microsoft.Playwright.Tests.Library;
 public class WebmcpDisabledTests
 {
     [BeforeEach]
-    public static void Skip(string browserName) => It.Skip(browserName == "webkit", "WebKit does not implement WebMCP");
+    public static void Skip(string browserName) => Info.Skip(browserName == "webkit", "WebKit does not implement WebMCP");
 
     [BeforeEach]
-    public static void Skip2(bool isBidi) => It.Skip(isBidi, "WebMCP is not implemented over BiDi");
+    public static void Skip2(bool isBidi) => Info.Skip(isBidi, "WebMCP is not implemented over BiDi");
 
     [UpstreamTest("WM-015 should throw when the browser was launched without WebMCP")]
     public async Task ShouldThrowWhenTheBrowserWasLaunchedWithoutWebMCP(IPage page, string browserName)

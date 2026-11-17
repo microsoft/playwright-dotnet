@@ -44,7 +44,7 @@ public class BrowsercontextSetExtraHttpHeadersTests
     }
 
     [UpstreamTest("NE-120 should throw for non-string header values")]
-    [Fixme("dotnet: the client does not check the values of ExtraHTTPHeaders: a null value goes to the driver, and the message is 'extraHTTPHeaders[0].value: expected string, got undefined'. Upstream expects 'Expected value of header \"foo\" to be String, but \"object\" is found.'")]
+    [LocalFixme("dotnet: the client does not check the values of ExtraHTTPHeaders: a null value goes to the driver, and the message is 'extraHTTPHeaders[0].value: expected string, got undefined'. Upstream expects 'Expected value of header \"foo\" to be String, but \"object\" is found.'")]
     public async Task ShouldThrowForNonStringHeaderValues(IBrowser browser, BrowserNewContextOptions contextOptions)
     {
         var error3 = await Catch(() => browser.NewContextAsync(new(contextOptions) { ExtraHTTPHeaders = new Dictionary<string, string> { ["foo"] = null } }));

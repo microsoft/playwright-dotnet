@@ -24,7 +24,7 @@ namespace Microsoft.Playwright.Tests.Page;
 public class LocatorHighlightTests
 {
     [BeforeEach]
-    public static void Skip(string mode) => It.Skip(mode != "default", "Highlight element has a closed shadow-root on != default");
+    public static void Skip(string mode) => Info.Skip(mode != "default", "Highlight element has a closed shadow-root on != default");
 
     [UpstreamTest("LO-114 should highlight locator")]
     public async Task ShouldHighlightLocator(IPage page)

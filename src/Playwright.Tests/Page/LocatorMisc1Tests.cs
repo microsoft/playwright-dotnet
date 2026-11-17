@@ -26,7 +26,7 @@ public class LocatorMisc1Tests
     [UpstreamTest("LO-127 should hover @smoke")]
     public async Task ShouldHover(IPage page, Server server, bool headless)
     {
-        It.Skip(!headless, "headed messes up with hover");
+        Info.Skip(!headless, "headed messes up with hover");
 
         await page.GotoAsync(server.Prefix + "/input/scrollable.html");
         var button = page.Locator("#button-6");
@@ -37,7 +37,7 @@ public class LocatorMisc1Tests
     [UpstreamTest("LO-128 should hover when Node is removed")]
     public async Task ShouldHoverWhenNodeIsRemoved(IPage page, Server server, bool headless)
     {
-        It.Skip(!headless, "headed messes up with hover");
+        Info.Skip(!headless, "headed messes up with hover");
 
         await page.GotoAsync(server.Prefix + "/input/scrollable.html");
         await page.EvaluateAsync("() => delete window['Node']");

@@ -24,7 +24,7 @@ namespace Microsoft.Playwright.Tests.Page;
 public class WheelTests
 {
     [BeforeEach]
-    public static void Skip(bool isAndroid) => It.Skip(isAndroid);
+    public static void Skip(bool isAndroid) => Info.Skip(isAndroid);
 
     private static bool ignoreDelta = false;
 

@@ -120,7 +120,7 @@ public class LocatorFrameTests
     }
 
     [UpstreamTest("LO-092 should wait for frame")]
-    [Fixme("dotnet: the call log has Locator(\"body\").Locator(\"iframe\").ContentFrame, upstream expects locator('body').locator('iframe').contentFrame()")]
+    [LocalFixme("dotnet: the call log has Locator(\"body\").Locator(\"iframe\").ContentFrame, upstream expects locator('body').locator('iframe').contentFrame()")]
     public async Task ShouldWaitForFrame(IPage page, Server server)
     {
         await page.GotoAsync(server.EmptyPage);
@@ -139,7 +139,7 @@ public class LocatorFrameTests
     [UpstreamTest("LO-094 should wait for frame to go")]
     public async Task ShouldWaitForFrameToGo(IPage page, Server server, bool isAndroid)
     {
-        It.Fixme(isAndroid);
+        Info.Fixme(isAndroid);
 
         await RouteIframe(page);
         await page.GotoAsync(server.EmptyPage);
@@ -275,7 +275,7 @@ public class LocatorFrameTests
     }
 
     [UpstreamTest("LO-104 locator.frameLocator should throw on ambiguity")]
-    [Fixme("dotnet: the error has Locator(\"body\").Locator(\"iframe\"), upstream expects locator('body').locator('iframe')")]
+    [LocalFixme("dotnet: the error has Locator(\"body\").Locator(\"iframe\"), upstream expects locator('body').locator('iframe')")]
     public async Task LocatorFrameLocatorShouldThrowOnAmbiguity(IPage page, Server server)
     {
         await RouteAmbiguous(page);
@@ -334,7 +334,7 @@ public class LocatorFrameTests
     [UpstreamTest("LO-108 should work with COEP/COOP/CORP isolated iframe")]
     public async Task ShouldWorkWithCOEPCOOPCORPIsolatedIframe(IPage page, Server server, string browserName)
     {
-        It.Fixme(browserName == "firefox");
+        Info.Fixme(browserName == "firefox");
         await page.RouteAsync("**/empty.html", route =>
         {
             return route.FulfillAsync(new()

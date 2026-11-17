@@ -25,7 +25,7 @@ public class LauncherTests
 {
     // .NET: the upstream config runs the files of library/firefox/ in the Firefox project only.
     [BeforeEach]
-    public static void Skip(string browserName) => It.Skip(browserName != "firefox", "firefox only");
+    public static void Skip(string browserName) => Info.Skip(browserName != "firefox", "firefox only");
 
     [UpstreamTest("FF-001 should pass firefox user preferences")]
     public async Task ShouldPassFirefoxUserPreferences(IBrowserType browserType, string mode, BrowserTypeLaunchOptions launchOptions, BrowserNewPageOptions newPageOptions)

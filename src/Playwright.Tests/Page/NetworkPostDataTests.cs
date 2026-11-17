@@ -63,7 +63,7 @@ public class NetworkPostDataTests
     }
 
     [UpstreamTest("NE-110 should throw on invalid JSON in post data")]
-    [Fixme("dotnet: Request.PostDataJSON() throws the JsonException of JsonDocument.Parse, \"'<' is an invalid start of a value. LineNumber: 0 | BytePositionInLine: 0.\"; upstream expects 'POST data is not a valid JSON object: <not a json>'")]
+    [LocalFixme("dotnet: Request.PostDataJSON() throws the JsonException of JsonDocument.Parse, \"'<' is an invalid start of a value. LineNumber: 0 | BytePositionInLine: 0.\"; upstream expects 'POST data is not a valid JSON object: <not a json>'")]
     public async Task ShouldThrowOnInvalidJSONInPostData(IPage page, Server server)
     {
         await page.GotoAsync(server.EmptyPage);
@@ -107,7 +107,7 @@ public class NetworkPostDataTests
     [UpstreamTest("NE-112 should get post data for file/blob")]
     public async Task ShouldGetPostDataForFileBlob(IPage page, Server server, string browserName)
     {
-        It.Fixme(browserName == "webkit" || browserName == "chromium");
+        Info.Fixme(browserName == "webkit" || browserName == "chromium");
         await page.GotoAsync(server.EmptyPage);
         var (request, _) = await PromiseAll(
             page.WaitForRequestAsync("**/*"),
@@ -126,11 +126,11 @@ public class NetworkPostDataTests
     }
 
     [UpstreamTest("NE-113 should get post data for navigator.sendBeacon api calls")]
-    [Fixme("dotnet: Request.PostDataJSON() throws a NullReferenceException for a request without a content-type header: it calls Contains() on the missing value; upstream reads it with contentType?.includes()", Browsers = "firefox")]
+    [LocalFixme("dotnet: Request.PostDataJSON() throws a NullReferenceException for a request without a content-type header: it calls Contains() on the missing value; upstream reads it with contentType?.includes() (only in firefox)")]
     public async Task ShouldGetPostDataForNavigatorSendBeaconApiCalls(IPage page, Server server, string browserName)
     {
-        It.Fixme(browserName == "chromium", "postData is empty");
-        It.Fixme(browserName == "webkit", "postData is empty");
+        Info.Fixme(browserName == "chromium", "postData is empty");
+        Info.Fixme(browserName == "webkit", "postData is empty");
         await page.GotoAsync(server.EmptyPage);
         var (request, _) = await PromiseAll(
             page.WaitForRequestAsync("**/*"),

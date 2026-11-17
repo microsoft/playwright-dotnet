@@ -25,7 +25,7 @@ namespace Microsoft.Playwright.Tests.Page;
 public class LocatorConvenienceTests
 {
     [UpstreamTest("LO-057 should have a nice preview")]
-    [Fixme("dotnet: Locator.ToString() gives the C# form, 'Locator(\"#outer\")'; upstream expects \"locator('#outer')\"")]
+    [LocalFixme("dotnet: Locator.ToString() gives the C# form, 'Locator(\"#outer\")'; upstream expects \"locator('#outer')\"")]
     public async Task ShouldHaveANicePreview(IPage page, Server server)
     {
         await page.GotoAsync($"{server.Prefix}/dom.html");
@@ -102,7 +102,7 @@ public class LocatorConvenienceTests
     }
 
     [UpstreamTest("LO-063 innerText should produce log")]
-    [Fixme("dotnet: the call log has Locator(\"span\"), upstream expects locator('span')")]
+    [LocalFixme("dotnet: the call log has Locator(\"span\"), upstream expects locator('span')")]
     public async Task InnerTextShouldProduceLog(IPage page, Server server)
     {
         await page.SetContentAsync("<div>Hello</div>");
@@ -271,7 +271,7 @@ public class LocatorConvenienceTests
     }
 
     [UpstreamTest("LO-077 toString() returns formatted locator")]
-    [Fixme("dotnet: Locator.ToString() gives the C# form, 'GetByRole(AriaRole.Button, new() { Name = \"Submit\" })'; upstream expects \"getByRole('button', { name: 'Submit' })\"")]
+    [LocalFixme("dotnet: Locator.ToString() gives the C# form, 'GetByRole(AriaRole.Button, new() { Name = \"Submit\" })'; upstream expects \"getByRole('button', { name: 'Submit' })\"")]
     public async Task ToStringReturnsFormattedLocator(IPage page)
     {
         var locator = page.GetByRole(AriaRole.Button, new() { Name = "Submit" });

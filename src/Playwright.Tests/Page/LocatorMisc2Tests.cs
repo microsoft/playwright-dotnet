@@ -33,10 +33,10 @@ public class LocatorMisc2Tests
     }
 
     [UpstreamTest("LO-141 should scroll into view")]
-    [Fixme("dotnet: Locator.WithElementAsync makes a negative timeout from the default timeout 0, and the call passes only when it ends before the timer of the driver")]
+    [LocalFixme("dotnet: Locator.WithElementAsync makes a negative timeout from the default timeout 0, and the call passes only when it ends before the timer of the driver")]
     public async Task ShouldScrollIntoView(IPage page, Server server, bool isAndroid)
     {
-        It.Fixme(isAndroid);
+        Info.Fixme(isAndroid);
 
         await page.GotoAsync(server.Prefix + "/offscreenbuttons.html");
         for (var i = 0; i < 11; ++i)
@@ -56,10 +56,10 @@ public class LocatorMisc2Tests
     }
 
     [UpstreamTest("LO-142 should scroll zero-sized element into view")]
-    [Fixme("dotnet: Locator.WithElementAsync makes a negative timeout from the default timeout 0, and the call passes only when it ends before the timer of the driver")]
+    [LocalFixme("dotnet: Locator.WithElementAsync makes a negative timeout from the default timeout 0, and the call passes only when it ends before the timer of the driver")]
     public async Task ShouldScrollZeroSizedElementIntoView(IPage page, bool isAndroid, bool isElectron)
     {
-        It.Fixme(isAndroid || isElectron);
+        Info.Fixme(isAndroid || isElectron);
 
         await page.SetContentAsync(@"
     <style>
@@ -90,7 +90,7 @@ public class LocatorMisc2Tests
     }
 
     [UpstreamTest("LO-143 should select textarea")]
-    [Fixme("dotnet: Locator.WithElementAsync makes a negative timeout from the default timeout 0, and the call passes only when it ends before the timer of the driver")]
+    [LocalFixme("dotnet: Locator.WithElementAsync makes a negative timeout from the default timeout 0, and the call passes only when it ends before the timer of the driver")]
     public async Task ShouldSelectTextarea(IPage page, Server server, string browserName)
     {
         await page.GotoAsync(server.Prefix + "/input/textarea.html");
@@ -117,11 +117,11 @@ public class LocatorMisc2Tests
     }
 
     [UpstreamTest("LO-146 should take screenshot")]
-    [Fixme("dotnet: Locator.WithElementAsync makes a negative timeout from the default timeout 0, and the call passes only when it ends before the timer of the driver")]
+    [LocalFixme("dotnet: Locator.WithElementAsync makes a negative timeout from the default timeout 0, and the call passes only when it ends before the timer of the driver")]
     public async Task ShouldTakeScreenshot(IPage page, Server server, string browserName, bool headless, bool isAndroid, string mode)
     {
-        It.Skip(browserName == "firefox" && !headless);
-        It.Skip(isAndroid, "Different dpr. Remove after using 1x scale for screenshots.");
+        Info.Skip(browserName == "firefox" && !headless);
+        Info.Skip(isAndroid, "Different dpr. Remove after using 1x scale for screenshots.");
         await page.SetViewportSizeAsync(500, 500);
         await page.GotoAsync(server.Prefix + "/grid.html");
         await page.EvaluateAsync("() => window.scrollBy(50, 100)");
@@ -133,7 +133,7 @@ public class LocatorMisc2Tests
     [UpstreamTest("LO-147 should return bounding box")]
     public async Task ShouldReturnBoundingBox(IPage page, Server server, string browserName, bool headless, bool isAndroid, bool isLinux)
     {
-        It.Skip(isAndroid);
+        Info.Skip(isAndroid);
 
         await page.SetViewportSizeAsync(500, 500);
         await page.GotoAsync(server.Prefix + "/grid.html");

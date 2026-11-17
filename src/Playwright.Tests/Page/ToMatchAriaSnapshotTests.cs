@@ -63,7 +63,7 @@ public class ToMatchAriaSnapshotTests
     }
 
     [UpstreamTest("AR-110 should fail page with timeout")]
-    [Fixme("dotnet: the message of ToMatchAriaSnapshotAsync is \"Page expected to match Aria snapshot '...'\\nBut was: 'System.Dynamic.ExpandoObject' \\nCall log: ...\"")]
+    [LocalFixme("dotnet: the message of ToMatchAriaSnapshotAsync is \"Page expected to match Aria snapshot '...'\\nBut was: 'System.Dynamic.ExpandoObject' \\nCall log: ...\"")]
     public async Task ShouldFailPageWithTimeout(IPage page)
     {
         await page.SetContentAsync("<h1>title</h1>");
@@ -206,7 +206,7 @@ public class ToMatchAriaSnapshotTests
     }
 
     [UpstreamTest("AR-119 checked attribute")]
-    [Fixme("dotnet: the message of ToMatchAriaSnapshotAsync is \"Page expected to match Aria snapshot '...'\\nBut was: 'System.Dynamic.ExpandoObject' \\nCall log: ...\"")]
+    [LocalFixme("dotnet: the message of ToMatchAriaSnapshotAsync is \"Page expected to match Aria snapshot '...'\\nBut was: 'System.Dynamic.ExpandoObject' \\nCall log: ...\"")]
     public async Task CheckedAttribute(IPage page)
     {
         await page.SetContentAsync(@"
@@ -250,7 +250,7 @@ public class ToMatchAriaSnapshotTests
     }
 
     [UpstreamTest("AR-120 disabled attribute")]
-    [Fixme("dotnet: the message of ToMatchAriaSnapshotAsync is \"Page expected to match Aria snapshot '...'\\nBut was: 'System.Dynamic.ExpandoObject' \\nCall log: ...\"")]
+    [LocalFixme("dotnet: the message of ToMatchAriaSnapshotAsync is \"Page expected to match Aria snapshot '...'\\nBut was: 'System.Dynamic.ExpandoObject' \\nCall log: ...\"")]
     public async Task DisabledAttribute(IPage page)
     {
         await page.SetContentAsync(@"
@@ -286,7 +286,7 @@ public class ToMatchAriaSnapshotTests
     }
 
     [UpstreamTest("AR-121 expanded attribute")]
-    [Fixme("dotnet: the message of ToMatchAriaSnapshotAsync is \"Page expected to match Aria snapshot '...'\\nBut was: 'System.Dynamic.ExpandoObject' \\nCall log: ...\"")]
+    [LocalFixme("dotnet: the message of ToMatchAriaSnapshotAsync is \"Page expected to match Aria snapshot '...'\\nBut was: 'System.Dynamic.ExpandoObject' \\nCall log: ...\"")]
     public async Task ExpandedAttribute(IPage page)
     {
         await page.SetContentAsync(@"
@@ -322,7 +322,7 @@ public class ToMatchAriaSnapshotTests
     }
 
     [UpstreamTest("AR-122 level attribute")]
-    [Fixme("dotnet: the message of ToMatchAriaSnapshotAsync is \"Page expected to match Aria snapshot '...'\\nBut was: 'System.Dynamic.ExpandoObject' \\nCall log: ...\"")]
+    [LocalFixme("dotnet: the message of ToMatchAriaSnapshotAsync is \"Page expected to match Aria snapshot '...'\\nBut was: 'System.Dynamic.ExpandoObject' \\nCall log: ...\"")]
     public async Task LevelAttribute(IPage page)
     {
         await page.SetContentAsync(@"
@@ -354,7 +354,7 @@ public class ToMatchAriaSnapshotTests
     }
 
     [UpstreamTest("AR-123 pressed attribute")]
-    [Fixme("dotnet: the message of ToMatchAriaSnapshotAsync is \"Page expected to match Aria snapshot '...'\\nBut was: 'System.Dynamic.ExpandoObject' \\nCall log: ...\"")]
+    [LocalFixme("dotnet: the message of ToMatchAriaSnapshotAsync is \"Page expected to match Aria snapshot '...'\\nBut was: 'System.Dynamic.ExpandoObject' \\nCall log: ...\"")]
     public async Task PressedAttribute(IPage page)
     {
         await page.SetContentAsync(@"
@@ -407,7 +407,7 @@ public class ToMatchAriaSnapshotTests
     }
 
     [UpstreamTest("AR-124 selected attribute")]
-    [Fixme("dotnet: the message of ToMatchAriaSnapshotAsync is \"Page expected to match Aria snapshot '...'\\nBut was: 'System.Dynamic.ExpandoObject' \\nCall log: ...\", without a diff of the two snapshots")]
+    [LocalFixme("dotnet: the message of ToMatchAriaSnapshotAsync is \"Page expected to match Aria snapshot '...'\\nBut was: 'System.Dynamic.ExpandoObject' \\nCall log: ...\", without a diff of the two snapshots")]
     public async Task SelectedAttribute(IPage page)
     {
         await page.SetContentAsync(@"
@@ -539,7 +539,7 @@ Call log:
     }
 
     [UpstreamTest("AR-127 expected formatter")]
-    [Fixme("dotnet: the message of ToMatchAriaSnapshotAsync is \"Page expected to match Aria snapshot '...'\\nBut was: 'System.Dynamic.ExpandoObject' \\nCall log: ...\", without a diff of the two snapshots")]
+    [LocalFixme("dotnet: the message of ToMatchAriaSnapshotAsync is \"Page expected to match Aria snapshot '...'\\nBut was: 'System.Dynamic.ExpandoObject' \\nCall log: ...\", without a diff of the two snapshots")]
     public async Task ExpectedFormatter(IPage page)
     {
         await page.SetContentAsync(@"
@@ -665,7 +665,7 @@ Call log:
     }
 
     [UpstreamTest("AR-129 should report error in YAML")]
-    [Fixme("dotnet: the message of ToMatchAriaSnapshotAsync is \"Page expected to match Aria snapshot\\nError: Aria snapshot must be a YAML sequence, elements starting with \" -\" '...'\\nBut was: 'null' \\nCall log: ...\"")]
+    [LocalFixme("dotnet: the message of ToMatchAriaSnapshotAsync is \"Page expected to match Aria snapshot\\nError: Aria snapshot must be a YAML sequence, elements starting with \" -\" '...'\\nBut was: 'null' \\nCall log: ...\"")]
     public async Task ShouldReportErrorInYAML(IPage page)
     {
         await page.SetContentAsync("<h1>title</h1>");
@@ -703,7 +703,7 @@ Call log:
     }
 
     [UpstreamTest("AR-130 should report error in YAML keys")]
-    [Fixme("dotnet: the message of ToMatchAriaSnapshotAsync is \"Page expected to match Aria snapshot\\nError: Unterminated string: ... '...'\\nBut was: 'null' \\nCall log: ...\"")]
+    [LocalFixme("dotnet: the message of ToMatchAriaSnapshotAsync is \"Page expected to match Aria snapshot\\nError: Unterminated string: ... '...'\\nBut was: 'null' \\nCall log: ...\"")]
     public async Task ShouldReportErrorInYAMLKeys(IPage page)
     {
         await page.SetContentAsync("<h1>title</h1>");
@@ -879,7 +879,7 @@ Call log:
     }
 
     [UpstreamTest("AR-133 should not unshift actual template text")]
-    [Fixme("dotnet: ToMatchAriaSnapshotAsync sends the expected snapshot as written, upstream removes the common indentation of its lines first: the message has \"        - heading \"title\" [level=1]\\n    - heading \"title 2\" [level=1]\"")]
+    [LocalFixme("dotnet: ToMatchAriaSnapshotAsync sends the expected snapshot as written, upstream removes the common indentation of its lines first: the message has \"        - heading \"title\" [level=1]\\n    - heading \"title 2\" [level=1]\"")]
     public async Task ShouldNotUnshiftActualTemplateText(IPage page)
     {
         await page.SetContentAsync(@"
@@ -896,7 +896,7 @@ Call log:
     }
 
     [UpstreamTest("AR-134 should not match what is not matched")]
-    [Fixme("dotnet: the message of ToMatchAriaSnapshotAsync is \"Page expected to match Aria snapshot '...'\\nBut was: 'System.Dynamic.ExpandoObject' \\nCall log: ...\", without a diff of the two snapshots")]
+    [LocalFixme("dotnet: the message of ToMatchAriaSnapshotAsync is \"Page expected to match Aria snapshot '...'\\nBut was: 'System.Dynamic.ExpandoObject' \\nCall log: ...\", without a diff of the two snapshots")]
     public async Task ShouldNotMatchWhatIsNotMatched(IPage page)
     {
         await page.SetContentAsync("<p>Text</p>");
@@ -924,7 +924,7 @@ Call log:
     }
 
     [UpstreamTest("AR-136 should detect unexpected children: equal")]
-    [Fixme("dotnet: the message of ToMatchAriaSnapshotAsync is \"Page expected to match Aria snapshot '...'\\nBut was: 'System.Dynamic.ExpandoObject' \\nCall log: ...\", without a diff of the two snapshots")]
+    [LocalFixme("dotnet: the message of ToMatchAriaSnapshotAsync is \"Page expected to match Aria snapshot '...'\\nBut was: 'System.Dynamic.ExpandoObject' \\nCall log: ...\", without a diff of the two snapshots")]
     public async Task ShouldDetectUnexpectedChildrenEqual(IPage page)
     {
         await page.SetContentAsync(@"
@@ -953,7 +953,7 @@ Call log:
     }
 
     [UpstreamTest("AR-137 should detect unexpected children: deep-equal")]
-    [Fixme("dotnet: the message of ToMatchAriaSnapshotAsync is \"Page expected to match Aria snapshot '...'\\nBut was: 'System.Dynamic.ExpandoObject' \\nCall log: ...\", without a diff of the two snapshots")]
+    [LocalFixme("dotnet: the message of ToMatchAriaSnapshotAsync is \"Page expected to match Aria snapshot '...'\\nBut was: 'System.Dynamic.ExpandoObject' \\nCall log: ...\", without a diff of the two snapshots")]
     public async Task ShouldDetectUnexpectedChildrenDeepEqual(IPage page)
     {
         await page.SetContentAsync(@"
@@ -995,7 +995,7 @@ Call log:
     }
 
     [UpstreamTest("AR-138 should allow restoring contain mode inside deep-equal")]
-    [Fixme("dotnet: the message of ToMatchAriaSnapshotAsync is \"Page expected to match Aria snapshot '...'\\nBut was: 'System.Dynamic.ExpandoObject' \\nCall log: ...\", without a diff of the two snapshots")]
+    [LocalFixme("dotnet: the message of ToMatchAriaSnapshotAsync is \"Page expected to match Aria snapshot '...'\\nBut was: 'System.Dynamic.ExpandoObject' \\nCall log: ...\", without a diff of the two snapshots")]
     public async Task ShouldAllowRestoringContainModeInsideDeepEqual(IPage page)
     {
         await page.SetContentAsync(@"
@@ -1031,7 +1031,7 @@ Call log:
     }
 
     [UpstreamTest("AR-139 top-level deep-equal")]
-    [Fixme("dotnet: the message of ToMatchAriaSnapshotAsync is \"Page expected to match Aria snapshot '...'\\nBut was: 'System.Dynamic.ExpandoObject' \\nCall log: ...\", without a diff of the two snapshots")]
+    [LocalFixme("dotnet: the message of ToMatchAriaSnapshotAsync is \"Page expected to match Aria snapshot '...'\\nBut was: 'System.Dynamic.ExpandoObject' \\nCall log: ...\", without a diff of the two snapshots")]
     public async Task TopLevelDeepEqual(IPage page)
     {
         await page.SetContentAsync(@"
@@ -1079,7 +1079,7 @@ Call log:
     }
 
     [UpstreamTest("AR-141 treat bad regex as a string")]
-    [Fixme("dotnet: the message of ToMatchAriaSnapshotAsync is \"Page expected to match Aria snapshot '...'\\nBut was: 'System.Dynamic.ExpandoObject' \\nCall log: ...\", without a diff of the two snapshots")]
+    [LocalFixme("dotnet: the message of ToMatchAriaSnapshotAsync is \"Page expected to match Aria snapshot '...'\\nBut was: 'System.Dynamic.ExpandoObject' \\nCall log: ...\", without a diff of the two snapshots")]
     public async Task TreatBadRegexAsAString(IPage page)
     {
         await page.SetContentAsync("<a href=\"/foo\">Log in</a>");
@@ -1093,7 +1093,7 @@ Call log:
     }
 
     [UpstreamTest("AR-142 invalid attribute")]
-    [Fixme("dotnet: the message of ToMatchAriaSnapshotAsync is \"Page expected to match Aria snapshot '...'\\nBut was: 'System.Dynamic.ExpandoObject' \\nCall log: ...\", without the received snapshot")]
+    [LocalFixme("dotnet: the message of ToMatchAriaSnapshotAsync is \"Page expected to match Aria snapshot '...'\\nBut was: 'System.Dynamic.ExpandoObject' \\nCall log: ...\", without the received snapshot")]
     public async Task InvalidAttribute(IPage page)
     {
         await page.SetContentAsync(@"

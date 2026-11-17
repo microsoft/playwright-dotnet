@@ -35,8 +35,8 @@ public class PageGotoTests
     [UpstreamTest("NA-002 should work with file URL")]
     public async Task ShouldWorkWithFileURL(IPage page, Func<string, string> asset, bool isAndroid, string mode, string channel)
     {
-        It.Skip(isAndroid, "No files on Android");
-        It.Skip(channel == "webkit-wsl", "separate filesystem on wsl");
+        Info.Skip(isAndroid, "No files on Android");
+        Info.Skip(channel == "webkit-wsl", "separate filesystem on wsl");
 
         var fileurl = new Uri(asset("empty.html")).AbsoluteUri;
         await page.GotoAsync(fileurl);
@@ -47,8 +47,8 @@ public class PageGotoTests
     [UpstreamTest("NA-003 should navigate from file URL to about:blank")]
     public async Task ShouldNavigateFromFileURLToAboutBlank(IPage page, Func<string, string> asset, bool isAndroid, string channel)
     {
-        It.Skip(isAndroid, "No files on Android");
-        It.Skip(channel == "webkit-wsl", "separate filesystem on wsl");
+        Info.Skip(isAndroid, "No files on Android");
+        Info.Skip(channel == "webkit-wsl", "separate filesystem on wsl");
 
         await page.GotoAsync(new Uri(asset("empty.html")).AbsoluteUri);
         await page.GotoAsync("about:blank");
@@ -57,8 +57,8 @@ public class PageGotoTests
     [UpstreamTest("NA-004 should work with file URL with subframes")]
     public async Task ShouldWorkWithFileURLWithSubframes(IPage page, Func<string, string> asset, bool isAndroid, string mode, string channel)
     {
-        It.Skip(isAndroid, "No files on Android");
-        It.Skip(channel == "webkit-wsl", "separate filesystem on wsl");
+        Info.Skip(isAndroid, "No files on Android");
+        Info.Skip(channel == "webkit-wsl", "separate filesystem on wsl");
 
         var fileurl = new Uri(asset("frames/two-frames.html")).AbsoluteUri;
         await page.GotoAsync(fileurl);
@@ -69,7 +69,7 @@ public class PageGotoTests
     [UpstreamTest("NA-005 should use http for no protocol")]
     public async Task ShouldUseHttpForNoProtocol(IPage page, Server server, bool isAndroid)
     {
-        It.Skip(isAndroid);
+        Info.Skip(isAndroid);
 
         await page.GotoAsync(server.EmptyPage.Substring("http://".Length));
         Assert.That(page.Url, Is.EqualTo(server.EmptyPage));
@@ -379,7 +379,7 @@ public class PageGotoTests
     [UpstreamTest("NA-020 should fail when server returns 204")]
     public async Task ShouldFailWhenServerReturns204(IPage page, Server server, string browserName, bool isLinux)
     {
-        It.Fixme(browserName == "webkit" && isLinux, "Regressed in https://github.com/microsoft/playwright-browsers/pull/1297");
+        Info.Fixme(browserName == "webkit" && isLinux, "Regressed in https://github.com/microsoft/playwright-browsers/pull/1297");
         // WebKit just loads an empty page.
         server.SetRoute("/empty.html", (req, res) =>
         {
@@ -477,7 +477,7 @@ public class PageGotoTests
     [UpstreamTest("NA-029 should fail when main resources failed to load")]
     public async Task ShouldFailWhenMainResourcesFailedToLoad(IPage page, string browserName, bool isWindows, string mode, string channel)
     {
-        It.Skip(channel == "webkit-wsl", "Networking mode mirrored ends up stalling connections rather than terminating them, see https://github.com/microsoft/WSL/issues/10855.");
+        Info.Skip(channel == "webkit-wsl", "Networking mode mirrored ends up stalling connections rather than terminating them, see https://github.com/microsoft/WSL/issues/10855.");
         Exception error = null;
         error = await Catch(() => page.GotoAsync("http://localhost:44123/non-existing-url"));
         if (browserName == "chromium")
@@ -499,7 +499,7 @@ public class PageGotoTests
     }
 
     [UpstreamTest("NA-030 should fail when exceeding maximum navigation timeout")]
-    [Fixme("dotnet: the message is 'Timeout 1ms exceeded.', without the 'page.goto: ' prefix of the call")]
+    [LocalFixme("dotnet: the message is 'Timeout 1ms exceeded.', without the 'page.goto: ' prefix of the call")]
     public async Task ShouldFailWhenExceedingMaximumNavigationTimeout(IPage page, Server server, IPlaywright playwright)
     {
         // Hang for request to the empty.html
@@ -512,10 +512,10 @@ public class PageGotoTests
     }
 
     [UpstreamTest("NA-031 should fail when exceeding default maximum navigation timeout")]
-    [Fixme("dotnet: the message is 'Timeout 1ms exceeded.', without the 'page.goto: ' prefix of the call")]
+    [LocalFixme("dotnet: the message is 'Timeout 1ms exceeded.', without the 'page.goto: ' prefix of the call")]
     public async Task ShouldFailWhenExceedingDefaultMaximumNavigationTimeout(IPage page, Server server, IPlaywright playwright, bool isAndroid, bool isElectron)
     {
-        It.Skip(isAndroid || isElectron, "No context per test");
+        Info.Skip(isAndroid || isElectron, "No context per test");
 
         // Hang for request to the empty.html
         server.SetRoute("/empty.html", (req, res) => { });
@@ -529,10 +529,10 @@ public class PageGotoTests
     }
 
     [UpstreamTest("NA-032 should fail when exceeding browser context navigation timeout")]
-    [Fixme("dotnet: the message is 'Timeout 2ms exceeded.', without the 'page.goto: ' prefix of the call")]
+    [LocalFixme("dotnet: the message is 'Timeout 2ms exceeded.', without the 'page.goto: ' prefix of the call")]
     public async Task ShouldFailWhenExceedingBrowserContextNavigationTimeout(IPage page, Server server, IPlaywright playwright, bool isAndroid, bool isElectron)
     {
-        It.Skip(isAndroid || isElectron, "No context per test");
+        Info.Skip(isAndroid || isElectron, "No context per test");
 
         // Hang for request to the empty.html
         server.SetRoute("/empty.html", (req, res) => { });
@@ -545,7 +545,7 @@ public class PageGotoTests
     }
 
     [UpstreamTest("NA-035 should prioritize default navigation timeout over default timeout")]
-    [Fixme("dotnet: the message is 'Timeout 1ms exceeded.', without the 'page.goto: ' prefix of the call")]
+    [LocalFixme("dotnet: the message is 'Timeout 1ms exceeded.', without the 'page.goto: ' prefix of the call")]
     public async Task ShouldPrioritizeDefaultNavigationTimeoutOverDefaultTimeout(IPage page, Server server, IPlaywright playwright)
     {
         // Hang for request to the empty.html
@@ -577,7 +577,7 @@ public class PageGotoTests
     }
 
     [UpstreamTest("NA-037 should fail when replaced by another navigation")]
-    [Fixme("dotnet: the message is 'Navigation to \"http://localhost:<port>/empty.html\" is interrupted by another navigation to \"http://localhost:<port>/one-style.html\"', without the 'page.goto: ' prefix of the call", Browsers = "firefox,webkit")]
+    [LocalFixme("dotnet: the message is 'Navigation to \"http://localhost:<port>/empty.html\" is interrupted by another navigation to \"http://localhost:<port>/one-style.html\"', without the 'page.goto: ' prefix of the call (only in firefox and webkit)")]
     public async Task ShouldFailWhenReplacedByAnotherNavigation(IPage page, Server server, string browserName, bool isBidi)
     {
         Task<IResponse> anotherPromise = null;
@@ -611,10 +611,10 @@ public class PageGotoTests
     }
 
     [UpstreamTest("NA-038 js redirect overrides url bar navigation ")]
-    [Fixme("dotnet: the message is 'Navigation to \"http://localhost:<port>/b\" is interrupted by another navigation to \"http://localhost:<port>/c\"', without the 'page.goto: ' prefix of the call", Browsers = "webkit")]
+    [LocalFixme("dotnet: the message is 'Navigation to \"http://localhost:<port>/b\" is interrupted by another navigation to \"http://localhost:<port>/c\"', without the 'page.goto: ' prefix of the call (only in webkit)")]
     public async Task JsRedirectOverridesUrlBarNavigation(IPage page, Server server, string browserName, string trace)
     {
-        It.Skip(trace == "on", "tracing waits for snapshot that never arrives because pending navigation");
+        Info.Skip(trace == "on", "tracing waits for snapshot that never arrives because pending navigation");
 
         server.SetRoute("/a", (req, res) =>
         {
@@ -674,7 +674,7 @@ public class PageGotoTests
     [UpstreamTest("NA-039 should succeed on url bar navigation when there is pending navigation")]
     public async Task ShouldSucceedOnUrlBarNavigationWhenThereIsPendingNavigation(IPage page, Server server, string browserName)
     {
-        It.Skip(Environment.GetEnvironmentVariable("PW_CLOCK") == "frozen");
+        Info.Skip(Environment.GetEnvironmentVariable("PW_CLOCK") == "frozen");
         server.SetRoute("/a", (req, res) =>
         {
             res.WriteHead(200, new() { ["content-type"] = "text/html" });
@@ -798,8 +798,8 @@ public class PageGotoTests
     [UpstreamTest("NA-051 should be able to navigate to a page controlled by service worker")]
     public async Task ShouldBeAbleToNavigateToAPageControlledByServiceWorker(IPage page, Server server, bool isElectron, bool isAndroid)
     {
-        It.Skip(isElectron);
-        It.Skip(isAndroid, "Service workers need a secure context, but the Android test server is reached over http://10.0.2.2");
+        Info.Skip(isElectron);
+        Info.Skip(isAndroid, "Service workers need a secure context, but the Android test server is reached over http://10.0.2.2");
 
         const string transaction = @"async function transaction(value) {
     const db = await new Promise((resolve, reject) => {
@@ -911,7 +911,7 @@ public class PageGotoTests
     [UpstreamTest("NA-057 should work with lazy loading iframes")]
     public async Task ShouldWorkWithLazyLoadingIframes(IPage page, Server server, bool isAndroid)
     {
-        It.Fixme(isAndroid);
+        Info.Fixme(isAndroid);
 
         await page.GotoAsync(server.Prefix + "/frames/lazy-frame.html");
         Assert.That(page.Frames.Count, Is.EqualTo(2));
@@ -920,8 +920,8 @@ public class PageGotoTests
     [UpstreamTest("NA-058 should report raw buffer for main resource")]
     public async Task ShouldReportRawBufferForMainResource(IPage page, Server server, string browserName, string platform, string channel)
     {
-        It.Fixme(browserName == "chromium", "Chromium sends main resource as text");
-        It.Fixme(browserName == "webkit" && platform == "win32" && channel != "webkit-wsl", "Same here");
+        Info.Fixme(browserName == "chromium", "Chromium sends main resource as text");
+        Info.Fixme(browserName == "webkit" && platform == "win32" && channel != "webkit-wsl", "Same here");
 
         server.SetRoute("/empty.html", (req, res) =>
         {
@@ -991,8 +991,8 @@ public class PageGotoTests
     [UpstreamTest("NA-062 should not resolve goto upon window.stop()")]
     public async Task ShouldNotResolveGotoUponWindowStop(string browserName, IPage page, Server server, bool isBidi)
     {
-        It.Fixme(browserName == "firefox" && !isBidi, "load/domcontentloaded events are flaky");
-        It.Skip(Environment.GetEnvironmentVariable("PW_CLOCK") == "frozen");
+        Info.Fixme(browserName == "firefox" && !isBidi, "load/domcontentloaded events are flaky");
+        Info.Skip(Environment.GetEnvironmentVariable("PW_CLOCK") == "frozen");
 
         ServerResponse response = null;
         server.SetRoute("/module.js", (req, res) =>
@@ -1018,7 +1018,7 @@ public class PageGotoTests
     [UpstreamTest("NA-063 should return from goto if new navigation is started")]
     public async Task ShouldReturnFromGotoIfNewNavigationIsStarted(IPage page, Server server, string browserName, bool isAndroid)
     {
-        It.Fixme(isAndroid);
+        Info.Fixme(isAndroid);
         server.SetRoute("/slow.js", (req, res) => { });
         var finished = false;
         async Task<IResponse> Navigation()
@@ -1051,7 +1051,7 @@ public class PageGotoTests
     [UpstreamTest("NA-065 should wait for load when iframe attaches and detaches")]
     public async Task ShouldWaitForLoadWhenIframeAttachesAndDetaches(IPage page, Server server)
     {
-        It.Skip(Environment.GetEnvironmentVariable("PW_CLOCK") == "frozen");
+        Info.Skip(Environment.GetEnvironmentVariable("PW_CLOCK") == "frozen");
         server.SetRoute("/empty.html", (req, res) =>
         {
             res.WriteHead(200, new() { ["content-type"] = "text/html" });

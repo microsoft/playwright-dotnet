@@ -122,8 +122,8 @@ public class PageNetworkRequestTests
     [UpstreamTest("NE-007 should get the same headers as the server")]
     public async Task ShouldGetTheSameHeadersAsTheServer(IPage page, Server server, string browserName, string platform, bool isElectron, int browserMajorVersion, string channel)
     {
-        It.Skip(isElectron && browserMajorVersion < 99, "This needs Chromium >= 99");
-        It.Fixme(browserName == "webkit" && platform == "win32" && channel != "webkit-wsl", "Curl does not show accept-encoding and accept-language");
+        Info.Skip(isElectron && browserMajorVersion < 99, "This needs Chromium >= 99");
+        Info.Fixme(browserName == "webkit" && platform == "win32" && channel != "webkit-wsl", "Curl does not show accept-encoding and accept-language");
         ServerRequest serverRequest = null;
         server.SetRoute("/empty.html", (request, response) =>
         {
@@ -138,8 +138,8 @@ public class PageNetworkRequestTests
     [UpstreamTest("NE-008 should not return allHeaders() until they are available")]
     public async Task ShouldNotReturnAllHeadersUntilTheyAreAvailable(IPage page, Server server, string browserName, string platform, bool isElectron, int browserMajorVersion, string channel)
     {
-        It.Skip(isElectron && browserMajorVersion < 99, "This needs Chromium >= 99");
-        It.Fixme(browserName == "webkit" && platform == "win32" && channel != "webkit-wsl", "Curl does not show accept-encoding and accept-language");
+        Info.Skip(isElectron && browserMajorVersion < 99, "This needs Chromium >= 99");
+        Info.Fixme(browserName == "webkit" && platform == "win32" && channel != "webkit-wsl", "Curl does not show accept-encoding and accept-language");
 
         Task<Dictionary<string, string>> requestHeadersPromise = null;
         page.Request += (_, request) => requestHeadersPromise = request.AllHeadersAsync();
@@ -166,8 +166,8 @@ public class PageNetworkRequestTests
     [UpstreamTest("NE-009 should get the same headers as the server CORS")]
     public async Task ShouldGetTheSameHeadersAsTheServerCORS(IPage page, Server server, string browserName, string platform, bool isElectron, int browserMajorVersion, string channel)
     {
-        It.Skip(isElectron && browserMajorVersion < 99, "This needs Chromium >= 99");
-        It.Fixme(browserName == "webkit" && platform == "win32" && channel != "webkit-wsl", "Curl does not show accept-encoding and accept-language");
+        Info.Skip(isElectron && browserMajorVersion < 99, "This needs Chromium >= 99");
+        Info.Fixme(browserName == "webkit" && platform == "win32" && channel != "webkit-wsl", "Curl does not show accept-encoding and accept-language");
 
         await page.GotoAsync(server.Prefix + "/empty.html");
         ServerRequest serverRequest = null;
@@ -191,7 +191,7 @@ public class PageNetworkRequestTests
     [UpstreamTest("NE-010 should not get preflight CORS requests when intercepting")]
     public async Task ShouldNotGetPreflightCORSRequestsWhenIntercepting(IPage page, Server server, string browserName, bool isAndroid, bool isBidi)
     {
-        It.Fixme(isAndroid, "Playwright does not get CORS pre-flight on Android");
+        Info.Fixme(isAndroid, "Playwright does not get CORS pre-flight on Android");
         await page.GotoAsync(server.Prefix + "/empty.html");
 
         var requests = new List<string>();
@@ -393,8 +393,8 @@ public class PageNetworkRequestTests
     [UpstreamTest("NE-020 should return multipart/form-data")]
     public async Task ShouldReturnMultipartFormData(IPage page, Server server, string browserName, int browserMajorVersion)
     {
-        It.Fixme(browserName == "webkit", "File content is missing in WebKit");
-        It.Skip(browserName == "chromium" && browserMajorVersion < 126, "Requires a recent enough protocol");
+        Info.Fixme(browserName == "webkit", "File content is missing in WebKit");
+        Info.Skip(browserName == "chromium" && browserMajorVersion < 126, "Requires a recent enough protocol");
 
         await page.GotoAsync(server.EmptyPage);
         server.SetRoute("/post", (req, res) => res.End());
@@ -472,7 +472,7 @@ public class PageNetworkRequestTests
     [UpstreamTest("NE-024 should report raw headers")]
     public async Task ShouldReportRawHeaders(IPage page, Server server, string browserName, string platform, bool isElectron, int browserMajorVersion, string channel)
     {
-        It.Skip(isElectron && browserMajorVersion < 99, "This needs Chromium >= 99");
+        Info.Skip(isElectron && browserMajorVersion < 99, "This needs Chromium >= 99");
 
         List<Header> expectedHeaders = null;
         server.SetRoute("/headers", (req, res) =>
@@ -533,7 +533,7 @@ public class PageNetworkRequestTests
     [UpstreamTest("NE-025 should report raw response headers in redirects")]
     public async Task ShouldReportRawResponseHeadersInRedirects(IPage page, Server server, string browserName)
     {
-        It.Skip(browserName == "webkit", "WebKit won't give us raw headers for redirects");
+        Info.Skip(browserName == "webkit", "WebKit won't give us raw headers for redirects");
         server.SetExtraHeaders("/redirect/1.html", new() { ["sec-test-header"] = "1.html" });
         server.SetExtraHeaders("/redirect/2.html", new() { ["sec-test-header"] = "2.html" });
         server.SetExtraHeaders("/empty.html", new() { ["sec-test-header"] = "empty.html" });
@@ -561,7 +561,7 @@ public class PageNetworkRequestTests
     [UpstreamTest("NE-026 should report all cookies in one header")]
     public async Task ShouldReportAllCookiesInOneHeader(IPage page, Server server, bool isElectron, int browserMajorVersion)
     {
-        It.Skip(isElectron && browserMajorVersion < 99, "This needs Chromium >= 99");
+        Info.Skip(isElectron && browserMajorVersion < 99, "This needs Chromium >= 99");
 
         var expectedHeaders = new Dictionary<string, string>();
         server.SetRoute("/headers", (req, res) =>
@@ -614,7 +614,7 @@ public class PageNetworkRequestTests
     [UpstreamTest("NE-028 page.reload return 304 status code")]
     public async Task PageReloadReturn304StatusCode(IPage page, Server server, string browserName, bool isBidi)
     {
-        It.Fixme(browserName == "firefox" && !isBidi, "Does not send second request");
+        Info.Fixme(browserName == "firefox" && !isBidi, "Does not send second request");
         var requestNumber = 0;
         server.SetRoute("/test.html", (req, res) =>
         {
@@ -657,7 +657,7 @@ public class PageNetworkRequestTests
     [UpstreamTest("NE-029 should handle mixed-content blocked requests")]
     public async Task ShouldHandleMixedContentBlockedRequests(IPage page, Func<string, string> asset, string browserName)
     {
-        It.Skip(browserName != "chromium", "FF and WK actually succeed with the request, and block afterwards");
+        Info.Skip(browserName != "chromium", "FF and WK actually succeed with the request, and block afterwards");
 
         await page.RouteAsync("**/mixedcontent.html", route =>
         {

@@ -24,7 +24,7 @@ public class PdfTests
     [UpstreamTest("PD-001 should be able to save file")]
     public async Task ShouldBeAbleToSaveFile(ContextFactory contextFactory, string browserName, TestInfo testInfo)
     {
-        It.Skip(browserName != "chromium", "Printing to pdf is currently only supported in chromium.");
+        Info.Skip(browserName != "chromium", "Printing to pdf is currently only supported in chromium.");
         var context = await contextFactory();
         var page = await context.NewPageAsync();
         var outputFile = testInfo.OutputPath("output.pdf");
@@ -35,7 +35,7 @@ public class PdfTests
     [UpstreamTest("PD-002 should be able to generate outline")]
     public async Task ShouldBeAbleToGenerateOutline(ContextFactory contextFactory, Server server, string browserName, TestInfo testInfo)
     {
-        It.Skip(browserName != "chromium", "Printing to pdf is currently only supported in chromium.");
+        Info.Skip(browserName != "chromium", "Printing to pdf is currently only supported in chromium.");
         var context = await contextFactory(new()
         {
             BaseURL = server.Prefix,

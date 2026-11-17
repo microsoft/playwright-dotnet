@@ -46,7 +46,7 @@ public class PageClickScrollTests
     [UpstreamTest("CL-095 should scroll into view display:contents")]
     public async Task ShouldScrollIntoViewDisplayContents(IPage page, string browserName, int browserMajorVersion)
     {
-        It.Skip(browserName == "chromium" && browserMajorVersion < 105, "Needs https://chromium-review.googlesource.com/c/chromium/src/+/3758670");
+        Info.Skip(browserName == "chromium" && browserMajorVersion < 105, "Needs https://chromium-review.googlesource.com/c/chromium/src/+/3758670");
 
         await page.SetContentAsync(@"
     <div style=""background:red;height:2000px"">filler</div>
@@ -62,7 +62,7 @@ public class PageClickScrollTests
     [UpstreamTest("CL-096 should scroll into view display:contents with a child")]
     public async Task ShouldScrollIntoViewDisplayContentsWithAChild(IPage page, string browserName, int browserMajorVersion)
     {
-        It.Skip(browserName == "chromium" && browserMajorVersion < 105, "Needs https://chromium-review.googlesource.com/c/chromium/src/+/3758670");
+        Info.Skip(browserName == "chromium" && browserMajorVersion < 105, "Needs https://chromium-review.googlesource.com/c/chromium/src/+/3758670");
 
         await page.SetContentAsync(@"
     <div style=""background:red;height:2000px"">filler</div>
@@ -76,7 +76,7 @@ public class PageClickScrollTests
     [UpstreamTest("CL-097 should scroll into view display:contents with position")]
     public async Task ShouldScrollIntoViewDisplayContentsWithPosition(IPage page, string browserName)
     {
-        It.Fixme(browserName == "chromium", "DOM.getBoxModel does not work for display:contents");
+        Info.Fixme(browserName == "chromium", "DOM.getBoxModel does not work for display:contents");
 
         await page.SetContentAsync(@"
     <div style=""background:red;height:2000px"">filler</div>
@@ -98,10 +98,10 @@ public class PageClickScrollTests
     }
 
     [UpstreamTest("CL-099 should scroll into view span element")]
-    [Fixme("dotnet: Locator.WithElementAsync makes a negative timeout from the default timeout 0, and the call passes only when it ends before the timer of the driver")]
+    [LocalFixme("dotnet: Locator.WithElementAsync makes a negative timeout from the default timeout 0, and the call passes only when it ends before the timer of the driver")]
     public async Task ShouldScrollIntoViewSpanElement(IPage page, bool isAndroid)
     {
-        It.Fixme(isAndroid);
+        Info.Fixme(isAndroid);
         await page.SetContentAsync(@"
     <div id=big style=""height: 10000px;""></div>
     <span id=small>foo</span>
@@ -113,7 +113,7 @@ public class PageClickScrollTests
     [UpstreamTest("CL-100 should scroll into view element in iframe")]
     public async Task ShouldScrollIntoViewElementInIframe(IPage page, bool isAndroid, Server server, string browserName)
     {
-        It.Fixme(isAndroid);
+        Info.Fixme(isAndroid);
         await page.GotoAsync(server.EmptyPage);
         await page.SetContentAsync($@"
     <div id=big style=""height: 10000px;""></div>

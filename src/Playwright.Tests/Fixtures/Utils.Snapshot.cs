@@ -22,6 +22,8 @@
  * SOFTWARE.
  */
 
+using NUnit.Framework.Internal;
+
 namespace Microsoft.Playwright.Tests.Fixtures;
 
 /// <summary>The options of <c>toMatchSnapshot</c> and <c>comparePNGs</c>, <c>ImageComparatorOptions</c> upstream.</summary>
@@ -44,20 +46,14 @@ public sealed class SnapshotOptions
 public static partial class Utils
 {
     /// <summary>
-    /// <c>expect(buffer).toMatchSnapshot('x.png', options)</c>. The golden file is <c>It.Info().SnapshotPath(name)</c>,
-    /// and its extension picks the comparison: images by pixels, text by lines, anything else by bytes.
+    /// <c>expect(buffer).toMatchSnapshot('x.png', options)</c>. The golden file is <c>Info.SnapshotPath(name)</c>,
+    /// an image: the port does not compare snapshots of text or of other files.
     /// The port never writes a golden file, so a missing one is a failure.
     /// </summary>
     public static void ExpectToMatchSnapshot(byte[] actual, string name, SnapshotOptions options = null) => MatchSnapshot(actual, name, options, false);
 
-    /// <summary><c>expect(text).toMatchSnapshot('x.txt')</c>.</summary>
-    public static void ExpectToMatchSnapshot(string actual, string name) => MatchSnapshot(actual, name, null, false);
-
     /// <summary><c>expect(buffer).not.toMatchSnapshot('x.png', options)</c>.</summary>
     public static void ExpectNotToMatchSnapshot(byte[] actual, string name, SnapshotOptions options = null) => MatchSnapshot(actual, name, options, true);
-
-    /// <summary><c>expect(text).not.toMatchSnapshot('x.txt')</c>.</summary>
-    public static void ExpectNotToMatchSnapshot(string actual, string name) => MatchSnapshot(actual, name, null, true);
 
     /// <summary>
     /// <c>comparePNGs(actual, expected, options)</c>: null when the images match. The comparator is
@@ -74,7 +70,7 @@ public static partial class Utils
         });
     }
 
-    private static void MatchSnapshot(object actual, string name, SnapshotOptions options, bool isNot)
+    private static void MatchSnapshot(byte[] actual, string name, SnapshotOptions options, bool isNot)
     {
         options ??= new();
         if (options.MaxDiffPixels < 0)
@@ -86,10 +82,9 @@ public static partial class Utils
             throw new ArgumentException("`maxDiffPixelRatio` option value must be between 0 and 1");
         }
 
-        var info = It.Info();
+        var info = ((UpstreamPlaywrightTest)TestExecutionContext.CurrentContext.TestObject).Info;
         var expectedPath = info.SnapshotPath(name);
-        var mimeType = ImageComparator.GetMimeTypeForPath(expectedPath) ?? "application/octet-stream";
-        var comparator = ImageComparator.GetComparator(mimeType);
+        var mimeType = ImageComparator.GetMimeTypeForPath(expectedPath) ?? throw new NotSupportedException($"{name} is not an image: the port compares snapshots of images only");
         var hasSnapshot = File.Exists(expectedPath);
 
         if (isNot)
@@ -98,10 +93,9 @@ public static partial class Utils
             {
                 Assert.Fail($"A snapshot doesn't exist at {expectedPath}.");
             }
-            if (comparator(actual, File.ReadAllBytes(expectedPath), options) == null)
+            if (ImageComparator.CompareImages(mimeType, actual, File.ReadAllBytes(expectedPath), options) == null)
             {
-                var kind = mimeType.StartsWith("image/", StringComparison.Ordinal) ? "Screenshot" : "Snapshot";
-                Assert.Fail($"{kind} comparison failed:\n\n  Expected result should be different from the actual one.");
+                Assert.Fail("Screenshot comparison failed:\n\n  Expected result should be different from the actual one.");
             }
             return;
         }
@@ -114,7 +108,7 @@ public static partial class Utils
         }
 
         var expected = File.ReadAllBytes(expectedPath);
-        var result = comparator(actual, expected, options);
+        var result = ImageComparator.CompareImages(mimeType, actual, expected, options);
         if (result == null)
         {
             return;
@@ -123,7 +117,7 @@ public static partial class Utils
         // Upstream copies the expectation next to the actual one as well.
         WriteSnapshot(SnapshotOutputPath(info, name, "-expected"), expected);
         WriteSnapshot(actualPath, actual);
-        var message = $"expect({(actual is string ? "string" : "Buffer")}).toMatchSnapshot(expected) failed\n\n"
+        var message = "expect(Buffer).toMatchSnapshot(expected) failed\n\n"
             + string.Join("\n", result.ErrorMessage.Split('\n').Select(line => line.Length > 0 ? "  " + line : line))
             + $"\n\n  Snapshot: {name}\n\n    Expected: {expectedPath}\n    Received: {actualPath}\n";
         if (result.Diff != null)
@@ -144,15 +138,5 @@ public static partial class Utils
         return path;
     }
 
-    private static void WriteSnapshot(string path, object content)
-    {
-        if (content is string text)
-        {
-            File.WriteAllText(path, text);
-        }
-        else if (content is byte[] bytes)
-        {
-            File.WriteAllBytes(path, bytes);
-        }
-    }
+    private static void WriteSnapshot(string path, byte[] content) => File.WriteAllBytes(path, content);
 }

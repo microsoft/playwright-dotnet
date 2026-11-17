@@ -196,7 +196,7 @@ public class SelectorsMiscTests
     [UpstreamTest("SE-141 should work with layout selectors")]
     public async Task ShouldWorkWithLayoutSelectors(IPage page, string trace)
     {
-        It.Skip(trace == "on");
+        Info.Skip(trace == "on");
 
         /*
 
@@ -363,7 +363,7 @@ public class SelectorsMiscTests
     }
 
     [UpstreamTest("SE-145 should print original xpath in error")]
-    [Fixme("dotnet: the call log has Locator(\"//*[contains(@Class, 'foo']\"), upstream expects locator('//*[contains(@Class, \\'foo\\']')")]
+    [LocalFixme("dotnet: the call log has Locator(\"//*[contains(@Class, 'foo']\"), upstream expects locator('//*[contains(@Class, \\'foo\\']')")]
     public async Task ShouldPrintOriginalXpathInError(IPage page, string browserName)
     {
         var error = await Catch(() => page.Locator("//*[contains(@Class, 'foo']").IsVisibleAsync());

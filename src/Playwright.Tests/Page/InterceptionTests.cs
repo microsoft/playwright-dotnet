@@ -44,7 +44,7 @@ public class InterceptionTests
     [UpstreamTest("RO-152 should intercept after a service worker")]
     public async Task ShouldInterceptAfterAServiceWorker(IPage page, Server server, string browserName, bool isAndroid, bool isBidi, bool isFrozenWebkit)
     {
-        It.Skip(isAndroid);
+        Info.Skip(isAndroid);
 
         await page.GotoAsync(server.Prefix + "/serviceworkers/fetchdummy/sw.html");
         await page.EvaluateAsync("() => window['activationPromise']");
@@ -101,7 +101,7 @@ public class InterceptionTests
     }
 
     [UpstreamTest("RO-155 should throw on page.route with invalid glob")]
-    [Fixme("dotnet: page.RouteAsync(\"http://*/foo{\", handler) does not throw, the glob is not checked; upstream throws \"unmatched '{'\"")]
+    [LocalFixme("dotnet: page.RouteAsync(\"http://*/foo{\", handler) does not throw, the glob is not checked; upstream throws \"unmatched '{'\"")]
     public async Task ShouldThrowOnPageRouteWithInvalidGlob(IPage page)
     {
         var error = await ThrowsAsync<PlaywrightException>(() => page.RouteAsync("http://*/foo{", route => route.ContinueAsync()));
@@ -111,7 +111,7 @@ public class InterceptionTests
     [UpstreamTest("RO-156 should intercept by glob")]
     public async Task ShouldInterceptByGlob(IPage page, Server server, bool isAndroid)
     {
-        It.Skip(isAndroid);
+        Info.Skip(isAndroid);
 
         await page.GotoAsync(server.EmptyPage);
         await page.RouteAsync("http://localhos**?*oo", async route =>
@@ -129,7 +129,7 @@ public class InterceptionTests
     [UpstreamTest("RO-157 should intercept network activity from worker")]
     public async Task ShouldInterceptNetworkActivityFromWorker(IPage page, Server server, bool isAndroid)
     {
-        It.Skip(isAndroid);
+        Info.Skip(isAndroid);
 
         await page.GotoAsync(server.EmptyPage);
         server.SetRoute("/data_for_worker", (req, res) => res.End("failed to intercept"));
@@ -153,8 +153,8 @@ public class InterceptionTests
     [UpstreamTest("RO-158 should intercept worker requests when enabled after worker creation")]
     public async Task ShouldInterceptWorkerRequestsWhenEnabledAfterWorkerCreation(IPage page, Server server, bool isAndroid, string browserName, int browserMajorVersion)
     {
-        It.Skip(isAndroid);
-        It.Skip(browserName == "chromium" && browserMajorVersion < 130, "fixed in Chromium 130");
+        Info.Skip(isAndroid);
+        Info.Skip(browserName == "chromium" && browserMajorVersion < 130, "fixed in Chromium 130");
 
         await page.GotoAsync(server.EmptyPage);
         server.SetRoute("/data_for_worker", (req, res) => res.End("failed to intercept"));
@@ -186,7 +186,7 @@ public class InterceptionTests
     [UpstreamTest("RO-159 should intercept network activity from worker 2")]
     public async Task ShouldInterceptNetworkActivityFromWorker2(IPage page, Server server, bool isAndroid)
     {
-        It.Skip(isAndroid);
+        Info.Skip(isAndroid);
 
         var url = server.Prefix + "/worker/worker.js";
         await page.RouteAsync(url, route =>
@@ -240,7 +240,7 @@ public class InterceptionTests
     [UpstreamTest("RO-164 should intercept blob url requests")]
     public async Task ShouldInterceptBlobUrlRequests(IPage page, Server server, string browserName)
     {
-        It.Skip(browserName != "webkit");
+        Info.Skip(browserName != "webkit");
         await page.GotoAsync(server.EmptyPage);
         await page.RouteAsync("**/*", route =>
         {

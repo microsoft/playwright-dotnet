@@ -679,7 +679,7 @@ public class BrowsercontextHarTests
     }
 
     [UpstreamTest("HA-098 page.unrouteAll should stop page.routeFromHAR")]
-    [Fixme("dotnet: Page.UnrouteAllAsync with Behavior = Wait does not send setNetworkInterceptionPatterns, as the Node.js client and BrowserContext.UnrouteAllAsync do (Page.UnrouteInternalAsync returns after it stops the handlers); the GotoAsync that follows fails with 'Navigation to \"http://localhost:<port>/empty.html\" is interrupted by another navigation to \"chrome-error://chromewebdata/\"'", Browsers = "chromium")]
+    [LocalFixme("dotnet: Page.UnrouteAllAsync with Behavior = Wait does not send setNetworkInterceptionPatterns, as the Node.js client and BrowserContext.UnrouteAllAsync do (Page.UnrouteInternalAsync returns after it stops the handlers); the GotoAsync that follows fails with 'Navigation to \"http://localhost:<port>/empty.html\" is interrupted by another navigation to \"chrome-error://chromewebdata/\"' (only in chromium)")]
     public async Task PageUnrouteAllShouldStopPageRouteFromHAR(ContextFactory contextFactory, Server server, Func<string, string> asset, TestInfo testInfo)
     {
         var harPath = asset("har-fulfill.har");
@@ -712,7 +712,7 @@ public class BrowsercontextHarTests
     [UpstreamTest("HA-100 should ignore aborted requests")]
     public async Task ShouldIgnoreAbortedRequests(ContextFactory contextFactory, Server server)
     {
-        var path = It.Info().OutputPath("test.har");
+        var path = Info.OutputPath("test.har");
         {
             // .NET: the parameter of the handler is `req` upstream, which is a variable of the block here.
             server.SetRoute("/x", (req1, res) => { req1.Destroy(); });

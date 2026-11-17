@@ -26,7 +26,7 @@ public class BrowsercontextDeviceTests
     public class Device
     {
         [BeforeEach]
-        public static void Skip(string browserName, bool isBidi) => It.Skip(browserName == "firefox" && !isBidi);
+        public static void Skip(string browserName, bool isBidi) => Info.Skip(browserName == "firefox" && !isBidi);
 
         [UpstreamTest("DV-001 should work @smoke")]
         public async Task ShouldWork(IPlaywright playwright, IBrowser browser, Server server, BrowserNewContextOptions contextOptions)
@@ -98,7 +98,7 @@ public class BrowsercontextDeviceTests
         [UpstreamTest("DV-005 should reset scroll top after a navigation")]
         public async Task ShouldResetScrollTopAfterANavigation(Server server, ContextFactory contextFactory, IPlaywright playwright, string browserName)
         {
-            It.Skip(browserName == "webkit");
+            Info.Skip(browserName == "webkit");
 
             var device = playwright.Devices["iPhone 6"];
             var context = await contextFactory(device);
@@ -114,7 +114,7 @@ public class BrowsercontextDeviceTests
         [UpstreamTest("DV-006 should scroll to a precise position with mobile scale")]
         public async Task ShouldScrollToAPrecisePositionWithMobileScale(Server server, ContextFactory contextFactory, IPlaywright playwright, string browserName)
         {
-            It.Skip(browserName == "webkit");
+            Info.Skip(browserName == "webkit");
 
             var device = playwright.Devices["iPhone 6"];
             var context = await contextFactory(device);

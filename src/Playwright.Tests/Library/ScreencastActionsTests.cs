@@ -26,7 +26,7 @@ namespace Microsoft.Playwright.Tests.Library;
 public class ScreencastActionsTests
 {
     [BeforeEach]
-    public static void Skip(string mode) => It.Skip(mode != "default", "Annotations use an open shadow root only in default mode");
+    public static void Skip(string mode) => Info.Skip(mode != "default", "Annotations use an open shadow root only in default mode");
 
     private static readonly ScreencastActionStyle style = new()
     {
@@ -35,7 +35,7 @@ public class ScreencastActionsTests
     };
 
     [UpstreamTest("SC-016 should show annotation on click")]
-    [Fixme("dotnet: ToHaveTextAsync(Regex) sends ignoreCase: false when the IgnoreCase option is not set, upstream sends no ignoreCase, so the driver removes the 'i' flag of the regex and the title 'Click Locator(\"button\")' does not match")]
+    [LocalFixme("dotnet: ToHaveTextAsync(Regex) sends ignoreCase: false when the IgnoreCase option is not set, upstream sends no ignoreCase, so the driver removes the 'i' flag of the regex and the title 'Click Locator(\"button\")' does not match")]
     public async Task ShouldShowAnnotationOnClick(IBrowser browser, Server server, BrowserNewContextOptions contextOptions)
     {
         var context = await browser.NewContextAsync(contextOptions);
@@ -160,7 +160,7 @@ public class ScreencastActionsTests
     }
 
     [UpstreamTest("SC-020 should annotate fill action")]
-    [Fixme("dotnet: ToHaveTextAsync(Regex) sends ignoreCase: false when the IgnoreCase option is not set, upstream sends no ignoreCase, so the driver removes the 'i' flag of the regex and the title 'Fill \"hello\" Locator(\"textarea\")' does not match")]
+    [LocalFixme("dotnet: ToHaveTextAsync(Regex) sends ignoreCase: false when the IgnoreCase option is not set, upstream sends no ignoreCase, so the driver removes the 'i' flag of the regex and the title 'Fill \"hello\" Locator(\"textarea\")' does not match")]
     public async Task ShouldAnnotateFillAction(IBrowser browser, Server server, BrowserNewContextOptions contextOptions)
     {
         var context = await browser.NewContextAsync(contextOptions);

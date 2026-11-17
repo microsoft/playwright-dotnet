@@ -35,7 +35,7 @@ public class PageCloseTests
     }
 
     [UpstreamTest("PA-040 expect should not print timed out error message when page closes")]
-    [Fixme("dotnet: the message of ToHaveTextAsync is \"Locator expected to have text\\nError: Target page, context or browser has been closed 'hey'\\nBut was: 'null' \\nCall log: ...\", upstream expects \"expect(locator).toHaveText(expected)\"")]
+    [LocalFixme("dotnet: the message of ToHaveTextAsync is \"Locator expected to have text\\nError: Target page, context or browser has been closed 'hey'\\nBut was: 'null' \\nCall log: ...\", upstream expects \"expect(locator).toHaveText(expected)\"")]
     public async Task ExpectShouldNotPrintTimedOutErrorMessageWhenPageCloses(IPage page)
     {
         await page.SetContentAsync("<div id=node>Text content</div>");
@@ -156,7 +156,7 @@ public class PageCloseTests
     [UpstreamTest("PA-050 should not throw UnhandledPromiseRejection when page closes")]
     public async Task ShouldNotThrowUnhandledPromiseRejectionWhenPageCloses(IPage page, string browserName, bool isWindows)
     {
-        It.Fixme(browserName == "firefox" && isWindows, "makes the next test to always timeout");
+        Info.Fixme(browserName == "firefox" && isWindows, "makes the next test to always timeout");
 
         await Catch(() => PromiseAll(
             page.CloseAsync(),

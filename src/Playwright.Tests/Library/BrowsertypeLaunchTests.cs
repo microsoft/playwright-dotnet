@@ -40,7 +40,7 @@ public class BrowsertypeLaunchTests
     [UpstreamTest("BT-009 should throw if page argument is passed")]
     public async Task ShouldThrowIfPageArgumentIsPassed(IBrowserType browserType, string browserName, bool isBidi, BrowserTypeLaunchOptions launchOptions)
     {
-        It.Skip(browserName == "firefox" && !isBidi);
+        Info.Skip(browserName == "firefox" && !isBidi);
 
         Exception waitError = null;
         waitError = await Catch(() => browserType.LaunchAsync(new(launchOptions) { Args = ["http://example.com"] }));
@@ -48,8 +48,7 @@ public class BrowsertypeLaunchTests
     }
 
     [UpstreamTest("BT-010 should reject if launched browser fails immediately")]
-    [Fixme("dotnet: the message is 'Target page, context or browser has been closed\\nBrowser logs: ...', without the 'browserType.launch: ' prefix of the call", Browsers = "chromium,webkit")]
-    [Fixme("dotnet: the message is 'Failed to launch the browser process.\\nBrowser logs: ...', without the 'browserType.launch: ' prefix of the call", Browsers = "firefox")]
+    [LocalFixme("dotnet: the message is 'Target page, context or browser has been closed\\nBrowser logs: ...', without the 'browserType.launch: ' prefix of the call (only in chromium and webkit); dotnet: the message is 'Failed to launch the browser process.\\nBrowser logs: ...', without the 'browserType.launch: ' prefix of the call (only in firefox)")]
     public async Task ShouldRejectIfLaunchedBrowserFailsImmediately(string mode, IBrowserType browserType, Func<string, string> asset, string channel, BrowserTypeLaunchOptions launchOptions)
     {
         var error = await Catch(() => browserType.LaunchAsync(new(launchOptions) { ExecutablePath = asset("dummy_bad_browser_executable.js") }));
@@ -95,7 +94,7 @@ public class BrowsertypeLaunchTests
     [UpstreamTest("BT-017 should allow await using")]
     public async Task ShouldAllowAwaitUsing(IBrowserType browserType, (int Major, int Minor, int Patch) nodeVersion, BrowserTypeLaunchOptions launchOptions, BrowserNewContextOptions contextOptions)
     {
-        It.Skip(nodeVersion.Major < 18);
+        Info.Skip(nodeVersion.Major < 18);
 
         IBrowser b;
         IBrowserContext c;

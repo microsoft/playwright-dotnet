@@ -182,7 +182,7 @@ public class LocatorQueryTests
     [UpstreamTest("LO-172 should support has:locator")]
     public async Task ShouldSupportHasLocator(IPage page, string trace)
     {
-        It.Skip(trace == "on");
+        Info.Skip(trace == "on");
 
         await page.SetContentAsync("<div><span>hello</span></div><div><span>world</span></div>");
         await Expect(page.Locator("div", new()
@@ -227,7 +227,7 @@ public class LocatorQueryTests
     [UpstreamTest("LO-173 should support locator.filter")]
     public async Task ShouldSupportLocatorFilter(IPage page, string trace)
     {
-        It.Skip(trace == "on");
+        Info.Skip(trace == "on");
 
         await page.SetContentAsync("<section><div><span>hello</span></div><div><span>world</span></div></section>");
         await Expect(page.Locator("div").Filter(new() { HasText = "hello" })).ToHaveCountAsync(1);
@@ -316,7 +316,7 @@ public class LocatorQueryTests
     }
 
     [UpstreamTest("LO-178 should allow some, but not all nested frameLocators")]
-    [Fixme("dotnet: the error has Locator(\"iframe\").ContentFrame.Locator(\"div\").Or(Locator(\"#iframe\").ContentFrame.Locator(\"span\")), upstream expects locator('iframe').contentFrame().locator('div').or(locator('#iframe').contentFrame().locator('span'))")]
+    [LocalFixme("dotnet: the error has Locator(\"iframe\").ContentFrame.Locator(\"div\").Or(Locator(\"#iframe\").ContentFrame.Locator(\"span\")), upstream expects locator('iframe').contentFrame().locator('div').or(locator('#iframe').contentFrame().locator('span'))")]
     public async Task ShouldAllowSomeButNotAllNestedFrameLocators(IPage page)
     {
         await page.SetContentAsync("<iframe srcdoc=\"<span id=target>world</span>\"></iframe><span>hello</span>");
@@ -342,7 +342,7 @@ public class LocatorQueryTests
     }
 
     [UpstreamTest("LO-180 should enforce same frame for has/leftOf/rightOf/above/below/near")]
-    [Fixme("dotnet: Locator() throws an ArgumentException with 'Inner \"Has\" locator must belong to the same frame.'; upstream expects 'Inner \"has\" locator must belong to the same frame.'")]
+    [LocalFixme("dotnet: Locator() throws an ArgumentException with 'Inner \"Has\" locator must belong to the same frame.'; upstream expects 'Inner \"has\" locator must belong to the same frame.'")]
     public async Task ShouldEnforceSameFrameForHasLeftOfRightOfAboveBelowNear(IPage page, Server server)
     {
         await page.GotoAsync(server.Prefix + "/frames/two-frames.html");

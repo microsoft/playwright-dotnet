@@ -207,7 +207,7 @@ public class PageDispatcheventTests
     [UpstreamTest("DE-014 should dispatch device orientation event")]
     public async Task ShouldDispatchDeviceOrientationEvent(IPage page, Server server, bool isAndroid)
     {
-        It.Skip(isAndroid, "DeviceOrientationEvent is only available in a secure context. While Androids loopback is not treated as secure.");
+        Info.Skip(isAndroid, "DeviceOrientationEvent is only available in a secure context. While Androids loopback is not treated as secure.");
         await page.GotoAsync(server.Prefix + "/device-orientation.html");
         await page.Locator("html").DispatchEventAsync("deviceorientation", new { alpha = 10, beta = 20, gamma = 30 });
         Assert.That(await page.EvaluateAsync<string>("result"), Is.EqualTo("Oriented"));
@@ -220,7 +220,7 @@ public class PageDispatcheventTests
     [UpstreamTest("DE-015 should dispatch absolute device orientation event")]
     public async Task ShouldDispatchAbsoluteDeviceOrientationEvent(IPage page, Server server, bool isAndroid)
     {
-        It.Skip(isAndroid, "DeviceOrientationEvent is only available in a secure context. While Androids loopback is not treated as secure.");
+        Info.Skip(isAndroid, "DeviceOrientationEvent is only available in a secure context. While Androids loopback is not treated as secure.");
         await page.GotoAsync(server.Prefix + "/device-orientation.html");
         await page.Locator("html").DispatchEventAsync("deviceorientationabsolute", new { alpha = 10, beta = 20, gamma = 30, absolute = true });
         Assert.That(await page.EvaluateAsync<string>("result"), Is.EqualTo("Oriented"));
@@ -233,7 +233,7 @@ public class PageDispatcheventTests
     [UpstreamTest("DE-016 should dispatch device motion event")]
     public async Task ShouldDispatchDeviceMotionEvent(IPage page, Server server, bool isAndroid)
     {
-        It.Skip(isAndroid, "DeviceOrientationEvent is only available in a secure context. While Androids loopback is not treated as secure.");
+        Info.Skip(isAndroid, "DeviceOrientationEvent is only available in a secure context. While Androids loopback is not treated as secure.");
         await page.GotoAsync(server.Prefix + "/device-motion.html");
         await page.Locator("html").DispatchEventAsync("devicemotion", new
         {

@@ -38,7 +38,7 @@ public class PageWaitForNavigationTests
 
     [UpstreamTest("WA-096 should respect timeout")]
 
-    [Fixme("dotnet: the message is 'Timeout 5000ms exceeded.', without the 'page.waitForNavigation: ' prefix of the call, and the log has 'until \"Load\"', upstream expects 'until \"load\"'")]
+    [LocalFixme("dotnet: the message is 'Timeout 5000ms exceeded.', without the 'page.waitForNavigation: ' prefix of the call, and the log has 'until \"Load\"', upstream expects 'until \"load\"'")]
     public async Task ShouldRespectTimeout(IPage page, Server server)
     {
         var promise = page.WaitForNavigationAsync(new() { Url = "**/frame.html", Timeout = 5000 });
@@ -286,7 +286,7 @@ public class PageWaitForNavigationTests
 
     [UpstreamTest("WA-109 should fail when frame detaches")]
 
-    [Fixme("dotnet: the log has 'waiting for navigation until \"Load\"', upstream expects 'waiting for navigation until \"load\"'")]
+    [LocalFixme("dotnet: the log has 'waiting for navigation until \"Load\"', upstream expects 'waiting for navigation until \"load\"'")]
     public async Task ShouldFailWhenFrameDetaches(IPage page, Server server)
     {
         await page.GotoAsync(server.Prefix + "/frames/one-frame.html");

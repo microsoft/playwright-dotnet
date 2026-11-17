@@ -24,7 +24,7 @@ namespace Microsoft.Playwright.Tests.Page;
 public class PageClickTimeout3Tests
 {
     [UpstreamTest("CL-117 should timeout waiting for hit target")]
-    [Fixme("dotnet: the message is 'Timeout 5000ms exceeded.', without the 'elementHandle.click: ' prefix of the call")]
+    [LocalFixme("dotnet: the message is 'Timeout 5000ms exceeded.', without the 'elementHandle.click: ' prefix of the call")]
     public async Task ShouldTimeoutWaitingForHitTarget(IPage page, Server server)
     {
         await page.GotoAsync(server.Prefix + "/input/button.html");
@@ -67,7 +67,7 @@ public class PageClickTimeout3Tests
     }
 
     [UpstreamTest("CL-119 should report wrong hit target subtree")]
-    [Fixme("dotnet: the message is 'Timeout 5000ms exceeded.', without the 'elementHandle.click: ' prefix of the call")]
+    [LocalFixme("dotnet: the message is 'Timeout 5000ms exceeded.', without the 'elementHandle.click: ' prefix of the call")]
     public async Task ShouldReportWrongHitTargetSubtree(IPage page, Server server)
     {
         await page.GotoAsync(server.Prefix + "/input/button.html");

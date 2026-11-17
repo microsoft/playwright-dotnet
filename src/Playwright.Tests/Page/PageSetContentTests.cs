@@ -90,7 +90,7 @@ public class PageSetContentTests
     }
 
     [UpstreamTest("PA-027 should respect default navigation timeout")]
-    [Fixme("dotnet: Frame.SetContentAsync takes the default timeout and not the default navigation timeout as upstream does, so it does not time out after SetDefaultNavigationTimeout(1)")]
+    [LocalFixme("dotnet: Frame.SetContentAsync takes the default timeout and not the default navigation timeout as upstream does, so it does not time out after SetDefaultNavigationTimeout(1)")]
     public async Task ShouldRespectDefaultNavigationTimeout(IPage page, Server server, IPlaywright playwright)
     {
         page.SetDefaultNavigationTimeout(1);
@@ -192,7 +192,7 @@ public class PageSetContentTests
     [UpstreamTest("PA-035 should return empty content there is no iframe src")]
     public async Task ShouldReturnEmptyContentThereIsNoIframeSrc(IPage page, string browserName)
     {
-        It.Fixme(browserName == "webkit", "there is no utility context");
+        Info.Fixme(browserName == "webkit", "there is no utility context");
         await page.SetContentAsync("<iframe src=\"javascript:console.log(1)\"></iframe>");
         Assert.That(page.Frames.Count, Is.EqualTo(2));
         Assert.That(await page.Frames[1].ContentAsync(), Is.EqualTo("<html><head></head><body></body></html>"));

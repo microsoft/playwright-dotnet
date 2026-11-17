@@ -26,7 +26,7 @@ public class OopifTests
 {
     // .NET: upstream runs the files of library/chromium/ in the Chromium project only.
     [BeforeEach]
-    public static void Skip(string browserName) => It.Skip(browserName != "chromium", "chromium only");
+    public static void Skip(string browserName) => Info.Skip(browserName != "chromium", "chromium only");
 
     [Fixture]
     public static BrowserTypeLaunchOptions LaunchOptions(BrowserTypeLaunchOptions launchOptions) => new(launchOptions) { Args = ["--site-per-process"] };
@@ -102,7 +102,7 @@ public class OopifTests
     }
 
     [UpstreamTest("OO-006 should get the proper viewport")]
-    [ItFixme]
+    [Ignore("fixme")]
     public async Task ShouldGetTheProperViewport(IPage page, IBrowser browser, Server server)
     {
         ExpectToEqual(page.ViewportSize, new { width = 1280, height = 720 });
@@ -301,7 +301,7 @@ public class OopifTests
     [UpstreamTest("OO-018 should report google.com frame with headed")]
     public async Task ShouldReportGoogleComFrameWithHeaded(IBrowserType browserType, Server server, string channel, BrowserTypeLaunchOptions launchOptions, BrowserNewPageOptions newPageOptions)
     {
-        It.Skip(channel == "chromium-headless-shell", "Headless Shell does not support headed mode");
+        Info.Skip(channel == "chromium-headless-shell", "Headless Shell does not support headed mode");
         // @see https://github.com/GoogleChrome/puppeteer/issues/2548
         // https://google.com is isolated by default in Chromium embedder.
         var browser = await browserType.LaunchAsync(new(launchOptions) { Headless = false });
@@ -474,9 +474,9 @@ public class OopifTests
     [UpstreamTest("OO-028 should allow to re-connect to OOPIFs with CDP when iframes were there already")]
     public async Task ShouldAllowToReConnectToOOPIFsWithCDPWhenIframesWereThereAlready(IBrowserType browserType, Server server, BrowserTypeLaunchOptions launchOptions, BrowserNewPageOptions newPageOptions)
     {
-        It.Skip(!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("PWTEST_CHANNEL")), "Test default channel only");
+        Info.Skip(!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("PWTEST_CHANNEL")), "Test default channel only");
 
-        var cdpPort = 10123 + (It.Info().ParallelIndex * 4);
+        var cdpPort = 10123 + (Info.ParallelIndex * 4);
         var hostBrowser = await browserType.LaunchAsync(new(launchOptions) { Channel = "chromium", Args = ["--remote-debugging-port=" + cdpPort] });
         var hostPage = await hostBrowser.NewPageAsync(newPageOptions);
         await hostPage.GotoAsync(server.Prefix + "/dynamic-oopif.html");
@@ -493,7 +493,7 @@ public class OopifTests
     [UpstreamTest("OO-029 should report the whole frame tree when connecting over CDP to nested OOPIFs")]
     public async Task ShouldReportTheWholeFrameTreeWhenConnectingOverCDPToNestedOOPIFs(IBrowserType browserType, Server server, BrowserTypeLaunchOptions launchOptions, BrowserNewPageOptions newPageOptions)
     {
-        It.Skip(!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("PWTEST_CHANNEL")), "Test default channel only");
+        Info.Skip(!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("PWTEST_CHANNEL")), "Test default channel only");
 
         // top > cross-site iframe (oopif) > same-process child iframe > sandboxed srcdoc iframe (oopif).
         server.SetRoute("/nested-top.html", (req, res) =>
@@ -512,7 +512,7 @@ public class OopifTests
             res.End("<iframe sandbox=\"allow-scripts\" srcdoc=\"<p>D</p>\"></iframe>");
         });
 
-        var cdpPort = 10123 + (It.Info().ParallelIndex * 4);
+        var cdpPort = 10123 + (Info.ParallelIndex * 4);
         var hostBrowser = await browserType.LaunchAsync(new(launchOptions)
         {
             Channel = "chromium",

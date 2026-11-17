@@ -63,7 +63,7 @@ public class IgnorehttpserrorsTests
     [UpstreamTest("NE-138 should isolated contexts that share network process")]
     public async Task ShouldIsolatedContextsThatShareNetworkProcess(IBrowser browser, Server httpsServer, string browserName, bool isLinux, BrowserNewContextOptions contextOptions)
     {
-        It.Fixme(browserName == "webkit" && isLinux, "See https://bugs.webkit.org/show_bug.cgi?id=293148");
+        Info.Fixme(browserName == "webkit" && isLinux, "See https://bugs.webkit.org/show_bug.cgi?id=293148");
         {
             var context = await browser.NewContextAsync(new(contextOptions) { IgnoreHTTPSErrors = true });
             var page = await context.NewPageAsync();
@@ -139,7 +139,7 @@ public class IgnorehttpserrorsTests
     [UpstreamTest("NE-142 serviceWorker should intercept document request")]
     public async Task ServiceWorkerShouldInterceptDocumentRequest(IBrowser browser, Server httpsServer, string browserName, BrowserNewContextOptions contextOptions)
     {
-        It.Fixme(browserName == "chromium", "Failed to register a ServiceWorker: An SSL certificate error occurred when fetching the script.");
+        Info.Fixme(browserName == "chromium", "Failed to register a ServiceWorker: An SSL certificate error occurred when fetching the script.");
         var context = await browser.NewContextAsync(new(contextOptions) { IgnoreHTTPSErrors = true });
         var page = await context.NewPageAsync();
         await context.RouteAsync("**/*", route => route.ContinueAsync());

@@ -27,7 +27,7 @@ namespace Microsoft.Playwright.Tests.Library;
 public class FetchProxyTests
 {
     [BeforeEach]
-    public static void Skip(string mode) => It.Skip(mode != "default");
+    public static void Skip(string mode) => Info.Skip(mode != "default");
 
     [UpstreamTest("PR-041 context request should pick up proxy credentials")]
     public async Task ContextRequestShouldPickUpProxyCredentials(IBrowserType browserType, Server server, TestProxy proxyServer, BrowserTypeLaunchOptions launchOptions, BrowserNewContextOptions contextOptions)
@@ -157,7 +157,7 @@ public class FetchProxyTests
     [UpstreamTest("PR-045 should use socks proxy")]
     public async Task ShouldUseSocksProxy(IPlaywright playwright, Server server, int socksPort)
     {
-        It.Skip(!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("INSIDE_DOCKER")), "connect ECONNREFUSED 127.0.0.1:<port>");
+        Info.Skip(!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("INSIDE_DOCKER")), "connect ECONNREFUSED 127.0.0.1:<port>");
 
         var request = await playwright.APIRequest.NewContextAsync(new()
         {
@@ -173,7 +173,7 @@ public class FetchProxyTests
     [UpstreamTest("PR-046 should send correct ALPN protocol to HTTPS proxy")]
     public async Task ShouldSendCorrectALPNProtocolToHTTPSProxy(IPlaywright playwright, Server server, (int Major, int Minor, int Patch) nodeVersion)
     {
-        It.Skip(nodeVersion.Major < 22, "ALPNCallback is supported starting from Node 22");
+        Info.Skip(nodeVersion.Major < 22, "ALPNCallback is supported starting from Node 22");
 
         string[] offeredProtocols = null;
         // .NET: https.createServer({ ...(await TestServer.certOptions()), ALPNCallback }) is the ALPNCallbackServer below.
@@ -204,7 +204,7 @@ public class FetchProxyTests
     public async Task ShouldApplyProxyBypassToRedirectTargets(ContextFactory contextFactory, Server server, TestProxy proxyServer)
     {
         var crossProcessHost = new Uri(server.CrossProcessPrefix).Authority;
-        It.Skip(crossProcessHost == server.Host, "Needs two different host names for the same server");
+        Info.Skip(crossProcessHost == server.Host, "Needs two different host names for the same server");
 
         proxyServer.ForwardTo(server.Port, new() { AllowConnectRequests = true });
         server.SetRedirect("/redirect-to-cross-process", server.CrossProcessPrefix + "/simple.json");

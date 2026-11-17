@@ -25,7 +25,7 @@ namespace Microsoft.Playwright.Tests.Page;
 public class PageDropTests
 {
     [BeforeEach]
-    public static void Skip(bool isAndroid) => It.Skip(isAndroid, "No drag&drop on Android.");
+    public static void Skip(bool isAndroid) => Info.Skip(isAndroid, "No drag&drop on Android.");
 
     private static async Task SetupDropzone(IPage page)
     {

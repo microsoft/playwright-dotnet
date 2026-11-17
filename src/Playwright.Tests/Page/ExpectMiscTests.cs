@@ -90,7 +90,7 @@ public class ExpectMiscTests
         }
 
         [UpstreamTest("EX-186 fail zero")]
-        [Fixme("dotnet: the message of ToHaveCountAsync is \"Locator expected to have count '0'\\nBut was: '1' \\nCall log: ...\"")]
+        [LocalFixme("dotnet: the message of ToHaveCountAsync is \"Locator expected to have count '0'\\nBut was: '1' \\nCall log: ...\"")]
         public async Task FailZero(IPage page)
         {
             await page.SetContentAsync("<div><span></span></div>");
@@ -106,7 +106,7 @@ Timeout:  1000ms"));
         }
 
         [UpstreamTest("EX-187 fail zero 2")]
-        [Fixme("dotnet: the message of Not.ToHaveCountAsync is \"Locator expected not to have count '1'\\nBut was: '1' \\nCall log: ...\"")]
+        [LocalFixme("dotnet: the message of Not.ToHaveCountAsync is \"Locator expected not to have count '1'\\nBut was: '1' \\nCall log: ...\"")]
         public async Task FailZero2(IPage page)
         {
             await page.SetContentAsync("<div><span></span></div>");
@@ -134,7 +134,7 @@ Timeout:  1000ms"));
         }
 
         [UpstreamTest("EX-189 fail")]
-        [Fixme("dotnet: the message of ToHaveJSPropertyAsync is \"Locator expected to have JavaScript property 'foo' '{ a = 1, b = string, c = <date> }'\\nBut was: 'System.Dynamic.ExpandoObject' \\nCall log: ...\", without a diff of the two objects")]
+        [LocalFixme("dotnet: the message of ToHaveJSPropertyAsync is \"Locator expected to have JavaScript property 'foo' '{ a = 1, b = string, c = <date> }'\\nBut was: 'System.Dynamic.ExpandoObject' \\nCall log: ...\", without a diff of the two objects")]
         public async Task Fail(IPage page)
         {
             await page.SetContentAsync("<div></div>");
@@ -154,7 +154,7 @@ Timeout:  1000ms"));
         }
 
         [UpstreamTest("EX-191 fail string")]
-        [Fixme("dotnet: the message of ToHaveJSPropertyAsync is \"Locator expected to have JavaScript property 'foo' 'error'\\nBut was: 'string' \\nCall log: ...\"")]
+        [LocalFixme("dotnet: the message of ToHaveJSPropertyAsync is \"Locator expected to have JavaScript property 'foo' 'error'\\nBut was: 'string' \\nCall log: ...\"")]
         public async Task FailString(IPage page)
         {
             await page.SetContentAsync("<div></div>");
@@ -180,7 +180,7 @@ Timeout:  200ms"));
         }
 
         [UpstreamTest("EX-193 fail number")]
-        [Fixme("dotnet: the message of ToHaveJSPropertyAsync is \"Locator expected to have JavaScript property 'foo' '1'\\nBut was: '2021' \\nCall log: ...\"")]
+        [LocalFixme("dotnet: the message of ToHaveJSPropertyAsync is \"Locator expected to have JavaScript property 'foo' '1'\\nBut was: '2021' \\nCall log: ...\"")]
         public async Task FailNumber(IPage page)
         {
             await page.SetContentAsync("<div></div>");
@@ -206,7 +206,7 @@ Timeout:  200ms"));
         }
 
         [UpstreamTest("EX-195 fail boolean")]
-        [Fixme("dotnet: the message of ToHaveJSPropertyAsync is \"Locator expected to have JavaScript property 'foo' 'True'\\nBut was: 'False' \\nCall log: ...\"")]
+        [LocalFixme("dotnet: the message of ToHaveJSPropertyAsync is \"Locator expected to have JavaScript property 'foo' 'True'\\nBut was: 'False' \\nCall log: ...\"")]
         public async Task FailBoolean(IPage page)
         {
             await page.SetContentAsync("<div></div>");
@@ -232,7 +232,7 @@ Timeout:  200ms"));
         }
 
         [UpstreamTest("EX-197 fail boolean 2")]
-        [Fixme("dotnet: the message of ToHaveJSPropertyAsync is \"Locator expected to have JavaScript property 'foo' 'True'\\nBut was: 'False' \\nCall log: ...\"")]
+        [LocalFixme("dotnet: the message of ToHaveJSPropertyAsync is \"Locator expected to have JavaScript property 'foo' 'True'\\nBut was: 'False' \\nCall log: ...\"")]
         public async Task FailBoolean2(IPage page)
         {
             await page.SetContentAsync("<div></div>");
@@ -270,7 +270,7 @@ Timeout:  200ms"));
         }
 
         [UpstreamTest("EX-201 fail nested")]
-        [Fixme("dotnet: the message of ToHaveJSPropertyAsync is \"Locator expected to have JavaScript property 'foo.bar' '{ a = 1, b = string, c = <date> }'\\nBut was: 'null' \\nCall log: ...\", upstream expects 'Received: undefined'")]
+        [LocalFixme("dotnet: the message of ToHaveJSPropertyAsync is \"Locator expected to have JavaScript property 'foo.bar' '{ a = 1, b = string, c = <date> }'\\nBut was: 'null' \\nCall log: ...\", upstream expects 'Received: undefined'")]
         public async Task FailNested(IPage page)
         {
             await page.SetContentAsync("<div></div>");
@@ -301,7 +301,7 @@ Timeout:  200ms"));
         }
 
         [UpstreamTest("EX-204 fail")]
-        [Fixme("dotnet: the message of ToHaveClassAsync is \"Locator expected to have class 'foo bar baz'\\nBut was: 'bar baz' \\nCall log: ...\"")]
+        [LocalFixme("dotnet: the message of ToHaveClassAsync is \"Locator expected to have class 'foo bar baz'\\nBut was: 'bar baz' \\nCall log: ...\"")]
         public async Task Fail(IPage page)
         {
             await page.SetContentAsync("<div class=\"bar baz\"></div>");
@@ -344,7 +344,7 @@ Call log:
         }
 
         [UpstreamTest("EX-209 fail")]
-        [Fixme("dotnet: the message of ToContainClassAsync is \"Locator expected to contain class names 'does-not-exist'\\nBut was: 'bar baz' \\nCall log: ...\"")]
+        [LocalFixme("dotnet: the message of ToContainClassAsync is \"Locator expected to contain class names 'does-not-exist'\\nBut was: 'bar baz' \\nCall log: ...\"")]
         public async Task Fail(IPage page)
         {
             await page.SetContentAsync("<div class=\"bar baz\"></div>");
@@ -375,7 +375,7 @@ Call log:
         }
 
         [UpstreamTest("EX-211 fail with array")]
-        [Fixme("dotnet: the message of ToContainClassAsync is \"Locator expected to contain class names '['foo', 'bar', 'baz']'\\nBut was: '['foo', 'bar', 'bar']' \\nCall log: ...\"")]
+        [LocalFixme("dotnet: the message of ToContainClassAsync is \"Locator expected to contain class names '['foo', 'bar', 'baz']'\\nBut was: '['foo', 'bar', 'bar']' \\nCall log: ...\"")]
         public async Task FailWithArray(IPage page)
         {
             await page.SetContentAsync("<div class=\"foo\"></div><div class=\"bar\"></div><div class=\"bar\"></div>");
@@ -397,7 +397,7 @@ Call log:
         }
 
         [UpstreamTest("EX-213 fail")]
-        [Fixme("dotnet: the message of ToHaveTitleAsync is \"Page title expected to be 'Hello'\\nBut was: 'Bye' \\nCall log: ...\"")]
+        [LocalFixme("dotnet: the message of ToHaveTitleAsync is \"Page title expected to be 'Hello'\\nBut was: 'Bye' \\nCall log: ...\"")]
         public async Task Fail(IPage page)
         {
             await page.SetContentAsync("<title>Bye</title>");
@@ -424,7 +424,7 @@ Call log:
         }
 
         [UpstreamTest("EX-215 fail string")]
-        [Fixme("dotnet: the message of ToHaveURLAsync is \"Page URL expected to be 'wrong'\\nBut was: 'data:text/html,<div>A</div>' \\nCall log: ...\"")]
+        [LocalFixme("dotnet: the message of ToHaveURLAsync is \"Page URL expected to be 'wrong'\\nBut was: 'data:text/html,<div>A</div>' \\nCall log: ...\"")]
         public async Task FailString(IPage page)
         {
             await page.GotoAsync("data:text/html,<div>A</div>");
@@ -458,7 +458,7 @@ Call log:
         }
 
         [UpstreamTest("EX-224 should not match missing attribute")]
-        [Fixme("dotnet: the message of ToHaveAttributeAsync is \"Locator expected to have attribute 'disabled' ''\\nBut was: 'null' \\nCall log: ...\"")]
+        [LocalFixme("dotnet: the message of ToHaveAttributeAsync is \"Locator expected to have attribute 'disabled' ''\\nBut was: 'null' \\nCall log: ...\"")]
         public async Task ShouldNotMatchMissingAttribute(IPage page)
         {
             await page.SetContentAsync("<div checked id=node>Text content</div>");
@@ -494,7 +494,7 @@ Call log:
         }
 
         [UpstreamTest("EX-225 should match boolean attribute")]
-        [Fixme("dotnet: the message of Not.ToHaveAttributeAsync is \"Locator expected not to have attribute 'checked' ''\\nBut was: '' \\nCall log: ...\"")]
+        [LocalFixme("dotnet: the message of Not.ToHaveAttributeAsync is \"Locator expected not to have attribute 'checked' ''\\nBut was: '' \\nCall log: ...\"")]
         public async Task ShouldMatchBooleanAttribute(IPage page)
         {
             await page.SetContentAsync("<div checked id=node>Text content</div>");
@@ -585,7 +585,7 @@ Timeout: 1000ms"));
     public class ToBeInViewport
     {
         [UpstreamTest("EX-233 should work")]
-        [Fixme("dotnet: Locator.WithElementAsync makes a negative timeout from the default timeout 0, and the call passes only when it ends before the timer of the driver")]
+        [LocalFixme("dotnet: Locator.WithElementAsync makes a negative timeout from the default timeout 0, and the call passes only when it ends before the timer of the driver")]
         public async Task ShouldWork(IPage page)
         {
             await page.SetContentAsync(@"
@@ -602,7 +602,7 @@ Timeout: 1000ms"));
         [UpstreamTest("EX-234 should respect ratio option")]
         public async Task ShouldRespectRatioOption(IPage page, bool isAndroid)
         {
-            It.Fixme(isAndroid, "ratio 0.24 is not in viewport for unknown reason");
+            Info.Fixme(isAndroid, "ratio 0.24 is not in viewport for unknown reason");
 
             await page.SetContentAsync(@"
       <style>body, div, html { padding: 0; margin: 0; }</style>
@@ -655,7 +655,7 @@ Timeout: 1000ms"));
     }
 
     [UpstreamTest("EX-237 toHaveCount should not produce logs twice")]
-    [Fixme("dotnet: the call log has Locator(\"option\"), upstream expects locator('option')")]
+    [LocalFixme("dotnet: the call log has Locator(\"option\"), upstream expects locator('option')")]
     public async Task ToHaveCountShouldNotProduceLogsTwice(IPage page)
     {
         await page.SetContentAsync("<select><option>One</option></select>");
@@ -668,7 +668,7 @@ Timeout: 1000ms"));
     }
 
     [UpstreamTest("EX-238 toHaveText should not produce logs twice")]
-    [Fixme("dotnet: the call log has Locator(\"div\"), upstream expects locator('div')")]
+    [LocalFixme("dotnet: the call log has Locator(\"div\"), upstream expects locator('div')")]
     public async Task ToHaveTextShouldNotProduceLogsTwice(IPage page)
     {
         await page.SetContentAsync("<div>hello</div>");
@@ -681,7 +681,7 @@ Timeout: 1000ms"));
     }
 
     [UpstreamTest("EX-239 toHaveText that does not match should not produce logs twice")]
-    [Fixme("dotnet: the call log has Locator(\"span\"), upstream expects locator('span')")]
+    [LocalFixme("dotnet: the call log has Locator(\"span\"), upstream expects locator('span')")]
     public async Task ToHaveTextThatDoesNotMatchShouldNotProduceLogsTwice(IPage page)
     {
         await page.SetContentAsync("<div>hello</div>");
@@ -693,7 +693,7 @@ Timeout: 1000ms"));
     }
 
     [UpstreamTest("EX-240 strict mode violation error format")]
-    [Fixme("dotnet: the message of ToHaveTextAsync is \"Locator expected to have text\\nError: strict mode violation: Locator(\"div\") resolved to 2 elements:\\n    1) <div>a</div> aka GetByText(\"a\")\\n    2) <div>b</div> aka GetByText(\"b\")\\n 'foo'\\nBut was: 'null' \\nCall log: ...\"")]
+    [LocalFixme("dotnet: the message of ToHaveTextAsync is \"Locator expected to have text\\nError: strict mode violation: Locator(\"div\") resolved to 2 elements:\\n    1) <div>a</div> aka GetByText(\"a\")\\n    2) <div>b</div> aka GetByText(\"b\")\\n 'foo'\\nBut was: 'null' \\nCall log: ...\"")]
     public async Task StrictModeViolationErrorFormat(IPage page)
     {
         await page.SetContentAsync("<div>a</div><div>b</div>");
@@ -711,7 +711,7 @@ Call log:
     }
 
     [UpstreamTest("EX-241 invalid selector error format")]
-    [Fixme("dotnet: the message of ToBeVisibleAsync is \"Locator expected to be visible\\nError: Unexpected token \"#\" while parsing css selector \"##\". Did you mean to CSS.escape it? \\nCall log: ...\"")]
+    [LocalFixme("dotnet: the message of ToBeVisibleAsync is \"Locator expected to be visible\\nError: Unexpected token \"#\" while parsing css selector \"##\". Did you mean to CSS.escape it? \\nCall log: ...\"")]
     public async Task InvalidSelectorErrorFormat(IPage page)
     {
         await page.SetContentAsync("<div>a</div><div>b</div>");
@@ -727,7 +727,7 @@ Call log:
     }
 
     [UpstreamTest("EX-242 should report expect error details when page closes during expect")]
-    [Fixme("dotnet: the message of ToHaveTextAsync is \"Locator expected to have text 'world'\\nBut was: 'hello' \\nCall log: ...\"")]
+    [LocalFixme("dotnet: the message of ToHaveTextAsync is \"Locator expected to have text 'world'\\nBut was: 'hello' \\nCall log: ...\"")]
     public async Task ShouldReportExpectErrorDetailsWhenPageClosesDuringExpect(IPage page)
     {
         await page.SetContentAsync("<div>hello</div>");
@@ -741,7 +741,7 @@ Call log:
     }
 
     [UpstreamTest("EX-243 should report page close reason when page closes during expect")]
-    [Fixme("dotnet: the message of ToHaveTextAsync is \"Locator expected to have text\\nError: Bye bye. 'world'\\nBut was: 'null' \\nCall log: ...\"")]
+    [LocalFixme("dotnet: the message of ToHaveTextAsync is \"Locator expected to have text\\nError: Bye bye. 'world'\\nBut was: 'null' \\nCall log: ...\"")]
     public async Task ShouldReportPageCloseReasonWhenPageClosesDuringExpect(IPage page)
     {
         await page.SetContentAsync("<div>hello</div>");

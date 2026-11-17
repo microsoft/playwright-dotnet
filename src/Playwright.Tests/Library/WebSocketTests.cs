@@ -191,7 +191,7 @@ public class WebSocketTests
     [UpstreamTest("WS-013 should send extra HTTP headers on WebSocket handshake")]
     public async Task ShouldSendExtraHTTPHeadersOnWebSocketHandshake(IPage page, Server server, string browserName, int browserMajorVersion)
     {
-        It.Fixme(browserName == "chromium" && browserMajorVersion < 151, "Chromium before 151 does not send extra HTTP headers on WebSocket handshake");
+        Info.Fixme(browserName == "chromium" && browserMajorVersion < 151, "Chromium before 151 does not send extra HTTP headers on WebSocket handshake");
 
         await page.SetExtraHTTPHeadersAsync(new Dictionary<string, string> { ["foo"] = "bar" });
         await page.GotoAsync(server.EmptyPage);
@@ -204,7 +204,7 @@ public class WebSocketTests
     [UpstreamTest("WS-014 should send extra HTTP headers on WebSocket handshake from a worker")]
     public async Task ShouldSendExtraHTTPHeadersOnWebSocketHandshakeFromAWorker(IPage page, Server server, string browserName, int browserMajorVersion)
     {
-        It.Fixme(browserName == "chromium" && browserMajorVersion < 151, "Chromium before 151 does not send extra HTTP headers on WebSocket handshake");
+        Info.Fixme(browserName == "chromium" && browserMajorVersion < 151, "Chromium before 151 does not send extra HTTP headers on WebSocket handshake");
 
         await page.SetExtraHTTPHeadersAsync(new Dictionary<string, string> { ["foo"] = "bar" });
         await page.GotoAsync(server.EmptyPage);

@@ -112,7 +112,7 @@ public class BrowsercontextExposeFunctionTests
     }
 
     [UpstreamTest("EF-027 should work with CSP")]
-    [Fixme("dotnet: a call of a binding of ExposeBindingAsync(name, Action) fails with \"TargetParameterCountException: Parameter count mismatch.\": BindingCall.CallAsync passes the BindingSource to the callback, which has no parameters")]
+    [LocalFixme("dotnet: a call of a binding of ExposeBindingAsync(name, Action) fails with \"TargetParameterCountException: Parameter count mismatch.\": BindingCall.CallAsync passes the BindingSource to the callback, which has no parameters")]
     public async Task ShouldWorkWithCSP(IPage page, IBrowserContext context, Server server)
     {
         server.SetCSP("/empty.html", "default-src \"self\"");
@@ -126,7 +126,7 @@ public class BrowsercontextExposeFunctionTests
     [UpstreamTest("EF-028 should call binding from pagehide handler when navigating away")]
     public async Task ShouldCallBindingFromPagehideHandlerWhenNavigatingAway(IBrowserContext context, IPage page, Server server, string browserName)
     {
-        It.Fixme(browserName == "chromium", "Chromium drops CDP events from the old document after the frame host swap");
+        Info.Fixme(browserName == "chromium", "Chromium drops CDP events from the old document after the frame host swap");
         var calls = new List<string>();
         await context.ExposeBindingAsync("reportFromPage", (BindingSource _source, string message) => { calls.Add(message); });
         var html = (string body) => $"<!doctype html>{body}<script>addEventListener('pagehide', () => window.reportFromPage('pagehide of ' + location.pathname));</script>";

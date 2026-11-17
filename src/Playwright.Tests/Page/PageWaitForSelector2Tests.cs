@@ -68,7 +68,7 @@ public class PageWaitForSelector2Tests
 
     [UpstreamTest("WA-046 should not consider visible when zero-sized")]
 
-    [Fixme("dotnet: the message is 'Timeout 1000ms exceeded.', without the 'page.waitForSelector: ' prefix of the call")]
+    [LocalFixme("dotnet: the message is 'Timeout 1000ms exceeded.', without the 'page.waitForSelector: ' prefix of the call")]
     public async Task ShouldNotConsiderVisibleWhenZeroSized(IPage page, Server server)
     {
         await page.SetContentAsync("<div style='width: 0; height: 0;'>1</div>");
@@ -190,7 +190,7 @@ public class PageWaitForSelector2Tests
 
     [UpstreamTest("WA-053 should respect timeout")]
 
-    [Fixme("dotnet: the message is 'Timeout 3000ms exceeded.', without the 'page.waitForSelector: ' prefix of the call, and the call log has Locator(\"div\"), upstream expects locator('div')")]
+    [LocalFixme("dotnet: the message is 'Timeout 3000ms exceeded.', without the 'page.waitForSelector: ' prefix of the call, and the call log has Locator(\"div\"), upstream expects locator('div')")]
     public async Task ShouldRespectTimeout(IPage page, IPlaywright playwright)
     {
         Exception error = null;
@@ -203,7 +203,7 @@ public class PageWaitForSelector2Tests
 
     [UpstreamTest("WA-054 should have an error message specifically for awaiting an element to be hidden")]
 
-    [Fixme("dotnet: the message is 'Timeout 1000ms exceeded.', without the 'page.waitForSelector: ' prefix of the call, and the call log has Locator(\"div\"), upstream expects locator('div')")]
+    [LocalFixme("dotnet: the message is 'Timeout 1000ms exceeded.', without the 'page.waitForSelector: ' prefix of the call, and the call log has Locator(\"div\"), upstream expects locator('div')")]
     public async Task ShouldHaveAnErrorMessageSpecificallyForAwaitingAnElementToBeHidden(IPage page, Server server)
     {
         await page.SetContentAsync("<div>content</div>");
@@ -290,7 +290,7 @@ public class PageWaitForSelector2Tests
 
     [UpstreamTest("WA-066 should respect timeout xpath")]
 
-    [Fixme("dotnet: the message is 'Timeout 3000ms exceeded.', without the 'page.waitForSelector: ' prefix of the call, and the call log has Locator(\"//div\"), upstream expects locator('//div')")]
+    [LocalFixme("dotnet: the message is 'Timeout 3000ms exceeded.', without the 'page.waitForSelector: ' prefix of the call, and the call log has Locator(\"//div\"), upstream expects locator('//div')")]
     public async Task ShouldRespectTimeoutXpath(IPage page, IPlaywright playwright)
     {
         Exception error = null;
@@ -317,7 +317,7 @@ public class PageWaitForSelector2Tests
 
     [UpstreamTest("WA-068 should throw when frame is detached xpath")]
 
-    [Fixme("dotnet: the message is 'Frame was detached', without the 'frame.waitForSelector: ' prefix of the call")]
+    [LocalFixme("dotnet: the message is 'Frame was detached', without the 'frame.waitForSelector: ' prefix of the call")]
     public async Task ShouldThrowWhenFrameIsDetachedXpath(IPage page, Server server)
     {
         await AttachFrame(page, "frame1", server.EmptyPage);

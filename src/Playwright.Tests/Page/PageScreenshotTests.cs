@@ -31,10 +31,10 @@ public class PageScreenshotTests
     public class PageScreenshot
     {
         [BeforeEach]
-        public static void Skip(string browserName, bool headless) => It.Skip(browserName == "firefox" && !headless, "Firefox headed produces a different image.");
+        public static void Skip(string browserName, bool headless) => Info.Skip(browserName == "firefox" && !headless, "Firefox headed produces a different image.");
 
         [BeforeEach]
-        public static void Skip2(bool isAndroid) => It.Skip(isAndroid, "Different viewport");
+        public static void Skip2(bool isAndroid) => Info.Skip(isAndroid, "Different viewport");
 
         [UpstreamTest("SS-001 should work @smoke")]
         public async Task ShouldWork(IPage page, Server server)
@@ -46,7 +46,7 @@ public class PageScreenshotTests
         }
 
         [UpstreamTest("SS-002 should not capture blinking caret by default")]
-        [Fixme("dotnet: Locator.WithElementAsync makes a negative timeout from the default timeout 0, and the call passes only when it ends before the timer of the driver")]
+        [LocalFixme("dotnet: Locator.WithElementAsync makes a negative timeout from the default timeout 0, and the call passes only when it ends before the timer of the driver")]
         public async Task ShouldNotCaptureBlinkingCaretByDefault(IPage page, Server server, string browserName)
         {
             await page.SetContentAsync($@"
@@ -77,10 +77,10 @@ public class PageScreenshotTests
         }
 
         [UpstreamTest("SS-003 should capture blinking caret if explicitly asked for")]
-        [Fixme("dotnet: Locator.WithElementAsync makes a negative timeout from the default timeout 0, and the call passes only when it ends before the timer of the driver")]
+        [LocalFixme("dotnet: Locator.WithElementAsync makes a negative timeout from the default timeout 0, and the call passes only when it ends before the timer of the driver")]
         public async Task ShouldCaptureBlinkingCaretIfExplicitlyAskedFor(IPage page, Server server, string browserName)
         {
-            It.Skip(browserName == "firefox", "browser-level screenshot API in firefox does not capture caret");
+            Info.Skip(browserName == "firefox", "browser-level screenshot API in firefox does not capture caret");
 
             await page.SetContentAsync($@"
       <!-- Refer to stylesheet from other origin. Accessing this
@@ -112,7 +112,7 @@ public class PageScreenshotTests
         }
 
         [UpstreamTest("SS-004 should capture blinking caret in shadow dom")]
-        [Fixme("dotnet: Locator.WithElementAsync makes a negative timeout from the default timeout 0, and the call passes only when it ends before the timer of the driver")]
+        [LocalFixme("dotnet: Locator.WithElementAsync makes a negative timeout from the default timeout 0, and the call passes only when it ends before the timer of the driver")]
         public async Task ShouldCaptureBlinkingCaretInShadowDom(IPage page, string browserName)
         {
             await page.AddScriptTagAsync(new()
@@ -329,7 +329,7 @@ public class PageScreenshotTests
         [UpstreamTest("SS-014 should allow transparency")]
         public async Task ShouldAllowTransparency(IPage page, string browserName, bool isBidi)
         {
-            It.Fixme(browserName == "firefox" || isBidi);
+            Info.Fixme(browserName == "firefox" || isBidi);
 
             await page.SetViewportSizeAsync(300, 300);
             await page.SetContentAsync(@"
@@ -365,7 +365,7 @@ public class PageScreenshotTests
         }
 
         [UpstreamTest("SS-017 path option should detect webp")]
-        [Fixme("dotnet: ScreenshotAsync does not detect webp from the path, it throws ArgumentException 'path: unsupported mime type \"application/octet-stream\"'")]
+        [LocalFixme("dotnet: ScreenshotAsync does not detect webp from the path, it throws ArgumentException 'path: unsupported mime type \"application/octet-stream\"'")]
         public async Task PathOptionShouldDetectWebp(IPage page, Server server, TestInfo testInfo)
         {
             await page.SetViewportSizeAsync(300, 300);
@@ -398,8 +398,8 @@ public class PageScreenshotTests
         [UpstreamTest("SS-020 should allow transparency with webp")]
         public async Task ShouldAllowTransparencyWithWebp(IPage page, string browserName, bool isBidi)
         {
-            It.Skip(isBidi, "transparency is not supported via WebDriver BiDi");
-            It.Fixme(browserName == "firefox");
+            Info.Skip(isBidi, "transparency is not supported via WebDriver BiDi");
+            Info.Fixme(browserName == "firefox");
 
             await page.SetViewportSizeAsync(300, 300);
             await page.SetContentAsync(@"
@@ -432,7 +432,7 @@ public class PageScreenshotTests
         [UpstreamTest("SS-022 should work with odd clip size on Retina displays")]
         public async Task ShouldWorkWithOddClipSizeOnRetinaDisplays(IPage page, bool isElectron)
         {
-            It.Skip(isElectron, "electron does not set device scale factor to 1");
+            Info.Skip(isElectron, "electron does not set device scale factor to 1");
 
             var screenshot = await page.ScreenshotAsync(new()
             {
@@ -460,7 +460,7 @@ public class PageScreenshotTests
         [UpstreamTest("SS-024 should capture canvas changes")]
         public async Task ShouldCaptureCanvasChanges(IPage page, bool isElectron)
         {
-            It.Skip(isElectron);
+            Info.Skip(isElectron);
             await page.GotoAsync("data:text/html,<canvas></canvas>");
             await page.EvaluateAsync(@"() => {
       const canvas = document.querySelector('canvas');
@@ -496,8 +496,8 @@ public class PageScreenshotTests
         [UpstreamTest("SS-025 should work for webgl")]
         public async Task ShouldWorkForWebgl(IPage page, Server server, string browserName, string platform, bool isElectron)
         {
-            It.Skip(browserName == "webkit" && platform == "darwin" && RuntimeInformation.ProcessArchitecture == Architecture.X64, "WebGL is not available on Intel macOS - https://bugs.webkit.org/show_bug.cgi?id=278277");
-            It.Skip(isElectron, "different rendering in electron");
+            Info.Skip(browserName == "webkit" && platform == "darwin" && RuntimeInformation.ProcessArchitecture == Architecture.X64, "WebGL is not available on Intel macOS - https://bugs.webkit.org/show_bug.cgi?id=278277");
+            Info.Skip(isElectron, "different rendering in electron");
 
             await page.SetViewportSizeAsync(640, 480);
             await page.GotoAsync(server.Prefix + "/screenshots/webgl.html");
@@ -508,7 +508,7 @@ public class PageScreenshotTests
         [UpstreamTest("SS-095 should capture webgl canvas after its drawing buffer is resized")]
         public async Task ShouldCaptureWebglCanvasAfterItsDrawingBufferIsResized(IPage page, string browserName, string platform)
         {
-            It.Skip(browserName == "webkit" && platform == "darwin" && RuntimeInformation.ProcessArchitecture == Architecture.X64, "WebGL is not available on Intel macOS - https://bugs.webkit.org/show_bug.cgi?id=278277");
+            Info.Skip(browserName == "webkit" && platform == "darwin" && RuntimeInformation.ProcessArchitecture == Architecture.X64, "WebGL is not available on Intel macOS - https://bugs.webkit.org/show_bug.cgi?id=278277");
 
             await page.SetViewportSizeAsync(200, 200);
             await page.SetContentAsync("<body style=\"margin:0\"><div style=\"width:100px;height:100px;background:rgb(0,255,0)\"></div></body>");
@@ -676,7 +676,7 @@ public class PageScreenshotTests
         [UpstreamTest("SS-039 should take fullPage screenshots during navigation")]
         public async Task ShouldTakeFullPageScreenshotsDuringNavigation(IPage page, Server server)
         {
-            It.Slow();
+            Info.Slow();
 
             await page.SetViewportSizeAsync(500, 500);
             await page.GotoAsync(server.Prefix + "/grid.html");
@@ -702,7 +702,7 @@ public class PageScreenshotTests
         [UpstreamTest("SS-096 should not wait for unused font face with failed local() source")]
         public async Task ShouldNotWaitForUnusedFontFaceWithFailedLocalSource(IPage page, Server server, string browserName)
         {
-            It.Fixme(browserName == "webkit", "Fixed upstream in https://commits.webkit.org/323883@main");
+            Info.Fixme(browserName == "webkit", "Fixed upstream in https://commits.webkit.org/323883@main");
 
             await page.GotoAsync(server.EmptyPage);
             await page.SetContentAsync($@"
@@ -987,7 +987,7 @@ public class PageScreenshotTests
         [UpstreamTest("SS-054 should not capture css animations in shadow DOM")]
         public async Task ShouldNotCaptureCssAnimationsInShadowDOM(IPage page, Server server, bool isAndroid)
         {
-            It.Skip(isAndroid, "Different viewport");
+            Info.Skip(isAndroid, "Different viewport");
             await page.GotoAsync(server.Prefix + "/rotate-z-shadow-dom.html");
             var screenshot = await page.ScreenshotAsync(new()
             {
@@ -1052,7 +1052,7 @@ public class PageScreenshotTests
       el.addEventListener('transitionend', () => window['__TRANSITION_END'] = true, false);
     }");
 
-            await It.Step("make sure transition is actually running", async () =>
+            await Info.Step("make sure transition is actually running", async () =>
             {
                 // .NET: 'screenshot1' and 'screenshot2' are also locals of the test below: screenshot12 and screenshot22 are the ones of upstream.
                 var screenshot12 = await page.ScreenshotAsync();
@@ -1090,7 +1090,7 @@ public class PageScreenshotTests
       }, false);
     }");
 
-            await It.Step("make sure transition is actually running", async () =>
+            await Info.Step("make sure transition is actually running", async () =>
             {
                 // .NET: 'screenshot1' and 'screenshot2' are also locals of the test below: screenshot12 and screenshot22 are the ones of upstream.
                 var screenshot12 = await page.ScreenshotAsync();
@@ -1120,7 +1120,7 @@ public class PageScreenshotTests
         [UpstreamTest("SS-060 should not change animation with playbackRate equal to 0")]
         public async Task ShouldNotChangeAnimationWithPlaybackRateEqualTo0(IPage page, Server server, bool isAndroid)
         {
-            It.Skip(isAndroid, "Different viewport");
+            Info.Skip(isAndroid, "Different viewport");
             await page.GotoAsync(server.Prefix + "/rotate-z.html");
             await page.EvaluateAsync(@"async () => {
       window.animation = document.getAnimations()[0];
@@ -1236,8 +1236,8 @@ public class PageScreenshotTests
         [UpstreamTest("SS-064 should wait for fonts to load")]
         public async Task ShouldWaitForFontsToLoad(IPage page, Server server, bool isWindows, bool isAndroid)
         {
-            It.Fixme(isWindows, "This requires a windows-specific test expectations. https://github.com/microsoft/playwright/issues/12707");
-            It.Skip(isAndroid, "Different viewport");
+            Info.Fixme(isWindows, "This requires a windows-specific test expectations. https://github.com/microsoft/playwright/issues/12707");
+            Info.Skip(isAndroid, "Different viewport");
             await page.SetViewportSizeAsync(500, 500);
             var fontRequestPromise = new TaskCompletionSource<(ServerRequest request, ServerResponse response)>(TaskCreationOptions.RunContinuationsAsynchronously);
             // Stall font loading.

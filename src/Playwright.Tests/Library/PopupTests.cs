@@ -25,7 +25,7 @@ public class PopupTests
     [UpstreamTest("PO-014 should inherit user agent from browser context @smoke")]
     public async Task ShouldInheritUserAgentFromBrowserContext(IBrowser browser, Server server, bool isFrozenWebkit, BrowserNewContextOptions contextOptions)
     {
-        It.Skip(isFrozenWebkit);
+        Info.Skip(isFrozenWebkit);
 
         var context = await browser.NewContextAsync(new(contextOptions)
         {
@@ -203,7 +203,7 @@ public class PopupTests
     [UpstreamTest("PO-029 should load subresources of an about:blank popup when the opener has routes")]
     public async Task ShouldLoadSubresourcesOfAnAboutBlankPopupWhenTheOpenerHasRoutes(IBrowser browser, Server server, string browserName, BrowserNewContextOptions contextOptions)
     {
-        It.Fixme(browserName == "chromium", "Subresources of an about:blank popup are paused on the opener target and never continued");
+        Info.Fixme(browserName == "chromium", "Subresources of an about:blank popup are paused on the opener target and never continued");
         var context = await browser.NewContextAsync(contextOptions);
         var page = await context.NewPageAsync();
         await page.RouteAsync("**/*", route => route.ContinueAsync());
@@ -308,7 +308,7 @@ public class PopupTests
     [UpstreamTest("PO-028 should not throw when click closes popup")]
     public async Task ShouldNotThrowWhenClickClosesPopup(string browserName, IPage page, Server server)
     {
-        It.Fixme(browserName == "firefox", "locator.click: Target page, context or browser has been closed");
+        Info.Fixme(browserName == "firefox", "locator.click: Target page, context or browser has been closed");
 
         await page.GotoAsync(server.EmptyPage);
         var (popup, _) = await PromiseAll(

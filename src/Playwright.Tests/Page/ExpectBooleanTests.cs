@@ -69,7 +69,7 @@ public class ExpectBooleanTests
         }
 
         [UpstreamTest("EX-006 fail")]
-        [Fixme("dotnet: the message of ToBeCheckedAsync is \"Locator expected to be checked \\nCall log: ...\"; upstream expects \"expect(locator).toBeChecked() failed\" with the Locator, Expected, Received and Timeout lines")]
+        [LocalFixme("dotnet: the message of ToBeCheckedAsync is \"Locator expected to be checked \\nCall log: ...\"; upstream expects \"expect(locator).toBeChecked() failed\" with the Locator, Expected, Received and Timeout lines")]
         public async Task Fail(IPage page)
         {
             await page.SetContentAsync("<input type=checkbox></input>");
@@ -101,7 +101,7 @@ Timeout:  1000ms"));
         }
 
         [UpstreamTest("EX-009 fail with not")]
-        [Fixme("dotnet: the message of Not.ToBeCheckedAsync is \"Locator expected not to be checked \\nCall log: ...\"; upstream expects \"expect(locator).not.toBeChecked() failed\" with the Locator, Expected, Received and Timeout lines")]
+        [LocalFixme("dotnet: the message of Not.ToBeCheckedAsync is \"Locator expected not to be checked \\nCall log: ...\"; upstream expects \"expect(locator).not.toBeChecked() failed\" with the Locator, Expected, Received and Timeout lines")]
         public async Task FailWithNot(IPage page)
         {
             await page.SetContentAsync("<input type=checkbox checked></input>");
@@ -118,7 +118,7 @@ Timeout:  1000ms"));
         }
 
         [UpstreamTest("EX-010 fail with checked:false")]
-        [Fixme("dotnet: the message of ToBeCheckedAsync with Checked = false is \"Locator expected not to be checked \\nCall log: ...\"; upstream expects \"expect(locator).toBeChecked({ checked: false }) failed\" with the Locator, Expected, Received and Timeout lines")]
+        [LocalFixme("dotnet: the message of ToBeCheckedAsync with Checked = false is \"Locator expected not to be checked \\nCall log: ...\"; upstream expects \"expect(locator).toBeChecked({ checked: false }) failed\" with the Locator, Expected, Received and Timeout lines")]
         public async Task FailWithCheckedFalse(IPage page)
         {
             await page.SetContentAsync("<input type=checkbox checked></input>");
@@ -135,7 +135,7 @@ Timeout:  1000ms"));
         }
 
         [UpstreamTest("EX-011 fail with indeterminate: true")]
-        [Fixme("dotnet: the message of ToBeCheckedAsync with Indeterminate = true is \"Locator expected to be indeterminate \\nCall log: ...\"; upstream expects \"expect(locator).toBeChecked({ indeterminate: true }) failed\" with the Locator, Expected, Received and Timeout lines")]
+        [LocalFixme("dotnet: the message of ToBeCheckedAsync with Indeterminate = true is \"Locator expected to be indeterminate \\nCall log: ...\"; upstream expects \"expect(locator).toBeChecked({ indeterminate: true }) failed\" with the Locator, Expected, Received and Timeout lines")]
         public async Task FailWithIndeterminateTrue(IPage page)
         {
             await page.SetContentAsync("<input type=checkbox></input>");
@@ -151,7 +151,7 @@ Timeout:  1000ms"));
         }
 
         [UpstreamTest("EX-012 fail missing")]
-        [Fixme("dotnet: the message of Not.ToBeCheckedAsync is \"Locator expected not to be checked\\nError: element(s) not found \\nCall log: ...\"; upstream expects \"expect(locator).not.toBeChecked() failed\" with the Locator, Expected and Timeout lines before the error")]
+        [LocalFixme("dotnet: the message of Not.ToBeCheckedAsync is \"Locator expected not to be checked\\nError: element(s) not found \\nCall log: ...\"; upstream expects \"expect(locator).not.toBeChecked() failed\" with the Locator, Expected and Timeout lines before the error")]
         public async Task FailMissing(IPage page)
         {
             await page.SetContentAsync("<div>no inputs here</div>");
@@ -175,7 +175,7 @@ Call log:
         {
             foreach (var role in new[] { "checkbox", "menuitemcheckbox", "option", "radio", "switch", "menuitemradio", "treeitem" })
             {
-                await It.Step($"role={role}", async () =>
+                await Info.Step($"role={role}", async () =>
                 {
                     await page.SetContentAsync($"<div role={role} aria-checked=true>I am checked</div>");
                     var locator = page.Locator("div");
@@ -619,7 +619,7 @@ Call log:
         }
 
         [UpstreamTest("EX-059 fail with not when nothing matching")]
-        [Fixme("dotnet: the message of Not.ToBeHiddenAsync is \"Locator expected not to be hidden\\nError: element(s) not found \\nCall log: ...\"; upstream expects \"expect(locator).not.toBeHidden() failed\" with the Locator, Expected and Timeout lines before the error")]
+        [LocalFixme("dotnet: the message of Not.ToBeHiddenAsync is \"Locator expected not to be hidden\\nError: element(s) not found \\nCall log: ...\"; upstream expects \"expect(locator).not.toBeHidden() failed\" with the Locator, Expected and Timeout lines before the error")]
         public async Task FailWithNotWhenNothingMatching(IPage page)
         {
             await page.SetContentAsync("<div></div>");
@@ -699,10 +699,10 @@ Call log:
     public class Describe
     {
         [BeforeEach]
-        public static void Skip(bool isAndroid) => It.Skip(isAndroid, "server.EMPTY_PAGE is the emulator address 10.0.2.2");
+        public static void Skip(bool isAndroid) => Info.Skip(isAndroid, "server.EMPTY_PAGE is the emulator address 10.0.2.2");
 
         [BeforeEach]
-        public static void Skip2(bool isElectron, int electronMajorVersion) => It.Skip(isElectron && electronMajorVersion < 30, "Protocol error (Storage.getCookies): Browser context management is not supported.");
+        public static void Skip2(bool isElectron, int electronMajorVersion) => Info.Skip(isElectron && electronMajorVersion < 30, "Protocol error (Storage.getCookies): Browser context management is not supported.");
 
         [UpstreamTest("EX-066 toBeOK")]
         public async Task ToBeOK(IPage page, Server server)
@@ -743,7 +743,7 @@ Call log:
             }
 
             [UpstreamTest("EX-070 text content type")]
-            [Fixme("dotnet: the message of ToBeOKAsync is \"Response status expected to be within [200..299] range, was 404\\nCall log: ...\"; upstream expects \"expect(response).toBeOK() failed\"")]
+            [LocalFixme("dotnet: the message of ToBeOKAsync is \"Response status expected to be within [200..299] range, was 404\\nCall log: ...\"; upstream expects \"expect(response).toBeOK() failed\"")]
             public async Task TextContentType(IPage page, Server server)
             {
                 var res = await page.APIRequest.GetAsync($"{server.Prefix}/text-content-type");

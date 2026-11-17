@@ -23,7 +23,7 @@ public class BfcacheTests
 {
     // .NET: upstream runs the files of tests/library/chromium only in the Chromium project.
     [BeforeEach]
-    public static void Skip(string browserName) => It.Skip(browserName != "chromium", "chromium only");
+    public static void Skip(string browserName) => Info.Skip(browserName != "chromium", "chromium only");
 
     // test.use({
     //   launchOptions: async ({ launchOptions }, use) => {

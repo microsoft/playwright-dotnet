@@ -215,8 +215,8 @@ public class BrowsercontextClearcookiesTests
     [UpstreamTest("CO-049 should not transiently delete non-matching cookies when filtering")]
     public async Task ShouldNotTransientlyDeleteNonMatchingCookiesWhenFiltering(IBrowserContext context, IPage page, Server server, string browserName, bool isWindows, bool isFrozenWebkit)
     {
-        It.Skip(browserName == "webkit" && isWindows, "cookieStore change events not supported on WebKit/Windows (curl backend lacks cookie change notifications)");
-        It.Skip(isFrozenWebkit);
+        Info.Skip(browserName == "webkit" && isWindows, "cookieStore change events not supported on WebKit/Windows (curl backend lacks cookie change notifications)");
+        Info.Skip(isFrozenWebkit);
 
         await context.AddCookiesAsync(new[]
         {
@@ -256,7 +256,7 @@ public class BrowsercontextClearcookiesTests
     [UpstreamTest("CO-050 should remove partitioned cookies by name")]
     public async Task ShouldRemovePartitionedCookiesByName(IBrowser browser, Server httpsServer, string browserName, BrowserNewContextOptions contextOptions)
     {
-        It.Skip(browserName != "chromium", "Partitioned cookies (CHIPS) are Chromium-specific");
+        Info.Skip(browserName != "chromium", "Partitioned cookies (CHIPS) are Chromium-specific");
         var context = await browser.NewContextAsync(new(contextOptions) { IgnoreHTTPSErrors = true });
         await context.AddCookiesAsync(new[]
         {

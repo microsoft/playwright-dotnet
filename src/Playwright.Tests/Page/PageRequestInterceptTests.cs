@@ -43,8 +43,8 @@ public class PageRequestInterceptTests
     [UpstreamTest("RO-134 should fulfill intercepted response")]
     public async Task ShouldFulfillInterceptedResponse(IPage page, Server server, bool isElectron, int electronMajorVersion, bool isAndroid)
     {
-        It.Skip(isElectron && electronMajorVersion < 30, "error: Browser context management is not supported.");
-        It.Skip(isAndroid, "The internal Android localhost (10.0.0.2) != the localhost on the host");
+        Info.Skip(isElectron && electronMajorVersion < 30, "error: Browser context management is not supported.");
+        Info.Skip(isAndroid, "The internal Android localhost (10.0.0.2) != the localhost on the host");
         await page.RouteAsync("**/*", async route =>
         {
             var response = await page.APIRequest.FetchAsync(route.Request);
@@ -70,9 +70,9 @@ public class PageRequestInterceptTests
     [UpstreamTest("RO-135 should fulfill response with empty body")]
     public async Task ShouldFulfillResponseWithEmptyBody(IPage page, Server server, bool isAndroid, bool isElectron, int electronMajorVersion, string browserName, int browserMajorVersion)
     {
-        It.Skip(browserName == "chromium" && browserMajorVersion <= 91, "Fails in Electron that uses old Chromium");
-        It.Skip(isAndroid, "The internal Android localhost (10.0.0.2) != the localhost on the host");
-        It.Skip(isElectron && electronMajorVersion < 30, "error: Browser context management is not supported.");
+        Info.Skip(browserName == "chromium" && browserMajorVersion <= 91, "Fails in Electron that uses old Chromium");
+        Info.Skip(isAndroid, "The internal Android localhost (10.0.0.2) != the localhost on the host");
+        Info.Skip(isElectron && electronMajorVersion < 30, "error: Browser context management is not supported.");
         await page.RouteAsync("**/*", async route =>
         {
             var response = await page.APIRequest.FetchAsync(route.Request);
@@ -92,8 +92,8 @@ public class PageRequestInterceptTests
     [UpstreamTest("RO-136 should override with defaults when intercepted response not provided")]
     public async Task ShouldOverrideWithDefaultsWhenInterceptedResponseNotProvided(IPage page, Server server, string browserName, bool isElectron, int electronMajorVersion, bool isAndroid)
     {
-        It.Skip(isElectron && electronMajorVersion < 30, "error: Browser context management is not supported.");
-        It.Skip(isAndroid, "The internal Android localhost (10.0.0.2) != the localhost on the host");
+        Info.Skip(isElectron && electronMajorVersion < 30, "error: Browser context management is not supported.");
+        Info.Skip(isAndroid, "The internal Android localhost (10.0.0.2) != the localhost on the host");
         server.SetRoute("/empty.html", (req, res) =>
         {
             res.SetHeader("foo", "bar");
@@ -123,7 +123,7 @@ public class PageRequestInterceptTests
     [UpstreamTest("RO-137 should fulfill with any response")]
     public async Task ShouldFulfillWithAnyResponse(IPage page, Server server, bool isElectron, int electronMajorVersion, Func<string, string> rewriteAndroidLoopbackURL)
     {
-        It.Skip(isElectron && electronMajorVersion < 30, "error: Browser context management is not supported.");
+        Info.Skip(isElectron && electronMajorVersion < 30, "error: Browser context management is not supported.");
 
         server.SetRoute("/sample", (req, res) =>
         {
@@ -150,8 +150,8 @@ public class PageRequestInterceptTests
     [UpstreamTest("RO-138 should support fulfill after intercept")]
     public async Task ShouldSupportFulfillAfterIntercept(IPage page, Server server, bool isElectron, int electronMajorVersion, bool isAndroid)
     {
-        It.Skip(isElectron && electronMajorVersion < 30, "error: Browser context management is not supported.");
-        It.Skip(isAndroid, "The internal Android localhost (10.0.0.2) != the localhost on the host");
+        Info.Skip(isElectron && electronMajorVersion < 30, "error: Browser context management is not supported.");
+        Info.Skip(isAndroid, "The internal Android localhost (10.0.0.2) != the localhost on the host");
         var requestPromise = server.WaitForRequest("/title.html");
         await page.RouteAsync("**", async route =>
         {
@@ -169,8 +169,8 @@ public class PageRequestInterceptTests
     [UpstreamTest("RO-139 should give access to the intercepted response")]
     public async Task ShouldGiveAccessToTheInterceptedResponse(IPage page, Server server, bool isElectron, int electronMajorVersion, bool isAndroid)
     {
-        It.Skip(isElectron && electronMajorVersion < 30, "error: Browser context management is not supported.");
-        It.Skip(isAndroid, "The internal Android localhost (10.0.0.2) != the localhost on the host");
+        Info.Skip(isElectron && electronMajorVersion < 30, "error: Browser context management is not supported.");
+        Info.Skip(isAndroid, "The internal Android localhost (10.0.0.2) != the localhost on the host");
         await page.GotoAsync(server.EmptyPage);
 
         var routePromise = new TaskCompletionSource<IRoute>(TaskCreationOptions.RunContinuationsAsynchronously);
@@ -194,8 +194,8 @@ public class PageRequestInterceptTests
     [UpstreamTest("RO-140 should give access to the intercepted response body")]
     public async Task ShouldGiveAccessToTheInterceptedResponseBody(IPage page, Server server, bool isAndroid, bool isElectron, int electronMajorVersion)
     {
-        It.Skip(isElectron && electronMajorVersion < 30, "error: Browser context management is not supported.");
-        It.Skip(isAndroid, "The internal Android localhost (10.0.0.2) != the localhost on the host");
+        Info.Skip(isElectron && electronMajorVersion < 30, "error: Browser context management is not supported.");
+        Info.Skip(isAndroid, "The internal Android localhost (10.0.0.2) != the localhost on the host");
         await page.GotoAsync(server.EmptyPage);
 
         var routePromise = new TaskCompletionSource<IRoute>(TaskCreationOptions.RunContinuationsAsynchronously);
@@ -215,7 +215,7 @@ public class PageRequestInterceptTests
     [UpstreamTest("RO-141 should intercept multipart/form-data request body")]
     public async Task ShouldInterceptMultipartFormDataRequestBody(IPage page, Server server, Func<string, string> asset, string browserName)
     {
-        It.Fixme(browserName != "firefox");
+        Info.Fixme(browserName != "firefox");
         await page.GotoAsync(server.Prefix + "/input/fileupload.html");
         var filePath = Path.GetRelativePath(Directory.GetCurrentDirectory(), asset("file-to-upload.txt"));
         await page.Locator("input[type=file]").SetInputFilesAsync(filePath);
@@ -235,8 +235,8 @@ public class PageRequestInterceptTests
     [UpstreamTest("RO-142 should fulfill intercepted response using alias")]
     public async Task ShouldFulfillInterceptedResponseUsingAlias(IPage page, Server server, bool isElectron, int electronMajorVersion, bool isAndroid)
     {
-        It.Skip(isElectron && electronMajorVersion < 30, "error: Browser context management is not supported.");
-        It.Skip(isAndroid, "The internal Android localhost (10.0.0.2) != the localhost on the host");
+        Info.Skip(isElectron && electronMajorVersion < 30, "error: Browser context management is not supported.");
+        Info.Skip(isAndroid, "The internal Android localhost (10.0.0.2) != the localhost on the host");
         await page.RouteAsync("**/*", async route =>
         {
             var response = await route.FetchAsync();
@@ -250,8 +250,8 @@ public class PageRequestInterceptTests
     [UpstreamTest("RO-143 should support timeout option in route.fetch")]
     public async Task ShouldSupportTimeoutOptionInRouteFetch(IPage page, Server server, bool isElectron, int electronMajorVersion, bool isAndroid)
     {
-        It.Skip(isElectron && electronMajorVersion < 30, "error: Browser context management is not supported.");
-        It.Skip(isAndroid, "The internal Android localhost (10.0.0.2) != the localhost on the host");
+        Info.Skip(isElectron && electronMajorVersion < 30, "error: Browser context management is not supported.");
+        Info.Skip(isAndroid, "The internal Android localhost (10.0.0.2) != the localhost on the host");
 
         server.SetRoute("/slow", (req, res) =>
         {
@@ -273,8 +273,8 @@ public class PageRequestInterceptTests
     [UpstreamTest("RO-144 should not follow redirects when maxRedirects is set to 0 in route.fetch")]
     public async Task ShouldNotFollowRedirectsWhenMaxRedirectsIsSetTo0InRouteFetch(IPage page, Server server, bool isAndroid, bool isElectron, int electronMajorVersion)
     {
-        It.Skip(isElectron && electronMajorVersion < 30, "error: Browser context management is not supported.");
-        It.Skip(isAndroid, "The internal Android localhost (10.0.0.2) != the localhost on the host");
+        Info.Skip(isElectron && electronMajorVersion < 30, "error: Browser context management is not supported.");
+        Info.Skip(isAndroid, "The internal Android localhost (10.0.0.2) != the localhost on the host");
 
         server.SetRedirect("/foo", "/empty.html");
         await page.RouteAsync("**/*", async route =>
@@ -291,8 +291,8 @@ public class PageRequestInterceptTests
     [UpstreamTest("RO-145 should intercept with url override")]
     public async Task ShouldInterceptWithUrlOverride(IPage page, Server server, bool isElectron, int electronMajorVersion, bool isAndroid)
     {
-        It.Skip(isElectron && electronMajorVersion < 30, "error: Browser context management is not supported.");
-        It.Skip(isAndroid, "The internal Android localhost (10.0.0.2) != the localhost on the host");
+        Info.Skip(isElectron && electronMajorVersion < 30, "error: Browser context management is not supported.");
+        Info.Skip(isAndroid, "The internal Android localhost (10.0.0.2) != the localhost on the host");
         await page.RouteAsync("**/*.html", async route =>
         {
             var response = await route.FetchAsync(new() { Url = server.Prefix + "/one-style.html" });
@@ -306,8 +306,8 @@ public class PageRequestInterceptTests
     [UpstreamTest("RO-146 should intercept with post data override")]
     public async Task ShouldInterceptWithPostDataOverride(IPage page, Server server, bool isElectron, int electronMajorVersion, bool isAndroid)
     {
-        It.Skip(isElectron && electronMajorVersion < 30, "error: Browser context management is not supported.");
-        It.Skip(isAndroid, "The internal Android localhost (10.0.0.2) != the localhost on the host");
+        Info.Skip(isElectron && electronMajorVersion < 30, "error: Browser context management is not supported.");
+        Info.Skip(isAndroid, "The internal Android localhost (10.0.0.2) != the localhost on the host");
         var requestPromise = server.WaitForRequest("/empty.html");
         await page.RouteAsync("**/*.html", async route =>
         {
@@ -326,9 +326,9 @@ public class PageRequestInterceptTests
     [UpstreamTest("RO-147 request.postData is not null when fetching FormData with a Blob")]
     public async Task RequestPostDataIsNotNullWhenFetchingFormDataWithABlob(Server server, IPage page, string browserName, bool isElectron, int electronMajorVersion, bool isAndroid)
     {
-        It.Skip(isElectron && electronMajorVersion < 31);
-        It.Fixme(isAndroid, "postData is null for some reason");
-        It.Fixme(browserName == "webkit", "The body is empty in WebKit when intercepting");
+        Info.Skip(isElectron && electronMajorVersion < 31);
+        Info.Fixme(isAndroid, "postData is null for some reason");
+        Info.Fixme(browserName == "webkit", "The body is empty in WebKit when intercepting");
         await page.GotoAsync(server.EmptyPage);
         await page.SetContentAsync(@"
 <script>

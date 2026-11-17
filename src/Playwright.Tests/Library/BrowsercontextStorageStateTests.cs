@@ -74,10 +74,10 @@ public class BrowsercontextStorageStateTests
     }
 
     [UpstreamTest("ST-002 should set local storage")]
-    [Fixme("dotnet: SetStorageStateAsync takes the path of a file only. A storage state, which is a JSON string in .NET, fails with 'The specified storage state file does not exist: {\"cookies\":[],...'")]
+    [LocalFixme("dotnet: SetStorageStateAsync takes the path of a file only. A storage state, which is a JSON string in .NET, fails with 'The specified storage state file does not exist: {\"cookies\":[],...'")]
     public async Task ShouldSetLocalStorage(ContextFactory contextFactory, string channel)
     {
-        It.Fixme(channel?.StartsWith("msedge", StringComparison.Ordinal) == true, "Network.clearBrowserCache sometimes stalls");
+        Info.Fixme(channel?.StartsWith("msedge", StringComparison.Ordinal) == true, "Network.clearBrowserCache sometimes stalls");
 
         var context = await contextFactory(new()
         {
@@ -141,7 +141,7 @@ public class BrowsercontextStorageStateTests
     }
 
     [UpstreamTest("ST-003 should report good error if the url is not valid")]
-    [Fixme("dotnet: the message is 'Error setting storage state:\\n...', without the 'browser.newContext: ' prefix of the call")]
+    [LocalFixme("dotnet: the message is 'Error setting storage state:\\n...', without the 'browser.newContext: ' prefix of the call")]
     public async Task ShouldReportGoodErrorIfTheUrlIsNotValid(ContextFactory contextFactory)
     {
         var error = await Catch(() => contextFactory(new()
@@ -174,7 +174,7 @@ public class BrowsercontextStorageStateTests
     [UpstreamTest("ST-004 should round-trip through the file")]
     public async Task ShouldRoundTripThroughTheFile(ContextFactory contextFactory, string channel, TestInfo testInfo)
     {
-        It.Fixme(channel?.StartsWith("msedge", StringComparison.Ordinal) == true, "Network.clearBrowserCache sometimes stalls");
+        Info.Fixme(channel?.StartsWith("msedge", StringComparison.Ordinal) == true, "Network.clearBrowserCache sometimes stalls");
 
         var context = await contextFactory();
         var page1 = await context.NewPageAsync();
@@ -263,10 +263,10 @@ public class BrowsercontextStorageStateTests
     }
 
     [UpstreamTest("ST-005 should round-trip OPFS")]
-    [Fixme("dotnet: SetStorageStateAsync takes the path of a file only. A storage state, which is a JSON string in .NET, fails with 'The specified storage state file does not exist: {\"cookies\":[],...'")]
+    [LocalFixme("dotnet: SetStorageStateAsync takes the path of a file only. A storage state, which is a JSON string in .NET, fails with 'The specified storage state file does not exist: {\"cookies\":[],...'")]
     public async Task ShouldRoundTripOPFS(string browserName, ContextFactory contextFactory, IPage page, Server server, TestInfo testInfo)
     {
-        It.Skip(browserName == "webkit", "OPFS is unavailable in non-persistent WebKit contexts");
+        Info.Skip(browserName == "webkit", "OPFS is unavailable in non-persistent WebKit contexts");
 
         await page.GotoAsync(server.EmptyPage);
         await page.EvaluateAsync(@"async () => {
@@ -466,7 +466,7 @@ public class BrowsercontextStorageStateTests
     }
 
     [UpstreamTest("ST-009 should handle missing file")]
-    [Fixme("dotnet: the client reads the file itself, and the message is 'The specified storage state file does not exist: <file>'. Upstream expects 'Error reading storage state from <file>:\\nENOENT'")]
+    [LocalFixme("dotnet: the client reads the file itself, and the message is 'The specified storage state file does not exist: <file>'. Upstream expects 'Error reading storage state from <file>:\\nENOENT'")]
     public async Task ShouldHandleMissingFile(ContextFactory contextFactory, TestInfo testInfo)
     {
         var file = testInfo.OutputPath("does-not-exist.json");
@@ -478,7 +478,7 @@ public class BrowsercontextStorageStateTests
     }
 
     [UpstreamTest("ST-010 should handle malformed file")]
-    [Fixme("dotnet: the client parses the file itself, and the message is ''not-json' is an invalid JSON literal. Expected the literal 'null'. Path: $ | LineNumber: 0 | BytePositionInLine: 1.'. Upstream expects 'Error reading storage state from <file>:\\nUnexpected token 'o', \"not-json\" is not valid JSON'")]
+    [LocalFixme("dotnet: the client parses the file itself, and the message is ''not-json' is an invalid JSON literal. Expected the literal 'null'. Path: $ | LineNumber: 0 | BytePositionInLine: 1.'. Upstream expects 'Error reading storage state from <file>:\\nUnexpected token 'o', \"not-json\" is not valid JSON'")]
     public async Task ShouldHandleMalformedFile(ContextFactory contextFactory, (int Major, int Minor, int Patch) nodeVersion, TestInfo testInfo)
     {
         var file = testInfo.OutputPath("state.json");
@@ -498,7 +498,7 @@ public class BrowsercontextStorageStateTests
     }
 
     [UpstreamTest("ST-011 should serialize storageState with lone surrogates")]
-    [Fixme("dotnet: the storage state has U+FFFD, the replacement character, in place of the lone surrogate U+DA7E")]
+    [LocalFixme("dotnet: the storage state has U+FFFD, the replacement character, in place of the lone surrogate U+DA7E")]
     public async Task ShouldSerializeStorageStateWithLoneSurrogates(IPage page, IBrowserContext context, Server server)
     {
         await page.GotoAsync(server.EmptyPage);
@@ -511,8 +511,8 @@ public class BrowsercontextStorageStateTests
     [UpstreamTest("ST-012 should work when service worker is intefering")]
     public async Task ShouldWorkWhenServiceWorkerIsIntefering(IPage page, IBrowserContext context, Server server, bool isAndroid, bool isElectron, int electronMajorVersion)
     {
-        It.Skip(isAndroid);
-        It.Skip(isElectron && electronMajorVersion < 30, "error: Browser context management is not supported.");
+        Info.Skip(isAndroid);
+        Info.Skip(isElectron && electronMajorVersion < 30, "error: Browser context management is not supported.");
 
         server.SetRoute("/", (req, res) =>
         {
@@ -569,8 +569,8 @@ public class BrowsercontextStorageStateTests
     [UpstreamTest("ST-013 should work when service worker is intefering and the origin is not open")]
     public async Task ShouldWorkWhenServiceWorkerIsInteferingAndTheOriginIsNotOpen(IPage page, IBrowserContext context, Server server, bool isAndroid, bool isElectron, int electronMajorVersion)
     {
-        It.Skip(isAndroid);
-        It.Skip(isElectron && electronMajorVersion < 30, "error: Browser context management is not supported.");
+        Info.Skip(isAndroid);
+        Info.Skip(isElectron && electronMajorVersion < 30, "error: Browser context management is not supported.");
 
         server.SetRoute("/", (req, res) =>
         {
@@ -805,7 +805,7 @@ public class BrowsercontextStorageStateTests
     [UpstreamTest("ST-017 should roundtrip IndexedDB values and keys with ${restore}")]
     [Case("newContext")]
     [Case("setStorageState")]
-    [Fixme("dotnet: SetStorageStateAsync takes the path of a file only. A storage state, which is a JSON string in .NET, fails with 'The specified storage state file does not exist: {\"cookies\":[],...'", Case = "setStorageState")]
+    [LocalFixme("dotnet: SetStorageStateAsync takes the path of a file only. A storage state, which is a JSON string in .NET, fails with 'The specified storage state file does not exist: {\"cookies\":[],...' (only for setStorageState)")]
     public async Task ShouldRoundtripIndexedDBValuesAndKeysWith(string restore, IPage page, Server server, ContextFactory contextFactory, TestInfo testInfo)
     {
         await page.GotoAsync(server.EmptyPage);
@@ -916,7 +916,7 @@ public class BrowsercontextStorageStateTests
     }
 
     [UpstreamTest("ST-019 should not leave IndexedDB connections open")]
-    [Fixme("dotnet: SetStorageStateAsync takes the path of a file only. A storage state, which is a JSON string in .NET, fails with 'The specified storage state file does not exist: {\"cookies\":[],...'")]
+    [LocalFixme("dotnet: SetStorageStateAsync takes the path of a file only. A storage state, which is a JSON string in .NET, fails with 'The specified storage state file does not exist: {\"cookies\":[],...'")]
     public async Task ShouldNotLeaveIndexedDBConnectionsOpen(ContextFactory contextFactory, Server server)
     {
         var context = await contextFactory();
@@ -974,7 +974,7 @@ public class BrowsercontextStorageStateTests
     }
 
     [UpstreamTest("ST-021 setStorageState should replace credentials")]
-    [Fixme("dotnet: SetStorageStateAsync takes the path of a file only. A storage state, which is a JSON string in .NET, fails with 'The specified storage state file does not exist: {\"cookies\":[],...'")]
+    [LocalFixme("dotnet: SetStorageStateAsync takes the path of a file only. A storage state, which is a JSON string in .NET, fails with 'The specified storage state file does not exist: {\"cookies\":[],...'")]
     public async Task SetStorageStateShouldReplaceCredentials(ContextFactory contextFactory)
     {
         var ctxA = await contextFactory();
@@ -1003,7 +1003,7 @@ public class BrowsercontextStorageStateTests
     }
 
     [UpstreamTest("ST-022 setStorageState should handle missing file")]
-    [Fixme("dotnet: the message is 'The specified storage state file does not exist: <file>'. Upstream expects 'Error reading storage state from <file>'")]
+    [LocalFixme("dotnet: the message is 'The specified storage state file does not exist: <file>'. Upstream expects 'Error reading storage state from <file>'")]
     public async Task SetStorageStateShouldHandleMissingFile(ContextFactory contextFactory, TestInfo testInfo)
     {
         var context = await contextFactory();

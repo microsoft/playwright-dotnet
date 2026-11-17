@@ -94,7 +94,7 @@ public class PageCheckTests : UpstreamPageTest
     {
         foreach (var role in new[] { "checkbox", "menuitemcheckbox", "option", "radio", "switch", "menuitemradio", "treeitem" })
         {
-            await It.Step($"role={role}", async () =>
+            await Info.Step($"role={role}", async () =>
             {
                 await Page.SetContentAsync($@"<div role='{role}' id='checkbox'>CHECKBOX</div>
         <script>
@@ -111,7 +111,7 @@ public class PageCheckTests : UpstreamPageTest
     {
         foreach (var role in new[] { "checkbox", "menuitemcheckbox", "option", "radio", "switch", "menuitemradio", "treeitem" })
         {
-            await It.Step($"role={role}", async () =>
+            await Info.Step($"role={role}", async () =>
             {
                 await Page.SetContentAsync($@"<div role='{role}' id='checkbox' aria-checked=""true"">CHECKBOX</div>
         <script>

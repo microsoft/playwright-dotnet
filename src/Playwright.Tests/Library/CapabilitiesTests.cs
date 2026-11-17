@@ -86,7 +86,7 @@ public class CapabilitiesTests
     [UpstreamTest("CA-005 should play video @smoke")]
     public async Task ShouldPlayVideo(IPage page, Func<string, string> asset, string browserName, bool isWindows, bool isLinux, string mode)
     {
-        It.Skip(browserName == "webkit" && isWindows, "passes locally but fails on GitHub Action bot, apparently due to a Media Pack issue in the Windows Server");
+        Info.Skip(browserName == "webkit" && isWindows, "passes locally but fails on GitHub Action bot, apparently due to a Media Pack issue in the Windows Server");
 
         // Safari only plays mp4 so we test WebKit with an .mp4 clip.
         var fileName = browserName == "webkit" ? "video_mp4.html" : "video.html";
@@ -101,7 +101,7 @@ public class CapabilitiesTests
     [UpstreamTest("CA-006 should play webm video @smoke")]
     public async Task ShouldPlayWebmVideo(IPage page, Func<string, string> asset, string browserName, string platform, int macVersion, string mode)
     {
-        It.Skip(browserName == "webkit" && platform == "win32", "not supported");
+        Info.Skip(browserName == "webkit" && platform == "win32", "not supported");
 
         var absolutePath = asset("video_webm.html");
         // Our test server doesn't support range requests required to play on Mac,
@@ -114,8 +114,8 @@ public class CapabilitiesTests
     [UpstreamTest("CA-007 should play audio @smoke")]
     public async Task ShouldPlayAudio(IPage page, Server server, string browserName, string platform, int macVersion)
     {
-        It.Fixme(browserName == "webkit" && platform == "win32", "https://github.com/microsoft/playwright/issues/10892");
-        It.Skip(browserName == "webkit" && platform == "darwin" && macVersion == 15, "audio output is unreliable on hosted macOS 15 runners");
+        Info.Fixme(browserName == "webkit" && platform == "win32", "https://github.com/microsoft/playwright/issues/10892");
+        Info.Skip(browserName == "webkit" && platform == "darwin" && macVersion == 15, "audio output is unreliable on hosted macOS 15 runners");
 
         await page.GotoAsync(server.EmptyPage);
         await page.SetContentAsync($"<audio src=\"{server.Prefix}/example.mp3\"></audio>");
@@ -138,7 +138,7 @@ public class CapabilitiesTests
     [UpstreamTest("CA-009 should support webgl 2 @smoke")]
     public async Task ShouldSupportWebgl2(IPage page, string browserName, bool isWindows)
     {
-        It.Fixme(browserName == "firefox" && isWindows);
+        Info.Fixme(browserName == "firefox" && isWindows);
 
         var hasWebGL2 = await page.EvaluateAsync<bool>(@"() => {
     const canvas = document.createElement('canvas');
@@ -150,7 +150,7 @@ public class CapabilitiesTests
     [UpstreamTest("CA-010 should not crash on page with mp4 @smoke")]
     public async Task ShouldNotCrashOnPageWithMp4(IPage page, Server server, string platform, string browserName)
     {
-        It.Fixme(browserName == "webkit" && platform == "win32", "https://github.com/microsoft/playwright/issues/11009, times out in setContent");
+        Info.Fixme(browserName == "webkit" && platform == "win32", "https://github.com/microsoft/playwright/issues/11009, times out in setContent");
         await page.SetContentAsync($"<video><source src=\"{server.Prefix}/movie.mp4\"/></video>");
         await page.WaitForTimeoutAsync(1000);
     }
@@ -158,7 +158,7 @@ public class CapabilitiesTests
     [UpstreamTest("CA-011 should not crash on showDirectoryPicker")]
     public async Task ShouldNotCrashOnShowDirectoryPicker(IPage page, Server server, string browserName, int browserMajorVersion)
     {
-        It.Skip(browserName != "chromium", "showDirectoryPicker is only available in Chromium");
+        Info.Skip(browserName != "chromium", "showDirectoryPicker is only available in Chromium");
         await page.GotoAsync(server.EmptyPage);
         // "User activation is required to show a file picker." - so we click first.
         await page.Locator("body").ClickAsync();
@@ -248,7 +248,7 @@ public class CapabilitiesTests
     [UpstreamTest("CA-016 webkit should define window.safari")]
     public async Task WebkitShouldDefineWindowSafari(IPage page, Server server, string browserName)
     {
-        It.Skip(browserName != "webkit");
+        Info.Skip(browserName != "webkit");
         await page.GotoAsync(server.EmptyPage);
         var defined = await page.EvaluateAsync<bool>("() => !!window.safari");
         Assert.That(defined, Is.True);
@@ -296,7 +296,7 @@ public class CapabilitiesTests
     [UpstreamTest("CA-020 requestFullscreen")]
     public async Task RequestFullscreen(IPage page, Server server, string browserName, bool headless)
     {
-        It.Fixme(browserName == "firefox" && !headless, "Error: Request for fullscreen was denied because requesting element is not in the currently focused tab");
+        Info.Fixme(browserName == "firefox" && !headless, "Error: Request for fullscreen was denied because requesting element is not in the currently focused tab");
         await page.GotoAsync(server.EmptyPage);
         await page.EvaluateAsync(@"() => {
     const result = new Promise(resolve => document.addEventListener('fullscreenchange', resolve));
@@ -452,8 +452,8 @@ public class CapabilitiesTests
     [UpstreamTest("CA-025 should be able to render avif images")]
     public async Task ShouldBeAbleToRenderAvifImages(IPage page, Server server, string browserName, string platform, bool isFrozenWebkit)
     {
-        It.Skip(browserName == "webkit" && platform == "win32");
-        It.Skip(isFrozenWebkit);
+        Info.Skip(browserName == "webkit" && platform == "win32");
+        Info.Skip(isFrozenWebkit);
         await page.GotoAsync(server.EmptyPage);
         await page.SetContentAsync($"<img src=\"{server.Prefix}/rgb.avif\" onerror=\"window.error = true\">");
         await Expect(async () => ExpectToEqual(await page.Locator("img").BoundingBoxAsync(), ObjectContaining(new
@@ -495,8 +495,8 @@ public class CapabilitiesTests
     [UpstreamTest("CA-028 should not auto play audio")]
     public async Task ShouldNotAutoPlayAudio(IPage page, string browserName, bool isWindows)
     {
-        It.Skip(browserName == "webkit" && isWindows, "audio does not play at all");
-        It.Skip(Environment.GetEnvironmentVariable("PW_CLOCK") == "frozen", "no way to inject real setTimeout");
+        Info.Skip(browserName == "webkit" && isWindows, "audio does not play at all");
+        Info.Skip(Environment.GetEnvironmentVariable("PW_CLOCK") == "frozen", "no way to inject real setTimeout");
         await page.RouteAsync("**/*", async route =>
         {
             await route.FulfillAsync(new()

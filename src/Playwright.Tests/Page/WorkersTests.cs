@@ -27,7 +27,7 @@ public class WorkersTests
     [UpstreamTest("WO-001 Page.workers @smoke")]
     public async Task PageWorkers(IPage page, Server server, string browserName, int browserMajorVersion)
     {
-        It.Skip(browserName == "chromium" && browserMajorVersion < 143, "needs workerScriptLoaded event");
+        Info.Skip(browserName == "chromium" && browserMajorVersion < 143, "needs workerScriptLoaded event");
 
         await PromiseAll(
             page.WaitForWorkerAsync(),
@@ -42,7 +42,7 @@ public class WorkersTests
     }
 
     [UpstreamTest("WO-002 should emit created and destroyed events")]
-    [Fixme("dotnet: the message is \"Target page, context or browser has been closed\", upstream expects the name of the call before it, \"jsHandle.getProperty: \"")]
+    [LocalFixme("dotnet: the message is \"Target page, context or browser has been closed\", upstream expects the name of the call before it, \"jsHandle.getProperty: \"")]
     public async Task ShouldEmitCreatedAndDestroyedEvents(IPage page)
     {
         var workerCreatedPromise = page.WaitForWorkerAsync();
@@ -58,8 +58,7 @@ public class WorkersTests
     }
 
     [UpstreamTest("WO-003 should reject in-flight evaluate and emit close when page closes")]
-    [Fixme("dotnet: the message is \"Target page, context or browser has been closed\", upstream expects the name of the call before it, \"worker.evaluate: \"", Browsers = "chromium,firefox")]
-    [Fixme("dotnet: the message is \"Target page, context or browser has been closed\" or \"Execution context was destroyed, most likely because of a navigation.\", upstream expects the name of the call before it, \"worker.evaluate: \"", Browsers = "webkit")]
+    [LocalFixme("dotnet: the message is \"Target page, context or browser has been closed\", upstream expects the name of the call before it, \"worker.evaluate: \" (only in chromium and firefox); dotnet: the message is \"Target page, context or browser has been closed\" or \"Execution context was destroyed, most likely because of a navigation.\", upstream expects the name of the call before it, \"worker.evaluate: \" (only in webkit)")]
     public async Task ShouldRejectInFlightEvaluateAndEmitCloseWhenPageCloses(IPage page, Server server)
     {
         await page.GotoAsync(server.EmptyPage);
@@ -86,11 +85,11 @@ public class WorkersTests
     }
 
     [UpstreamTest("WO-005 should have timestamp on worker console messages")]
-    [Fixme("dotnet: ConsoleMessage.Timestamp is a float, which holds the milliseconds since the epoch in steps of 131072 only: the value is up to 65 seconds away from the time of the message, and the test passes only when the rounded value falls in its window by chance")]
+    [LocalFixme("dotnet: ConsoleMessage.Timestamp is a float, which holds the milliseconds since the epoch in steps of 131072 only: the value is up to 65 seconds away from the time of the message, and the test passes only when the rounded value falls in its window by chance")]
     public async Task ShouldHaveTimestampOnWorkerConsoleMessages(IPage page, bool isAndroid, string channel)
     {
-        It.Skip(isAndroid, "there is a time difference between android emulator and host machine");
-        It.Skip(channel == "webkit-wsl", "there is a time difference between WSL VM and host machine");
+        Info.Skip(isAndroid, "there is a time difference between android emulator and host machine");
+        Info.Skip(channel == "webkit-wsl", "there is a time difference between WSL VM and host machine");
 
         // .NET: a number of JavaScript is a double. NUnit compares a float with a long as two floats.
         double before = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() - 1;  // Account for the rounding of fractional timestamps.
@@ -139,7 +138,7 @@ public class WorkersTests
     [UpstreamTest("WO-008 should evaluate")]
     public async Task ShouldEvaluate(IPage page, string browserName, int browserMajorVersion)
     {
-        It.Skip(browserName == "chromium" && browserMajorVersion < 143, "needs workerScriptLoaded event");
+        Info.Skip(browserName == "chromium" && browserMajorVersion < 143, "needs workerScriptLoaded event");
 
         var workerCreatedPromise = page.WaitForWorkerAsync();
         await page.EvaluateAsync("() => new Worker(URL.createObjectURL(new Blob(['console.log(1)'], { type: 'application/javascript' })))");
@@ -150,7 +149,7 @@ public class WorkersTests
     [UpstreamTest("WO-009 should report console event on the worker")]
     public async Task ShouldReportConsoleEventOnTheWorker(IPage page, string browserName, int browserMajorVersion)
     {
-        It.Skip(browserName == "chromium" && browserMajorVersion < 143, "needs workerScriptLoaded event");
+        Info.Skip(browserName == "chromium" && browserMajorVersion < 143, "needs workerScriptLoaded event");
 
         var (worker, _) = await PromiseAll(
             page.WaitForWorkerAsync(),
@@ -172,7 +171,7 @@ public class WorkersTests
     [UpstreamTest("WO-010 should report console event on the worker when not listening on page or context")]
     public async Task ShouldReportConsoleEventOnTheWorkerWhenNotListeningOnPageOrContext(IPage page, string browserName, int browserMajorVersion)
     {
-        It.Skip(browserName == "chromium" && browserMajorVersion < 143, "needs workerScriptLoaded event");
+        Info.Skip(browserName == "chromium" && browserMajorVersion < 143, "needs workerScriptLoaded event");
 
         var (worker, _) = await PromiseAll(
             page.WaitForWorkerAsync(),
@@ -248,8 +247,8 @@ public class WorkersTests
     [UpstreamTest("WO-014 should attribute network activity for worker inside iframe to the iframe")]
     public async Task ShouldAttributeNetworkActivityForWorkerInsideIframeToTheIframe(IPage page, Server server, string browserName, int browserMajorVersion)
     {
-        It.Skip(browserName == "firefox" && browserMajorVersion < 114, "https://github.com/microsoft/playwright/issues/21760");
-        It.Skip(browserName == "chromium" && browserMajorVersion < 149, "needs TargetInfo.parentFrameId for workers");
+        Info.Skip(browserName == "firefox" && browserMajorVersion < 114, "https://github.com/microsoft/playwright/issues/21760");
+        Info.Skip(browserName == "chromium" && browserMajorVersion < 149, "needs TargetInfo.parentFrameId for workers");
 
         await page.GotoAsync(server.Prefix + "/empty.html");
         var (worker, frame) = await PromiseAll(
@@ -266,8 +265,8 @@ public class WorkersTests
     [UpstreamTest("WO-015 should report network activity")]
     public async Task ShouldReportNetworkActivity(IPage page, Server server, string browserName, int browserMajorVersion, Func<string, string> asset)
     {
-        It.Skip(browserName == "firefox" && browserMajorVersion < 114, "https://github.com/microsoft/playwright/issues/21760");
-        It.Skip(browserName == "chromium" && browserMajorVersion < 143, "needs workerScriptLoaded event");
+        Info.Skip(browserName == "firefox" && browserMajorVersion < 114, "https://github.com/microsoft/playwright/issues/21760");
+        Info.Skip(browserName == "chromium" && browserMajorVersion < 143, "needs workerScriptLoaded event");
 
         var (worker, _) = await PromiseAll(
             page.WaitForWorkerAsync(),
@@ -287,7 +286,7 @@ public class WorkersTests
     [UpstreamTest("WO-016 should report network activity on worker creation")]
     public async Task ShouldReportNetworkActivityOnWorkerCreation(IPage page, Server server, string browserName, int browserMajorVersion)
     {
-        It.Skip(browserName == "firefox" && browserMajorVersion < 114, "https://github.com/microsoft/playwright/issues/21760");
+        Info.Skip(browserName == "firefox" && browserMajorVersion < 114, "https://github.com/microsoft/playwright/issues/21760");
         await page.GotoAsync(server.EmptyPage);
         var url = server.Prefix + "/one-style.css";
         var requestPromise = page.WaitForRequestAsync(url);
@@ -320,7 +319,7 @@ public class WorkersTests
     [UpstreamTest("WO-018 should report worker script as network request after redirect")]
     public async Task ShouldReportWorkerScriptAsNetworkRequestAfterRedirect(IPage page, Server server, string browserName)
     {
-        It.Fixme(browserName == "chromium", "Chromium does not report the redirect because it is not plumbed to the worker target");
+        Info.Fixme(browserName == "chromium", "Chromium does not report the redirect because it is not plumbed to the worker target");
 
         await page.GotoAsync(server.EmptyPage);
         server.SetRedirect("/worker.js", "/worker2.js");
@@ -358,8 +357,8 @@ public class WorkersTests
     [UpstreamTest("WO-020 should report and intercept network from nested worker")]
     public async Task ShouldReportAndInterceptNetworkFromNestedWorker(IPage page, Server server, string browserName, int browserMajorVersion)
     {
-        It.Fixme(browserName == "webkit", "https://github.com/microsoft/playwright/issues/27376");
-        It.Skip(browserName == "chromium" && browserMajorVersion < 143, "needs workerScriptLoaded event");
+        Info.Fixme(browserName == "webkit", "https://github.com/microsoft/playwright/issues/27376");
+        Info.Skip(browserName == "chromium" && browserMajorVersion < 143, "needs workerScriptLoaded event");
 
         await page.RouteAsync("**/simple.json", async route =>
         {
@@ -392,7 +391,7 @@ public class WorkersTests
     [UpstreamTest("WO-021 should support extra http headers")]
     public async Task ShouldSupportExtraHttpHeaders(IPage page, Server server, string browserName, int browserMajorVersion)
     {
-        It.Skip(browserName == "chromium" && browserMajorVersion < 143, "needs workerScriptLoaded event");
+        Info.Skip(browserName == "chromium" && browserMajorVersion < 143, "needs workerScriptLoaded event");
 
         await page.SetExtraHTTPHeadersAsync(new Dictionary<string, string> { ["foo"] = "bar" });
         var (worker, request1, _) = await PromiseAll(
@@ -409,8 +408,8 @@ public class WorkersTests
     [UpstreamTest("WO-022 should support offline")]
     public async Task ShouldSupportOffline(IPage page, Server server, string browserName)
     {
-        It.Fixme(browserName == "webkit", "flaky on all platforms");
-        It.Fixme(browserName == "firefox", "does not plumb setOffline into WorkerNavigator::OnLine");
+        Info.Fixme(browserName == "webkit", "flaky on all platforms");
+        Info.Fixme(browserName == "firefox", "does not plumb setOffline into WorkerNavigator::OnLine");
 
         var (worker, _, _) = await PromiseAll(
             page.WaitForWorkerAsync(),
@@ -439,7 +438,7 @@ public class WorkersTests
     [UpstreamTest("WO-024 should resolve worker script allHeaders in iframe")]
     public async Task ShouldResolveWorkerScriptAllHeadersInIframe(IPage page, Server server, string browserName, int browserMajorVersion)
     {
-        It.Skip(browserName == "chromium" && browserMajorVersion < 151, "needs proper Network.requestWillBeSentExtraInfo");
+        Info.Skip(browserName == "chromium" && browserMajorVersion < 151, "needs proper Network.requestWillBeSentExtraInfo");
 
         var (request, _) = await PromiseAll(
             page.WaitForRequestFinishedAsync(new() { Predicate = r => r.Url == server.Prefix + "/worker/worker.js" }),
@@ -454,8 +453,8 @@ public class WorkersTests
     [UpstreamTest("WO-025 should resolve worker script allHeaders in nested worker inside iframe")]
     public async Task ShouldResolveWorkerScriptAllHeadersInNestedWorkerInsideIframe(IPage page, Server server, string browserName)
     {
-        It.Fixme(browserName == "webkit", "cannot evaluate in nested worker");
-        It.Fixme(browserName == "firefox", "nested worker script request is not reported at all");
+        Info.Fixme(browserName == "webkit", "cannot evaluate in nested worker");
+        Info.Fixme(browserName == "firefox", "nested worker script request is not reported at all");
 
         var url = server.Prefix + "/worker/worker.js";
         var (worker, _, _) = await PromiseAll(

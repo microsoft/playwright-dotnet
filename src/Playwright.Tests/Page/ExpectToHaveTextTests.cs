@@ -42,7 +42,7 @@ public class ExpectToHaveTextTests
         }
 
         [UpstreamTest("EX-275 fail")]
-        [Fixme("dotnet: the message of ToHaveTextAsync is \"Locator expected to have text matching regex 'Text 2'\\nBut was: 'Text content' \\nCall log: ...\"; upstream expects \"expect(locator).toHaveText(expected) failed\" with the Locator, Expected pattern, Received string and Timeout lines")]
+        [LocalFixme("dotnet: the message of ToHaveTextAsync is \"Locator expected to have text matching regex 'Text 2'\\nBut was: 'Text content' \\nCall log: ...\"; upstream expects \"expect(locator).toHaveText(expected) failed\" with the Locator, Expected pattern, Received string and Timeout lines")]
         public async Task Fail(IPage page)
         {
             await page.SetContentAsync("<div id=node>Text content</div>");
@@ -74,7 +74,7 @@ Call log:
         }
 
         [UpstreamTest("EX-277 fail")]
-        [Fixme("dotnet: the message of ToContainTextAsync is \"Locator expected text matching regex 'ex2'\\nBut was: 'Text content' \\nCall log: ...\"; upstream expects 'Expected pattern: /ex2/' and 'Received string:  \"Text content\"'")]
+        [LocalFixme("dotnet: the message of ToContainTextAsync is \"Locator expected text matching regex 'ex2'\\nBut was: 'Text content' \\nCall log: ...\"; upstream expects 'Expected pattern: /ex2/' and 'Received string:  \"Text content\"'")]
         public async Task Fail(IPage page)
         {
             await page.SetContentAsync("<div id=node>Text content</div>");
@@ -96,7 +96,7 @@ Call log:
         }
 
         [UpstreamTest("EX-279 fail")]
-        [Fixme("dotnet: the message of ToContainTextAsync is \"Locator expected to contain text 'foo'\\nBut was: 'Text content' \\nCall log: ...\"; upstream expects \"expect(locator).toContainText(expected) failed\" with the Locator, Expected substring, Received string and Timeout lines")]
+        [LocalFixme("dotnet: the message of ToContainTextAsync is \"Locator expected to contain text 'foo'\\nBut was: 'Text content' \\nCall log: ...\"; upstream expects \"expect(locator).toContainText(expected) failed\" with the Locator, Expected substring, Received string and Timeout lines")]
         public async Task Fail(IPage page)
         {
             await page.SetContentAsync("<div id=node>Text content</div>");
@@ -148,7 +148,7 @@ Call log:
         }
 
         [UpstreamTest("EX-282 fail")]
-        [Fixme("dotnet: the message of ToHaveTextAsync is \"Locator expected to have text 'Text'\\nBut was: 'Text content' \\nCall log: ...\"; upstream expects 'Expected: \"Text\"' and 'Received: \"Text content\"'")]
+        [LocalFixme("dotnet: the message of ToHaveTextAsync is \"Locator expected to have text 'Text'\\nBut was: 'Text content' \\nCall log: ...\"; upstream expects 'Expected: \"Text\"' and 'Received: \"Text content\"'")]
         public async Task Fail(IPage page)
         {
             await page.SetContentAsync("<div id=node>Text content</div>");
@@ -205,7 +205,7 @@ Call log:
         }
 
         [UpstreamTest("EX-286 fail with impossible timeout")]
-        [Fixme("dotnet: the message of ToHaveTextAsync is \"Locator expected to have text 'Text'\\nBut was: 'Text content' \\nCall log: ...\"; upstream expects 'Expected: \"Text\"' and 'Received: \"Text content\"'")]
+        [LocalFixme("dotnet: the message of ToHaveTextAsync is \"Locator expected to have text 'Text'\\nBut was: 'Text content' \\nCall log: ...\"; upstream expects 'Expected: \"Text\"' and 'Received: \"Text content\"'")]
         public async Task FailWithImpossibleTimeout(IPage page)
         {
             await page.SetContentAsync("<div id=node>Text content</div>");
@@ -215,10 +215,10 @@ Call log:
         }
 
         [UpstreamTest("EX-287 do not show \"element(s) not found\" when the real failure is a string mismatch")]
-        [Fixme("dotnet: the message of ToHaveTextAsync is \"Locator expected to have text 'Something'\\nBut was: 'Final value' \\nCall log: ...\"; upstream expects 'Expected: \"Something\"' and 'Received: \"Final value\"'")]
+        [LocalFixme("dotnet: the message of ToHaveTextAsync is \"Locator expected to have text 'Something'\\nBut was: 'Final value' \\nCall log: ...\"; upstream expects 'Expected: \"Something\"' and 'Received: \"Final value\"'")]
         public async Task DoNotShowElementSNotFoundWhenTheRealFailureIsAStringMismatch(IPage page)
         {
-            It.Skip(Environment.GetEnvironmentVariable("PW_CLOCK") == "frozen", "The element is attached after 1 second.");
+            Info.Skip(Environment.GetEnvironmentVariable("PW_CLOCK") == "frozen", "The element is attached after 1 second.");
             await page.SetContentAsync(@"
       <div>Initial</div>
       <script>
@@ -250,7 +250,7 @@ Call log:
         }
 
         [UpstreamTest("EX-289 fail")]
-        [Fixme("dotnet: the message of Not.ToHaveTextAsync is \"Locator expected not to have text 'Text content'\\nBut was: 'Text content' \\nCall log: ...\"; upstream expects 'Expected: not \"Text content\"' and 'Received: \"Text content\"'")]
+        [LocalFixme("dotnet: the message of Not.ToHaveTextAsync is \"Locator expected not to have text 'Text content'\\nBut was: 'Text content' \\nCall log: ...\"; upstream expects 'Expected: not \"Text content\"' and 'Received: \"Text content\"'")]
         public async Task Fail(IPage page)
         {
             await page.SetContentAsync("<div id=node>Text content</div>");
@@ -261,7 +261,7 @@ Call log:
         }
 
         [UpstreamTest("EX-290 should work when selector does not match")]
-        [Fixme("dotnet: the message of Not.ToHaveTextAsync is \"Locator expected not to have text\\nError: element(s) not found 'hello'\\nBut was: 'null' \\nCall log: ...\"; upstream expects 'Expected: not \"hello\"'. The call log has Locator(\"span\"), upstream expects locator('span')")]
+        [LocalFixme("dotnet: the message of Not.ToHaveTextAsync is \"Locator expected not to have text\\nError: element(s) not found 'hello'\\nBut was: 'null' \\nCall log: ...\"; upstream expects 'Expected: not \"hello\"'. The call log has Locator(\"span\"), upstream expects locator('span')")]
         public async Task ShouldWorkWhenSelectorDoesNotMatch(IPage page)
         {
             await page.SetContentAsync("<div>hello</div>");
@@ -325,7 +325,7 @@ Call log:
         }
 
         [UpstreamTest("EX-296 fail on not+empty")]
-        [Fixme("dotnet: the message of Not.ToHaveTextAsync is \"Locator expected not to have text '[]'\\nBut was: '[]' \\nCall log:\\n  - Expect \"ToHaveTextAsync\" Locator(\"p\") with timeout 1000ms ...\"; upstream expects \"expect(locator).not.toHaveText(expected)\", 'Timeout:  1000ms' and '- Expect \"not toHaveText\" locator('p') with timeout 1000ms'")]
+        [LocalFixme("dotnet: the message of Not.ToHaveTextAsync is \"Locator expected not to have text '[]'\\nBut was: '[]' \\nCall log:\\n  - Expect \"ToHaveTextAsync\" Locator(\"p\") with timeout 1000ms ...\"; upstream expects \"expect(locator).not.toHaveText(expected)\", 'Timeout:  1000ms' and '- Expect \"not toHaveText\" locator('p') with timeout 1000ms'")]
         public async Task FailOnNotEmpty(IPage page)
         {
             await page.SetContentAsync("<div></div>");
@@ -372,7 +372,7 @@ Call log:
         }
 
         [UpstreamTest("EX-301 fail")]
-        [Fixme("dotnet: the message of ToContainTextAsync has no diff of the arrays, \"Locator expected to contain text '['Text 2']'\\nBut was: '['Text 1', 'Text 3']' \\nCall log: ...\"; upstream expects the diff line '-   \"Text 2\"'")]
+        [LocalFixme("dotnet: the message of ToContainTextAsync has no diff of the arrays, \"Locator expected to contain text '['Text 2']'\\nBut was: '['Text 1', 'Text 3']' \\nCall log: ...\"; upstream expects the diff line '-   \"Text 2\"'")]
         public async Task Fail(IPage page)
         {
             await page.SetContentAsync("<div>Text 1</div><div>Text 3</div>");

@@ -24,7 +24,7 @@ public class LauncherTests
 {
     // .NET: upstream runs the files of tests/library/chromium only in the Chromium project.
     [BeforeEach]
-    public static void Skip(string browserName) => It.Skip(browserName != "chromium", "chromium only");
+    public static void Skip(string browserName) => Info.Skip(browserName != "chromium", "chromium only");
 
     [UpstreamTest("CR-035 should not create pages automatically")]
     public async Task ShouldNotCreatePagesAutomatically(IBrowserType browserType, BrowserTypeLaunchOptions launchOptions, BrowserNewContextOptions contextOptions)

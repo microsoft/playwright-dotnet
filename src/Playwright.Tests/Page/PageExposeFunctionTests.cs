@@ -222,7 +222,7 @@ public class PageExposeFunctionTests
     }
 
     [UpstreamTest("EF-014 should throw for duplicate registrations")]
-    [Fixme("dotnet: the message is 'Function \"foo\" has been already registered', without the 'page.exposeFunction: ' prefix of the call")]
+    [LocalFixme("dotnet: the message is 'Function \"foo\" has been already registered', without the 'page.exposeFunction: ' prefix of the call")]
     public async Task ShouldThrowForDuplicateRegistrations(IPage page)
     {
         await page.ExposeFunctionAsync("foo", () => { });

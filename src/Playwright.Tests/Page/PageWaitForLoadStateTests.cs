@@ -39,7 +39,7 @@ public class PageWaitForLoadStateTests
 
     [UpstreamTest("WA-078 should respect timeout")]
 
-    [Fixme("dotnet: the message is 'Timeout 1ms exceeded.', without the 'page.waitForLoadState: ' prefix of the call")]
+    [LocalFixme("dotnet: the message is 'Timeout 1ms exceeded.', without the 'page.waitForLoadState: ' prefix of the call")]
     public async Task ShouldRespectTimeout(IPage page, Server server)
     {
         server.SetRoute("/one-style.css", (req, res) => { });
@@ -151,7 +151,7 @@ public class PageWaitForLoadStateTests
     [UpstreamTest("WA-089 should wait for load state of newPage")]
     public async Task ShouldWaitForLoadStateOfNewPage(IPage page, bool isElectron)
     {
-        It.Fixme(isElectron, "BrowserContext.newPage does not work in Electron");
+        Info.Fixme(isElectron, "BrowserContext.newPage does not work in Electron");
 
         var (newPage, _) = await PromiseAll(
             page.Context.WaitForPageAsync(),

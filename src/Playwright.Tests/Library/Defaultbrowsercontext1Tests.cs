@@ -192,7 +192,7 @@ public class Defaultbrowsercontext1Tests
     [UpstreamTest("DC-011 should support acceptDownloads option")]
     public async Task ShouldSupportAcceptDownloadsOption(Server server, LaunchPersistent launchPersistent, string mode)
     {
-        It.Skip(mode != "default", "download.path() is not available in remote mode");
+        Info.Skip(mode != "default", "download.path() is not available in remote mode");
 
         var (_, page) = await launchPersistent();
         server.SetRoute("/download", (req, res) =>

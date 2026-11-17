@@ -88,7 +88,7 @@ public class PageAddStyleTagTests
     [UpstreamTest("AT-020 should throw when added with URL to the CSP page")]
     public async Task ShouldThrowWhenAddedWithURLToTheCSPPage(IPage page, Server server, bool isAndroid)
     {
-        It.Skip(isAndroid, "No cross-process on Android");
+        Info.Skip(isAndroid, "No cross-process on Android");
 
         await page.GotoAsync(server.Prefix + "/csp.html");
         Exception error = null;

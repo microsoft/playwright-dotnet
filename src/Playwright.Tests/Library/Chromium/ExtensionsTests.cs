@@ -25,7 +25,7 @@ public class ExtensionsTests
 {
     // .NET: upstream runs the files of tests/library/chromium only in the Chromium project.
     [BeforeEach]
-    public static void Skip(string browserName) => It.Skip(browserName != "chromium", "chromium only");
+    public static void Skip(string browserName) => Info.Skip(browserName != "chromium", "chromium only");
 
     public delegate Task<IBrowserContext> LaunchPersistentContextFixture(string extensionPath, BrowserTypeLaunchPersistentContextOptions options = null);
 
@@ -49,12 +49,12 @@ public class ExtensionsTests
     }
 
     [BeforeEach]
-    public static void Skip2(bool isHeadlessShell) => It.Skip(isHeadlessShell, "Headless Shell has no support for extensions");
+    public static void Skip2(bool isHeadlessShell) => Info.Skip(isHeadlessShell, "Headless Shell has no support for extensions");
 
     public class MV3
     {
         [BeforeEach]
-        public static void Skip(string channel) => It.Skip(channel?.StartsWith("chrome", StringComparison.Ordinal) == true, "--load-extension is not supported in Chrome anymore. https://groups.google.com/a/chromium.org/g/chromium-extensions/c/1-g8EFx2BBY/m/S0ET5wPjCAAJ");
+        public static void Skip(string channel) => Info.Skip(channel?.StartsWith("chrome", StringComparison.Ordinal) == true, "--load-extension is not supported in Chrome anymore. https://groups.google.com/a/chromium.org/g/chromium-extensions/c/1-g8EFx2BBY/m/S0ET5wPjCAAJ");
 
         [UpstreamTest("CR-040 should report console messages from content script")]
         public async Task ShouldReportConsoleMessagesFromContentScript(LaunchPersistentContextFixture launchPersistentContext, Func<string, string> asset, Server server)

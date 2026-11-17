@@ -186,8 +186,8 @@ public class PageRouteTests
     [UpstreamTest("RO-008 should properly return navigation response when URL has cookies")]
     public async Task ShouldProperlyReturnNavigationResponseWhenURLHasCookies(IPage page, Server server, bool isAndroid, bool isElectron, int electronMajorVersion)
     {
-        It.Skip(isAndroid, "No isolated context");
-        It.Skip(isElectron && electronMajorVersion < 30, "error: Browser context management is not supported.");
+        Info.Skip(isAndroid, "No isolated context");
+        Info.Skip(isElectron && electronMajorVersion < 30, "error: Browser context management is not supported.");
 
         // Setup cookie.
         await page.GotoAsync(server.EmptyPage);
@@ -243,7 +243,7 @@ public class PageRouteTests
     [UpstreamTest("RO-011 should work with redirect inside sync XHR")]
     public async Task ShouldWorkWithRedirectInsideSyncXHR(IPage page, Server server, string browserName)
     {
-        It.Fixme(browserName == "webkit", "No Network.requestIntercepted for the request");
+        Info.Fixme(browserName == "webkit", "No Network.requestIntercepted for the request");
         await page.GotoAsync(server.EmptyPage);
         server.SetRedirect("/logo.png", "/pptr.png");
         Task continuePromise = null;
@@ -265,8 +265,8 @@ public class PageRouteTests
     [UpstreamTest("RO-012 should pause intercepted XHR until continue")]
     public async Task ShouldPauseInterceptedXHRUntilContinue(IPage page, Server server, string browserName)
     {
-        It.Skip(Environment.GetEnvironmentVariable("PW_CLOCK") == "frozen");
-        It.Fixme(browserName == "webkit", "Redirected request is not paused in WebKit");
+        Info.Skip(Environment.GetEnvironmentVariable("PW_CLOCK") == "frozen");
+        Info.Fixme(browserName == "webkit", "Redirected request is not paused in WebKit");
 
         await page.GotoAsync(server.EmptyPage);
         var routePromise = new TaskCompletionSource<IRoute>(TaskCreationOptions.RunContinuationsAsynchronously);
@@ -672,7 +672,7 @@ public class PageRouteTests
     [UpstreamTest("RO-032 should fulfill with redirect status")]
     public async Task ShouldFulfillWithRedirectStatus(IPage page, Server server, string browserName)
     {
-        It.Fixme(browserName == "webkit", "in WebKit the redirects are handled by the network stack and we intercept before");
+        Info.Fixme(browserName == "webkit", "in WebKit the redirects are handled by the network stack and we intercept before");
 
         await page.GotoAsync(server.Prefix + "/title.html");
         server.SetRoute("/final", (req, res) => res.End("foo"));
@@ -703,7 +703,7 @@ public class PageRouteTests
     [UpstreamTest("RO-033 should not fulfill with redirect status")]
     public async Task ShouldNotFulfillWithRedirectStatus(IPage page, Server server, string browserName)
     {
-        It.Skip(browserName != "webkit", "we should support fulfill with redirect in webkit and delete this test");
+        Info.Skip(browserName != "webkit", "we should support fulfill with redirect in webkit and delete this test");
 
         await page.GotoAsync(server.Prefix + "/empty.html");
 
@@ -847,7 +847,7 @@ public class PageRouteTests
     [UpstreamTest("RO-037 should respect cors overrides")]
     public async Task ShouldRespectCorsOverrides(IPage page, Server server, string browserName, bool isAndroid)
     {
-        It.Fixme(isAndroid, "no cors error in android emulator");
+        Info.Fixme(isAndroid, "no cors error in android emulator");
         await page.GotoAsync(server.EmptyPage);
         server.SetRoute("/something", (request, response) =>
         {
@@ -904,7 +904,7 @@ public class PageRouteTests
     [UpstreamTest("RO-038 should not auto-intercept non-preflight OPTIONS without network interception")]
     public async Task ShouldNotAutoInterceptNonPreflightOPTIONSWithoutNetworkInterception(IPage page, Server server, bool isAndroid, string browserName)
     {
-        It.Fixme(isAndroid);
+        Info.Fixme(isAndroid);
 
         await page.GotoAsync(server.EmptyPage);
 
@@ -952,7 +952,7 @@ public class PageRouteTests
     [UpstreamTest("RO-039 should not auto-intercept non-preflight OPTIONS with network interception")]
     public async Task ShouldNotAutoInterceptNonPreflightOPTIONSWithNetworkInterception(IPage page, Server server, bool isAndroid, string browserName, bool isBidi)
     {
-        It.Fixme(isAndroid);
+        Info.Fixme(isAndroid);
 
         await page.GotoAsync(server.EmptyPage);
 
@@ -1065,7 +1065,7 @@ public class PageRouteTests
     [UpstreamTest("RO-042 should not abort preflighted cross-origin redirect when a route is registered")]
     public async Task ShouldNotAbortPreflightedCrossOriginRedirectWhenARouteIsRegistered(IPage page, Server server, bool isAndroid)
     {
-        It.Skip(isAndroid, "No cross-process on Android");
+        Info.Skip(isAndroid, "No cross-process on Android");
 
         Func<ServerRequest, ServerResponse, bool> allowCors = (request, response) =>
         {
@@ -1256,7 +1256,7 @@ public class PageRouteTests
     [UpstreamTest("RO-048 route abort with times: 1 should not affect second sequential fetch")]
     public async Task RouteAbortWithTimes1ShouldNotAffectSecondSequentialFetch(IPage page, Server server, string browserName, int browserMajorVersion)
     {
-        It.Skip(browserName == "chromium" && browserMajorVersion < 155, "Chromium drops a request that is intercepted while Fetch.disable is being processed; fix is not rolled yet");
+        Info.Skip(browserName == "chromium" && browserMajorVersion < 155, "Chromium drops a request that is intercepted while Fetch.disable is being processed; fix is not rolled yet");
 
         server.SetRoute("/data", (req, res) =>
         {
@@ -1297,7 +1297,7 @@ public class PageRouteTests
     [UpstreamTest("RO-050 should contain sec-fetch headers in route")]
     public async Task ShouldContainSecFetchHeadersInRoute(IPage page, Server server, string browserName)
     {
-        It.Fixme(browserName == "chromium", "Fetch.requestPaused fires before Chromium attaches Fetch Metadata headers");
+        Info.Fixme(browserName == "chromium", "Fetch.requestPaused fires before Chromium attaches Fetch Metadata headers");
 
         Func<IEnumerable<KeyValuePair<string, string>>, Dictionary<string, string>> secFetch = headers => headers
             .Where(entry => entry.Key.ToLowerInvariant().StartsWith("sec-fetch-", StringComparison.Ordinal))
@@ -1401,7 +1401,7 @@ public class PageRouteTests
     [UpstreamTest("RO-054 should intercept when postData is more than 1MB")]
     public async Task ShouldInterceptWhenPostDataIsMoreThan1MB(IPage page, Server server, bool isAndroid)
     {
-        It.Fixme(isAndroid);
+        Info.Fixme(isAndroid);
 
         await page.GotoAsync(server.EmptyPage);
         var interceptionPromise = new TaskCompletionSource<string>(TaskCreationOptions.RunContinuationsAsynchronously);
@@ -1421,7 +1421,7 @@ public class PageRouteTests
     [UpstreamTest("RO-055 should be able to intercept every navigation to a page controlled by service worker")]
     public async Task ShouldBeAbleToInterceptEveryNavigationToAPageControlledByServiceWorker(IPage page, Server server, bool isElectron, string browserName)
     {
-        It.Skip(isElectron);
+        Info.Skip(isElectron);
 
         var interceptions = 0;
         var URL = server.Prefix + "/serviceworkers/bug-33561/index.html";
@@ -1440,7 +1440,7 @@ public class PageRouteTests
     [UpstreamTest("RO-202 should continue a request reported while interception was disabled")]
     public async Task ShouldContinueARequestReportedWhileInterceptionWasDisabled(IPage page, Server server, bool isElectron)
     {
-        It.Skip(isElectron);
+        Info.Skip(isElectron);
 
         await page.GotoAsync(server.Prefix + "/serviceworkers/slow-fallback/sw.html");
         await page.EvaluateAsync("() => window['activationPromise']");

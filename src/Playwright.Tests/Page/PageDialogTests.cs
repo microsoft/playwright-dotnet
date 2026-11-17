@@ -80,7 +80,7 @@ public class PageDialogTests
     [UpstreamTest("DI-005 should allow accepting prompts @smoke")]
     public async Task ShouldAllowAcceptingPrompts(IPage page, bool isElectron)
     {
-        It.Skip(isElectron, "prompt() is not a thing in electron");
+        Info.Skip(isElectron, "prompt() is not a thing in electron");
 
         page.Dialog += (_, dialog) =>
         {
@@ -96,7 +96,7 @@ public class PageDialogTests
     [UpstreamTest("DI-006 should dismiss the prompt")]
     public async Task ShouldDismissThePrompt(IPage page, bool isElectron)
     {
-        It.Skip(isElectron, "prompt() is not a thing in electron");
+        Info.Skip(isElectron, "prompt() is not a thing in electron");
 
         page.Dialog += (_, dialog) => dialog.DismissAsync();
         var result = await page.EvaluateAsync<string>("() => prompt('question?')");
@@ -174,7 +174,7 @@ public class PageDialogTests
     [UpstreamTest("DI-012 should auto-dismiss the prompt without listeners")]
     public async Task ShouldAutoDismissThePromptWithoutListeners(IPage page, bool isElectron)
     {
-        It.Skip(isElectron, "prompt() is not a thing in electron");
+        Info.Skip(isElectron, "prompt() is not a thing in electron");
 
         var result = await page.EvaluateAsync<string>("() => prompt('question?')");
         Assert.That(result, Is.Null);

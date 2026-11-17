@@ -24,7 +24,7 @@ namespace Microsoft.Playwright.Tests.Library;
 public class HitTargetTests
 {
     [UpstreamTest("HT-001 should block all events when hit target is wrong")]
-    [Fixme("dotnet: the message is 'Timeout 3000ms exceeded.', without the 'page.click: ' prefix of the call")]
+    [LocalFixme("dotnet: the message is 'Timeout 3000ms exceeded.', without the 'page.click: ' prefix of the call")]
     public async Task ShouldBlockAllEventsWhenHitTargetIsWrong(IPage page, Server server)
     {
         await page.GotoAsync(server.Prefix + "/input/button.html");
@@ -97,7 +97,7 @@ public class HitTargetTests
     }
 
     [UpstreamTest("HT-004 should block all events when hit target is wrong and element detaches")]
-    [Fixme("dotnet: the message is 'Timeout 3000ms exceeded.', without the 'page.click: ' prefix of the call")]
+    [LocalFixme("dotnet: the message is 'Timeout 3000ms exceeded.', without the 'page.click: ' prefix of the call")]
     public async Task ShouldBlockAllEventsWhenHitTargetIsWrongAndElementDetaches(IPage page, Server server)
     {
         await page.GotoAsync(server.Prefix + "/input/button.html");

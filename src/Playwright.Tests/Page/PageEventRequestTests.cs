@@ -65,8 +65,8 @@ public class PageEventRequestTests
     [UpstreamTest("NE-095 should report requests and responses handled by service worker")]
     public async Task ShouldReportRequestsAndResponsesHandledByServiceWorker(IPage page, Server server, bool isAndroid, bool isElectron)
     {
-        It.Fixme(isAndroid);
-        It.Fixme(isElectron);
+        Info.Fixme(isAndroid);
+        Info.Fixme(isElectron);
 
         await page.GotoAsync(server.Prefix + "/serviceworkers/fetchdummy/sw.html");
         await page.EvaluateAsync("() => window['activationPromise']");
@@ -93,8 +93,8 @@ public class PageEventRequestTests
     [UpstreamTest("NE-096 should report requests and responses handled by service worker with routing")]
     public async Task ShouldReportRequestsAndResponsesHandledByServiceWorkerWithRouting(IPage page, Server server, bool isAndroid, bool isElectron, string mode, string browserName, string platform)
     {
-        It.Fixme(isAndroid);
-        It.Fixme(isElectron);
+        Info.Fixme(isAndroid);
+        Info.Fixme(isElectron);
 
         var interceptedUrls = new List<string>();
         await page.RouteAsync("**/*", route =>
@@ -133,7 +133,7 @@ public class PageEventRequestTests
     [UpstreamTest("NE-097 should report navigation requests and responses handled by service worker")]
     public async Task ShouldReportNavigationRequestsAndResponsesHandledByServiceWorker(IPage page, Server server, bool isAndroid, string browserName)
     {
-        It.Fixme(isAndroid);
+        Info.Fixme(isAndroid);
 
         await page.GotoAsync(server.Prefix + "/serviceworkers/stub/sw.html");
         await page.EvaluateAsync("() => window['activationPromise']");
@@ -163,7 +163,7 @@ public class PageEventRequestTests
     [UpstreamTest("NE-098 should report navigation requests and responses handled by service worker with routing")]
     public async Task ShouldReportNavigationRequestsAndResponsesHandledByServiceWorkerWithRouting(IPage page, Server server, bool isAndroid, string browserName)
     {
-        It.Fixme(isAndroid);
+        Info.Fixme(isAndroid);
 
         await page.RouteAsync("**/*", route => route.ContinueAsync());
         await page.GotoAsync(server.Prefix + "/serviceworkers/stub/sw.html");
@@ -216,7 +216,7 @@ public class PageEventRequestTests
     [UpstreamTest("NE-100 should fire requestfailed when intercepting race")]
     public async Task ShouldFireRequestfailedWhenInterceptingRace(IPage page, Server server, string browserName)
     {
-        It.Skip(browserName != "chromium", "This test is specifically testing Chromium race");
+        Info.Skip(browserName != "chromium", "This test is specifically testing Chromium race");
 
         var promise = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
         {

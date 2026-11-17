@@ -66,8 +66,8 @@ public class PageHistoryTests
     [UpstreamTest("NA-073 page.goBack should work for file urls")]
     public async Task PageGoBackShouldWorkForFileUrls(IPage page, Server server, Func<string, string> asset, string channel, bool isAndroid, string mode)
     {
-        It.Skip(isAndroid, "No files on Android");
-        It.Skip(channel == "webkit-wsl");
+        Info.Skip(isAndroid, "No files on Android");
+        Info.Skip(channel == "webkit-wsl");
 
         var url1 = new Uri(asset("consolelog.html")).AbsoluteUri;
         var url2 = server.Prefix + "/consolelog.html";
@@ -284,7 +284,7 @@ public class PageHistoryTests
     [UpstreamTest("NA-085 regression test for issue 20791")]
     public async Task RegressionTestForIssue20791(IPage page, Server server)
     {
-        It.Skip(Environment.GetEnvironmentVariable("PW_CLOCK") == "frozen");
+        Info.Skip(Environment.GetEnvironmentVariable("PW_CLOCK") == "frozen");
         server.SetRoute("/iframe.html", (req, res) =>
         {
             res.WriteHead(200, new() { ["content-type"] = "text/html; charset=utf-8" });

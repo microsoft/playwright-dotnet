@@ -113,8 +113,8 @@ public class ProxyTests
             [Case("169.254.3.4", "link-local")]
             public async Task Test(string target, string description, string platform, string browserName, IBrowserType browserType, Server server, TestProxy proxyServer, string channel, BrowserTypeLaunchOptions launchOptions, BrowserNewPageOptions newPageOptions)
             {
-                It.Skip(browserName == "webkit" && platform == "darwin" && new[] { "localhost", "127.0.0.1" }.Contains(target) && additionalBypass, "Mac webkit does not proxy localhost when bypass rules are set.");
-                It.Skip(channel?.StartsWith("msedge", StringComparison.Ordinal) == true, "times out while loading the page");
+                Info.Skip(browserName == "webkit" && platform == "darwin" && new[] { "localhost", "127.0.0.1" }.Contains(target) && additionalBypass, "Mac webkit does not proxy localhost when bypass rules are set.");
+                Info.Skip(channel?.StartsWith("msedge", StringComparison.Ordinal) == true, "times out while loading the page");
 
                 // .NET: a boolean in a template literal is 'true' or 'false'.
                 var path = $"/target-{(additionalBypass ? "true" : "false")}-{target}.html";
@@ -320,7 +320,7 @@ public class ProxyTests
     [UpstreamTest("PR-010 should exclude patterns")]
     public async Task ShouldExcludePatterns(IBrowserType browserType, Server server, string channel, BrowserTypeLaunchOptions launchOptions, BrowserNewPageOptions newPageOptions)
     {
-        It.Skip(channel?.StartsWith("msedge", StringComparison.Ordinal) == true, "times out while loading the page");
+        Info.Skip(channel?.StartsWith("msedge", StringComparison.Ordinal) == true, "times out while loading the page");
 
         server.SetRoute("/target.html", (req, res) =>
         {
@@ -442,7 +442,7 @@ public class ProxyTests
     [UpstreamTest("PR-015 should use proxy with emulated user agent")]
     public async Task ShouldUseProxyWithEmulatedUserAgent(IBrowserType browserType, BrowserTypeLaunchOptions launchOptions, BrowserNewPageOptions newPageOptions)
     {
-        It.Fixme(true, "Non-emulated user agent is used in proxy CONNECT");
+        Info.Fixme(true, "Non-emulated user agent is used in proxy CONNECT");
 
         var requestText = string.Empty;
         // This is our proxy server
@@ -484,7 +484,7 @@ public class ProxyTests
     public async Task ShouldUseSOCKSProxyForWebsocketRequests(IBrowserType browserType, Server server, BrowserTypeLaunchOptions launchOptions, BrowserNewPageOptions newPageOptions)
     {
         var socksForwardingServer = await TestProxy.SetupSocksForwardingServer(
-            port: It.Info().WorkerIndex + 2048 + 2,
+            port: Info.WorkerIndex + 2048 + 2,
             forwardPort: server.Port,
             allowedTargetPort: 1337);
         var proxyServerAddr = socksForwardingServer.ProxyServerAddr;
@@ -524,7 +524,7 @@ public class ProxyTests
     [UpstreamTest("PR-017 should use http proxy for websocket requests")]
     public async Task ShouldUseHttpProxyForWebsocketRequests(string browserName, IBrowserType browserType, Server server, TestProxy proxyServer, bool isWindows, bool isMac, int macVersion, string channel, BrowserTypeLaunchOptions launchOptions, BrowserNewPageOptions newPageOptions)
     {
-        It.Skip(isMac && macVersion == 13, "Times out on Mac 13");
+        Info.Skip(isMac && macVersion == 13, "Times out on Mac 13");
 
         proxyServer.ForwardTo(server.Port, new() { AllowConnectRequests = true });
         var browser = await browserType.LaunchAsync(new(launchOptions)

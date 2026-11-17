@@ -86,7 +86,7 @@ public class PageAddScriptTagTests
     [UpstreamTest("AT-008 should include sourceURL when path is provided")]
     public async Task ShouldIncludeSourceURLWhenPathIsProvided(IPage page, Server server, string browserName, Func<string, string> asset)
     {
-        It.Skip(browserName == "webkit");
+        Info.Skip(browserName == "webkit");
 
         await page.GotoAsync(server.EmptyPage);
         await page.AddScriptTagAsync(new() { Path = asset("injectedfile.js") });
@@ -116,7 +116,7 @@ public class PageAddScriptTagTests
     [UpstreamTest("AT-011 should throw when added with URL to the CSP page")]
     public async Task ShouldThrowWhenAddedWithURLToTheCSPPage(IPage page, Server server, bool isAndroid)
     {
-        It.Skip(isAndroid, "No cross-process on Android");
+        Info.Skip(isAndroid, "No cross-process on Android");
 
         await page.GotoAsync(server.Prefix + "/csp.html");
         Exception error = null;

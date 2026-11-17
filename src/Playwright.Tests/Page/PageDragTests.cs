@@ -24,13 +24,13 @@ namespace Microsoft.Playwright.Tests.Page;
 public class PageDragTests
 {
     [BeforeEach]
-    public static void Skip(string browserName, int browserMajorVersion) => It.Skip(browserName == "chromium" && browserMajorVersion < 91);
+    public static void Skip(string browserName, int browserMajorVersion) => Info.Skip(browserName == "chromium" && browserMajorVersion < 91);
 
     [BeforeEach]
-    public static void Skip2(bool isAndroid) => It.Skip(isAndroid, "No drag&drop on Android.");
+    public static void Skip2(bool isAndroid) => Info.Skip(isAndroid, "No drag&drop on Android.");
 
     [BeforeEach]
-    public static void Skip3(bool headless) => It.Skip(!headless, "Stray mouse events mess up the tests.");
+    public static void Skip3(bool headless) => Info.Skip(!headless, "Stray mouse events mess up the tests.");
 
     public class DragAndDrop
     {
@@ -70,7 +70,7 @@ public class PageDragTests
         [UpstreamTest("DD-003 should not send dragover on the first mousemove")]
         public async Task ShouldNotSendDragoverOnTheFirstMousemove(Server server, IPage page, string browserName)
         {
-            It.Fixme(browserName != "chromium");
+            Info.Fixme(browserName != "chromium");
 
             await page.GotoAsync(server.Prefix + "/drag-n-drop.html");
             var events = await TrackEvents(await page.QuerySelectorAsync("body"));
@@ -146,7 +146,7 @@ public class PageDragTests
         public class Iframe
         {
             [BeforeEach]
-            public static void Fixme() => It.Fixme(true, "implement dragging with iframes");
+            public static void Fixme() => Info.Fixme(true, "implement dragging with iframes");
 
             [UpstreamTest("DD-006 should drag into an iframe")]
             public async Task ShouldDragIntoAnIframe(Server server, IPage page, string browserName)
@@ -212,9 +212,9 @@ public class PageDragTests
         [UpstreamTest("DD-008 should respect the drop effect")]
         public async Task ShouldRespectTheDropEffect(IPage page, string browserName, bool isLinux, bool isMac, bool headless, string trace)
         {
-            It.Fixme(browserName == "webkit" && isLinux && !headless, "https://github.com/microsoft/playwright/issues/21646");
-            It.Fixme(browserName == "chromium" && !isMac && !headless, "https://github.com/microsoft/playwright/issues/21646");
-            It.Slow(trace == "on");
+            Info.Fixme(browserName == "webkit" && isLinux && !headless, "https://github.com/microsoft/playwright/issues/21646");
+            Info.Fixme(browserName == "chromium" && !isMac && !headless, "https://github.com/microsoft/playwright/issues/21646");
+            Info.Slow(trace == "on");
 
             Assert.That(await testIfDropped("copy", "copy"), Is.EqualTo(true));
             Assert.That(await testIfDropped("copy", "move"), Is.EqualTo(false));
@@ -269,7 +269,7 @@ public class PageDragTests
         [UpstreamTest("DD-028 should report the default drop effect from effectAllowed")]
         public async Task ShouldReportTheDefaultDropEffectFromEffectAllowed(IPage page, string browserName, bool isLinux, bool headless)
         {
-            It.Fixme(browserName == "webkit" && isLinux && !headless, "https://github.com/microsoft/playwright/issues/21646");
+            Info.Fixme(browserName == "webkit" && isLinux && !headless, "https://github.com/microsoft/playwright/issues/21646");
 
             await page.SetContentAsync(@"
       <div draggable=""true"">drag target</div>
@@ -386,7 +386,7 @@ public class PageDragTests
         [CaseSource(nameof(Drags))]
         public async Task ShouldWithTweenedMouseMovement(string title, Func<IPage, int?, Task> drag, IPage page, bool headless)
         {
-            It.Skip(!headless, "actual mouse interferes with the exact mousemove events");
+            Info.Skip(!headless, "actual mouse interferes with the exact mousemove events");
 
             await page.SetContentAsync(@"
         <body style=""margin: 0; padding: 0;"">
@@ -550,7 +550,7 @@ public class PageDragTests
     [UpstreamTest("DD-019 should handle custom dataTransfer")]
     public async Task ShouldHandleCustomDataTransfer(IPage page, string browserName, bool isWindows)
     {
-        It.Fixme(browserName == "webkit" && isWindows);
+        Info.Fixme(browserName == "webkit" && isWindows);
         await page.SetContentAsync("<button draggable=\"true\">Draggable</button>");
 
         await page.EvaluateAsync(@"() => {

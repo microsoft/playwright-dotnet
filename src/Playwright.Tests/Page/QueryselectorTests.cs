@@ -24,7 +24,7 @@ namespace Microsoft.Playwright.Tests.Page;
 public class QueryselectorTests
 {
     [UpstreamTest("QS-001 should throw for non-string selector")]
-    [Fixme("dotnet: the message is 'selector: expected string, got undefined': the client leaves a null selector out of the message, upstream sends null and expects 'selector: expected string, got object'")]
+    [LocalFixme("dotnet: the message is 'selector: expected string, got undefined': the client leaves a null selector out of the message, upstream sends null and expects 'selector: expected string, got object'")]
     public async Task ShouldThrowForNonStringSelector(IPage page)
     {
         var error = await Catch(() => page.QuerySelectorAsync(null));

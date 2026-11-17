@@ -25,7 +25,7 @@ public class SessionTests
 {
     // .NET: upstream runs the files of tests/library/chromium only in the Chromium project.
     [BeforeEach]
-    public static void Skip(string browserName) => It.Skip(browserName != "chromium", "chromium only");
+    public static void Skip(string browserName) => Info.Skip(browserName != "chromium", "chromium only");
 
     [UpstreamTest("CD-037 should work")]
     public async Task ShouldWork(IPage page)

@@ -175,7 +175,7 @@ public class RetargetTests
         };
         foreach (var (dom, enabled, locator) in cases)
         {
-            await It.Step($"\"{locator}\" in \"{dom}\" should be enabled={(enabled ? "true" : "false")}", async () =>
+            await Info.Step($"\"{locator}\" in \"{dom}\" should be enabled={(enabled ? "true" : "false")}", async () =>
             {
                 await page.SetContentAsync(dom);
                 var target = page.Locator(locator);
@@ -221,7 +221,7 @@ public class RetargetTests
         };
         foreach (var (dom, visible, locator) in cases)
         {
-            await It.Step($"\"{locator}\" in \"{dom}\" should be visible={(visible ? "true" : "false")}", async () =>
+            await Info.Step($"\"{locator}\" in \"{dom}\" should be visible={(visible ? "true" : "false")}", async () =>
             {
                 await page.SetContentAsync(dom);
                 var target = page.Locator(locator);
@@ -265,7 +265,7 @@ public class RetargetTests
         };
         foreach (var (dom, editable, locator) in cases)
         {
-            await It.Step($"\"{locator}\" in \"{dom}\" should be editable={(editable ? "true" : "false")}", async () =>
+            await Info.Step($"\"{locator}\" in \"{dom}\" should be editable={(editable ? "true" : "false")}", async () =>
             {
                 await page.SetContentAsync(dom);
                 var target = page.Locator(locator);
@@ -285,7 +285,7 @@ public class RetargetTests
     }
 
     [UpstreamTest("RE-010 input value retargeting")]
-    [Fixme("dotnet: Locator.WithElementAsync makes a negative timeout from the default timeout 0, and the call passes only when it ends before the timer of the driver")]
+    [LocalFixme("dotnet: Locator.WithElementAsync makes a negative timeout from the default timeout 0, and the call passes only when it ends before the timer of the driver")]
     public async Task InputValueRetargeting(IPage page, string browserName)
     {
         var cases = new[]
@@ -299,7 +299,7 @@ public class RetargetTests
         };
         foreach (var (dom, locator) in cases)
         {
-            await It.Step($"\"{locator}\" in \"{dom}\" input value", async () =>
+            await Info.Step($"\"{locator}\" in \"{dom}\" input value", async () =>
             {
                 await page.SetContentAsync(dom);
                 var target = page.Locator(locator);
@@ -326,7 +326,7 @@ public class RetargetTests
     }
 
     [UpstreamTest("RE-011 selection retargeting")]
-    [Fixme("dotnet: Locator.WithElementAsync makes a negative timeout from the default timeout 0, and the call passes only when it ends before the timer of the driver")]
+    [LocalFixme("dotnet: Locator.WithElementAsync makes a negative timeout from the default timeout 0, and the call passes only when it ends before the timer of the driver")]
     public async Task SelectionRetargeting(IPage page, string browserName)
     {
         var cases = new[]
@@ -338,7 +338,7 @@ public class RetargetTests
         };
         foreach (var (dom, locator) in cases)
         {
-            await It.Step($"\"{locator}\" in \"{dom}\" text selection", async () =>
+            await Info.Step($"\"{locator}\" in \"{dom}\" text selection", async () =>
             {
                 await page.SetContentAsync(dom);
                 var target = page.Locator(locator);
@@ -371,7 +371,7 @@ public class RetargetTests
         };
         foreach (var (dom, locator) in cases)
         {
-            await It.Step($"\"{locator}\" in \"{dom}\" select option", async () =>
+            await Info.Step($"\"{locator}\" in \"{dom}\" select option", async () =>
             {
                 await page.SetContentAsync(dom);
                 var target = page.Locator(locator);
@@ -405,7 +405,7 @@ public class RetargetTests
         };
         foreach (var (dom, locator) in cases)
         {
-            await It.Step($"\"{locator}\" in \"{dom}\" direct actions", async () =>
+            await Info.Step($"\"{locator}\" in \"{dom}\" direct actions", async () =>
             {
                 await page.SetContentAsync(dom);
                 var target = page.Locator(locator);
@@ -445,7 +445,7 @@ public class RetargetTests
         };
         foreach (var (dom, locator) in cases)
         {
-            await It.Step($"\"{locator}\" in \"{dom}\" check", async () =>
+            await Info.Step($"\"{locator}\" in \"{dom}\" check", async () =>
             {
                 await page.SetContentAsync(dom);
                 var target = page.Locator(locator);

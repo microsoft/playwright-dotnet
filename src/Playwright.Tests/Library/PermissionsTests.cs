@@ -37,7 +37,7 @@ public class PermissionsTests
     public class Permissions
     {
         [BeforeEach]
-        public static void Fixme(string browserName, bool isWindows) => It.Fixme(browserName == "webkit" && isWindows, "Permissions API is disabled on Windows WebKit");
+        public static void Fixme(string browserName, bool isWindows) => Info.Fixme(browserName == "webkit" && isWindows, "Permissions API is disabled on Windows WebKit");
 
         [UpstreamTest("PE-001 should be prompt by default")]
         public async Task ShouldBePromptByDefault(IPage page, Server server)
@@ -49,7 +49,7 @@ public class PermissionsTests
         [UpstreamTest("PE-002 should deny permission when not listed")]
         public async Task ShouldDenyPermissionWhenNotListed(IPage page, IBrowserContext context, Server server, string browserName, bool isBidi, bool isFrozenWebkit)
         {
-            It.Skip(isFrozenWebkit);
+            Info.Skip(isFrozenWebkit);
 
             await page.GotoAsync(server.EmptyPage);
             await context.GrantPermissionsAsync([], new() { Origin = server.EmptyPage });
@@ -164,7 +164,7 @@ public class PermissionsTests
         [UpstreamTest("PE-012 should trigger permission onchange")]
         public async Task ShouldTriggerPermissionOnchange(IPage page, IBrowserContext context, Server server, string browserName, bool isBidi)
         {
-            It.Fixme(browserName == "webkit");
+            Info.Fixme(browserName == "webkit");
 
             await page.GotoAsync(server.EmptyPage);
             await page.EvaluateAsync(@"() => {
@@ -195,7 +195,7 @@ public class PermissionsTests
         [UpstreamTest("PE-013 should isolate permissions between browser contexts")]
         public async Task ShouldIsolatePermissionsBetweenBrowserContexts(Server server, IBrowser browser, string browserName, bool isBidi, bool isFrozenWebkit, BrowserNewContextOptions contextOptions)
         {
-            It.Skip(isFrozenWebkit);
+            Info.Skip(isFrozenWebkit);
 
             var context = await browser.NewContextAsync(contextOptions);
             var page = await context.NewPageAsync();
@@ -255,7 +255,7 @@ public class PermissionsTests
     [UpstreamTest("PE-014 should support clipboard read")]
     public async Task ShouldSupportClipboardRead(IPage page, IBrowserContext context, Server server, string browserName, bool isWindows, bool isHeadlessShell)
     {
-        It.Fixme(browserName == "firefox", "No such permissions (requires flag) in Firefox");
+        Info.Fixme(browserName == "firefox", "No such permissions (requires flag) in Firefox");
 
         await page.GotoAsync(server.EmptyPage);
         // There is no 'clipboard-read' permission in WebKit Web API.
@@ -288,7 +288,7 @@ public class PermissionsTests
     [UpstreamTest("PE-015 should isolate the headless clipboard from the operating system")]
     public async Task ShouldIsolateTheHeadlessClipboardFromTheOperatingSystem(IBrowserType browserType, Server server, string browserName, bool isFrozenWebkit, BrowserTypeLaunchOptions launchOptions, BrowserNewContextOptions contextOptions)
     {
-        It.Skip(isFrozenWebkit, "needs recent webkit");
+        Info.Skip(isFrozenWebkit, "needs recent webkit");
 
         // Each headless browser gets its own clipboard, so neither can see the clipboard of the operating system nor of another browser.
         var browser1 = await browserType.LaunchAsync(new(launchOptions) { Headless = true });
@@ -326,7 +326,7 @@ public class PermissionsTests
     [UpstreamTest("PE-016 storage access")]
     public async Task StorageAccess(IPage page, IBrowserContext context, Server server, string browserName)
     {
-        It.Skip(browserName != "chromium", "chromium-only api");
+        Info.Skip(browserName != "chromium", "chromium-only api");
 
         await context.GrantPermissionsAsync(["storage-access"]);
         Assert.That(await GetPermission(page, "storage-access"), Is.EqualTo("granted"));
@@ -362,9 +362,9 @@ public class PermissionsTests
         [UpstreamTest("PE-017 should be able to use the local-fonts API")]
         public async Task ShouldBeAbleToUseTheLocalFontsAPI(IPage page, IBrowserContext context, Server httpsServer, string browserName, string channel, bool headless)
         {
-            It.Skip(browserName != "chromium", "chromium-only api");
-            It.Skip(!string.IsNullOrEmpty(channel) && channel.StartsWith("msedge", StringComparison.Ordinal), "always times out in edge");
-            It.Fixme(!headless, "times out in headed");
+            Info.Skip(browserName != "chromium", "chromium-only api");
+            Info.Skip(!string.IsNullOrEmpty(channel) && channel.StartsWith("msedge", StringComparison.Ordinal), "always times out in edge");
+            Info.Fixme(!headless, "times out in headed");
 
             await page.GotoAsync(httpsServer.EmptyPage);
             Assert.That(await GetPermission(page, "local-fonts"), Is.EqualTo("prompt"));
@@ -377,8 +377,8 @@ public class PermissionsTests
     [UpstreamTest("PE-018 local network request is allowed from public origin")]
     public async Task LocalNetworkRequestIsAllowedFromPublicOrigin(IPage page, IBrowserContext context, Server server, string browserName, string channel, int browserMajorVersion)
     {
-        It.Skip(browserName == "webkit");
-        It.Skip(browserName == "chromium" && browserMajorVersion < 145, "local-network-access permission support has changed between versions");
+        Info.Skip(browserName == "webkit");
+        Info.Skip(browserName == "chromium" && browserMajorVersion < 145, "local-network-access permission support has changed between versions");
 
         if (browserName == "chromium" || browserName == "firefox")
         {
@@ -455,12 +455,12 @@ public class PermissionsTests
         // 'camera'/'microphone' permissions. Chromium needs --use-fake-device-for-media-stream
         // and Firefox has no camera/microphone permission mapping, so scope to WebKit.
         [BeforeEach]
-        public static void Skip(string browserName) => It.Skip(browserName != "webkit", "WebKit mock-capture-device based test");
+        public static void Skip(string browserName) => Info.Skip(browserName != "webkit", "WebKit mock-capture-device based test");
 
         // Native Windows WebKit is built without a media-capture backend, so getUserMedia is
         // unavailable there; WSL runs the Linux build, which does have mock capture.
         [BeforeEach]
-        public static void Skip2(bool isWindows, string channel) => It.Skip(isWindows && channel != "webkit-wsl", "WebKit has no media capture on Windows");
+        public static void Skip2(bool isWindows, string channel) => Info.Skip(isWindows && channel != "webkit-wsl", "WebKit has no media capture on Windows");
 
         private static async Task<object> GetUserMedia(IPage page, object constraints)
         {
@@ -480,7 +480,7 @@ public class PermissionsTests
         [UpstreamTest("PE-020 should capture when camera and microphone are granted")]
         public async Task ShouldCaptureWhenCameraAndMicrophoneAreGranted(IPage page, IBrowserContext context, Server server, bool isFrozenWebkit)
         {
-            It.Skip(isFrozenWebkit, "Mock capture device support requires a newer WebKit build");
+            Info.Skip(isFrozenWebkit, "Mock capture device support requires a newer WebKit build");
 
             await context.GrantPermissionsAsync(["camera", "microphone"], new() { Origin = server.Prefix });
             await page.GotoAsync(server.EmptyPage);
@@ -497,7 +497,7 @@ public class PermissionsTests
         [UpstreamTest("PE-021 should reject when no permission is granted")]
         public async Task ShouldRejectWhenNoPermissionIsGranted(IPage page, Server server, bool isFrozenWebkit)
         {
-            It.Skip(isFrozenWebkit, "Mock capture device support requires a newer WebKit build");
+            Info.Skip(isFrozenWebkit, "Mock capture device support requires a newer WebKit build");
 
             await page.GotoAsync(server.EmptyPage);
             ExpectToEqual(await GetUserMedia(page, new { video = true, audio = true }), new { error = "NotAllowedError" });
@@ -506,7 +506,7 @@ public class PermissionsTests
         [UpstreamTest("PE-022 should gate audio and video independently")]
         public async Task ShouldGateAudioAndVideoIndependently(IPage page, IBrowserContext context, Server server, bool isFrozenWebkit)
         {
-            It.Skip(isFrozenWebkit, "Mock capture device support requires a newer WebKit build");
+            Info.Skip(isFrozenWebkit, "Mock capture device support requires a newer WebKit build");
 
             await context.GrantPermissionsAsync(["camera"], new() { Origin = server.Prefix });
             await page.GotoAsync(server.EmptyPage);
@@ -519,7 +519,7 @@ public class PermissionsTests
         [UpstreamTest("PE-023 should stop capturing after permissions are cleared")]
         public async Task ShouldStopCapturingAfterPermissionsAreCleared(IPage page, IBrowserContext context, Server server, bool isFrozenWebkit)
         {
-            It.Skip(isFrozenWebkit, "Mock capture device support requires a newer WebKit build");
+            Info.Skip(isFrozenWebkit, "Mock capture device support requires a newer WebKit build");
 
             await context.GrantPermissionsAsync(["camera"], new() { Origin = server.Prefix });
             await page.GotoAsync(server.EmptyPage);

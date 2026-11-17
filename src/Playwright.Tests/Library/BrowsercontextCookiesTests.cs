@@ -142,7 +142,7 @@ public class BrowsercontextCookiesTests
     [UpstreamTest("CO-006 should properly report \"Strict\" sameSite cookie")]
     public async Task ShouldProperlyReportStrictSameSiteCookie(IBrowserContext context, IPage page, Server server, string browserName, string platform, string channel)
     {
-        It.Fixme(browserName == "webkit" && platform == "win32" && channel != "webkit-wsl");
+        Info.Fixme(browserName == "webkit" && platform == "win32" && channel != "webkit-wsl");
 
         server.SetRoute("/empty.html", (req, res) =>
         {
@@ -158,7 +158,7 @@ public class BrowsercontextCookiesTests
     [UpstreamTest("CO-007 should properly report \"Lax\" sameSite cookie")]
     public async Task ShouldProperlyReportLaxSameSiteCookie(IBrowserContext context, IPage page, Server server, string browserName, string platform, string channel)
     {
-        It.Fixme(browserName == "webkit" && platform == "win32" && channel != "webkit-wsl");
+        Info.Fixme(browserName == "webkit" && platform == "win32" && channel != "webkit-wsl");
 
         server.SetRoute("/empty.html", (req, res) =>
         {
@@ -414,7 +414,7 @@ public class BrowsercontextCookiesTests
     }
 
     [UpstreamTest("CO-015 should add cookies with an expiration")]
-    [Fixme("dotnet: Cookie.Expires is a float: 253402300800 is sent as 253402300416, which is a valid expiration, and AddCookiesAsync does not throw")]
+    [LocalFixme("dotnet: Cookie.Expires is a float: 253402300800 is sent as 253402300416, which is a valid expiration, and AddCookiesAsync does not throw")]
     public async Task ShouldAddCookiesWithAnExpiration(IBrowserContext context)
     {
         var expires = Math.Floor(DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() / 1000d) + 3600;
@@ -487,7 +487,7 @@ public class BrowsercontextCookiesTests
     [UpstreamTest("CO-016 should support requestStorageAccess")]
     public async Task ShouldSupportRequestStorageAccess(IPage page, Server server, string channel, string browserName, bool isMac, bool isLinux, bool isWindows, int macVersion)
     {
-        It.Skip(browserName == "chromium", "requestStorageAccess API is not available in Chromium");
+        Info.Skip(browserName == "chromium", "requestStorageAccess API is not available in Chromium");
 
         server.SetRoute("/set-cookie.html", (req, res) =>
         {

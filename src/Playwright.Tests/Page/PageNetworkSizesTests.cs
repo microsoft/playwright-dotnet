@@ -26,7 +26,7 @@ namespace Microsoft.Playwright.Tests.Page;
 public class PageNetworkSizesTests
 {
     [BeforeEach]
-    public static void Skip(bool isElectron, int browserMajorVersion) => It.Skip(isElectron && browserMajorVersion < 99, "This needs Chromium >= 99");
+    public static void Skip(bool isElectron, int browserMajorVersion) => Info.Skip(isElectron && browserMajorVersion < 99, "This needs Chromium >= 99");
 
     [UpstreamTest("NE-058 should set bodySize and headersSize")]
     public async Task ShouldSetBodySizeAndHeadersSize(IPage page, Server server)
@@ -92,8 +92,8 @@ public class PageNetworkSizesTests
     [UpstreamTest("NE-063 should have the correct responseBodySize for chunked request")]
     public async Task ShouldHaveTheCorrectResponseBodySizeForChunkedRequest(IPage page, Server server, Func<string, string> asset, string browserName, string platform)
     {
-        It.Fixme(browserName == "firefox");
-        It.Fixme(browserName == "webkit" && platform != "darwin");
+        Info.Fixme(browserName == "firefox");
+        Info.Fixme(browserName == "webkit" && platform != "darwin");
         var content = File.ReadAllBytes(asset("simplezip.json"));
         var AMOUNT_OF_CHUNKS = 10;
         var CHUNK_SIZE = (int)Math.Ceiling(content.Length / (double)AMOUNT_OF_CHUNKS);
@@ -161,7 +161,7 @@ public class PageNetworkSizesTests
     }
 
     [UpstreamTest("NE-066 should throw for failed requests")]
-    [Fixme("dotnet: the message of Request.SizesAsync for a failed request is \"Unable to fetch resources sizes.\", upstream has \"Unable to fetch sizes for failed request\"")]
+    [LocalFixme("dotnet: the message of Request.SizesAsync for a failed request is \"Unable to fetch resources sizes.\", upstream has \"Unable to fetch sizes for failed request\"")]
     public async Task ShouldThrowForFailedRequests(IPage page, Server server)
     {
         server.SetRoute("/one-style.css", (req, res) =>
@@ -209,7 +209,7 @@ public class PageNetworkSizesTests
     [UpstreamTest("NE-068 should have correct responseBodySize for 404 with content")]
     public async Task ShouldHaveCorrectResponseBodySizeFor404WithContent(IPage page, Server server, string browserName)
     {
-        It.Fixme(browserName == "chromium");
+        Info.Fixme(browserName == "chromium");
 
         server.SetRoute("/broken-image.png", (req, resp) =>
         {
@@ -241,7 +241,7 @@ public class PageNetworkSizesTests
     [UpstreamTest("NE-069 should return sizes without hanging")]
     public async Task ShouldReturnSizesWithoutHanging(IPage page, Server server, string browserName)
     {
-        It.Fixme(browserName == "chromium");
+        Info.Fixme(browserName == "chromium");
 
         server.SetRoute("/has-abandoned-fetch", (req, resp) =>
         {
