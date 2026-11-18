@@ -24,8 +24,8 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.Playwright.Helpers;
 using Microsoft.Playwright.Transport;
@@ -51,15 +51,17 @@ internal class BindingCall : ChannelOwner
         try
         {
             const string taskResultPropertyName = "Result";
-            var methodParams = binding.Method.GetParameters().Select(parameter => parameter.ParameterType).Skip(1).ToArray();
-            var args = new List<object>
+            var parameters = binding.Method.GetParameters();
+            var args = new List<object>();
+            if (parameters.Length > 0)
             {
-                new BindingSource(_initializer.Frame.Page.Context, _initializer.Frame.Page, _initializer.Frame),
-            };
+                args.Add(new BindingSource(_initializer.Frame.Page.Context, _initializer.Frame.Page, _initializer.Frame));
+            }
 
-            for (int i = 0; i < methodParams.Length; i++)
+            for (int i = 1; i < parameters.Length; i++)
             {
-                args.Add(ScriptsHelper.ParseEvaluateResult(_initializer.Args[i], methodParams[i]));
+                JsonElement? arg = i <= _initializer.Args.Count ? _initializer.Args[i - 1] : null;
+                args.Add(ScriptsHelper.ParseEvaluateResult(arg, parameters[i].ParameterType));
             }
 
             object? result = binding.DynamicInvoke(args.ToArray());
