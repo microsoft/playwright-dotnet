@@ -285,7 +285,6 @@ public class RetargetTests : UpstreamPageTest
     }
 
     [UpstreamTest("RE-010 input value retargeting")]
-    [LocalFixme("dotnet: Locator.WithElementAsync makes a negative timeout from the default timeout 0, and the call passes only when it ends before the timer of the driver")]
     public async Task InputValueRetargeting()
     {
         var cases = new[]
@@ -326,7 +325,6 @@ public class RetargetTests : UpstreamPageTest
     }
 
     [UpstreamTest("RE-011 selection retargeting")]
-    [LocalFixme("dotnet: Locator.WithElementAsync makes a negative timeout from the default timeout 0, and the call passes only when it ends before the timer of the driver")]
     public async Task SelectionRetargeting()
     {
         var cases = new[]

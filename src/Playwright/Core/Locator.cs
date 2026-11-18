@@ -477,7 +477,7 @@ internal class Locator : ILocator
     private Task<TResult> WithElementAsync<TResult>(Func<IElementHandle, float?, Task<TResult>> task, float? timeout, string title)
     {
         timeout = this._frame.Timeout(timeout);
-        long? deadline = timeout.HasValue ? Stopwatch.GetTimestamp() + (long)(timeout.Value * 1000 * Stopwatch.Frequency / 1000) : null;
+        long deadline = timeout > 0 ? Stopwatch.GetTimestamp() + (long)(timeout.Value * Stopwatch.Frequency / 1000) : 0;
 
         return this._frame.WrapApiCallAsync(
             async () =>
@@ -495,7 +495,7 @@ internal class Locator : ILocator
             {
                 throw new PlaywrightException($"Could not resolve {this._selector} to DOM Element");
             }
-            float? taskTimeout = deadline.HasValue ? (deadline.Value - Stopwatch.GetTimestamp()) / (float)Stopwatch.Frequency : null;
+            float taskTimeout = deadline != 0 ? (deadline - Stopwatch.GetTimestamp()) * 1000f / Stopwatch.Frequency : 0;
             try
             {
                 return await task(handle, taskTimeout).ConfigureAwait(false);

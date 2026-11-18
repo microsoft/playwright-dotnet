@@ -49,7 +49,6 @@ public class PageScreenshotTests : UpstreamPageTest
         }
 
         [UpstreamTest("SS-002 should not capture blinking caret by default")]
-        [LocalFixme("dotnet: Locator.WithElementAsync makes a negative timeout from the default timeout 0, and the call passes only when it ends before the timer of the driver")]
         public async Task ShouldNotCaptureBlinkingCaretByDefault()
         {
             await Page.SetContentAsync($@"
@@ -80,7 +79,6 @@ public class PageScreenshotTests : UpstreamPageTest
         }
 
         [UpstreamTest("SS-003 should capture blinking caret if explicitly asked for")]
-        [LocalFixme("dotnet: Locator.WithElementAsync makes a negative timeout from the default timeout 0, and the call passes only when it ends before the timer of the driver")]
         public async Task ShouldCaptureBlinkingCaretIfExplicitlyAskedFor()
         {
             Info.Skip(BrowserName == "firefox", "browser-level screenshot API in firefox does not capture caret");
@@ -115,7 +113,6 @@ public class PageScreenshotTests : UpstreamPageTest
         }
 
         [UpstreamTest("SS-004 should capture blinking caret in shadow dom")]
-        [LocalFixme("dotnet: Locator.WithElementAsync makes a negative timeout from the default timeout 0, and the call passes only when it ends before the timer of the driver")]
         public async Task ShouldCaptureBlinkingCaretInShadowDom()
         {
             await Page.AddScriptTagAsync(new()
