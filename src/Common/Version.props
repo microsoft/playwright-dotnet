@@ -1,6 +1,6 @@
 <Project>
   <PropertyGroup>
-    <AssemblyVersion>1.65.0</AssemblyVersion>
+    <AssemblyVersion>1.65.1</AssemblyVersion>
     <PackageVersion>$(AssemblyVersion)</PackageVersion>
     <DriverVersion>bbd948344ea9a60bf1e6f125c02ca99b2b51593b</DriverVersion>
     <!-- The Node.js major version bundled with the driver. Each driver build bundles the
