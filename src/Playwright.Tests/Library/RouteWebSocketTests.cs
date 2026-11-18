@@ -152,7 +152,6 @@ public class RouteWebSocketTests : UpstreamBrowserTest
         }
 
         [UpstreamTest("WS-016 should work with binaryType=blob")]
-        [LocalFixme("dotnet: IWebSocketFrame.Text is not null for a binary frame (WebSocketFrame.Text decodes Binary), so a handler can not tell a binary message from a text one and the pass-through route forwards 'hi' as text: the page logs 'data=hi', not 'data=blob:hi' (only for pass-through)")]
         public async Task ShouldWorkWithBinaryTypeBlob()
         {
             var page = await PageFixture();
@@ -172,7 +171,6 @@ public class RouteWebSocketTests : UpstreamBrowserTest
         }
 
         [UpstreamTest("WS-017 should work with binaryType=arraybuffer")]
-        [LocalFixme("dotnet: IWebSocketFrame.Text is not null for a binary frame (WebSocketFrame.Text decodes Binary), so a handler can not tell a binary message from a text one and the pass-through route forwards 'hi' as text: the page logs 'data=hi', not 'data=arraybuffer:hi' (only for pass-through)")]
         public async Task ShouldWorkWithBinaryTypeArraybuffer()
         {
             var page = await PageFixture();
@@ -279,7 +277,6 @@ public class RouteWebSocketTests : UpstreamBrowserTest
         }
 
         [UpstreamTest("WS-022 should work with relative WebSocket URL")]
-        [LocalFixme("dotnet: IWebSocketFrame.Text is not null for a binary frame (WebSocketFrame.Text decodes Binary), so a handler can not tell a binary message from a text one and the pass-through route forwards 'hi' as text: the page logs 'data=hi', not 'data=blob:hi' (only for pass-through)")]
         public async Task ShouldWorkWithRelativeWebSocketURL()
         {
             var page = await PageFixture();
@@ -893,7 +890,6 @@ public class RouteWebSocketTests : UpstreamBrowserTest
     }
 
     [UpstreamTest("WS-038 should work with baseURL regardless of scheme casing")]
-    [LocalFixme("dotnet: URLMatch.ToWebSocketBaseURL makes 'ws://' only from a lower-case 'http://' of the baseURL, upstream ignores the case of the scheme, so the route '/ws' does not match with the baseURL 'HTTP://localhost:<port>'")]
     public async Task ShouldWorkWithBaseURLRegardlessOfSchemeCasing()
     {
         // baseURL schemes are case-insensitive, same as everywhere else in URL matching.
