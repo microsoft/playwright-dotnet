@@ -37,6 +37,14 @@ public class BrowsertypeLaunchTests : UpstreamBrowserTest
         Assert.That(error.Message, Does.Contain(" closed"));
     }
 
+    [UpstreamTest("BT-006 should throw if userDataDir is passed as an argument")]
+    public async Task ShouldThrowIfUserDataDirIsPassedAsAnArgument()
+    {
+        Exception waitError = null;
+        waitError = await Catch(() => BrowserType.LaunchAsync(new(LaunchOptions()) { Args = ["--user-data-dir=random-path", "--profile=random-path"] }));
+        Assert.That(waitError.Message, Does.Contain("Pass userDataDir parameter to 'BrowserType.LaunchPersistentContextAsync"));
+    }
+
     [UpstreamTest("BT-009 should throw if page argument is passed")]
     public async Task ShouldThrowIfPageArgumentIsPassed()
     {

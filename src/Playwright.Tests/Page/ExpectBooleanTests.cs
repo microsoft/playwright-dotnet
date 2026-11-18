@@ -77,11 +77,11 @@ public class ExpectBooleanTests : UpstreamPageTest
             var error = await Catch(() => Expect(locator).ToBeCheckedAsync(new() { Timeout = 1000 }));
             Assert.That(StripAnsi(error.Message), Does.Contain(@"expect(locator).toBeChecked() failed
 
-Locator:  locator('input')
+Locator:  Locator(""input"")
 Expected: checked
 Received: unchecked
 Timeout:  1000ms"));
-            Assert.That(StripAnsi(error.Message), Does.Contain("- Expect \"toBeChecked\" locator('input') with timeout 1000ms"));
+            Assert.That(StripAnsi(error.Message), Does.Contain("- Expect \"toBeChecked\" Locator(\"input\") with timeout 1000ms"));
         }
 
         [UpstreamTest("EX-007 with not")]
@@ -109,11 +109,11 @@ Timeout:  1000ms"));
             var error = await Catch(() => Expect(locator).Not.ToBeCheckedAsync(new() { Timeout = 1000 }));
             Assert.That(StripAnsi(error.Message), Does.Contain(@"expect(locator).not.toBeChecked() failed
 
-Locator:  locator('input')
+Locator:  Locator(""input"")
 Expected: not checked
 Received: checked
 Timeout:  1000ms"));
-            Assert.That(StripAnsi(error.Message), Does.Contain("- Expect \"not toBeChecked\" locator('input') with timeout 1000ms"));
+            Assert.That(StripAnsi(error.Message), Does.Contain("- Expect \"not toBeChecked\" Locator(\"input\") with timeout 1000ms"));
             Assert.That(StripAnsi(error.Message), Does.Contain("locator resolved to <input checked type=\"checkbox\"/>"));
         }
 
@@ -126,11 +126,11 @@ Timeout:  1000ms"));
             var error = await Catch(() => Expect(locator).ToBeCheckedAsync(new() { Checked = false, Timeout = 1000 }));
             Assert.That(StripAnsi(error.Message), Does.Contain(@"expect(locator).toBeChecked({ checked: false }) failed
 
-Locator:  locator('input')
+Locator:  Locator(""input"")
 Expected: unchecked
 Received: checked
 Timeout:  1000ms"));
-            Assert.That(StripAnsi(error.Message), Does.Contain("- Expect \"toBeChecked\" locator('input') with timeout 1000ms"));
+            Assert.That(StripAnsi(error.Message), Does.Contain("- Expect \"toBeChecked\" Locator(\"input\") with timeout 1000ms"));
             Assert.That(StripAnsi(error.Message), Does.Contain("locator resolved to <input checked type=\"checkbox\"/>"));
         }
 
@@ -143,11 +143,11 @@ Timeout:  1000ms"));
             var error = await Catch(() => Expect(locator).ToBeCheckedAsync(new() { Indeterminate = true, Timeout = 1000 }));
             Assert.That(StripAnsi(error.Message), Does.Contain(@"expect(locator).toBeChecked({ indeterminate: true }) failed
 
-Locator:  locator('input')
+Locator:  Locator(""input"")
 Expected: indeterminate
 Received: unchecked
 Timeout:  1000ms"));
-            Assert.That(StripAnsi(error.Message), Does.Contain("- Expect \"toBeChecked\" locator('input') with timeout 1000ms"));
+            Assert.That(StripAnsi(error.Message), Does.Contain("- Expect \"toBeChecked\" Locator(\"input\") with timeout 1000ms"));
         }
 
         [UpstreamTest("EX-012 fail missing")]
@@ -159,14 +159,14 @@ Timeout:  1000ms"));
             var error = await Catch(() => Expect(locator2).Not.ToBeCheckedAsync(new() { Timeout = 1000 }));
             Assert.That(StripAnsi(error.Message), Does.Contain(@"expect(locator).not.toBeChecked() failed
 
-Locator: locator('input2')
+Locator: Locator(""input2"")
 Expected: not checked
 Timeout: 1000ms
 Error: element(s) not found
 
 Call log:
-  - Expect ""not toBeChecked"" locator('input2') with timeout 1000ms
-  - waiting for locator('input2')
+  - Expect ""not toBeChecked"" Locator(""input2"") with timeout 1000ms
+  - waiting for Locator(""input2"")
 "));
         }
 
@@ -627,13 +627,13 @@ Call log:
             var error = await Catch(() => Expect(locator).Not.ToBeHiddenAsync(new() { Timeout = 1000 }));
             Assert.That(StripAnsi(error.Message), Does.Contain(@"expect(locator).not.toBeHidden() failed
 
-Locator: locator('button')
+Locator: Locator(""button"")
 Expected: not hidden
 Timeout: 1000ms
 Error: element(s) not found
 
 Call log:
-  - Expect ""not toBeHidden"" locator('button') with timeout 1000ms
+  - Expect ""not toBeHidden"" Locator(""button"") with timeout 1000ms
 "));
         }
 

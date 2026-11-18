@@ -116,7 +116,6 @@ public class PageAriaSnapshotAiTests : UpstreamPageTest
     }
 
     [UpstreamTest("AR-052 should stitch all frame snapshots")]
-    [LocalFixme("dotnet: locator.ToString() after NormalizeAsync() is the C# form Locator(\"body\"), upstream expects locator('body')")]
     public async Task ShouldStitchAllFrameSnapshots()
     {
         await Page.GotoAsync(Server.Prefix + "/frames/nested-frames.html");
@@ -144,16 +143,16 @@ public class PageAriaSnapshotAiTests : UpstreamPageTest
 
         {
             var resolved = await Page.GetByRef("e1").NormalizeAsync();
-            Assert.That(resolved.ToString(), Is.EqualTo("locator('body')"));
+            Assert.That(resolved.ToString(), Is.EqualTo("Locator(\"body\")"));
         }
         {
             var resolved = await Page.GetByRef("f4e2").NormalizeAsync();
-            Assert.That(resolved.ToString(), Is.EqualTo("locator('iframe[name=\"2frames\"]').contentFrame().locator('iframe[name=\"dos\"]').contentFrame().getByText('Hi, I\\'m frame')"));
+            Assert.That(resolved.ToString(), Is.EqualTo("Locator(\"iframe[name=\\\"2frames\\\"]\").ContentFrame.Locator(\"iframe[name=\\\"dos\\\"]\").ContentFrame.GetByText(\"Hi, I'm frame\")"));
         }
         {
             // Should tolerate .describe().
             var resolved = await Page.GetByRef("f3e2").Describe("foo bar").NormalizeAsync();
-            Assert.That(resolved.ToString(), Is.EqualTo("locator('iframe[name=\"2frames\"]').contentFrame().locator('iframe[name=\"uno\"]').contentFrame().getByText('Hi, I\\'m frame')"));
+            Assert.That(resolved.ToString(), Is.EqualTo("Locator(\"iframe[name=\\\"2frames\\\"]\").ContentFrame.Locator(\"iframe[name=\\\"uno\\\"]\").ContentFrame.GetByText(\"Hi, I'm frame\")"));
         }
         {
             var error = await Catch(() => Page.GetByRef("e1000").NormalizeAsync());
@@ -858,7 +857,6 @@ public class PageAriaSnapshotAiTests : UpstreamPageTest
     }
 
     [UpstreamTest("AR-083 should snapshot a locator inside a frameset frame")]
-    [LocalFixme("dotnet: locator.ToString() after NormalizeAsync() is the C# form Locator(\"frame\").First.ContentFrame.Locator(\"body\"), upstream expects locator('frame').first().contentFrame().locator('body')")]
     public async Task ShouldSnapshotALocatorInsideAFramesetFrame()
     {
         await Page.GotoAsync(Server.Prefix + "/frames/frameset.html");
@@ -870,11 +868,10 @@ public class PageAriaSnapshotAiTests : UpstreamPageTest
 
         await Expect(Page.GetByRef("f1e1")).ToHaveTextAsync("Hi, I'm frame");
         var resolved = await Page.GetByRef("f1e1").NormalizeAsync();
-        Assert.That(resolved.ToString(), Is.EqualTo("locator('frame').first().contentFrame().locator('body')"));
+        Assert.That(resolved.ToString(), Is.EqualTo("Locator(\"frame\").First.ContentFrame.Locator(\"body\")"));
     }
 
     [UpstreamTest("AR-084 should stitch iframes inside a frameset frame")]
-    [LocalFixme("dotnet: locator.ToString() after NormalizeAsync() is the C# form Locator(\"frame\").ContentFrame.Locator(\"iframe\").ContentFrame.GetByRole(AriaRole.Button, new() { Name = \"In iframe\" }), upstream expects locator('frame').contentFrame().locator('iframe').contentFrame().getByRole('button', { name: 'In iframe' })")]
     public async Task ShouldStitchIframesInsideAFramesetFrame()
     {
         Server.SetRoute("/frameset-with-iframe.html", (req, res) =>
@@ -900,7 +897,7 @@ public class PageAriaSnapshotAiTests : UpstreamPageTest
         await Expect(Page.GetByRef("f2e2")).ToHaveTextAsync("In iframe");
 
         var resolved = await Page.GetByRef("f2e2").NormalizeAsync();
-        Assert.That(resolved.ToString(), Is.EqualTo("locator('frame').contentFrame().locator('iframe').contentFrame().getByRole('button', { name: 'In iframe' })"));
+        Assert.That(resolved.ToString(), Is.EqualTo("Locator(\"frame\").ContentFrame.Locator(\"iframe\").ContentFrame.GetByRole(AriaRole.Button, new() { Name = \"In iframe\" })"));
     }
 
     [UpstreamTest("AR-085 should stitch nested frameset documents")]

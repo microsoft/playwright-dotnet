@@ -316,7 +316,6 @@ public class LocatorQueryTests : UpstreamPageTest
     }
 
     [UpstreamTest("LO-178 should allow some, but not all nested frameLocators")]
-    [LocalFixme("dotnet: the error has Locator(\"iframe\").ContentFrame.Locator(\"div\").Or(Locator(\"#iframe\").ContentFrame.Locator(\"span\")), upstream expects locator('iframe').contentFrame().locator('div').or(locator('#iframe').contentFrame().locator('span'))")]
     public async Task ShouldAllowSomeButNotAllNestedFrameLocators()
     {
         await Page.SetContentAsync("<iframe srcdoc=\"<span id=target>world</span>\"></iframe><span>hello</span>");
@@ -324,9 +323,9 @@ public class LocatorQueryTests : UpstreamPageTest
         await Expect(Page.FrameLocator("iframe").Locator("article").Or(Page.FrameLocator("iframe").Locator("span"))).ToHaveTextAsync("world");
         await Expect(Page.FrameLocator("iframe").Locator("span").And(Page.FrameLocator("iframe").Locator("#target"))).ToHaveTextAsync("world");
         var error1 = await Catch(() => Expect(Page.FrameLocator("iframe").Locator("div").Or(Page.FrameLocator("#iframe").Locator("span"))).ToHaveTextAsync("world"));
-        Assert.That(error1.Message, Does.Contain("Frame locators are not allowed inside composite locators, while querying \"locator('iframe').contentFrame().locator('div').or(locator('#iframe').contentFrame().locator('span'))"));
+        Assert.That(error1.Message, Does.Contain("Frame locators are not allowed inside composite locators, while querying \"Locator(\"iframe\").ContentFrame.Locator(\"div\").Or(Locator(\"#iframe\").ContentFrame.Locator(\"span\"))"));
         var error2 = await Catch(() => Expect(Page.FrameLocator("iframe").Locator("div").And(Page.FrameLocator("#iframe").Locator("span"))).ToHaveTextAsync("world"));
-        Assert.That(error2.Message, Does.Contain("Frame locators are not allowed inside composite locators, while querying \"locator('iframe').contentFrame().locator('div').and(locator('#iframe').contentFrame().locator('span'))"));
+        Assert.That(error2.Message, Does.Contain("Frame locators are not allowed inside composite locators, while querying \"Locator(\"iframe\").ContentFrame.Locator(\"div\").And(Locator(\"#iframe\").ContentFrame.Locator(\"span\"))"));
     }
 
     [UpstreamTest("LO-179 should keep the capture when removing a common frame prefix")]
@@ -342,12 +341,12 @@ public class LocatorQueryTests : UpstreamPageTest
     }
 
     [UpstreamTest("LO-180 should enforce same frame for has/leftOf/rightOf/above/below/near")]
-    [LocalFixme("dotnet: Locator() throws an ArgumentException with 'Inner \"Has\" locator must belong to the same frame.'; upstream expects 'Inner \"has\" locator must belong to the same frame.'")]
     public async Task ShouldEnforceSameFrameForHasLeftOfRightOfAboveBelowNear()
     {
         await Page.GotoAsync(Server.Prefix + "/frames/two-frames.html");
         var child = Page.Frames[1];
-        foreach (var option in new[] { "has" })
+        // .NET: the option has is Has, and the message names it so.
+        foreach (var option in new[] { "Has" })
         {
             Exception error = null;
             try

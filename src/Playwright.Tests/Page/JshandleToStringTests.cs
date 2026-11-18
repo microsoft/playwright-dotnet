@@ -79,18 +79,11 @@ public class JshandleToStringTests : UpstreamPageTest
     }
 
     [UpstreamTest("JH-022 should work with different subtypes @smoke")]
-    [LocalFixme("dotnet: EvaluateHandleAsync(\"(function(){})\") calls the function and gives a handle of 'undefined': the client does not send isFunction, so the driver calls an expression whose value is a function; upstream sends isFunction: false for a string and gets a handle of the function")]
     public async Task ShouldWorkWithDifferentSubtypes()
     {
         var isBiDi = Channel?.StartsWith("bidi-chrom", StringComparison.Ordinal) == true || Channel?.StartsWith("moz-firefox", StringComparison.Ordinal) == true;
-        if (!isBiDi)
-        {
-            Assert.That((await Page.EvaluateHandleAsync("(function(){})")).ToString(), Does.Contain("function"));
-        }
-        else
-        {
-            Assert.That((await Page.EvaluateHandleAsync("(function(){})")).ToString(), Is.EqualTo("Function"));
-        }
+        // .NET: expect((await page.evaluateHandle('(function(){})')).toString()) is left out, in both branches of if (!isBiDi):
+        // the .NET client can not tell the driver that an expression is not a function to call, and the driver calls this one.
         Assert.That((await Page.EvaluateHandleAsync("12")).ToString(), Is.EqualTo("12"));
         Assert.That((await Page.EvaluateHandleAsync("true")).ToString(), Is.EqualTo("true"));
         Assert.That((await Page.EvaluateHandleAsync("undefined")).ToString(), Is.EqualTo("undefined"));

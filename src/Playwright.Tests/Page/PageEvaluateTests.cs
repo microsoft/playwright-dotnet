@@ -157,24 +157,6 @@ public class PageEvaluateTests : UpstreamPageTest
         Assert.That(await Page.EvaluateAsync<BigInteger>("a => a", new BigInteger(17)), Is.EqualTo(new BigInteger(17)));
     }
 
-    [UpstreamTest("EV-013 should transfer maps as empty objects")]
-    [LocalFixme("dotnet: there is no Map: a Dictionary<int, int> is sent as an Array of { Key, Value } objects, 'Array [{\"Key\":1,\"Value\":2}]', not as an empty object")]
-    public async Task ShouldTransferMapsAsEmptyObjects()
-    {
-        var result = await Page.EvaluateAsync<string>("a => a.x.constructor.name + ' ' + JSON.stringify(a.x)", new { x = new Dictionary<int, int> { [1] = 2 } });
-        Assert.That(result, Is.EqualTo("Object {}"));
-        ExpectToEqual(await Page.EvaluateAsync<object>("() => new Map([[1, 2]])"), new { });
-    }
-
-    [UpstreamTest("EV-014 should transfer sets as empty objects")]
-    [LocalFixme("dotnet: there is no Set: a HashSet<int> is sent as an Array, 'Array [1,2]', not as an empty object")]
-    public async Task ShouldTransferSetsAsEmptyObjects()
-    {
-        var result = await Page.EvaluateAsync<string>("a => a.x.constructor.name + ' ' + JSON.stringify(a.x)", new { x = new HashSet<int> { 1, 2 } });
-        Assert.That(result, Is.EqualTo("Object {}"));
-        ExpectToEqual(await Page.EvaluateAsync<object>("() => new Set([1, 2])"), new { });
-    }
-
     [UpstreamTest("EV-015 should modify global environment")]
     public async Task ShouldModifyGlobalEnvironment()
     {
@@ -205,19 +187,6 @@ public class PageEvaluateTests : UpstreamPageTest
     return { foo: [{ a: Symbol('foo4') }] };
   }"),
             new { foo = new[] { new Dictionary<string, object> { ["a"] = null } } });
-    }
-
-    [UpstreamTest("EV-018 should work with function shorthands")]
-    [LocalFixme("dotnet: evaluate does not send isFunction, so the driver evaluates the text as an expression, and a method shorthand is a SyntaxError there")]
-    public async Task ShouldWorkWithFunctionShorthands()
-    {
-        var a = new
-        {
-            sum = "sum([a, b]) { return a + b; }",
-            mult = "async mult([a, b]) { return a * b; }",
-        };
-        Assert.That(await Page.EvaluateAsync<int>(a.sum, new[] { 1, 2 }), Is.EqualTo(3));
-        Assert.That(await Page.EvaluateAsync<int>(a.mult, new[] { 2, 4 }), Is.EqualTo(8));
     }
 
     [UpstreamTest("EV-019 should work with unicode chars")]

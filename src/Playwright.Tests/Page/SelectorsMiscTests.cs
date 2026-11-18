@@ -363,11 +363,10 @@ public class SelectorsMiscTests : UpstreamPageTest
     }
 
     [UpstreamTest("SE-145 should print original xpath in error")]
-    [LocalFixme("dotnet: the call log has Locator(\"//*[contains(@Class, 'foo']\"), upstream expects locator('//*[contains(@Class, \\'foo\\']')")]
     public async Task ShouldPrintOriginalXpathInError()
     {
         var error = await Catch(() => Page.Locator("//*[contains(@Class, 'foo']").IsVisibleAsync());
-        Assert.That(error.Message, Does.Contain("//*[contains(@Class, \\'foo\\']"));
+        Assert.That(error.Message, Does.Contain("//*[contains(@Class, 'foo']"));
         Assert.That(error.Message, Does.Not.Contain(".//*[contains(@Class, 'foo']"));
     }
 

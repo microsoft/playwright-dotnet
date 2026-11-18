@@ -15,7 +15,7 @@ you, never from memory of what the test does.
 
 **Never change a port to make it pass.** No skip, condition, wait or assertion that upstream
 does not have, for any reason: not a browser channel, not a CI image, not an operating system,
-not flakiness. A port that fails shows a bug in the .NET client, the driver, the test harness
+not flakiness. Section 3 has the one skip that the port adds. A port that fails shows a bug in the .NET client, the driver, the test harness
 or the environment: first read the upstream test again and check that the port is faithful,
 then report it with the evidence.
 
@@ -232,7 +232,7 @@ no parameters for them.
 | `startRemoteServer(kind, options)` | `await StartRemoteServer("launchServer", new() { ... })`; `remoteServer.WsEndpoint()`, `Close()`, `Out(key)`, `Child().Id`, `ChildExitCode()` |
 | `childProcess(params)`, `waitForPort(port)` | `ChildProcess(new() { ... })`, `await WaitForPort(port)` (`TestChildProcess.cs`) |
 | `pageWithHar(options)` | `await PageWithHar(new() { ... })`: `Page`, `Context`, `GetLog()` (a `JsonElement`), `GetZip()` |
-| `toImpl` | not available: a test that uses it is not ported; one that only destructures it is ported |
+| `toImpl` | not available: a test that uses it is not ported; one that only destructures it is ported; a fixture of the file that uses it for some browsers only skips its tests in these browsers (section 3) |
 | `process.execPath`, `process.kill(pid, signal)` | `NodeProcess.ExecPath` (the Node.js of the driver), `NodeProcess.Kill(pid, signal)` |
 | `process.env.X` (read) | `Environment.GetEnvironmentVariable("X")` |
 | `process.env.PWTEST_SERVER_REGISTRY = dir` | `ServerRegistry`: the directory that the driver got at its start |
@@ -350,7 +350,13 @@ so a port passes them.
 - `test.info().annotations` and `{ annotation: ... }` are left out, without a comment.
   `await test.step('name', async () => { ... })` is `await Info.Step("name", async () => { ... })`.
 - Do not add `[LocalFixme]`, an `Info.Skip` or an `[Ignore]` that upstream does not
-  have, except the `[LocalFixme]` of the rule at the top.
+  have, except the `[LocalFixme]` of the rule at the top and the skip of the next rule.
+- A fixture of the file that needs `toImpl` in some browsers only (`crash` of
+  `page-event-crash.spec.ts`: `chrome://crash` in Chromium, `toImpl(page)` in Firefox and
+  WebKit) is ported for the other browsers, and the tests that take it are skipped in the
+  browsers that it can not serve. The skip is the last line of the `BeforeEach` of the file when
+  every test takes the fixture, else the first line of each test that takes it, with a
+  `// .NET:` mark: `Info.Skip(BrowserName != "chromium", "the crash fixture needs toImpl(page)");`
 
 ## 4. Statements
 
@@ -412,12 +418,37 @@ is `ExpectToEqual(await page.EvaluateAsync<object>("() => ({ a: 1, b: [1, 2] })"
   `TargetClosedErrorMessage`. `error.stack` as a text is `error.ToString()`.
 - Compare messages as upstream does. When the .NET message differs from the one upstream
   checks, the test gets `[LocalFixme("dotnet: ...")]`, with the .NET text in the reason. This is so
-  for the missing prefix with the name of the call (`page.click: Timeout ...`), for the
-  messages of the `Expect` matchers, and for the C# form of a locator in a message or a call
-  log (`Locator("option")` for `locator('option')`): the port shows the difference, it does
-  not hide it. A message that the driver words for .NET on purpose
-  (`'BrowserType.LaunchPersistentContextAsync(...)'` for `'browserType.launchPersistentContext'`)
-  is another matter: the test is not ported.
+  for the missing prefix with the name of the call (`page.click: Timeout ...`) and for the
+  messages of the `Expect` matchers: the port shows the difference, it does not hide it.
+- Three parts of a message are .NET by design. The expected text has them in the .NET form,
+  and the rest of it stays as upstream has it:
+  - A locator is printed as C# code, in an error message, in a call log and by
+    `locator.ToString()`:
+
+    | Upstream | .NET |
+    |---|---|
+    | `locator('div')`, `getByText('a')` | `Locator("div")`, `GetByText("a")` |
+    | `getByRole('button', { name: 'Submit' })` | `GetByRole(AriaRole.Button, new() { Name = "Submit" })` |
+    | `.filter({ hasText: 'x' })` | `.Filter(new() { HasText = "x" })` |
+    | `.first()`, `.contentFrame()` | `.First`, `.ContentFrame` |
+    | `.or(...)`, `.and(...)` | `.Or(...)`, `.And(...)` |
+    | `frameLocator().locator('a')` | `FrameLocator().Locator("a")` |
+
+    A string of the locator is in double quotes: a `'` in it has no backslash, a `"` has one.
+    `waiting for locator('div') to be visible` is `waiting for Locator("div") to be visible`.
+    Only a locator that the driver prints changes: `frameLocator()` as a word of a message
+    (`frameLocator() matched elements in multiple frames`), the action titles that
+    `ParseTraceRaw` gives (`Click locator('button')`) and the tooltip of `locator.highlight()`
+    keep the JavaScript form.
+  - A member of the API that the message names has its .NET name, whether the client or the
+    driver words the message: `Use saveAs()` is `Use SaveAsAsync()`, `'maxRedirects' must be`
+    is `'MaxRedirects' must be`, `Please use browser.newContext()` is
+    `Please use Browser.NewContextAsync()`, `'browserType.launchPersistentContext` is
+    `'BrowserType.LaunchPersistentContextAsync`. A loop value that is the name of an option in
+    a message (`has`) is the .NET name, `Has`, with a mark.
+  - A message of Node.js itself is the message of the .NET runtime, with a mark:
+    `ENOENT: no such file or directory` is `Could not find file`, the message of a
+    `FileNotFoundException`.
 - A check of `error.stack` against `__filename` is a statement left out with a `// .NET:`
   comment: a .NET stack trace has the frames of the library. `__filename` as a value is
   `new System.Diagnostics.StackFrame(true).GetFileName()`, and a `.spec.ts` name that a trace

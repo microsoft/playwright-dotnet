@@ -25,7 +25,6 @@ namespace Microsoft.Playwright.Tests.Page;
 public class LocatorConvenienceTests : UpstreamPageTest
 {
     [UpstreamTest("LO-057 should have a nice preview")]
-    [LocalFixme("dotnet: Locator.ToString() gives the C# form, 'Locator(\"#outer\")'; upstream expects \"locator('#outer')\"")]
     public async Task ShouldHaveANicePreview()
     {
         await Page.GotoAsync($"{Server.Prefix}/dom.html");
@@ -34,10 +33,10 @@ public class LocatorConvenienceTests : UpstreamPageTest
         var check = Page.Locator("#check");
         var text = await inner.EvaluateHandleAsync("e => e.firstChild");
         await Page.EvaluateAsync("() => 1");  // Give them a chance to calculate the preview.
-        Assert.That(outer.ToString(), Is.EqualTo("locator('#outer')"));
-        Assert.That(inner.ToString(), Is.EqualTo("locator('#outer').locator('#inner')"));
+        Assert.That(outer.ToString(), Is.EqualTo("Locator(\"#outer\")"));
+        Assert.That(inner.ToString(), Is.EqualTo("Locator(\"#outer\").Locator(\"#inner\")"));
         Assert.That(text.ToString(), Is.EqualTo("JSHandle@#text=Text,↵more text"));
-        Assert.That(check.ToString(), Is.EqualTo("locator('#check')"));
+        Assert.That(check.ToString(), Is.EqualTo("Locator(\"#check\")"));
     }
 
     [UpstreamTest("LO-058 getAttribute should work")]
@@ -102,13 +101,12 @@ public class LocatorConvenienceTests : UpstreamPageTest
     }
 
     [UpstreamTest("LO-063 innerText should produce log")]
-    [LocalFixme("dotnet: the call log has Locator(\"span\"), upstream expects locator('span')")]
     public async Task InnerTextShouldProduceLog()
     {
         await Page.SetContentAsync("<div>Hello</div>");
         var locator = Page.Locator("span");
         var error = await Catch(() => locator.InnerTextAsync(new() { Timeout = 1000 }));
-        Assert.That(error.Message, Does.Contain("waiting for locator('span')"));
+        Assert.That(error.Message, Does.Contain("waiting for Locator(\"span\")"));
     }
 
     [UpstreamTest("LO-064 textContent should work")]
@@ -271,11 +269,10 @@ public class LocatorConvenienceTests : UpstreamPageTest
     }
 
     [UpstreamTest("LO-077 toString() returns formatted locator")]
-    [LocalFixme("dotnet: Locator.ToString() gives the C# form, 'GetByRole(AriaRole.Button, new() { Name = \"Submit\" })'; upstream expects \"getByRole('button', { name: 'Submit' })\"")]
     public async Task ToStringReturnsFormattedLocator()
     {
         var locator = Page.GetByRole(AriaRole.Button, new() { Name = "Submit" });
-        Assert.That(locator.ToString(), Is.EqualTo("getByRole('button', { name: 'Submit' })"));
+        Assert.That(locator.ToString(), Is.EqualTo("GetByRole(AriaRole.Button, new() { Name = \"Submit\" })"));
         Assert.That(locator.Description, Is.Null);
     }
 

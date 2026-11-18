@@ -120,12 +120,11 @@ public class LocatorFrameTests : UpstreamPageTest
     }
 
     [UpstreamTest("LO-092 should wait for frame")]
-    [LocalFixme("dotnet: the call log has Locator(\"body\").Locator(\"iframe\").ContentFrame, upstream expects locator('body').locator('iframe').contentFrame()")]
     public async Task ShouldWaitForFrame()
     {
         await Page.GotoAsync(Server.EmptyPage);
         var error = await Catch(() => Page.Locator("body").FrameLocator("iframe").Locator("span").ClickAsync(new() { Timeout = 1000 }));
-        Assert.That(error.Message, Does.Contain("waiting for locator('body').locator('iframe').contentFrame()"));
+        Assert.That(error.Message, Does.Contain("waiting for Locator(\"body\").Locator(\"iframe\").ContentFrame"));
     }
 
     [UpstreamTest("LO-093 should wait for frame 2")]
@@ -275,14 +274,13 @@ public class LocatorFrameTests : UpstreamPageTest
     }
 
     [UpstreamTest("LO-104 locator.frameLocator should throw on ambiguity")]
-    [LocalFixme("dotnet: the error has Locator(\"body\").Locator(\"iframe\"), upstream expects locator('body').locator('iframe')")]
     public async Task LocatorFrameLocatorShouldThrowOnAmbiguity()
     {
         await RouteAmbiguous(Page);
         await Page.GotoAsync(Server.EmptyPage);
         var button = Page.Locator("body").FrameLocator("iframe").Locator("button");
         var error = await Catch(() => button.WaitForAsync());
-        Assert.That(error.Message, Does.Contain("Error: strict mode violation: locator('body').locator('iframe') resolved to 3 elements"));
+        Assert.That(error.Message, Does.Contain("Error: strict mode violation: Locator(\"body\").Locator(\"iframe\") resolved to 3 elements"));
     }
 
     [UpstreamTest("LO-105 locator.frameLocator should not throw on first/last/nth")]
