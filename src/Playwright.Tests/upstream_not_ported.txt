@@ -233,6 +233,8 @@ PR-020      The test passes a number as proxy.server (@ts-expect-error); Proxy.S
 library/browsercontext-reuse        The reusedContext fixture calls browser._newContextForReuse(), browser._disconnectFromReusedContext() and browserType._instrumentation, internals of the Node.js client that the .NET client does not have.
 # library/browsercontext-route
 RO-185      The URLPattern argument of context.route() is not in the .NET API: RouteAsync takes a string, a Regex or a predicate.
+# library/browsercontext-storage-state
+ST-011      Expects a lone surrogate in the storage state. The driver replaces it with U+FFFD for a client that does not send supportsLoneSurrogates, and .NET does not: System.Text.Json can not read a string with a lone surrogate.
 # library/browsertype-connect
 BT-034      The test sets process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = '0' for the WebSocket connection, which the Node.js client makes in the process of the test. In .NET the driver makes it, in a process that is already running and does not see the variable.
 BT-041      The test changes playwright._defaultLaunchOptions.headless, an internal of the Node.js client that startRemoteServer and connect read, and passes the __testHookKeepTestTimeout option of page.pause(), which is not in the .NET API.

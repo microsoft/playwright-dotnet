@@ -22,7 +22,6 @@
  * SOFTWARE.
  */
 using System.Collections.Generic;
-using System.IO;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.Playwright.Helpers;
@@ -52,19 +51,13 @@ internal class APIRequest : IAPIRequest
             ["clientCertificates"] = Browser.ToClientCertificatesProtocol(options?.ClientCertificates),
             ["failOnStatusCode"] = options?.FailOnStatusCode,
         };
-        var storageState = options?.StorageState;
         if (!string.IsNullOrEmpty(options?.StorageStatePath))
         {
-            if (!File.Exists(options?.StorageStatePath))
-            {
-                throw new PlaywrightException($"The specified storage state file does not exist: {options?.StorageStatePath}");
-            }
-
-            storageState = File.ReadAllText(options?.StorageStatePath);
+            args.Add("storageState", BrowserContext.ReadStorageState(options!.StorageStatePath!));
         }
-        if (!storageState.IsNullOrEmpty())
+        else if (!string.IsNullOrEmpty(options?.StorageState))
         {
-            args.Add("storageState", JsonSerializer.Deserialize<object>(storageState, Helpers.JsonExtensions.DefaultJsonSerializerOptions));
+            args.Add("storageState", JsonSerializer.Deserialize<object>(options!.StorageState!, Helpers.JsonExtensions.DefaultJsonSerializerOptions));
         }
 
         var context = await _playwright.SendMessageToServerAsync<APIRequestContext>(

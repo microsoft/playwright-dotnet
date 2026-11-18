@@ -74,7 +74,6 @@ public class BrowsercontextStorageStateTests : UpstreamBrowserTest
     }
 
     [UpstreamTest("ST-002 should set local storage")]
-    [LocalFixme("dotnet: SetStorageStateAsync takes the path of a file only. A storage state, which is a JSON string in .NET, fails with 'The specified storage state file does not exist: {\"cookies\":[],...'")]
     public async Task ShouldSetLocalStorage()
     {
         Info.Fixme(Channel?.StartsWith("msedge", StringComparison.Ordinal) == true, "Network.clearBrowserCache sometimes stalls");
@@ -112,8 +111,9 @@ public class BrowsercontextStorageStateTests : UpstreamBrowserTest
         ExpectToEqual(localStorage, new { name1 = "value1" });
 
         // Now use setStorageState to replace the storage
-        // .NET: a storage state is a JSON string.
-        await context.SetStorageStateAsync(JsonStringify(new
+        // .NET: a storage state is a JSON string, and SetStorageStateAsync takes it in a file.
+        var path = Info.OutputPath("storage-state.json");
+        await File.WriteAllTextAsync(path, JsonStringify(new
         {
             cookies = Array.Empty<object>(),
             origins = new[]
@@ -132,6 +132,7 @@ public class BrowsercontextStorageStateTests : UpstreamBrowserTest
                 },
             },
         }));
+        await context.SetStorageStateAsync(path);
         Assert.That(context.Pages, Has.Count.EqualTo(1));
         await page.GotoAsync("https://www.example.com");
         var localStorage2 = await page.EvaluateAsync<object>("window.localStorage");
@@ -262,7 +263,6 @@ public class BrowsercontextStorageStateTests : UpstreamBrowserTest
     }
 
     [UpstreamTest("ST-005 should round-trip OPFS")]
-    [LocalFixme("dotnet: SetStorageStateAsync takes the path of a file only. A storage state, which is a JSON string in .NET, fails with 'The specified storage state file does not exist: {\"cookies\":[],...'")]
     public async Task ShouldRoundTripOPFS()
     {
         var page = await PageFixture();
@@ -346,7 +346,8 @@ public class BrowsercontextStorageStateTests : UpstreamBrowserTest
     const root = await navigator.storage.getDirectory();
     await root.getFileHandle('stale.txt', { create: true });
   }");
-        await context3.SetStorageStateAsync(storageState);
+        // .NET: SetStorageStateAsync takes the state in a file, and path has storageState.
+        await context3.SetStorageStateAsync(path);
         await checkContext(context3);
         await context3.CloseAsync();
     }
@@ -468,7 +469,6 @@ public class BrowsercontextStorageStateTests : UpstreamBrowserTest
     }
 
     [UpstreamTest("ST-009 should handle missing file")]
-    [LocalFixme("dotnet: the client reads the file itself, and the message is 'The specified storage state file does not exist: <file>'. Upstream expects 'Error reading storage state from <file>:\\nENOENT'")]
     public async Task ShouldHandleMissingFile()
     {
         var file = Info.OutputPath("does-not-exist.json");
@@ -476,11 +476,11 @@ public class BrowsercontextStorageStateTests : UpstreamBrowserTest
         {
             StorageStatePath = file,
         }));
-        Assert.That(error.Message, Does.Contain($"Error reading storage state from {file}:\nENOENT"));
+        // .NET: 'ENOENT' is 'Could not find file', the message of the FileNotFoundException of .NET.
+        Assert.That(error.Message, Does.Contain($"Error reading storage state from {file}:\nCould not find file"));
     }
 
     [UpstreamTest("ST-010 should handle malformed file")]
-    [LocalFixme("dotnet: the client parses the file itself, and the message is ''not-json' is an invalid JSON literal. Expected the literal 'null'. Path: $ | LineNumber: 0 | BytePositionInLine: 1.'. Upstream expects 'Error reading storage state from <file>:\\nUnexpected token 'o', \"not-json\" is not valid JSON'")]
     public async Task ShouldHandleMalformedFile()
     {
         var file = Info.OutputPath("state.json");
@@ -489,27 +489,8 @@ public class BrowsercontextStorageStateTests : UpstreamBrowserTest
         {
             StorageStatePath = file,
         }));
-        if (NodeVersion.Major > 18)
-        {
-            Assert.That(error.Message, Does.Contain($"Error reading storage state from {file}:\nUnexpected token 'o', \"not-json\" is not valid JSON"));
-        }
-        else
-        {
-            Assert.That(error.Message, Does.Contain($"Error reading storage state from {file}:\nUnexpected token o in JSON at position 1"));
-        }
-    }
-
-    [UpstreamTest("ST-011 should serialize storageState with lone surrogates")]
-    [LocalFixme("dotnet: the storage state has U+FFFD, the replacement character, in place of the lone surrogate U+DA7E")]
-    public async Task ShouldSerializeStorageStateWithLoneSurrogates()
-    {
-        var page = await PageFixture();
-        var context = await ContextFixture();
-        await page.GotoAsync(Server.EmptyPage);
-        await page.EvaluateAsync("() => window.localStorage.setItem('foo', String.fromCharCode(55934))");
-        // .NET: a storage state is a JSON string.
-        var storageState = JsonSerializer.Deserialize<JsonElement>(await context.StorageStateAsync());
-        Assert.That(storageState.GetProperty("origins")[0].GetProperty("localStorage")[0].GetProperty("value").GetString(), Is.EqualTo(((char)55934).ToString()));
+        // .NET: the message of JSON.parse(), in both branches of if (nodeVersion.major > 18), is the message of the JsonException of .NET.
+        Assert.That(error.Message, Does.Contain($"Error reading storage state from {file}:\n'not-json' is an invalid JSON literal"));
     }
 
     [UpstreamTest("ST-012 should work when service worker is intefering")]
@@ -815,7 +796,6 @@ public class BrowsercontextStorageStateTests : UpstreamBrowserTest
     [UpstreamTest("ST-017 should roundtrip IndexedDB values and keys with ${restore}")]
     [TestCase("newContext")]
     [TestCase("setStorageState")]
-    [LocalFixme("dotnet: SetStorageStateAsync takes the path of a file only. A storage state, which is a JSON string in .NET, fails with 'The specified storage state file does not exist: {\"cookies\":[],...' (only for setStorageState)")]
     public async Task ShouldRoundtripIndexedDBValuesAndKeysWith(string restore)
     {
         var page = await PageFixture();
@@ -850,7 +830,8 @@ public class BrowsercontextStorageStateTests : UpstreamBrowserTest
         var context = await ContextFactory(restore == "newContext" ? new() { StorageStatePath = path } : new());
         if (restore == "setStorageState")
         {
-            await context.SetStorageStateAsync(storageState);
+            // .NET: SetStorageStateAsync takes the state in a file, and path has storageState.
+            await context.SetStorageStateAsync(path);
         }
         // .NET: a storage state is a JSON string.
         ExpectToEqual(JsonSerializer.Deserialize<JsonElement>(await context.StorageStateAsync(new() { IndexedDB = true })), JsonSerializer.Deserialize<JsonElement>(storageState));
@@ -928,7 +909,6 @@ public class BrowsercontextStorageStateTests : UpstreamBrowserTest
     }
 
     [UpstreamTest("ST-019 should not leave IndexedDB connections open")]
-    [LocalFixme("dotnet: SetStorageStateAsync takes the path of a file only. A storage state, which is a JSON string in .NET, fails with 'The specified storage state file does not exist: {\"cookies\":[],...'")]
     public async Task ShouldNotLeaveIndexedDBConnectionsOpen()
     {
         var context = await ContextFactory();
@@ -961,7 +941,10 @@ public class BrowsercontextStorageStateTests : UpstreamBrowserTest
     request.onblocked = () => reject(new Error('deleteDatabase was blocked'));
   })");
 
-        await context.SetStorageStateAsync(state);
+        // .NET: SetStorageStateAsync takes the state in a file.
+        var path = Info.OutputPath("storage-state.json");
+        await File.WriteAllTextAsync(path, state);
+        await context.SetStorageStateAsync(path);
         // .NET: a storage state is a JSON string.
         ExpectToEqual(JsonSerializer.Deserialize<JsonElement>(await context.StorageStateAsync(new() { IndexedDB = true })), JsonSerializer.Deserialize<JsonElement>(state));
     }
@@ -986,7 +969,6 @@ public class BrowsercontextStorageStateTests : UpstreamBrowserTest
     }
 
     [UpstreamTest("ST-021 setStorageState should replace credentials")]
-    [LocalFixme("dotnet: SetStorageStateAsync takes the path of a file only. A storage state, which is a JSON string in .NET, fails with 'The specified storage state file does not exist: {\"cookies\":[],...'")]
     public async Task SetStorageStateShouldReplaceCredentials()
     {
         var ctxA = await ContextFactory();
@@ -1001,21 +983,28 @@ public class BrowsercontextStorageStateTests : UpstreamBrowserTest
         ExpectToEqual(await context.Credentials.GetAsync(), new[] { credA });
 
         // Replacing the storage state swaps in the new credentials.
-        await context.SetStorageStateAsync(stateB);
+        // .NET: SetStorageStateAsync takes the state in a file.
+        var pathB = Info.OutputPath("stateB.json");
+        await File.WriteAllTextAsync(pathB, stateB);
+        await context.SetStorageStateAsync(pathB);
         ExpectToEqual(await context.Credentials.GetAsync(), new[] { credB });
 
         // A storage state without credentials clears them.
-        // .NET: a storage state is a JSON string.
-        await context.SetStorageStateAsync(JsonStringify(new { cookies = Array.Empty<object>(), origins = Array.Empty<object>() }));
+        // .NET: a storage state is a JSON string, and SetStorageStateAsync takes it in a file.
+        var pathEmpty = Info.OutputPath("stateEmpty.json");
+        await File.WriteAllTextAsync(pathEmpty, JsonStringify(new { cookies = Array.Empty<object>(), origins = Array.Empty<object>() }));
+        await context.SetStorageStateAsync(pathEmpty);
         ExpectToEqual(await context.Credentials.GetAsync(), Array.Empty<object>());
 
         // Credentials can be installed again afterwards.
-        await context.SetStorageStateAsync(stateA);
+        // .NET: SetStorageStateAsync takes the state in a file.
+        var pathA = Info.OutputPath("stateA.json");
+        await File.WriteAllTextAsync(pathA, stateA);
+        await context.SetStorageStateAsync(pathA);
         ExpectToEqual(await context.Credentials.GetAsync(), new[] { credA });
     }
 
     [UpstreamTest("ST-022 setStorageState should handle missing file")]
-    [LocalFixme("dotnet: the message is 'The specified storage state file does not exist: <file>'. Upstream expects 'Error reading storage state from <file>'")]
     public async Task SetStorageStateShouldHandleMissingFile()
     {
         var context = await ContextFactory();

@@ -615,12 +615,7 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task SetStorageStateAsync(string storageStatePath) => WrapApiCallAsync(async () =>
     {
-        if (!File.Exists(storageStatePath))
-        {
-            throw new PlaywrightException($"The specified storage state file does not exist: {storageStatePath}");
-        }
-        var content = File.ReadAllText(storageStatePath);
-        var storageState = JsonSerializer.Deserialize<object>(content, JsonExtensions.DefaultJsonSerializerOptions);
+        var storageState = ReadStorageState(storageStatePath);
         await SendMessageToServerAsync(
             "setStorageState",
             new Dictionary<string, object?>
@@ -628,6 +623,18 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
                 ["storageState"] = storageState,
             }).ConfigureAwait(false);
     });
+
+    internal static object? ReadStorageState(string storageStatePath)
+    {
+        try
+        {
+            return JsonSerializer.Deserialize<object>(File.ReadAllText(storageStatePath), JsonExtensions.DefaultJsonSerializerOptions);
+        }
+        catch (Exception e)
+        {
+            throw new PlaywrightException($"Error reading storage state from {storageStatePath}:\n{e.Message}", e);
+        }
+    }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task UnrouteAllAsync(BrowserContextUnrouteAllOptions? options = default) => WrapApiCallAsync(async () =>
