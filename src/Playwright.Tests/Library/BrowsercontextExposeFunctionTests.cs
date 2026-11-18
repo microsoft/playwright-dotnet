@@ -117,7 +117,6 @@ public class BrowsercontextExposeFunctionTests : UpstreamBrowserTest
     }
 
     [UpstreamTest("EF-027 should work with CSP")]
-    [LocalFixme("dotnet: a call of a binding of ExposeBindingAsync(name, Action) fails with \"TargetParameterCountException: Parameter count mismatch.\": BindingCall.CallAsync passes the BindingSource to the callback, which has no parameters")]
     public async Task ShouldWorkWithCSP()
     {
         var page = await PageFixture();

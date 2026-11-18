@@ -59,7 +59,6 @@ public class PageClockTests : PageClockTestsBase
         }
 
         [UpstreamTest("CK-001 triggers immediately without specified delay")]
-        [LocalFixme("dotnet: a callback of ExposeFunctionAsync has a fixed number of parameters, not (...params): the page calls stub() without arguments, BindingCall.CallAsync throws ArgumentOutOfRangeException for the missing argument, and the callback does not run")]
         public async Task TriggersImmediatelyWithoutSpecifiedDelay()
         {
             var page = await PageFixture();
@@ -85,7 +84,6 @@ public class PageClockTests : PageClockTestsBase
         }
 
         [UpstreamTest("CK-003 triggers after sufficient delay")]
-        [LocalFixme("dotnet: a callback of ExposeFunctionAsync has a fixed number of parameters, not (...params): the page calls stub() without arguments, BindingCall.CallAsync throws ArgumentOutOfRangeException for the missing argument, and the callback does not run")]
         public async Task TriggersAfterSufficientDelay()
         {
             var page = await PageFixture();
@@ -98,7 +96,6 @@ public class PageClockTests : PageClockTestsBase
         }
 
         [UpstreamTest("CK-004 triggers simultaneous timers")]
-        [LocalFixme("dotnet: a callback of ExposeFunctionAsync has a fixed number of parameters, not (...params): the page calls stub() without arguments, BindingCall.CallAsync throws ArgumentOutOfRangeException for the missing argument, and the callback does not run")]
         public async Task TriggersSimultaneousTimers()
         {
             var page = await PageFixture();
@@ -112,7 +109,6 @@ public class PageClockTests : PageClockTestsBase
         }
 
         [UpstreamTest("CK-005 triggers multiple simultaneous timers")]
-        [LocalFixme("dotnet: a callback of ExposeFunctionAsync has a fixed number of parameters, not (...params): the page calls stub() without arguments, BindingCall.CallAsync throws ArgumentOutOfRangeException for the missing argument, and the callback does not run")]
         public async Task TriggersMultipleSimultaneousTimers()
         {
             var page = await PageFixture();
@@ -128,7 +124,6 @@ public class PageClockTests : PageClockTestsBase
         }
 
         [UpstreamTest("CK-006 waits after setTimeout was called")]
-        [LocalFixme("dotnet: a callback of ExposeFunctionAsync has a fixed number of parameters, not (...params): the page calls stub() without arguments, BindingCall.CallAsync throws ArgumentOutOfRangeException for the missing argument, and the callback does not run")]
         public async Task WaitsAfterSetTimeoutWasCalled()
         {
             var page = await PageFixture();
@@ -143,7 +138,6 @@ public class PageClockTests : PageClockTestsBase
         }
 
         [UpstreamTest("CK-007 triggers event when some throw")]
-        [LocalFixme("dotnet: a callback of ExposeFunctionAsync has a fixed number of parameters, not (...params): the page calls stub() without arguments, BindingCall.CallAsync throws ArgumentOutOfRangeException for the missing argument, and the callback does not run")]
         public async Task TriggersEventWhenSomeThrow()
         {
             var page = await PageFixture();
@@ -184,7 +178,6 @@ public class PageClockTests : PageClockTestsBase
         }
 
         [UpstreamTest("CK-009 passes 8 seconds")]
-        [LocalFixme("dotnet: a callback of ExposeFunctionAsync has a fixed number of parameters, not (...params): the page calls stub() without arguments, BindingCall.CallAsync throws ArgumentOutOfRangeException for the missing argument, and the callback does not run")]
         public async Task Passes8Seconds()
         {
             var page = await PageFixture();
@@ -198,7 +191,6 @@ public class PageClockTests : PageClockTestsBase
         }
 
         [UpstreamTest("CK-010 passes 1 minute")]
-        [LocalFixme("dotnet: a callback of ExposeFunctionAsync has a fixed number of parameters, not (...params): the page calls stub() without arguments, BindingCall.CallAsync throws ArgumentOutOfRangeException for the missing argument, and the callback does not run")]
         public async Task Passes1Minute()
         {
             var page = await PageFixture();
@@ -212,7 +204,6 @@ public class PageClockTests : PageClockTestsBase
         }
 
         [UpstreamTest("CK-011 passes 2 hours, 34 minutes and 10 seconds")]
-        [LocalFixme("dotnet: a callback of ExposeFunctionAsync has a fixed number of parameters, not (...params): the page calls stub() without arguments, BindingCall.CallAsync throws ArgumentOutOfRangeException for the missing argument, and the callback does not run")]
         public async Task Passes2Hours34MinutesAnd10Seconds()
         {
             var page = await PageFixture();
@@ -341,7 +332,6 @@ public class PageClockTests : PageClockTestsBase
         }
 
         [UpstreamTest("CK-019 replaces global setTimeout")]
-        [LocalFixme("dotnet: a callback of ExposeFunctionAsync has a fixed number of parameters, not (...params): the page calls stub() without arguments, BindingCall.CallAsync throws ArgumentOutOfRangeException for the missing argument, and the callback does not run")]
         public async Task ReplacesGlobalSetTimeout()
         {
             var page = await PageFixture();
@@ -377,7 +367,6 @@ public class PageClockTests : PageClockTestsBase
         }
 
         [UpstreamTest("CK-022 replaces global setInterval")]
-        [LocalFixme("dotnet: a callback of ExposeFunctionAsync has a fixed number of parameters, not (...params): the page calls stub() without arguments, BindingCall.CallAsync throws ArgumentOutOfRangeException for the missing argument, and the callback does not run")]
         public async Task ReplacesGlobalSetInterval()
         {
             var page = await PageFixture();
