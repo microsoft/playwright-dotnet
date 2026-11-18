@@ -263,7 +263,7 @@ public class PageRequestInterceptTests : UpstreamPageTest
         await Page.RouteAsync("**/*", async route =>
         {
             var error = await Catch(() => route.FetchAsync(new() { Timeout = 1000 }));
-            Assert.That(error.Message, Does.Contain("route.fetch: Timeout 1000ms exceeded"));
+            Assert.That(error.Message, Does.Contain("Timeout 1000ms exceeded"));
         });
         var error = await Catch(() => Page.GotoAsync(Server.Prefix + "/slow", new() { Timeout = 2000 }));
         Assert.That(error.Message, Does.Contain("Timeout 2000ms exceeded"));

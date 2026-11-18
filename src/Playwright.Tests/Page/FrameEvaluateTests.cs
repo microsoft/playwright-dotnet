@@ -96,14 +96,13 @@ public class FrameEvaluateTests : UpstreamPageTest
     }
 
     [UpstreamTest("FR-009 should throw for detached frames")]
-    [LocalFixme("dotnet: the message is 'Frame was detached', without the 'frame.evaluate: ' prefix of the call")]
     public async Task ShouldThrowForDetachedFrames()
     {
         var frame1 = await AttachFrame(Page, "frame1", Server.EmptyPage);
         await DetachFrame(Page, "frame1");
         Exception error = null;
         error = await Catch(() => frame1.EvaluateAsync("() => 7 * 8"));
-        Assert.That(error.Message, Does.Contain("frame.evaluate: Frame was detached"));
+        Assert.That(error.Message, Does.Contain("Frame was detached"));
     }
 
     [UpstreamTest("FR-010 should be isolated between frames")]

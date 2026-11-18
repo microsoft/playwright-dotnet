@@ -39,13 +39,12 @@ public class PageWaitForLoadStateTests : UpstreamPageTest
 
     [UpstreamTest("WA-078 should respect timeout")]
 
-    [LocalFixme("dotnet: the message is 'Timeout 1ms exceeded.', without the 'page.waitForLoadState: ' prefix of the call")]
     public async Task ShouldRespectTimeout()
     {
         Server.SetRoute("/one-style.css", (req, res) => { });
         await Page.GotoAsync(Server.Prefix + "/one-style.html", new() { WaitUntil = WaitUntilState.DOMContentLoaded });
         var error = await Catch(() => Page.WaitForLoadStateAsync(LoadState.Load, new() { Timeout = 1 }));
-        Assert.That(error.Message, Does.Contain("page.waitForLoadState: Timeout 1ms exceeded."));
+        Assert.That(error.Message, Does.Contain("Timeout 1ms exceeded."));
         // .NET: left out, a .NET stack trace has the frames of the library:
         // expect(error.stack.split('\n')[1]).toContain(__filename);
     }

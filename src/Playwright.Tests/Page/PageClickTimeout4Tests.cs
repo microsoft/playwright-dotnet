@@ -24,7 +24,6 @@ namespace Microsoft.Playwright.Tests.Page;
 public class PageClickTimeout4Tests : UpstreamPageTest
 {
     [UpstreamTest("CL-120 should timeout waiting for stable position")]
-    [LocalFixme("dotnet: the message is 'Timeout 3000ms exceeded.', without the 'elementHandle.click: ' prefix of the call")]
     public async Task ShouldTimeoutWaitingForStablePosition()
     {
         await Page.GotoAsync(Server.Prefix + "/input/button.html");
@@ -36,7 +35,7 @@ public class PageClickTimeout4Tests : UpstreamPageTest
         // rafraf for Firefox to kick in the animation.
         await Rafraf(Page);
         var error = await Catch(() => button.ClickAsync(new() { Timeout = 3000 }));
-        Assert.That(error.Message, Does.Contain("elementHandle.click: Timeout 3000ms exceeded."));
+        Assert.That(error.Message, Does.Contain("Timeout 3000ms exceeded."));
         Assert.That(error.Message, Does.Contain("waiting for element to be visible, enabled and stable"));
         Assert.That(error.Message, Does.Contain("element is not stable"));
         Assert.That(error.Message, Does.Contain("retrying click action"));

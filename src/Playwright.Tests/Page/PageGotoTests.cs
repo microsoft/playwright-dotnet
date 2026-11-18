@@ -499,20 +499,18 @@ public class PageGotoTests : UpstreamPageTest
     }
 
     [UpstreamTest("NA-030 should fail when exceeding maximum navigation timeout")]
-    [LocalFixme("dotnet: the message is 'Timeout 1ms exceeded.', without the 'page.goto: ' prefix of the call")]
     public async Task ShouldFailWhenExceedingMaximumNavigationTimeout()
     {
         // Hang for request to the empty.html
         Server.SetRoute("/empty.html", (req, res) => { });
         Exception error = null;
         error = await Catch(() => Page.GotoAsync(Server.Prefix + "/empty.html", new() { Timeout = 1 }));
-        Assert.That(error.Message, Does.Contain("page.goto: Timeout 1ms exceeded."));
+        Assert.That(error.Message, Does.Contain("Timeout 1ms exceeded."));
         Assert.That(error.Message, Does.Contain(Server.Prefix + "/empty.html"));
         Assert.That(error, Is.InstanceOf<TimeoutException>());
     }
 
     [UpstreamTest("NA-031 should fail when exceeding default maximum navigation timeout")]
-    [LocalFixme("dotnet: the message is 'Timeout 1ms exceeded.', without the 'page.goto: ' prefix of the call")]
     public async Task ShouldFailWhenExceedingDefaultMaximumNavigationTimeout()
     {
         Info.Skip(IsAndroid || IsElectron, "No context per test");
@@ -523,13 +521,12 @@ public class PageGotoTests : UpstreamPageTest
         Page.Context.SetDefaultNavigationTimeout(2);
         Page.SetDefaultNavigationTimeout(1);
         error = await Catch(() => Page.GotoAsync(Server.Prefix + "/empty.html"));
-        Assert.That(error.Message, Does.Contain("page.goto: Timeout 1ms exceeded."));
+        Assert.That(error.Message, Does.Contain("Timeout 1ms exceeded."));
         Assert.That(error.Message, Does.Contain(Server.Prefix + "/empty.html"));
         Assert.That(error, Is.InstanceOf<TimeoutException>());
     }
 
     [UpstreamTest("NA-032 should fail when exceeding browser context navigation timeout")]
-    [LocalFixme("dotnet: the message is 'Timeout 2ms exceeded.', without the 'page.goto: ' prefix of the call")]
     public async Task ShouldFailWhenExceedingBrowserContextNavigationTimeout()
     {
         Info.Skip(IsAndroid || IsElectron, "No context per test");
@@ -539,13 +536,12 @@ public class PageGotoTests : UpstreamPageTest
         Exception error = null;
         Page.Context.SetDefaultNavigationTimeout(2);
         error = await Catch(() => Page.GotoAsync(Server.Prefix + "/empty.html"));
-        Assert.That(error.Message, Does.Contain("page.goto: Timeout 2ms exceeded."));
+        Assert.That(error.Message, Does.Contain("Timeout 2ms exceeded."));
         Assert.That(error.Message, Does.Contain(Server.Prefix + "/empty.html"));
         Assert.That(error, Is.InstanceOf<TimeoutException>());
     }
 
     [UpstreamTest("NA-035 should prioritize default navigation timeout over default timeout")]
-    [LocalFixme("dotnet: the message is 'Timeout 1ms exceeded.', without the 'page.goto: ' prefix of the call")]
     public async Task ShouldPrioritizeDefaultNavigationTimeoutOverDefaultTimeout()
     {
         // Hang for request to the empty.html
@@ -554,7 +550,7 @@ public class PageGotoTests : UpstreamPageTest
         Page.SetDefaultTimeout(0);
         Page.SetDefaultNavigationTimeout(1);
         error = await Catch(() => Page.GotoAsync(Server.Prefix + "/empty.html"));
-        Assert.That(error.Message, Does.Contain("page.goto: Timeout 1ms exceeded."));
+        Assert.That(error.Message, Does.Contain("Timeout 1ms exceeded."));
         Assert.That(error.Message, Does.Contain(Server.Prefix + "/empty.html"));
         Assert.That(error, Is.InstanceOf<TimeoutException>());
     }
@@ -577,7 +573,6 @@ public class PageGotoTests : UpstreamPageTest
     }
 
     [UpstreamTest("NA-037 should fail when replaced by another navigation")]
-    [LocalFixme("dotnet: the message is 'Navigation to \"http://localhost:<port>/empty.html\" is interrupted by another navigation to \"http://localhost:<port>/one-style.html\"', without the 'page.goto: ' prefix of the call (only in firefox and webkit)")]
     public async Task ShouldFailWhenReplacedByAnotherNavigation()
     {
         Task<IResponse> anotherPromise = null;
@@ -594,24 +589,23 @@ public class PageGotoTests : UpstreamPageTest
         }
         else if (BrowserName == "webkit")
         {
-            Assert.That(error.Message, Does.Contain($"page.goto: Navigation to \"{Server.Prefix + "/empty.html"}\" is interrupted by another navigation to \"{Server.Prefix + "/one-style.html"}\""));
+            Assert.That(error.Message, Does.Contain($"Navigation to \"{Server.Prefix + "/empty.html"}\" is interrupted by another navigation to \"{Server.Prefix + "/one-style.html"}\""));
         }
         else if (BrowserName == "firefox")
         {
             if (IsBidi)
             {
-                Assert.That(error.Message, Does.Contain("page.goto: Protocol error (browsingContext.navigate): unknown error"));
+                Assert.That(error.Message, Does.Contain("Protocol error (browsingContext.navigate): unknown error"));
             }
             else
             {
                 // Firefox might yield either NS_BINDING_ABORTED or 'navigation interrupted by another one'
-                Assert.That(error.Message.Contains($"page.goto: Navigation to \"{Server.Prefix + "/empty.html"}\" is interrupted by another navigation to \"{Server.Prefix + "/one-style.html"}\"", StringComparison.Ordinal) || error.Message.Contains("NS_BINDING_ABORTED", StringComparison.Ordinal), Is.EqualTo(true));
+                Assert.That(error.Message.Contains($"Navigation to \"{Server.Prefix + "/empty.html"}\" is interrupted by another navigation to \"{Server.Prefix + "/one-style.html"}\"", StringComparison.Ordinal) || error.Message.Contains("NS_BINDING_ABORTED", StringComparison.Ordinal), Is.EqualTo(true));
             }
         }
     }
 
     [UpstreamTest("NA-038 js redirect overrides url bar navigation ")]
-    [LocalFixme("dotnet: the message is 'Navigation to \"http://localhost:<port>/b\" is interrupted by another navigation to \"http://localhost:<port>/c\"', without the 'page.goto: ' prefix of the call (only in webkit)")]
     public async Task JsRedirectOverridesUrlBarNavigation()
     {
         Info.Skip(Trace == "on", "tracing waits for snapshot that never arrives because pending navigation");
@@ -661,7 +655,7 @@ public class PageGotoTests : UpstreamPageTest
         }
         else if (BrowserName == "webkit")
         {
-            Assert.That(error.Message, Does.Contain($"page.goto: Navigation to \"{Server.Prefix + "/b"}\" is interrupted by another navigation to \"{Server.Prefix + "/c"}\""));
+            Assert.That(error.Message, Does.Contain($"Navigation to \"{Server.Prefix + "/b"}\" is interrupted by another navigation to \"{Server.Prefix + "/c"}\""));
             await Expect(Page).ToHaveURLAsync(Server.Prefix + "/c");
         }
         else if (BrowserName == "firefox")

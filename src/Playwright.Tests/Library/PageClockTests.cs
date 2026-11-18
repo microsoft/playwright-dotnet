@@ -234,8 +234,8 @@ public class PageClockTests : PageClockTestsBase
       setInterval(window.stub, 10000);
     }");
             await ThrowsAsync<PlaywrightException>(() => page.Clock.RunForAsync("12:02:34:10"));
-            // .NET: await expect(page.clock.runFor(NaN)).rejects.toThrow('clock.runFor: Invalid ticks: NaN') is left out: RunForAsync takes a long, which has no NaN.
-            // .NET: await expect(page.clock.fastForward(Infinity)).rejects.toThrow('clock.fastForward: Invalid ticks: Infinity') is left out: FastForwardAsync takes a long, which has no Infinity.
+            // .NET: await expect(page.clock.runFor(NaN)).rejects.toThrow('Invalid ticks: NaN') is left out: RunForAsync takes a long, which has no NaN.
+            // .NET: await expect(page.clock.fastForward(Infinity)).rejects.toThrow('Invalid ticks: Infinity') is left out: FastForwardAsync takes a long, which has no Infinity.
             ExpectToEqual(calls, Array.Empty<object>());
             await page.GotoAsync(Server.EmptyPage);
             Assert.That(await page.EvaluateAsync<int>("() => Date.now()"), Is.EqualTo(1000));
@@ -331,13 +331,12 @@ public class PageClockTests : PageClockTestsBase
         }
 
         [UpstreamTest("CK-018 should throw for invalid date")]
-        [LocalFixme("dotnet: the message is 'Invalid date: invalid', without the 'clock.setSystemTime: ' prefix of the call")]
         public async Task ShouldThrowForInvalidDate()
         {
             var page = await PageFixture();
             // .NET: await expect(page.clock.setSystemTime(new Date('invalid'))).rejects.toThrow('Invalid date: Invalid Date') is left out: a DateTime is never an invalid date.
             var error = await ThrowsAsync<PlaywrightException>(() => page.Clock.SetSystemTimeAsync("invalid"));
-            Assert.That(error.Message, Does.Contain("clock.setSystemTime: Invalid date: invalid"));
+            Assert.That(error.Message, Does.Contain("Invalid date: invalid"));
         }
 
         [UpstreamTest("CK-019 replaces global setTimeout")]

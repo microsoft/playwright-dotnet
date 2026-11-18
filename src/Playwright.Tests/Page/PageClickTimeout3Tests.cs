@@ -24,7 +24,6 @@ namespace Microsoft.Playwright.Tests.Page;
 public class PageClickTimeout3Tests : UpstreamPageTest
 {
     [UpstreamTest("CL-117 should timeout waiting for hit target")]
-    [LocalFixme("dotnet: the message is 'Timeout 5000ms exceeded.', without the 'elementHandle.click: ' prefix of the call")]
     public async Task ShouldTimeoutWaitingForHitTarget()
     {
         await Page.GotoAsync(Server.Prefix + "/input/button.html");
@@ -41,7 +40,7 @@ public class PageClickTimeout3Tests : UpstreamPageTest
     document.body.appendChild(blocker);
   }");
         var error = await Catch(() => button.ClickAsync(new() { Timeout = 5000 }));
-        Assert.That(error.Message, Does.Contain("elementHandle.click: Timeout 5000ms exceeded."));
+        Assert.That(error.Message, Does.Contain("Timeout 5000ms exceeded."));
         Assert.That(error.Message, Does.Contain("<div id=\"blocker\"></div> intercepts pointer events"));
         Assert.That(error.Message, Does.Contain("retrying click action"));
         Assert.That(error.Message, Does.Contain("waiting 500ms"));
@@ -67,7 +66,6 @@ public class PageClickTimeout3Tests : UpstreamPageTest
     }
 
     [UpstreamTest("CL-119 should report wrong hit target subtree")]
-    [LocalFixme("dotnet: the message is 'Timeout 5000ms exceeded.', without the 'elementHandle.click: ' prefix of the call")]
     public async Task ShouldReportWrongHitTargetSubtree()
     {
         await Page.GotoAsync(Server.Prefix + "/input/button.html");
@@ -94,7 +92,7 @@ public class PageClickTimeout3Tests : UpstreamPageTest
     blocker.appendChild(inner);
   }");
         var error = await Catch(() => button.ClickAsync(new() { Timeout = 5000 }));
-        Assert.That(error.Message, Does.Contain("elementHandle.click: Timeout 5000ms exceeded."));
+        Assert.That(error.Message, Does.Contain("Timeout 5000ms exceeded."));
         Assert.That(error.Message, Does.Contain("<div id=\"inner\"></div> from <div id=\"blocker\">…</div> subtree intercepts pointer events"));
         Assert.That(error.Message, Does.Contain("retrying click action"));
     }

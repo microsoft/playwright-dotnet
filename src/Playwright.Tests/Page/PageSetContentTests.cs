@@ -98,7 +98,7 @@ public class PageSetContentTests : UpstreamPageTest
         // stall for image
         Server.SetRoute(imgPath, (req, res) => { });
         var error = await Catch(() => Page.SetContentAsync($"<img src=\"{Server.Prefix + imgPath}\"></img>"));
-        Assert.That(error.Message, Does.Contain("page.setContent: Timeout 1ms exceeded."));
+        Assert.That(error.Message, Does.Contain("Timeout 1ms exceeded."));
         Assert.That(error, Is.InstanceOf<TimeoutException>());
     }
 

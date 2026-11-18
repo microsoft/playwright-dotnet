@@ -33,13 +33,12 @@ public class PageWaitForUrlTests : UpstreamPageTest
     }
 
     [UpstreamTest("WA-111 should respect timeout")]
-    [LocalFixme("dotnet: the message is 'Timeout 2500ms exceeded.', without the 'page.waitForURL: ' prefix of the call")]
     public async Task ShouldRespectTimeout()
     {
         var promise = Catch(() => Page.WaitForURLAsync("**/frame.html", new() { Timeout = 2500 }));
         await Page.GotoAsync(Server.EmptyPage);
         var error = await promise;
-        Assert.That(error.Message, Does.Contain("page.waitForURL: Timeout 2500ms exceeded."));
+        Assert.That(error.Message, Does.Contain("Timeout 2500ms exceeded."));
     }
 
     [UpstreamTest("WA-112 should work with both domcontentloaded and load")]

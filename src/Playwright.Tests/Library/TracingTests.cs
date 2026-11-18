@@ -343,6 +343,29 @@ public class TracingTests : UpstreamBrowserTest
         Assert.That(File.Exists(Path.Combine(tracesDir, "name2.trace")), Is.EqualTo(true));
         Assert.That(File.Exists(Path.Combine(tracesDir, "name2.network")), Is.EqualTo(true));
 
+        await context.Tracing.StartAsync(new() { Name = "discarded", Screenshots = true, Snapshots = true, ScreenSnapshots = true, AriaSnapshots = true });
+        await page.GotoAsync(Server.Prefix + "/har.html");
+        // A stylesheet changed through CSSOM is saved as a snapshot resource.
+        await page.EvaluateAsync("() => document.styleSheets[0].insertRule('.discarded-rule { color: red }')");
+        await page.ClickAsync("body");
+        string[] snapshotResources() => Directory.GetFileSystemEntries(Path.Combine(tracesDir, "resources")).Select(Path.GetFileName).Where(file => File.ReadAllText(Path.Combine(tracesDir, "resources", file)).Contains(".discarded-rule", StringComparison.Ordinal)).ToArray();
+        foreach (var dir in new[] { "screencast", "screenshots", "aria" })
+        {
+            await Expect(() => Assert.That(Directory.GetFileSystemEntries(Path.Combine(tracesDir, dir)).Length, Is.GreaterThan(0))).ToPassAsync();
+        }
+        await Expect(() => Assert.That(snapshotResources(), Has.Length.EqualTo(1))).ToPassAsync();
+        var networkResources = Directory.GetFileSystemEntries(Path.Combine(tracesDir, "resources")).Select(Path.GetFileName).Where(file => !snapshotResources().Contains(file)).ToArray();
+        await context.Tracing.StopChunkAsync();
+        // Discarded files are removed in the background.
+        await Expect(() => Assert.That(File.Exists(Path.Combine(tracesDir, "discarded.trace")), Is.EqualTo(false))).ToPassAsync();
+        foreach (var dir in new[] { "screencast", "screenshots", "aria" })
+        {
+            await Expect(() => Assert.That(Directory.GetFileSystemEntries(Path.Combine(tracesDir, dir)).Select(Path.GetFileName), Is.EqualTo(Array.Empty<string>()))).ToPassAsync();
+        }
+        await Expect(() => Assert.That(Directory.GetFileSystemEntries(Path.Combine(tracesDir, "resources")).Select(Path.GetFileName), Is.EqualTo(networkResources))).ToPassAsync();
+        Assert.That(File.Exists(Path.Combine(tracesDir, "discarded.network")), Is.EqualTo(true));
+        await context.Tracing.StopAsync();
+
         await browser.CloseAsync();
 
         string[] resourceNames(Dictionary<string, byte[]> resources)

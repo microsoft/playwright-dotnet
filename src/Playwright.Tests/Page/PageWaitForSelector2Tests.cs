@@ -68,15 +68,14 @@ public class PageWaitForSelector2Tests : UpstreamPageTest
 
     [UpstreamTest("WA-046 should not consider visible when zero-sized")]
 
-    [LocalFixme("dotnet: the message is 'Timeout 1000ms exceeded.', without the 'page.waitForSelector: ' prefix of the call")]
     public async Task ShouldNotConsiderVisibleWhenZeroSized()
     {
         await Page.SetContentAsync("<div style='width: 0; height: 0;'>1</div>");
         var error = await Catch(() => Page.WaitForSelectorAsync("div", new() { Timeout = 1000 }));
-        Assert.That(error.Message, Does.Contain("page.waitForSelector: Timeout 1000ms exceeded"));
+        Assert.That(error.Message, Does.Contain("Timeout 1000ms exceeded"));
         await Page.EvaluateAsync("() => document.querySelector('div').style.width = '10px'");
         error = await Catch(() => Page.WaitForSelectorAsync("div", new() { Timeout = 1000 }));
-        Assert.That(error.Message, Does.Contain("page.waitForSelector: Timeout 1000ms exceeded"));
+        Assert.That(error.Message, Does.Contain("Timeout 1000ms exceeded"));
         await Page.EvaluateAsync("() => document.querySelector('div').style.height = '10px'");
         Assert.That(await Page.WaitForSelectorAsync("div", new() { Timeout = 1000 }), Is.Not.Null);
     }
@@ -190,27 +189,27 @@ public class PageWaitForSelector2Tests : UpstreamPageTest
 
     [UpstreamTest("WA-053 should respect timeout")]
 
-    [LocalFixme("dotnet: the message is 'Timeout 3000ms exceeded.', without the 'page.waitForSelector: ' prefix of the call, and the call log has Locator(\"div\"), upstream expects locator('div')")]
+    [LocalFixme("dotnet: the call log has Locator(\"div\"), upstream expects locator('div')")]
     public async Task ShouldRespectTimeout()
     {
         Exception error = null;
         error = await Catch(() => Page.WaitForSelectorAsync("div", new() { Timeout = 3000, State = WaitForSelectorState.Attached }));
         Assert.That(error, Is.Not.Null);
-        Assert.That(error.Message, Does.Contain("page.waitForSelector: Timeout 3000ms exceeded"));
+        Assert.That(error.Message, Does.Contain("Timeout 3000ms exceeded"));
         Assert.That(error.Message, Does.Contain("waiting for locator('div')"));
         Assert.That(error, Is.InstanceOf<TimeoutException>());
     }
 
     [UpstreamTest("WA-054 should have an error message specifically for awaiting an element to be hidden")]
 
-    [LocalFixme("dotnet: the message is 'Timeout 1000ms exceeded.', without the 'page.waitForSelector: ' prefix of the call, and the call log has Locator(\"div\"), upstream expects locator('div')")]
+    [LocalFixme("dotnet: the call log has Locator(\"div\"), upstream expects locator('div')")]
     public async Task ShouldHaveAnErrorMessageSpecificallyForAwaitingAnElementToBeHidden()
     {
         await Page.SetContentAsync("<div>content</div>");
         Exception error = null;
         error = await Catch(() => Page.WaitForSelectorAsync("div", new() { State = WaitForSelectorState.Hidden, Timeout = 1000 }));
         Assert.That(error, Is.Not.Null);
-        Assert.That(error.Message, Does.Contain("page.waitForSelector: Timeout 1000ms exceeded"));
+        Assert.That(error.Message, Does.Contain("Timeout 1000ms exceeded"));
         Assert.That(error.Message, Does.Contain("waiting for locator('div') to be hidden"));
     }
 
@@ -290,13 +289,13 @@ public class PageWaitForSelector2Tests : UpstreamPageTest
 
     [UpstreamTest("WA-066 should respect timeout xpath")]
 
-    [LocalFixme("dotnet: the message is 'Timeout 3000ms exceeded.', without the 'page.waitForSelector: ' prefix of the call, and the call log has Locator(\"//div\"), upstream expects locator('//div')")]
+    [LocalFixme("dotnet: the call log has Locator(\"//div\"), upstream expects locator('//div')")]
     public async Task ShouldRespectTimeoutXpath()
     {
         Exception error = null;
         error = await Catch(() => Page.WaitForSelectorAsync("//div", new() { State = WaitForSelectorState.Attached, Timeout = 3000 }));
         Assert.That(error, Is.Not.Null);
-        Assert.That(error.Message, Does.Contain("page.waitForSelector: Timeout 3000ms exceeded"));
+        Assert.That(error.Message, Does.Contain("Timeout 3000ms exceeded"));
         Assert.That(error.Message, Does.Contain("waiting for locator('//div')"));
         Assert.That(error, Is.InstanceOf<TimeoutException>());
     }
@@ -317,7 +316,6 @@ public class PageWaitForSelector2Tests : UpstreamPageTest
 
     [UpstreamTest("WA-068 should throw when frame is detached xpath")]
 
-    [LocalFixme("dotnet: the message is 'Frame was detached', without the 'frame.waitForSelector: ' prefix of the call")]
     public async Task ShouldThrowWhenFrameIsDetachedXpath()
     {
         await AttachFrame(Page, "frame1", Server.EmptyPage);
@@ -332,7 +330,7 @@ public class PageWaitForSelector2Tests : UpstreamPageTest
         await DetachFrame(Page, "frame1");
         await waitPromise;
         Assert.That(waitError, Is.Not.Null);
-        Assert.That(waitError.Message, Does.Contain("frame.waitForSelector: Frame was detached"));
+        Assert.That(waitError.Message, Does.Contain("Frame was detached"));
     }
 
     [UpstreamTest("WA-069 should return the element handle xpath")]

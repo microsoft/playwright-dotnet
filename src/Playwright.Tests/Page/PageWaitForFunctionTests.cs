@@ -68,7 +68,6 @@ public class PageWaitForFunctionTests : UpstreamPageTest
 
     [UpstreamTest("WA-005 should avoid side effects after timeout")]
 
-    [LocalFixme("dotnet: the message is 'Timeout 1000ms exceeded.', without the 'page.waitForFunction: ' prefix of the call")]
     public async Task ShouldAvoidSideEffectsAfterTimeout()
     {
         var counter = 0;
@@ -82,7 +81,7 @@ public class PageWaitForFunctionTests : UpstreamPageTest
         var savedCounter = counter;
         await Page.WaitForTimeoutAsync(2000); // Give it some time to produce more logs.
 
-        Assert.That(error.Message, Does.Contain("page.waitForFunction: Timeout 1000ms exceeded"));
+        Assert.That(error.Message, Does.Contain("Timeout 1000ms exceeded"));
         Assert.That(counter, Is.EqualTo(savedCounter));
     }
 
@@ -179,26 +178,24 @@ public class PageWaitForFunctionTests : UpstreamPageTest
 
     [UpstreamTest("WA-017 should respect timeout")]
 
-    [LocalFixme("dotnet: the message is 'Timeout 10ms exceeded.', without the 'page.waitForFunction: ' prefix of the call")]
     public async Task ShouldRespectTimeout()
     {
         Exception error = null;
         error = await Catch(() => Page.WaitForFunctionAsync("false", new { }, new() { Timeout = 10 }));
         Assert.That(error, Is.Not.Null);
-        Assert.That(error.Message, Does.Contain("page.waitForFunction: Timeout 10ms exceeded"));
+        Assert.That(error.Message, Does.Contain("Timeout 10ms exceeded"));
         Assert.That(error, Is.InstanceOf<TimeoutException>());
     }
 
     [UpstreamTest("WA-018 should respect default timeout")]
 
-    [LocalFixme("dotnet: the message is 'Timeout 1ms exceeded.', without the 'page.waitForFunction: ' prefix of the call")]
     public async Task ShouldRespectDefaultTimeout()
     {
         Page.SetDefaultTimeout(1);
         Exception error = null;
         error = await Catch(() => Page.WaitForFunctionAsync("false"));
         Assert.That(error, Is.InstanceOf<TimeoutException>());
-        Assert.That(error.Message, Does.Contain("page.waitForFunction: Timeout 1ms exceeded"));
+        Assert.That(error.Message, Does.Contain("Timeout 1ms exceeded"));
     }
 
     [UpstreamTest("WA-019 should disable timeout when its set to 0")]
@@ -326,7 +323,6 @@ public class PageWaitForFunctionTests : UpstreamPageTest
 
     [UpstreamTest("WA-026 should throw when frame is detached")]
 
-    [LocalFixme("dotnet: the message is 'Frame was detached', without the 'frame.waitForFunction: ' prefix of the call")]
     public async Task ShouldThrowWhenFrameIsDetached()
     {
         await AttachFrame(Page, "frame1", Server.EmptyPage);
@@ -335,6 +331,6 @@ public class PageWaitForFunctionTests : UpstreamPageTest
         await DetachFrame(Page, "frame1");
         var error = await promise;
         Assert.That(error, Is.Not.Null);
-        Assert.That(error.Message, Does.Match("frame.waitForFunction: (Frame was detached|Execution context was destroyed)"));
+        Assert.That(error.Message, Does.Match("(Frame was detached|Execution context was destroyed)"));
     }
 }

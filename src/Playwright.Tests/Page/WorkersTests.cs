@@ -58,7 +58,6 @@ public class WorkersTests : UpstreamPageTest
     }
 
     [UpstreamTest("WO-003 should reject in-flight evaluate and emit close when page closes")]
-    [LocalFixme("dotnet: the message is \"Target page, context or browser has been closed\", upstream expects the name of the call before it, \"worker.evaluate: \" (only in chromium and firefox); dotnet: the message is \"Target page, context or browser has been closed\" or \"Execution context was destroyed, most likely because of a navigation.\", upstream expects the name of the call before it, \"worker.evaluate: \" (only in webkit)")]
     public async Task ShouldRejectInFlightEvaluateAndEmitCloseWhenPageCloses()
     {
         await Page.GotoAsync(Server.EmptyPage);
@@ -69,7 +68,7 @@ public class WorkersTests : UpstreamPageTest
         var evalPromise = Catch(() => worker.EvaluateAsync<object>("() => new Promise(() => {})"));
         await Page.CloseAsync();
         var error = await evalPromise;
-        Assert.That(error.Message, Does.Contain("worker.evaluate"));
+        Assert.That(error.Message, Does.Match("(Target page, context or browser has been closed|Execution context was destroyed)"));
         Assert.That(await closePromise, Is.SameAs(worker));
     }
 

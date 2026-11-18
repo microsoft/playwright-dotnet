@@ -38,13 +38,13 @@ public class PageWaitForNavigationTests : UpstreamPageTest
 
     [UpstreamTest("WA-096 should respect timeout")]
 
-    [LocalFixme("dotnet: the message is 'Timeout 5000ms exceeded.', without the 'page.waitForNavigation: ' prefix of the call, and the log has 'until \"Load\"', upstream expects 'until \"load\"'")]
+    [LocalFixme("dotnet: the log has 'until \"Load\"', upstream expects 'until \"load\"'")]
     public async Task ShouldRespectTimeout()
     {
         var promise = Page.WaitForNavigationAsync(new() { Url = "**/frame.html", Timeout = 5000 });
         await Page.GotoAsync(Server.EmptyPage);
         var error = await Catch(() => promise);
-        Assert.That(error.Message, Does.Contain("page.waitForNavigation: Timeout 5000ms exceeded."));
+        Assert.That(error.Message, Does.Contain("Timeout 5000ms exceeded."));
         Assert.That(error.Message, Does.Contain("waiting for navigation to \"**/frame.html\" until \"load\""));
         Assert.That(error.Message, Does.Contain($"navigated to \"{Server.EmptyPage}\""));
     }

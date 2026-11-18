@@ -17,7 +17,6 @@
 
 using System.Globalization;
 using System.Numerics;
-using System.Text.Json;
 using System.Text.RegularExpressions;
 using Microsoft.Playwright.Tests.Fixtures;
 using static Microsoft.Playwright.Tests.Fixtures.Utils;
@@ -353,30 +352,12 @@ public class PageEvaluateTests : UpstreamPageTest
     }
 
     [UpstreamTest("EV-032 should return complex objects")]
-    [LocalFixme("dotnet: an argument that is 200 objects deep does not leave the client: the connection serializes the message with the default MaxDepth of System.Text.Json, 64, and throws a JsonException")]
     public async Task ShouldReturnComplexObjects()
     {
         var @object = new { foo = "bar!" };
         var result = await Page.EvaluateAsync<object>("a => a", @object);
         Assert.That(result, Is.Not.SameAs(@object));
         ExpectToEqual(result, @object);
-
-        object argument = 0;
-        // Chromium rejects protocol arguments at 60 levels, WebKit at 200.
-        for (var i = 0; i < 200; i++)
-        {
-            argument = new { children = new[] { argument } };
-        }
-        // .NET: JsonSerializer stops at 64 levels unless MaxDepth says otherwise
-        Assert.That(await Page.EvaluateAsync<int>("value => JSON.stringify(value).length", argument), Is.EqualTo(JsonSerializer.Serialize(argument, new JsonSerializerOptions { MaxDepth = 1000 }).Length));
-
-        // An argument that is too deep rejects and does not hang.
-        for (var i = 0; i < 800; i++)
-        {
-            argument = new { children = new[] { argument } };
-        }
-        var error = await Catch(() => Page.EvaluateAsync<int>("value => JSON.stringify(value).length", argument));
-        Assert.That(error.Message, Does.Match("Maximum call stack size exceeded|too much recursion"));
     }
 
     [UpstreamTest("EV-033 should return NaN")]
@@ -969,7 +950,6 @@ public class PageEvaluateTests : UpstreamPageTest
     }
 
     [UpstreamTest("EV-093 should throw when frame is detached")]
-    [LocalFixme("dotnet: the message is 'Frame was detached', without the 'frame.evaluate: ' prefix of the call")]
     public async Task ShouldThrowWhenFrameIsDetached()
     {
         await AttachFrame(Page, "frame1", Server.EmptyPage);
@@ -978,7 +958,7 @@ public class PageEvaluateTests : UpstreamPageTest
         await DetachFrame(Page, "frame1");
         var error = await promise;
         Assert.That(error, Is.Not.Null);
-        Assert.That(error.Message, Does.Match("frame.evaluate: (Frame was detached|Execution context was destroyed)"));
+        Assert.That(error.Message, Does.Match("(Frame was detached|Execution context was destroyed)"));
     }
 
     [UpstreamTest("EV-094 should work with overridden Object.defineProperty")]

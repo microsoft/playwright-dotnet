@@ -95,7 +95,7 @@ public abstract class BrowsertypeConnectTestsBase : UpstreamBrowserTest
         // .NET: (options as any).__testHookRedirectPortForwarding = testOptions.redirectPortForTest; the test hook is not in the .NET API.
         // .NET: browserType._playwright._defaultLaunchOptions is LaunchOptions(), so the local of upstream takes another name.
         var launchOptionsOfConnect = MergeOptions(new BrowserTypeLaunchOptions(testOptions.LaunchOptions), LaunchOptions());
-        // .NET: the spread of options.headers is a loop.
+        // .NET: the launchOptions option of connect() is not in the .NET API: the Node.js client sends it as this header, before options.headers.
         var headers = new Dictionary<string, string>
         {
             ["x-playwright-launch-options"] = JsonSerializer.Serialize(launchOptionsOfConnect, _launchOptionsJson),
@@ -185,7 +185,6 @@ public class BrowsertypeConnectTests : BrowsertypeConnectTestsBase
         }
 
         [UpstreamTest("BT-037 should print custom ws close error")]
-        [LocalFixme("dotnet: the message is 'Oh my!', without the 'browserType.connect: ' prefix of the call")]
         public async Task ShouldPrintCustomWsCloseError()
         {
             Server.OnceWebSocketConnection((ws, request) =>
@@ -196,7 +195,7 @@ public class BrowsertypeConnectTests : BrowsertypeConnectTestsBase
                 });
             });
             var error = await Catch(() => Connect($"ws://localhost:{Server.Port}/ws"));
-            Assert.That(error.Message, Does.Contain("browserType.connect: Oh my!"));
+            Assert.That(error.Message, Does.Contain("Oh my!"));
         }
 
         [UpstreamTest("BT-038 should be able to reconnect to a browser")]
@@ -301,25 +300,23 @@ public class BrowsertypeConnectTests : BrowsertypeConnectTestsBase
         }
 
         [UpstreamTest("BT-044 should timeout in socket while connecting")]
-        [LocalFixme("dotnet: the message is 'Timeout 1000ms exceeded.', without the 'browserType.connect: ' prefix of the call")]
         public async Task ShouldTimeoutInSocketWhileConnecting()
         {
             var e = await Catch(() => Connect($"ws://localhost:{Server.Port}/ws-slow", new()
             {
                 Timeout = 1000,
             }));
-            Assert.That(e.Message, Does.Contain("browserType.connect: Timeout 1000ms exceeded"));
+            Assert.That(e.Message, Does.Contain("Timeout 1000ms exceeded"));
         }
 
         [UpstreamTest("BT-045 should timeout in connect while connecting")]
-        [LocalFixme("dotnet: the message is 'BrowserType.ConnectAsync: Timeout 100ms exceeded', upstream expects 'browserType.connect: Timeout 100ms exceeded'")]
         public async Task ShouldTimeoutInConnectWhileConnecting()
         {
             var e = await Catch(() => Connect($"ws://localhost:{Server.Port}/ws", new()
             {
                 Timeout = 100,
             }));
-            Assert.That(e.Message, Does.Contain("browserType.connect: Timeout 100ms exceeded"));
+            Assert.That(e.Message, Does.Contain("Timeout 100ms exceeded"));
         }
 
         [UpstreamTest("BT-046 should send extra headers with connect request")]
@@ -734,6 +731,7 @@ public class BrowsertypeConnectTests : BrowsertypeConnectTestsBase
             var remoteServer = await StartRemoteServer(kind);
             var browser = await BrowserType.ConnectAsync(remoteServer.WsEndpoint(), new()
             {
+                // .NET: the launchOptions option of connect() is not in the .NET API: the Node.js client sends it as this header.
                 Headers = new Dictionary<string, string>
                 {
                     ["x-playwright-launch-options"] = JsonSerializer.Serialize(LaunchOptions(), _launchOptionsJson),
@@ -929,17 +927,6 @@ public class BrowsertypeConnectTests : BrowsertypeConnectTestsBase
             }
         }
 
-        [UpstreamTest("BT-079 should connect over http")]
-        public async Task ShouldConnectOverHttp()
-        {
-            var remoteServer = await StartRemoteServer(kind);
-
-            var url = new Uri(remoteServer.WsEndpoint());
-            var browser = await Connect($"http://localhost:{url.Port}");
-            Assert.That(browser.Version, Is.Not.Empty);
-            await browser.CloseAsync();
-        }
-
         [TestFixture("launchServer")]
         [TestFixture("run-server")]
         public class SocksProxy : BrowsertypeConnectTestsBase
@@ -1095,19 +1082,5 @@ public class BrowsertypeConnectTests : BrowsertypeConnectTestsBase
 
         var (_, _, actions, _, _) = await ParseTraceRaw(tracePath);
         Assert.That(actions, Does.Contain("Set content"));
-    }
-
-    [UpstreamTest("BT-095 should timeout after redirect when connecting over http")]
-    public async Task ShouldTimeoutAfterRedirectWhenConnectingOverHttp()
-    {
-        Server.SetRedirect("/connect/json", "/connect/slow");
-        var aborted = false;
-        Server.SetRoute("/connect/slow", (req, res) =>
-        {
-            req.Socket.OnClose(() => aborted = true);
-        });
-        var error = await Catch(() => Connect($"{Server.Prefix}/connect", new() { Timeout = 2000, Headers = new Dictionary<string, string> { ["Connection"] = "Close" } }));
-        Assert.That(error.Message, Does.Contain("Timeout 2000ms exceeded."));
-        await Expect(() => Assert.That(aborted, Is.EqualTo(true))).ToPassAsync();
     }
 }

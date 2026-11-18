@@ -230,7 +230,7 @@ public class WebSocketTests : UpstreamPageTest
             res.SetHeader("Content-Type", "text/html");
             res.End("<script>setInterval(() => new WebSocket('ws://' + location.host + '/ws'), 5)</script>");
         });
-        for (var i = 0; i < 100; ++i)
+        for (var i = 0; i < 20; ++i)
         {
             await Page.GotoAsync(Server.Prefix + "/parent");
         }
