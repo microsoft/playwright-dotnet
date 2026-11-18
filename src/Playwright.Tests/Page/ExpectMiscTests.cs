@@ -585,7 +585,6 @@ Timeout: 1000ms"));
     public class ToBeInViewport : UpstreamPageTest
     {
         [UpstreamTest("EX-233 should work")]
-        [LocalFixme("dotnet: Locator.WithElementAsync makes a negative timeout from the default timeout 0, and the call passes only when it ends before the timer of the driver")]
         public async Task ShouldWork()
         {
             await Page.SetContentAsync(@"

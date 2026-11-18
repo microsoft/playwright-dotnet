@@ -98,7 +98,6 @@ public class PageClickScrollTests : UpstreamPageTest
     }
 
     [UpstreamTest("CL-099 should scroll into view span element")]
-    [LocalFixme("dotnet: Locator.WithElementAsync makes a negative timeout from the default timeout 0, and the call passes only when it ends before the timer of the driver")]
     public async Task ShouldScrollIntoViewSpanElement()
     {
         Info.Fixme(IsAndroid);

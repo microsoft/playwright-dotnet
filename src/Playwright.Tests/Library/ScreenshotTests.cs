@@ -432,7 +432,6 @@ public class ScreenshotTests : UpstreamBrowserTest
         }
 
         [UpstreamTest("SS-092 should capture full element when larger than viewport with device scale factor")]
-        [LocalFixme("dotnet: Locator.WithElementAsync makes a negative timeout from the default timeout 0, and the call passes only when it ends before the timer of the driver")]
         public async Task ShouldCaptureFullElementWhenLargerThanViewportWithDeviceScaleFactor()
         {
             var context = await Browser.NewContextAsync(new(ContextOptions()) { ViewportSize = new() { Width = 501, Height = 501 }, DeviceScaleFactor = 2.5f });
