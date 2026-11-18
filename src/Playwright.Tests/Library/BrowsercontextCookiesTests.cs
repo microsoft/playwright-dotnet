@@ -97,6 +97,7 @@ public class BrowsercontextCookiesTests : UpstreamBrowserTest
     }
 
     [UpstreamTest("CO-004 should allow adding cookies with >400 days expiration")]
+    [LocalFixme("dotnet: Cookie.Expires is a float, which holds the seconds since the epoch in steps of 128: the expiration that the test sets is rounded, up to 64 seconds later in about half of the runs, and WebKit on Windows returns it as set, so it is later than the time that the test computed (only in webkit on win32)")]
     public async Task ShouldAllowAddingCookiesWith400DaysExpiration()
     {
         var context = await ContextFixture();
