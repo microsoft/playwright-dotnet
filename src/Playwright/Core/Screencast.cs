@@ -42,12 +42,23 @@ internal class Screencast : IScreencast
         _page = page;
     }
 
-    internal void OnScreencastFrame(ScreencastFrame frame)
+    internal void OnScreencastFrame(ScreencastFrame frame, int frameId)
+        => AckFrameAsync(_onFrame?.Invoke(frame), frameId).IgnoreException();
+
+    private async Task AckFrameAsync(Task? handlerTask, int frameId)
     {
-        var handler = _onFrame;
-        if (handler != null)
+        try
         {
-            _ = handler(frame);
+            if (handlerTask != null)
+            {
+                await handlerTask.ConfigureAwait(false);
+            }
+        }
+        finally
+        {
+            await _page.WrapApiCallAsync(
+                () => _page.SendMessageToServerAsync("screencastFrameAck", new Dictionary<string, object?> { ["frameId"] = frameId }),
+                true).ConfigureAwait(false);
         }
     }
 
