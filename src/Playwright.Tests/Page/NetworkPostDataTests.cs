@@ -63,7 +63,6 @@ public class NetworkPostDataTests : UpstreamPageTest
     }
 
     [UpstreamTest("NE-110 should throw on invalid JSON in post data")]
-    [LocalFixme("dotnet: Request.PostDataJSON() throws the JsonException of JsonDocument.Parse, \"'<' is an invalid start of a value. LineNumber: 0 | BytePositionInLine: 0.\"; upstream expects 'POST data is not a valid JSON object: <not a json>'")]
     public async Task ShouldThrowOnInvalidJSONInPostData()
     {
         await Page.GotoAsync(Server.EmptyPage);
@@ -126,7 +125,6 @@ public class NetworkPostDataTests : UpstreamPageTest
     }
 
     [UpstreamTest("NE-113 should get post data for navigator.sendBeacon api calls")]
-    [LocalFixme("dotnet: Request.PostDataJSON() throws a NullReferenceException for a request without a content-type header: it calls Contains() on the missing value; upstream reads it with contentType?.includes() (only in firefox)")]
     public async Task ShouldGetPostDataForNavigatorSendBeaconApiCalls()
     {
         Info.Fixme(BrowserName == "chromium", "postData is empty");

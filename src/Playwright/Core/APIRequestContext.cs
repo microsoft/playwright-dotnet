@@ -23,6 +23,7 @@
  */
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -183,7 +184,7 @@ internal class APIRequestContext : ChannelOwner, IAPIRequestContext
             ["ignoreHTTPSErrors"] = options?.IgnoreHTTPSErrors,
             ["maxRedirects"] = options?.MaxRedirects,
             ["maxRetries"] = options?.MaxRetries,
-            ["params"] = options?.Params?.ToDictionary(x => x.Key, x => x.Value.ToString()).ToProtocol(),
+            ["params"] = options?.Params?.Where(x => x.Value != null).Select(x => new NameValue { Name = x.Key, Value = ParamToString(x.Value) }).ToArray(),
             ["encodedParams"] = options?.ParamsString,
             ["headers"] = options?.Headers?.ToProtocol(),
             ["jsonData"] = jsonData,
@@ -195,6 +196,13 @@ internal class APIRequestContext : ChannelOwner, IAPIRequestContext
         var response = await SendMessageToServerAsync("fetch", message, timeout: _timeoutSettings.Timeout(options?.Timeout)).ConfigureAwait(false);
         return new APIResponse(this, response?.GetProperty("response").ToObject<Transport.Protocol.APIResponse>()!);
     });
+
+    private static string ParamToString(object value) => value switch
+    {
+        bool b => b ? "true" : "false",
+        IFormattable f => f.ToString(null, CultureInfo.InvariantCulture),
+        _ => value.ToString(),
+    };
 
     private bool IsJsonContentType(IDictionary<string, string>? headers)
     {

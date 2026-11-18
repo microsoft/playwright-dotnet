@@ -163,7 +163,6 @@ public class PageRequestFallbackTests : UpstreamPageTest
     }
 
     [UpstreamTest("RO-128 should delete header with undefined value")]
-    [LocalFixme("dotnet: route.FallbackAsync() keeps a null header value, and the continue that follows fails with \"headers[N].value: expected string, got undefined\"; the Node.js client leaves out a header whose value is undefined")]
     public async Task ShouldDeleteHeaderWithUndefinedValue()
     {
         await Page.GotoAsync(Server.Prefix + "/empty.html");

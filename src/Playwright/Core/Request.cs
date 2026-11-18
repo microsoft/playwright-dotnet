@@ -161,7 +161,7 @@ internal class Request : ChannelOwner, IRequest
 
         string content = PostData;
         Headers.TryGetValue("content-type", out string contentType);
-        if (contentType.Contains("application/x-www-form-urlencoded"))
+        if (contentType?.Contains("application/x-www-form-urlencoded") == true)
         {
             var parsed = HttpUtility.ParseQueryString(PostData);
             var dictionary = new Dictionary<string, string>();
@@ -179,7 +179,14 @@ internal class Request : ChannelOwner, IRequest
             return null;
         }
 
-        return JsonDocument.Parse(content).RootElement;
+        try
+        {
+            return JsonDocument.Parse(content).RootElement;
+        }
+        catch (JsonException)
+        {
+            throw new PlaywrightException("POST data is not a valid JSON object: " + PostData);
+        }
     }
 
     [MethodImpl(MethodImplOptions.NoInlining)]

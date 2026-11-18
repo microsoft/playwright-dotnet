@@ -112,7 +112,7 @@ internal class Route : ChannelOwner, IRoute
                 ["url"] = options.Url,
                 ["method"] = options.Method,
                 ["postData"] = options.PostData != null ? Convert.ToBase64String(options.PostData) : null,
-                ["headers"] = options.Headers?.Select(kv => new HeaderEntry { Name = kv.Key, Value = kv.Value }).ToArray(),
+                ["headers"] = options.Headers?.Where(kv => kv.Value != null).Select(kv => new HeaderEntry { Name = kv.Key, Value = kv.Value }).ToArray(),
                 ["isFallback"] = isFallback,
             })).ConfigureAwait(false);
     }

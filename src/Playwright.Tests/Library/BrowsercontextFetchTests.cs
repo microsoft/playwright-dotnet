@@ -244,7 +244,6 @@ public class BrowsercontextFetchTests : UpstreamBrowserTest
     }
 
     [UpstreamTest("FE-099 ${method} should support params passed as URLSearchParams")]
-    [LocalFixme("dotnet: Params with the same name twice throws 'ArgumentException: An item with the same key has already been added. Key: param1': APIRequestContext.FetchAsync makes a dictionary of the params; upstream sends param1=value1&param1=value2")]
     [TestCase("fetch")]
     [TestCase("delete")]
     [TestCase("get")]
@@ -1596,7 +1595,6 @@ public class BrowsercontextFetchTests : UpstreamBrowserTest
     }
 
     [UpstreamTest("FE-167 should accept bool and numeric params and filter out undefined")]
-    [LocalFixme("dotnet: a null value in Params throws NullReferenceException: APIRequestContext.FetchAsync calls ToString() on each value, which also makes 'True' and 'False' of the bools; upstream leaves the param out and sends bool=true&bool2=false")]
     public async Task ShouldAcceptBoolAndNumericParamsAndFilterOutUndefined()
     {
         var page = await PageFixture();

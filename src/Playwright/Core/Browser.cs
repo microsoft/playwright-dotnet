@@ -130,7 +130,7 @@ internal class Browser : ChannelOwner, IBrowser
             ["reducedMotion"] = options.ReducedMotion == ReducedMotion.Null ? "no-override" : options.ReducedMotion,
             ["forcedColors"] = options.ForcedColors == ForcedColors.Null ? "no-override" : options.ForcedColors,
             ["contrast"] = options.Contrast == Contrast.Null ? "no-override" : options.Contrast,
-            ["extraHTTPHeaders"] = options.ExtraHTTPHeaders?.Select(kv => new HeaderEntry { Name = kv.Key, Value = kv.Value }).ToArray(),
+            ["extraHTTPHeaders"] = options.ExtraHTTPHeaders.ToExtraHTTPHeaders(),
             ["recordVideo"] = GetVideoArgs(options.RecordVideoDir, options.RecordVideoSize, options.RecordVideoFps),
             ["timezoneId"] = options.TimezoneId,
             ["userAgent"] = options.UserAgent,

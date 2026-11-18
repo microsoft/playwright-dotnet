@@ -923,8 +923,8 @@ public class BrowserContextFetchTests : PageTestEx
         );
         Assert.AreEqual("s", receivedQueryParams["str"].First());
         Assert.AreEqual("10", receivedQueryParams["num"].First());
-        Assert.AreEqual("True", receivedQueryParams["bool"].First());
-        Assert.AreEqual("False", receivedQueryParams["bool2"].First());
+        Assert.AreEqual("true", receivedQueryParams["bool"].First());
+        Assert.AreEqual("false", receivedQueryParams["bool2"].First());
     }
 
     [PlaywrightTest("browsercontext-fetch.spec.ts", "should support repeating names in multipart/form-data")]

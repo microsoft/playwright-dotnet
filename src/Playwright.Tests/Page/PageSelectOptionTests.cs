@@ -206,7 +206,6 @@ public class PageSelectOptionTests : UpstreamPageTest
     }
 
     [UpstreamTest("SO-020 should not allow null items")]
-    [LocalFixme("dotnet: SelectOptionAsync does not check the values for null and does not throw, upstream throws \"options[1]: expected object, got null\" in the client")]
     public async Task ShouldNotAllowNullItems()
     {
         await Page.GotoAsync(Server.Prefix + "/input/select.html");
@@ -217,7 +216,6 @@ public class PageSelectOptionTests : UpstreamPageTest
     }
 
     [UpstreamTest("SO-021 should unselect with null")]
-    [LocalFixme("dotnet: SelectOptionAsync(selector, (string)null) sends one option without a value and options stay selected, and a null IEnumerable<string> throws ArgumentNullException; upstream sends no options for null, which deselects all")]
     public async Task ShouldUnselectWithNull()
     {
         await Page.GotoAsync(Server.Prefix + "/input/select.html");
