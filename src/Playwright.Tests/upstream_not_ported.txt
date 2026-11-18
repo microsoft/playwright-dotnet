@@ -97,6 +97,7 @@ AT-013      Passes a string in place of the options object (@ts-ignore), which t
 AW-010      Passes a function as the __testHookAfterPointerAction option of click(), a hook that the Node.js client hands to the driver in the same process; the .NET API has no such option.
 # page/page-basic
 PA-019      Enumerates the properties of the JavaScript Page object with for...in and reads their Symbol.iterator; a .NET object has no such enumeration.
+PA-057      Checks the 'page.goto: ' prefix that the Node.js client puts before an error message; the .NET client adds no API name.
 # page/page-click
 CL-067      Passes a function as the __testHookBeforeStable option of click(), a hook of the Node.js client that the .NET API does not have.
 CL-068      Passes a function as the __testHookBeforeStable option of click(), a hook of the Node.js client that the .NET API does not have.
@@ -117,6 +118,9 @@ CL-121      Passes a function as the __testHookBeforePointerAction option of cli
 EM-002      Passes media: 'bad', a value outside of the Media enum of the .NET API.
 EM-005      Passes colorScheme: 'bad', a value outside of the ColorScheme enum of the .NET API.
 # page/page-evaluate
+EV-013      Expects a Map to arrive in the page as an empty object; .NET has no Map, and a Dictionary is sent with its entries.
+EV-014      Expects a Set to arrive in the page as an empty object; .NET has no Set, and a HashSet is sent with its items.
+EV-018      Passes a method shorthand, 'sum([a, b]) { ... }', as the function: the Node.js client tells the driver that it is a function; a .NET expression is a string that the driver evaluates, and a method shorthand is a SyntaxError there.
 EV-038      The evaluate methods of the .NET API take one argument: a call with two does not compile.
 EV-039      Passes undefined as a property of the argument and checks Object.is(a, undefined) in the page; .NET has one null, which is sent as null.
 EV-040      Passes undefined as the argument and expects { a: x } to come back without the property; .NET has one null, which is sent as null.
@@ -187,6 +191,8 @@ WA-060      Passes state: true, which the typed API can not express (@ts-expect-
 WA-061      Passes state: false, which the typed API can not express (@ts-expect-error).
 WA-072      Passes the __testHookBeforeAdoptNode function as an option, a hook of the Node.js client that is not in the .NET API.
 WA-073      Passes the __testHookBeforeAdoptNode function as an option, a hook of the Node.js client that is not in the .NET API.
+# page/queryselector
+QS-001      Passes null as the selector and expects 'selector: expected string, got object', the typeof null of JavaScript; the .NET client leaves a null out of the message, and the driver reports 'got undefined'.
 # page/selectors-get-by
 SE-092      The v (unicodeSets) flag of a JavaScript regular expression is not in .NET Regex: the client can not send it.
 SE-097      The g (global) and y (sticky) flags of a JavaScript regular expression are not in .NET Regex: the client can not send them.
@@ -247,7 +253,6 @@ BT-092      The test calls browser._parent.launch(), an internal of the Node.js 
 BT-096      The test starts remote.PlaywrightServer of the Node.js package (coreBundle) in its own process and reads its _dontReuseBrowsers.
 # library/browsertype-launch
 BT-005      The userDataDir option of browserType.launch() is not in the .NET API: upstream passes it with "as any".
-BT-006      Checks the message "Pass userDataDir parameter to 'browserType.launchPersistentContext": the driver words it for .NET on purpose, 'BrowserType.LaunchPersistentContextAsync(userDataDir, options)'.
 BT-007      The port option of browserType.launch() is not in the .NET API: upstream passes it with "as any".
 BT-008      The port option of browserType.launchPersistentContext() is not in the .NET API: upstream passes it with "as any".
 BT-012      The __testHookBeforeCreateBrowser option is a function of the Node.js client internals, not in the .NET API.

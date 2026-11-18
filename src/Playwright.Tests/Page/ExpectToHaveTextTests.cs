@@ -50,7 +50,7 @@ public class ExpectToHaveTextTests : UpstreamPageTest
             var error = await Catch(() => Expect(locator).ToHaveTextAsync(new Regex("Text 2"), new() { Timeout = 1000 }));
             Assert.That(StripAnsi(error.Message), Does.Contain(@"expect(locator).toHaveText(expected) failed
 
-Locator: locator('#node')
+Locator: Locator(""#node"")
 Expected pattern: /Text 2/
 Received string:  ""Text content""
 Timeout: 1000ms
@@ -104,7 +104,7 @@ Call log:
             var error = await Catch(() => Expect(locator).ToContainTextAsync("foo", new() { Timeout = 1000 }));
             Assert.That(StripAnsi(error.Message), Does.Contain(@"expect(locator).toContainText(expected) failed
 
-Locator: locator('#node')
+Locator: Locator(""#node"")
 Expected substring: ""foo""
 Received string:    ""Text content""
 Timeout: 1000ms
@@ -261,14 +261,14 @@ Call log:
         }
 
         [UpstreamTest("EX-290 should work when selector does not match")]
-        [LocalFixme("dotnet: the message of Not.ToHaveTextAsync is \"Locator expected not to have text\\nError: element(s) not found 'hello'\\nBut was: 'null' \\nCall log: ...\"; upstream expects 'Expected: not \"hello\"'. The call log has Locator(\"span\"), upstream expects locator('span')")]
+        [LocalFixme("dotnet: the message of Not.ToHaveTextAsync is \"Locator expected not to have text\\nError: element(s) not found 'hello'\\nBut was: 'null' \\nCall log: ...\"; upstream expects 'Expected: not \"hello\"'")]
         public async Task ShouldWorkWhenSelectorDoesNotMatch()
         {
             await Page.SetContentAsync("<div>hello</div>");
             var error = await Catch(() => Expect(Page.Locator("span")).Not.ToHaveTextAsync("hello", new() { Timeout = 1000 }));
             Assert.That(StripAnsi(error.Message), Does.Contain("Expected: not \"hello\""));
             Assert.That(StripAnsi(error.Message), Does.Contain("Error: element(s) not found"));
-            Assert.That(StripAnsi(error.Message), Does.Contain("waiting for locator('span')"));
+            Assert.That(StripAnsi(error.Message), Does.Contain("waiting for Locator(\"span\")"));
         }
     }
 
@@ -325,7 +325,7 @@ Call log:
         }
 
         [UpstreamTest("EX-296 fail on not+empty")]
-        [LocalFixme("dotnet: the message of Not.ToHaveTextAsync is \"Locator expected not to have text '[]'\\nBut was: '[]' \\nCall log:\\n  - Expect \"ToHaveTextAsync\" Locator(\"p\") with timeout 1000ms ...\"; upstream expects \"expect(locator).not.toHaveText(expected)\", 'Timeout:  1000ms' and '- Expect \"not toHaveText\" locator('p') with timeout 1000ms'")]
+        [LocalFixme("dotnet: the message of Not.ToHaveTextAsync is \"Locator expected not to have text '[]'\\nBut was: '[]' \\nCall log:\\n  - Expect \"ToHaveTextAsync\" Locator(\"p\") with timeout 1000ms ...\"; upstream expects \"expect(locator).not.toHaveText(expected)\", 'Timeout:  1000ms' and '- Expect \"not toHaveText\" Locator(\"p\") with timeout 1000ms'")]
         public async Task FailOnNotEmpty()
         {
             await Page.SetContentAsync("<div></div>");
@@ -333,7 +333,7 @@ Call log:
             var error = await Catch(() => Expect(locator).Not.ToHaveTextAsync(Array.Empty<string>(), new() { Timeout = 1000 }));
             Assert.That(StripAnsi(error.Message), Does.Contain("expect(locator).not.toHaveText(expected)"));
             Assert.That(StripAnsi(error.Message), Does.Contain("Timeout:  1000ms"));
-            Assert.That(StripAnsi(error.Message), Does.Contain("- Expect \"not toHaveText\" locator('p') with timeout 1000ms"));
+            Assert.That(StripAnsi(error.Message), Does.Contain("- Expect \"not toHaveText\" Locator(\"p\") with timeout 1000ms"));
         }
 
         [UpstreamTest("EX-297 pass eventually empty")]

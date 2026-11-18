@@ -71,7 +71,6 @@ public class PageWaitForSelector1Tests : UpstreamPageTest
 
     [UpstreamTest("WA-033 elementHandle.waitForSelector should throw on navigation")]
 
-    [LocalFixme("dotnet: the call log has Locator(\"span\"), upstream expects locator('span')")]
     public async Task ElementHandleWaitForSelectorShouldThrowOnNavigation()
     {
         await Page.SetContentAsync("<div></div>");
@@ -84,7 +83,7 @@ public class PageWaitForSelector1Tests : UpstreamPageTest
         }
         await Page.GotoAsync(Server.EmptyPage);
         var error = await promise;
-        Assert.That(error.Message, Does.Contain("waiting for locator('span') to be visible"));
+        Assert.That(error.Message, Does.Contain("waiting for Locator(\"span\") to be visible"));
     }
 
     [UpstreamTest("WA-034 should work with removed MutationObserver")]
@@ -112,7 +111,6 @@ public class PageWaitForSelector1Tests : UpstreamPageTest
 
     [UpstreamTest("WA-036 should report logs while waiting for visible")]
 
-    [LocalFixme("dotnet: the call log has Locator(\"div\"), upstream expects locator('div')")]
     public async Task ShouldReportLogsWhileWaitingForVisible()
     {
         await Page.GotoAsync(Server.EmptyPage);
@@ -143,14 +141,13 @@ public class PageWaitForSelector1Tests : UpstreamPageTest
 
         var error = await Catch(() => watchdog);
         Assert.That(error.Message, Does.Contain("Timeout 5000ms exceeded."));
-        Assert.That(error.Message, Does.Contain("waiting for locator('div') to be visible"));
+        Assert.That(error.Message, Does.Contain("waiting for Locator(\"div\") to be visible"));
         Assert.That(error.Message, Does.Contain("locator resolved to hidden <div id=\"mydiv\" class=\"foo bar\" foo=\"123456789012345678901234567890123456789012345678901234567890\">abcdefghijklmnopqrstuvwyxzabcdefghijklmnopqrstuvw…</div>"));
         Assert.That(error.Message, Does.Contain("locator resolved to hidden <div class=\"another\"></div>"));
     }
 
     [UpstreamTest("WA-037 should report logs while waiting for hidden")]
 
-    [LocalFixme("dotnet: the call log has Locator(\"div\"), upstream expects locator('div')")]
     public async Task ShouldReportLogsWhileWaitingForHidden()
     {
         await Page.GotoAsync(Server.EmptyPage);
@@ -177,7 +174,7 @@ public class PageWaitForSelector1Tests : UpstreamPageTest
 
         var error = await Catch(() => watchdog);
         Assert.That(error.Message, Does.Contain("Timeout 5000ms exceeded."));
-        Assert.That(error.Message, Does.Contain("waiting for locator('div') to be hidden"));
+        Assert.That(error.Message, Does.Contain("waiting for Locator(\"div\") to be hidden"));
         Assert.That(error.Message, Does.Contain("locator resolved to visible <div id=\"mydiv\" class=\"foo bar\">hello</div>"));
         Assert.That(error.Message, Does.Contain("locator resolved to visible <div class=\"another\">hello</div>"));
     }

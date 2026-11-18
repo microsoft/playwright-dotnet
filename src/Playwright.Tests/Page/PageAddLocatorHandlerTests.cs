@@ -306,7 +306,6 @@ public class PageAddLocatorHandlerTests : UpstreamPageTest
     }
 
     [UpstreamTest("LH-012 should wait for hidden by default 2")]
-    [LocalFixme("dotnet: the call log has GetByRole(AriaRole.Button, new() { Name = \"close\" }), upstream expects getByRole('button', { name: 'close' })")]
     public async Task ShouldWaitForHiddenByDefault2()
     {
         await Page.GotoAsync(Server.Prefix + "/input/handle-locator.html");
@@ -326,7 +325,7 @@ public class PageAddLocatorHandlerTests : UpstreamPageTest
         Assert.That(await Page.EvaluateAsync<int>("window.clicked"), Is.EqualTo(0));
         Assert.That(await Page.Locator("#interstitial").IsVisibleAsync(), Is.EqualTo(true));
         Assert.That(called, Is.EqualTo(1));
-        Assert.That(error.Message, Does.Contain("locator handler has finished, waiting for getByRole('button', { name: 'close' }) to be hidden"));
+        Assert.That(error.Message, Does.Contain("locator handler has finished, waiting for GetByRole(AriaRole.Button, new() { Name = \"close\" }) to be hidden"));
     }
 
     [UpstreamTest("LH-013 should work with noWaitAfter")]

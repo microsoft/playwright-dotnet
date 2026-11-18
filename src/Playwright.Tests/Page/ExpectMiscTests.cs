@@ -98,11 +98,11 @@ public class ExpectMiscTests : UpstreamPageTest
             var error = await Catch(() => Expect(locator).ToHaveCountAsync(0, new() { Timeout = 1000 }));
             Assert.That(StripAnsi(error.Message), Does.Contain(@"expect(locator).toHaveCount(expected) failed
 
-Locator:  locator('span')
+Locator:  Locator(""span"")
 Expected: 0
 Received: 1
 Timeout:  1000ms"));
-            Assert.That(StripAnsi(error.Message), Does.Contain("- Expect \"toHaveCount\" locator('span') with timeout 1000ms"));
+            Assert.That(StripAnsi(error.Message), Does.Contain("- Expect \"toHaveCount\" Locator(\"span\") with timeout 1000ms"));
         }
 
         [UpstreamTest("EX-187 fail zero 2")]
@@ -114,11 +114,11 @@ Timeout:  1000ms"));
             var error = await Catch(() => Expect(locator).Not.ToHaveCountAsync(1, new() { Timeout = 1000 }));
             Assert.That(StripAnsi(error.Message), Does.Contain(@"expect(locator).not.toHaveCount(expected) failed
 
-Locator:  locator('span')
+Locator:  Locator(""span"")
 Expected: not 1
 Received: 1
 Timeout:  1000ms"));
-            Assert.That(StripAnsi(error.Message), Does.Contain("- Expect \"not toHaveCount\" locator('span') with timeout 1000ms"));
+            Assert.That(StripAnsi(error.Message), Does.Contain("- Expect \"not toHaveCount\" Locator(\"span\") with timeout 1000ms"));
         }
     }
 
@@ -163,11 +163,11 @@ Timeout:  1000ms"));
             var error = await Catch(() => Expect(locator).ToHaveJSPropertyAsync("foo", "error", new() { Timeout = 200 }));
             Assert.That(StripAnsi(error.Message), Does.Contain(@"expect(locator).toHaveJSProperty(expected) failed
 
-Locator:  locator('div')
+Locator:  Locator(""div"")
 Expected: ""error""
 Received: ""string""
 Timeout:  200ms"));
-            Assert.That(StripAnsi(error.Message), Does.Contain("- Expect \"toHaveJSProperty\" locator('div') with timeout 200ms"));
+            Assert.That(StripAnsi(error.Message), Does.Contain("- Expect \"toHaveJSProperty\" Locator(\"div\") with timeout 200ms"));
         }
 
         [UpstreamTest("EX-192 pass number")]
@@ -189,11 +189,11 @@ Timeout:  200ms"));
             var error = await Catch(() => Expect(locator).ToHaveJSPropertyAsync("foo", 1, new() { Timeout = 200 }));
             Assert.That(StripAnsi(error.Message), Does.Contain(@"expect(locator).toHaveJSProperty(expected) failed
 
-Locator:  locator('div')
+Locator:  Locator(""div"")
 Expected: 1
 Received: 2021
 Timeout:  200ms"));
-            Assert.That(StripAnsi(error.Message), Does.Contain("- Expect \"toHaveJSProperty\" locator('div') with timeout 200ms"));
+            Assert.That(StripAnsi(error.Message), Does.Contain("- Expect \"toHaveJSProperty\" Locator(\"div\") with timeout 200ms"));
         }
 
         [UpstreamTest("EX-194 pass boolean")]
@@ -215,11 +215,11 @@ Timeout:  200ms"));
             var error = await Catch(() => Expect(locator).ToHaveJSPropertyAsync("foo", true, new() { Timeout = 200 }));
             Assert.That(StripAnsi(error.Message), Does.Contain(@"expect(locator).toHaveJSProperty(expected) failed
 
-Locator:  locator('div')
+Locator:  Locator(""div"")
 Expected: true
 Received: false
 Timeout:  200ms"));
-            Assert.That(StripAnsi(error.Message), Does.Contain("- Expect \"toHaveJSProperty\" locator('div') with timeout 200ms"));
+            Assert.That(StripAnsi(error.Message), Does.Contain("- Expect \"toHaveJSProperty\" Locator(\"div\") with timeout 200ms"));
         }
 
         [UpstreamTest("EX-196 pass boolean 2")]
@@ -241,11 +241,11 @@ Timeout:  200ms"));
             var error = await Catch(() => Expect(locator).ToHaveJSPropertyAsync("foo", true, new() { Timeout = 200 }));
             Assert.That(StripAnsi(error.Message), Does.Contain(@"expect(locator).toHaveJSProperty(expected) failed
 
-Locator:  locator('div')
+Locator:  Locator(""div"")
 Expected: true
 Received: false
 Timeout:  200ms"));
-            Assert.That(StripAnsi(error.Message), Does.Contain("- Expect \"toHaveJSProperty\" locator('div') with timeout 200ms"));
+            Assert.That(StripAnsi(error.Message), Does.Contain("- Expect \"toHaveJSProperty\" Locator(\"div\") with timeout 200ms"));
         }
 
         [UpstreamTest("EX-199 pass null")]
@@ -309,14 +309,14 @@ Timeout:  200ms"));
             var error = await Catch(() => Expect(locator).ToHaveClassAsync("foo bar baz", new() { Timeout = 1000 }));
             Assert.That(StripAnsi(error.Message), Does.Contain(@"expect(locator).toHaveClass(expected) failed
 
-Locator:  locator('div')
+Locator:  Locator(""div"")
 Expected: ""foo bar baz""
 Received: ""bar baz""
 Timeout:  1000ms
 
 Call log:
 "));
-            Assert.That(StripAnsi(error.Message), Does.Contain("- Expect \"toHaveClass\" locator('div') with timeout 1000ms"));
+            Assert.That(StripAnsi(error.Message), Does.Contain("- Expect \"toHaveClass\" Locator(\"div\") with timeout 1000ms"));
         }
     }
 
@@ -352,14 +352,14 @@ Call log:
             var error = await Catch(() => Expect(locator).ToContainClassAsync("does-not-exist", new() { Timeout = 1000 }));
             Assert.That(StripAnsi(error.Message), Does.Contain(@"expect(locator).toContainClass(expected) failed
 
-Locator:  locator('div')
+Locator:  Locator(""div"")
 Expected: ""does-not-exist""
 Received: ""bar baz""
 Timeout:  1000ms
 
 Call log:
 "));
-            Assert.That(StripAnsi(error.Message), Does.Contain("- Expect \"toContainClass\" locator('div') with timeout 1000ms"));
+            Assert.That(StripAnsi(error.Message), Does.Contain("- Expect \"toContainClass\" Locator(\"div\") with timeout 1000ms"));
         }
 
         [UpstreamTest("EX-210 pass with array")]
@@ -383,7 +383,7 @@ Call log:
             var error = await Catch(() => Expect(locator).ToContainClassAsync(new[] { "foo", "bar", "baz" }, new() { Timeout = 1000 }));
             Assert.That(StripAnsi(error.Message), Does.Contain("expect(locator).toContainClass(expected) failed"));
             Assert.That(StripAnsi(error.Message), Does.Contain("Timeout: 1000ms"));
-            Assert.That(StripAnsi(error.Message), Does.Contain("- Expect \"toContainClass\" locator('div') with timeout 1000ms"));
+            Assert.That(StripAnsi(error.Message), Does.Contain("- Expect \"toContainClass\" Locator(\"div\") with timeout 1000ms"));
         }
     }
 
@@ -467,27 +467,27 @@ Call log:
                 var error = await Catch(() => Expect(locator).ToHaveAttributeAsync("disabled", "", new() { Timeout = 1000 }));
                 Assert.That(StripAnsi(error.Message), Does.Contain(@"expect(locator).toHaveAttribute(expected) failed
 
-Locator:  locator('#node')
+Locator:  Locator(""#node"")
 Expected: """"
 Received: serializes to the same string
 Timeout:  1000ms
 
 Call log:
 "));
-                Assert.That(StripAnsi(error.Message), Does.Contain("- Expect \"toHaveAttribute\" locator('#node') with timeout 1000ms"));
+                Assert.That(StripAnsi(error.Message), Does.Contain("- Expect \"toHaveAttribute\" Locator(\"#node\") with timeout 1000ms"));
             }
             {
                 var error = await Catch(() => Expect(locator).ToHaveAttributeAsync("disabled", new Regex(".*"), new() { Timeout = 1000 }));
                 Assert.That(StripAnsi(error.Message), Does.Contain(@"expect(locator).toHaveAttribute(expected) failed
 
-Locator: locator('#node')
+Locator: Locator(""#node"")
 Expected pattern: /.*/
 Received string:  """"
 Timeout: 1000ms
 
 Call log:
 "));
-                Assert.That(StripAnsi(error.Message), Does.Contain("- Expect \"toHaveAttribute\" locator('#node') with timeout 1000ms"));
+                Assert.That(StripAnsi(error.Message), Does.Contain("- Expect \"toHaveAttribute\" Locator(\"#node\") with timeout 1000ms"));
             }
             await Expect(locator).Not.ToHaveAttributeAsync("disabled", "");
             await Expect(locator).Not.ToHaveAttributeAsync("disabled", new Regex(".*"));
@@ -505,24 +505,24 @@ Call log:
                 var error = await Catch(() => Expect(locator).Not.ToHaveAttributeAsync("checked", "", new() { Timeout = 1000 }));
                 Assert.That(StripAnsi(error.Message), Does.Contain(@"expect(locator).not.toHaveAttribute(expected) failed
 
-Locator:  locator('#node')
+Locator:  Locator(""#node"")
 Expected: not """"
 Received: """"
 Timeout:  1000ms
 
 Call log:
 "));
-                Assert.That(StripAnsi(error.Message), Does.Contain("- Expect \"not toHaveAttribute\" locator('#node') with timeout 1000ms"));
+                Assert.That(StripAnsi(error.Message), Does.Contain("- Expect \"not toHaveAttribute\" Locator(\"#node\") with timeout 1000ms"));
             }
             {
                 var error = await Catch(() => Expect(locator).Not.ToHaveAttributeAsync("checked", new Regex(".*"), new() { Timeout = 1000 }));
                 Assert.That(StripAnsi(error.Message), Does.Contain(@"expect(locator).not.toHaveAttribute(expected) failed
 
-Locator: locator('#node')
+Locator: Locator(""#node"")
 Expected pattern: not /.*/
 Received string: """"
 Timeout: 1000ms"));
-                Assert.That(StripAnsi(error.Message), Does.Contain("- Expect \"not toHaveAttribute\" locator('#node') with timeout 1000ms"));
+                Assert.That(StripAnsi(error.Message), Does.Contain("- Expect \"not toHaveAttribute\" Locator(\"#node\") with timeout 1000ms"));
             }
         }
 
@@ -654,12 +654,11 @@ Timeout: 1000ms"));
     }
 
     [UpstreamTest("EX-237 toHaveCount should not produce logs twice")]
-    [LocalFixme("dotnet: the call log has Locator(\"option\"), upstream expects locator('option')")]
     public async Task ToHaveCountShouldNotProduceLogsTwice()
     {
         await Page.SetContentAsync("<select><option>One</option></select>");
         var error = await Catch(() => Expect(Page.Locator("option")).ToHaveCountAsync(2, new() { Timeout = 2000 }));
-        var waitingForMessage = "waiting for locator('option')";
+        var waitingForMessage = "waiting for Locator(\"option\")";
         Assert.That(error.Message, Does.Contain(waitingForMessage));
         Assert.That(error.Message, Does.Contain("locator resolved to 1 element"));
         Assert.That(error.Message, Does.Contain("unexpected value \"1\""));
@@ -667,12 +666,11 @@ Timeout: 1000ms"));
     }
 
     [UpstreamTest("EX-238 toHaveText should not produce logs twice")]
-    [LocalFixme("dotnet: the call log has Locator(\"div\"), upstream expects locator('div')")]
     public async Task ToHaveTextShouldNotProduceLogsTwice()
     {
         await Page.SetContentAsync("<div>hello</div>");
         var error = await Catch(() => Expect(Page.Locator("div")).ToHaveTextAsync("world", new() { Timeout = 2000 }));
-        var waitingForMessage = "waiting for locator('div')";
+        var waitingForMessage = "waiting for Locator(\"div\")";
         Assert.That(error.Message, Does.Contain(waitingForMessage));
         Assert.That(error.Message, Does.Contain("locator resolved to <div>hello</div>"));
         Assert.That(error.Message, Does.Contain("unexpected value \"hello\""));
@@ -680,12 +678,11 @@ Timeout: 1000ms"));
     }
 
     [UpstreamTest("EX-239 toHaveText that does not match should not produce logs twice")]
-    [LocalFixme("dotnet: the call log has Locator(\"span\"), upstream expects locator('span')")]
     public async Task ToHaveTextThatDoesNotMatchShouldNotProduceLogsTwice()
     {
         await Page.SetContentAsync("<div>hello</div>");
         var error = await Catch(() => Expect(Page.Locator("span")).ToHaveTextAsync("world", new() { Timeout = 2000 }));
-        var waitingForMessage = "waiting for locator('span')";
+        var waitingForMessage = "waiting for Locator(\"span\")";
         Assert.That(error.Message, Does.Contain(waitingForMessage));
         Assert.That(error.Message, Does.Not.Contain("locator resolved to"));
         Assert.That(ReplaceFirst(error.Message, waitingForMessage, "<redacted>"), Does.Not.Contain(waitingForMessage));
@@ -699,11 +696,11 @@ Timeout: 1000ms"));
         var error = await Catch(() => Expect(Page.Locator("div")).ToHaveTextAsync("foo"));
         Assert.That(StripAnsi(error.Message), Does.Contain(@"expect(locator).toHaveText(expected) failed
 
-Locator: locator('div')
+Locator: Locator(""div"")
 Expected: ""foo""
-Error: strict mode violation: locator('div') resolved to 2 elements:
-    1) <div>a</div> aka getByText('a')
-    2) <div>b</div> aka getByText('b')
+Error: strict mode violation: Locator(""div"") resolved to 2 elements:
+    1) <div>a</div> aka GetByText(""a"")
+    2) <div>b</div> aka GetByText(""b"")
 
 Call log:
 "));

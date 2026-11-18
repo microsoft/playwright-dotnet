@@ -715,7 +715,6 @@ public class GlobalFetchTests : UpstreamBrowserTest
     }
 
     [UpstreamTest("FE-041 should throw an error when maxRedirects is less than 0")]
-    [LocalFixme("dotnet: the message is \"'MaxRedirects' must be greater than or equal to '0'\", upstream expects \"'maxRedirects' must be greater than or equal to '0'\"")]
     public async Task ShouldThrowAnErrorWhenMaxRedirectsIsLessThan0()
     {
         Server.SetRedirect("/a/redirect1", "/b/c/redirect2");
@@ -725,7 +724,7 @@ public class GlobalFetchTests : UpstreamBrowserTest
         foreach (var method in HTTP_METHODS)
         {
             var error = await ThrowsAsync<PlaywrightException>(() => request.FetchAsync($"{Server.Prefix}/a/redirect1", new() { Method = method, MaxRedirects = -1 }));
-            Assert.That(error.Message, Does.Contain("'maxRedirects' must be greater than or equal to '0'"));
+            Assert.That(error.Message, Does.Contain("'MaxRedirects' must be greater than or equal to '0'"));
         }
         await request.DisposeAsync();
     }

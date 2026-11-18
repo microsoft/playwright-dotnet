@@ -189,20 +189,18 @@ public class PageWaitForSelector2Tests : UpstreamPageTest
 
     [UpstreamTest("WA-053 should respect timeout")]
 
-    [LocalFixme("dotnet: the call log has Locator(\"div\"), upstream expects locator('div')")]
     public async Task ShouldRespectTimeout()
     {
         Exception error = null;
         error = await Catch(() => Page.WaitForSelectorAsync("div", new() { Timeout = 3000, State = WaitForSelectorState.Attached }));
         Assert.That(error, Is.Not.Null);
         Assert.That(error.Message, Does.Contain("Timeout 3000ms exceeded"));
-        Assert.That(error.Message, Does.Contain("waiting for locator('div')"));
+        Assert.That(error.Message, Does.Contain("waiting for Locator(\"div\")"));
         Assert.That(error, Is.InstanceOf<TimeoutException>());
     }
 
     [UpstreamTest("WA-054 should have an error message specifically for awaiting an element to be hidden")]
 
-    [LocalFixme("dotnet: the call log has Locator(\"div\"), upstream expects locator('div')")]
     public async Task ShouldHaveAnErrorMessageSpecificallyForAwaitingAnElementToBeHidden()
     {
         await Page.SetContentAsync("<div>content</div>");
@@ -210,7 +208,7 @@ public class PageWaitForSelector2Tests : UpstreamPageTest
         error = await Catch(() => Page.WaitForSelectorAsync("div", new() { State = WaitForSelectorState.Hidden, Timeout = 1000 }));
         Assert.That(error, Is.Not.Null);
         Assert.That(error.Message, Does.Contain("Timeout 1000ms exceeded"));
-        Assert.That(error.Message, Does.Contain("waiting for locator('div') to be hidden"));
+        Assert.That(error.Message, Does.Contain("waiting for Locator(\"div\") to be hidden"));
     }
 
     [UpstreamTest("WA-055 should respond to node attribute mutation")]
@@ -289,14 +287,13 @@ public class PageWaitForSelector2Tests : UpstreamPageTest
 
     [UpstreamTest("WA-066 should respect timeout xpath")]
 
-    [LocalFixme("dotnet: the call log has Locator(\"//div\"), upstream expects locator('//div')")]
     public async Task ShouldRespectTimeoutXpath()
     {
         Exception error = null;
         error = await Catch(() => Page.WaitForSelectorAsync("//div", new() { State = WaitForSelectorState.Attached, Timeout = 3000 }));
         Assert.That(error, Is.Not.Null);
         Assert.That(error.Message, Does.Contain("Timeout 3000ms exceeded"));
-        Assert.That(error.Message, Does.Contain("waiting for locator('//div')"));
+        Assert.That(error.Message, Does.Contain("waiting for Locator(\"//div\")"));
         Assert.That(error, Is.InstanceOf<TimeoutException>());
     }
 

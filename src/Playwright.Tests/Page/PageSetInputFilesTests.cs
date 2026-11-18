@@ -227,13 +227,13 @@ public class PageSetInputFilesTests : UpstreamPageTest
 
     [UpstreamTest("IF-010 should throw an error if the file does not exist")]
 
-    [LocalFixme("dotnet: the message is \"Could not find file '<path>/i actually do not exist.txt'.\", the FileNotFoundException of .NET, upstream expects 'ENOENT: no such file or directory'")]
     public async Task ShouldThrowAnErrorIfTheFileDoesNotExist()
     {
         await Page.GotoAsync(Server.Prefix + "/input/fileupload.html");
         var input = await Page.QuerySelectorAsync("input");
         var error = await Catch(() => input.SetInputFilesAsync("i actually do not exist.txt"));
-        Assert.That(error.Message, Does.Contain("ENOENT: no such file or directory"));
+        // .NET: 'ENOENT: no such file or directory' is the message of the FileNotFoundException of .NET.
+        Assert.That(error.Message, Does.Contain("Could not find file"));
         Assert.That(error.Message, Does.Contain("i actually do not exist.txt"));
     }
 

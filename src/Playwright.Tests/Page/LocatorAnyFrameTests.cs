@@ -67,7 +67,6 @@ public class LocatorAnyFrameTests : UpstreamPageTest
     }
 
     [UpstreamTest("LO-003 should fail click when elements match in multiple frames")]
-    [LocalFixme("dotnet: the call log has FrameLocator().Locator(\"button\"), upstream expects frameLocator().locator('button')")]
     public async Task ShouldFailClickWhenElementsMatchInMultipleFrames()
     {
         await RoutePage(Page, "empty.html", "<iframe src=\"a.html\"></iframe><iframe src=\"b.html\"></iframe>");
@@ -77,11 +76,10 @@ public class LocatorAnyFrameTests : UpstreamPageTest
         await WaitForAllFrames(Page, 3, "button");
         var error = await Catch(() => Page.FrameLocator().Locator("button").ClickAsync(new() { Timeout = 3000 }));
         Assert.That(error.Message, Does.Contain("frameLocator() matched elements in multiple frames"));
-        Assert.That(error.Message, Does.Contain("waiting for frameLocator().locator('button')"));
+        Assert.That(error.Message, Does.Contain("waiting for FrameLocator().Locator(\"button\")"));
     }
 
     [UpstreamTest("LO-004 should fail click upon strict mode violation inside a single frame")]
-    [LocalFixme("dotnet: the call log has FrameLocator().Locator(\"button\"), upstream expects frameLocator().locator('button')")]
     public async Task ShouldFailClickUponStrictModeViolationInsideASingleFrame()
     {
         await RoutePage(Page, "empty.html", "<iframe src=\"a.html\"></iframe>");
@@ -90,11 +88,10 @@ public class LocatorAnyFrameTests : UpstreamPageTest
         await WaitForAllFrames(Page, 2, "button");
         var error = await Catch(() => Page.FrameLocator().Locator("button").ClickAsync(new() { Timeout = 3000 }));
         Assert.That(error.Message, Does.Contain("strict mode violation"));
-        Assert.That(error.Message, Does.Contain("waiting for frameLocator().locator('button')"));
+        Assert.That(error.Message, Does.Contain("waiting for FrameLocator().Locator(\"button\")"));
     }
 
     [UpstreamTest("LO-005 should time out on click when there are no matches")]
-    [LocalFixme("dotnet: the call log has FrameLocator().Locator(\"button\"), upstream expects frameLocator().locator('button')")]
     public async Task ShouldTimeOutOnClickWhenThereAreNoMatches()
     {
         await RoutePage(Page, "empty.html", "<iframe src=\"a.html\"></iframe>");
@@ -102,7 +99,7 @@ public class LocatorAnyFrameTests : UpstreamPageTest
         await Page.GotoAsync(Server.EmptyPage);
         var error = await Catch(() => Page.FrameLocator().Locator("button").ClickAsync(new() { Timeout = 1000 }));
         Assert.That(error.Message, Does.Contain("Timeout 1000ms exceeded"));
-        Assert.That(error.Message, Does.Contain("waiting for frameLocator().locator('button')"));
+        Assert.That(error.Message, Does.Contain("waiting for FrameLocator().Locator(\"button\")"));
     }
 
     [UpstreamTest("LO-006 should count elements in a single frame")]
@@ -154,7 +151,7 @@ public class LocatorAnyFrameTests : UpstreamPageTest
     }
 
     [UpstreamTest("LO-010 should fail toHaveCount when elements match in multiple frames")]
-    [LocalFixme("dotnet: the message of ToHaveCountAsync is \"Locator expected to have count\\nError: frameLocator() matched elements in multiple frames. '2'\\nBut was: 'null'\", with FrameLocator().Locator(\"span\") in the call log; upstream expects the line \"Locator: frameLocator().locator('span')\"")]
+    [LocalFixme("dotnet: the message of ToHaveCountAsync is \"Locator expected to have count\\nError: frameLocator() matched elements in multiple frames. '2'\\nBut was: 'null'\", without a line \"Locator: FrameLocator().Locator(\"span\")\"")]
     public async Task ShouldFailToHaveCountWhenElementsMatchInMultipleFrames()
     {
         await RoutePage(Page, "empty.html", "<iframe src=\"a.html\"></iframe><iframe src=\"b.html\"></iframe>");
@@ -164,7 +161,7 @@ public class LocatorAnyFrameTests : UpstreamPageTest
         await WaitForAllFrames(Page, 3, "span");
         var error = await Catch(() => Expect(Page.FrameLocator().Locator("span")).ToHaveCountAsync(2, new() { Timeout = 3000 }));
         Assert.That(error.Message, Does.Contain("frameLocator() matched elements in multiple frames"));
-        Assert.That(error.Message, Does.Contain("Locator: frameLocator().locator('span')"));
+        Assert.That(error.Message, Does.Contain("Locator: FrameLocator().Locator(\"span\")"));
     }
 
     [UpstreamTest("LO-011 should support toHaveText")]
@@ -186,7 +183,7 @@ public class LocatorAnyFrameTests : UpstreamPageTest
     }
 
     [UpstreamTest("LO-013 should fail toHaveText when elements match in multiple frames")]
-    [LocalFixme("dotnet: the message of ToHaveTextAsync is \"Locator expected to have text\\nError: frameLocator() matched elements in multiple frames. 'one'\\nBut was: 'null'\", with FrameLocator().Locator(\"div\") in the call log; upstream expects the line \"Locator: frameLocator().locator('div')\"")]
+    [LocalFixme("dotnet: the message of ToHaveTextAsync is \"Locator expected to have text\\nError: frameLocator() matched elements in multiple frames. 'one'\\nBut was: 'null'\", without a line \"Locator: FrameLocator().Locator(\"div\")\"")]
     public async Task ShouldFailToHaveTextWhenElementsMatchInMultipleFrames()
     {
         await RoutePage(Page, "empty.html", "<iframe src=\"a.html\"></iframe><iframe src=\"b.html\"></iframe>");
@@ -196,7 +193,7 @@ public class LocatorAnyFrameTests : UpstreamPageTest
         await WaitForAllFrames(Page, 3, "div");
         var error = await Catch(() => Expect(Page.FrameLocator().Locator("div")).ToHaveTextAsync("one", new() { Timeout = 3000 }));
         Assert.That(error.Message, Does.Contain("frameLocator() matched elements in multiple frames"));
-        Assert.That(error.Message, Does.Contain("Locator: frameLocator().locator('div')"));
+        Assert.That(error.Message, Does.Contain("Locator: FrameLocator().Locator(\"div\")"));
     }
 
     [UpstreamTest("LO-014 should fail toHaveText with an array when elements match in multiple frames")]
@@ -212,7 +209,7 @@ public class LocatorAnyFrameTests : UpstreamPageTest
     }
 
     [UpstreamTest("LO-015 should fail toHaveText upon strict mode violation inside a single frame")]
-    [LocalFixme("dotnet: the message of ToHaveTextAsync is \"Locator expected to have text\\nError: strict mode violation: Locator(\\\"div\\\") resolved to 2 elements: ... 'one'\\nBut was: 'null'\", with FrameLocator().Locator(\"div\") in the call log; upstream expects the line \"Locator: frameLocator().locator('div')\"")]
+    [LocalFixme("dotnet: the message of ToHaveTextAsync is \"Locator expected to have text\\nError: strict mode violation: Locator(\\\"div\\\") resolved to 2 elements: ... 'one'\\nBut was: 'null'\", without a line \"Locator: FrameLocator().Locator(\"div\")\"")]
     public async Task ShouldFailToHaveTextUponStrictModeViolationInsideASingleFrame()
     {
         await RoutePage(Page, "empty.html", "<iframe src=\"a.html\"></iframe>");
@@ -221,7 +218,7 @@ public class LocatorAnyFrameTests : UpstreamPageTest
         await WaitForAllFrames(Page, 2, "div");
         var error = await Catch(() => Expect(Page.FrameLocator().Locator("div")).ToHaveTextAsync("one", new() { Timeout = 3000 }));
         Assert.That(error.Message, Does.Contain("strict mode violation"));
-        Assert.That(error.Message, Does.Contain("Locator: frameLocator().locator('div')"));
+        Assert.That(error.Message, Does.Contain("Locator: FrameLocator().Locator(\"div\")"));
     }
 
     [UpstreamTest("LO-016 should support evaluate")]
@@ -246,7 +243,6 @@ public class LocatorAnyFrameTests : UpstreamPageTest
     }
 
     [UpstreamTest("LO-018 should time out on evaluate when there are no matches")]
-    [LocalFixme("dotnet: the call log has FrameLocator().Locator(\"button\"), upstream expects frameLocator().locator('button')")]
     public async Task ShouldTimeOutOnEvaluateWhenThereAreNoMatches()
     {
         await RoutePage(Page, "empty.html", "<iframe src=\"a.html\"></iframe>");
@@ -254,7 +250,7 @@ public class LocatorAnyFrameTests : UpstreamPageTest
         await Page.GotoAsync(Server.EmptyPage);
         var error = await Catch(() => Page.FrameLocator().Locator("button").EvaluateAsync<string>("e => e.textContent", null, new() { Timeout = 1000 }));
         Assert.That(error.Message, Does.Contain("Timeout 1000ms exceeded"));
-        Assert.That(error.Message, Does.Contain("waiting for frameLocator().locator('button')"));
+        Assert.That(error.Message, Does.Contain("waiting for FrameLocator().Locator(\"button\")"));
     }
 
     [UpstreamTest("LO-019 should support evaluateAll")]
@@ -535,15 +531,13 @@ public class LocatorAnyFrameTests : UpstreamPageTest
     }
 
     [UpstreamTest("LO-041 should render frameLocator() in the locator description")]
-    [LocalFixme("dotnet: Locator.ToString() is the C# form, 'FrameLocator().Locator(\"#x\").ContentFrame.Locator(\"button\")'; upstream expects \"frameLocator().locator('#x').contentFrame().locator('button')\"")]
     public async Task ShouldRenderFrameLocatorInTheLocatorDescription()
     {
-        Assert.That(Page.FrameLocator().FrameLocator("#x").Locator("button").ToString(), Is.EqualTo("frameLocator().locator('#x').contentFrame().locator('button')"));
-        Assert.That(Page.FrameLocator().Locator("section").FrameLocator("iframe").GetByText("foo").ToString(), Is.EqualTo("frameLocator().locator('section').locator('iframe').contentFrame().getByText('foo')"));
+        Assert.That(Page.FrameLocator().FrameLocator("#x").Locator("button").ToString(), Is.EqualTo("FrameLocator().Locator(\"#x\").ContentFrame.Locator(\"button\")"));
+        Assert.That(Page.FrameLocator().Locator("section").FrameLocator("iframe").GetByText("foo").ToString(), Is.EqualTo("FrameLocator().Locator(\"section\").Locator(\"iframe\").ContentFrame.GetByText(\"foo\")"));
     }
 
     [UpstreamTest("LO-042 should not allow frameLocator() inside a composite locator")]
-    [LocalFixme("dotnet: the message names the locator in the C# form, 'while querying \"Locator(\"button\").Or(FrameLocator().Locator(\"a\"))\"'; upstream expects 'while querying \"locator('button').or(frameLocator().locator('a'))\"'")]
     public async Task ShouldNotAllowFrameLocatorInsideACompositeLocator()
     {
         await RoutePage(Page, "empty.html", "<button>main</button><iframe src=\"a.html\"></iframe>");
@@ -552,14 +546,14 @@ public class LocatorAnyFrameTests : UpstreamPageTest
         await WaitForAllFrames(Page, 2, "a");
 
         var error = await Catch(() => Page.Locator("button").Or(Page.FrameLocator().Locator("a")).CountAsync());
-        Assert.That(error.Message, Does.Contain("frameLocator() is not allowed inside composite locators, while querying \"locator('button').or(frameLocator().locator('a'))\""));
+        Assert.That(error.Message, Does.Contain("frameLocator() is not allowed inside composite locators, while querying \"Locator(\"button\").Or(FrameLocator().Locator(\"a\"))\""));
 
         var error2 = await Catch(() => Page.Locator("button").Filter(new() { Has = Page.FrameLocator().Locator("a") }).CountAsync());
         Assert.That(error2.Message, Does.Contain("frameLocator() is not allowed inside composite locators"));
 
         // Repeating frameLocator() in the operand is not allowed either, even though the outer locator has it.
         var error3 = await Catch(() => Page.FrameLocator().Locator("button").Or(Page.FrameLocator().Locator("a")).CountAsync());
-        Assert.That(error3.Message, Does.Contain("frameLocator() is not allowed inside composite locators, while querying \"frameLocator().locator('button').or(frameLocator().locator('a'))\""));
+        Assert.That(error3.Message, Does.Contain("frameLocator() is not allowed inside composite locators, while querying \"FrameLocator().Locator(\"button\").Or(FrameLocator().Locator(\"a\"))\""));
 
         // Repeating frameLocator() is not allowed even when the rest of the frame chain matches.
         var error4 = await Catch(() => Page.FrameLocator().FrameLocator("#f").Locator("a").Or(Page.FrameLocator().FrameLocator("#f").Locator("button")).CountAsync());

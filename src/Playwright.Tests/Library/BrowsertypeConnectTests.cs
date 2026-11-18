@@ -675,7 +675,6 @@ public class BrowsertypeConnectTests : BrowsertypeConnectTestsBase
         }
 
         [UpstreamTest("BT-068 should save download")]
-        [LocalFixme("dotnet: the message is 'Path is not available when connecting remotely. Use SaveAsAsync() to save a local copy.', upstream expects 'Use saveAs() to save a local copy.'")]
         public async Task ShouldSaveDownload()
         {
             Server.SetRoute("/download", (req, res) =>
@@ -697,7 +696,7 @@ public class BrowsertypeConnectTests : BrowsertypeConnectTestsBase
             Assert.That(File.Exists(nestedPath), Is.True);
             Assert.That(File.ReadAllText(nestedPath), Is.EqualTo("Hello world"));
             var error = await Catch(() => download.PathAsync());
-            Assert.That(error.Message, Does.Contain("Path is not available when connecting remotely. Use saveAs() to save a local copy."));
+            Assert.That(error.Message, Does.Contain("Path is not available when connecting remotely. Use SaveAsAsync() to save a local copy."));
             await browser.CloseAsync();
         }
 

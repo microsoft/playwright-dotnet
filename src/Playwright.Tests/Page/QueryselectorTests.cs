@@ -23,14 +23,6 @@ namespace Microsoft.Playwright.Tests.Page;
 /// <summary>Port of tests/page/queryselector.spec.ts.</summary>
 public class QueryselectorTests : UpstreamPageTest
 {
-    [UpstreamTest("QS-001 should throw for non-string selector")]
-    [LocalFixme("dotnet: the message is 'selector: expected string, got undefined': the client leaves a null selector out of the message, upstream sends null and expects 'selector: expected string, got object'")]
-    public async Task ShouldThrowForNonStringSelector()
-    {
-        var error = await Catch(() => Page.QuerySelectorAsync(null));
-        Assert.That(error.Message, Does.Contain("selector: expected string, got object"));
-    }
-
     [UpstreamTest("QS-002 should query existing element with css selector @smoke")]
     public async Task ShouldQueryExistingElementWithCssSelector()
     {
