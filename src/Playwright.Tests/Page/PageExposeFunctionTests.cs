@@ -222,12 +222,11 @@ public class PageExposeFunctionTests : UpstreamPageTest
     }
 
     [UpstreamTest("EF-014 should throw for duplicate registrations")]
-    [LocalFixme("dotnet: the message is 'Function \"foo\" has been already registered', without the 'page.exposeFunction: ' prefix of the call")]
     public async Task ShouldThrowForDuplicateRegistrations()
     {
         await Page.ExposeFunctionAsync("foo", () => { });
         var error = await Catch(() => Page.ExposeFunctionAsync("foo", () => { }));
-        Assert.That(error.Message, Does.Contain("page.exposeFunction: Function \"foo\" has been already registered"));
+        Assert.That(error.Message, Does.Contain("Function \"foo\" has been already registered"));
     }
 
     [UpstreamTest("EF-015 should work with setContent")]

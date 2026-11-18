@@ -58,7 +58,6 @@ public class FrameGotoTests : UpstreamPageTest
     }
 
     [UpstreamTest("FR-022 should continue after client redirect")]
-    [LocalFixme("dotnet: the message is 'Timeout 5000ms exceeded.', without the 'page.goto: ' prefix of the call (only in chromium and webkit)")]
     public async Task ShouldContinueAfterClientRedirect()
     {
         Info.Fixme(IsAndroid);
@@ -67,7 +66,7 @@ public class FrameGotoTests : UpstreamPageTest
         Server.SetRoute("/frames/script.js", (req, res) => { });
         var url = Server.Prefix + "/frames/child-redirect.html";
         var error = await Catch(() => Page.GotoAsync(url, new() { Timeout = 5000, WaitUntil = WaitUntilState.NetworkIdle }));
-        Assert.That(error.Message, Does.Contain("page.goto: Timeout 5000ms exceeded."));
+        Assert.That(error.Message, Does.Contain("Timeout 5000ms exceeded."));
         Assert.That(error.Message, Does.Contain($"navigating to \"{url}\", waiting until \"networkidle\""));
     }
 

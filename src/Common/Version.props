@@ -2,7 +2,7 @@
   <PropertyGroup>
     <AssemblyVersion>1.65.0</AssemblyVersion>
     <PackageVersion>$(AssemblyVersion)</PackageVersion>
-    <DriverVersion>8534271f0413bae6a455b7cf43b2637391bc614b</DriverVersion>
+    <DriverVersion>8124fc39233c4c349b9dbebd4abc4103738eae81</DriverVersion>
     <!-- The exact Node.js version bundled with the driver. The roll script sets it to the
          latest release of the same major version. -->
     <DriverNodeVersion>26.13.1</DriverNodeVersion>

@@ -24,7 +24,6 @@ namespace Microsoft.Playwright.Tests.Library;
 public class HitTargetTests : UpstreamPageTest
 {
     [UpstreamTest("HT-001 should block all events when hit target is wrong")]
-    [LocalFixme("dotnet: the message is 'Timeout 3000ms exceeded.', without the 'page.click: ' prefix of the call")]
     public async Task ShouldBlockAllEventsWhenHitTargetIsWrong()
     {
         await Page.GotoAsync(Server.Prefix + "/input/button.html");
@@ -46,7 +45,7 @@ public class HitTargetTests : UpstreamPageTest
   }");
 
         var error = await Catch(() => Page.ClickAsync("button", new() { Timeout = 3000 }));
-        Assert.That(error.Message, Does.Contain("page.click: Timeout 3000ms exceeded."));
+        Assert.That(error.Message, Does.Contain("Timeout 3000ms exceeded."));
 
         // Give it some time, just in case.
         await Page.WaitForTimeoutAsync(1000);
@@ -97,7 +96,6 @@ public class HitTargetTests : UpstreamPageTest
     }
 
     [UpstreamTest("HT-004 should block all events when hit target is wrong and element detaches")]
-    [LocalFixme("dotnet: the message is 'Timeout 3000ms exceeded.', without the 'page.click: ' prefix of the call")]
     public async Task ShouldBlockAllEventsWhenHitTargetIsWrongAndElementDetaches()
     {
         await Page.GotoAsync(Server.Prefix + "/input/button.html");
@@ -121,7 +119,7 @@ public class HitTargetTests : UpstreamPageTest
   }");
 
         var error = await Catch(() => Page.ClickAsync("button", new() { Timeout = 3000 }));
-        Assert.That(error.Message, Does.Contain("page.click: Timeout 3000ms exceeded."));
+        Assert.That(error.Message, Does.Contain("Timeout 3000ms exceeded."));
 
         // Give it some time, just in case.
         await Page.WaitForTimeoutAsync(1000);

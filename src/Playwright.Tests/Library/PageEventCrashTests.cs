@@ -111,7 +111,7 @@ public class PageEventCrashTests : UpstreamPageTest
     }
 
     [UpstreamTest("ER-018 should cancel navigation when page crashes")]
-    [LocalFixme("dotnet: the message is 'Page crashed\\nCall log: ...', without the 'page.goto: ' prefix of the call (only in chromium); harness: the crash fixture crashes a page of Firefox and WebKit with toImpl(page).delegate._session.send('Page.crash', {}), and toImpl is not available (only in firefox and webkit)")]
+    [LocalFixme("harness: the crash fixture crashes a page of Firefox and WebKit with toImpl(page).delegate._session.send('Page.crash', {}), and toImpl is not available (only in firefox and webkit)")]
     public async Task ShouldCancelNavigationWhenPageCrashes()
     {
         await Page.SetContentAsync("<div>This page should crash</div>");
@@ -120,7 +120,7 @@ public class PageEventCrashTests : UpstreamPageTest
         await Page.WaitForNavigationAsync(new() { WaitUntil = WaitUntilState.DOMContentLoaded });
         Crash();
         var error = await promise;
-        Assert.That(error.Message, Does.Contain("page.goto: Page crashed"));
+        Assert.That(error.Message, Does.Contain("Page crashed"));
     }
 
     [UpstreamTest("ER-019 should be able to close context when page crashes")]

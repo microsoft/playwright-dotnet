@@ -228,13 +228,12 @@ public class ElementhandleScreenshotTests : UpstreamPageTest
         }
 
         [UpstreamTest("EH-084 should timeout waiting for visible")]
-        [LocalFixme("dotnet: the message is 'Timeout 3000ms exceeded.', without the 'elementHandle.screenshot: ' prefix of the call")]
         public async Task ShouldTimeoutWaitingForVisible()
         {
             await Page.SetContentAsync("<div style=\"width: 50px; height: 0\"></div>");
             var div = await Page.QuerySelectorAsync("div");
             var error = await Catch(() => div.ScreenshotAsync(new() { Timeout = 3000 }));
-            Assert.That(error.Message, Does.Contain("elementHandle.screenshot: Timeout 3000ms exceeded"));
+            Assert.That(error.Message, Does.Contain("Timeout 3000ms exceeded"));
             Assert.That(error.Message, Does.Contain("element is not visible"));
         }
 

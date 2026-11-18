@@ -48,7 +48,6 @@ public class BrowsertypeLaunchTests : UpstreamBrowserTest
     }
 
     [UpstreamTest("BT-010 should reject if launched browser fails immediately")]
-    [LocalFixme("dotnet: the message is 'Target page, context or browser has been closed\\nBrowser logs: ...', without the 'browserType.launch: ' prefix of the call (only in chromium and webkit); dotnet: the message is 'Failed to launch the browser process.\\nBrowser logs: ...', without the 'browserType.launch: ' prefix of the call (only in firefox)")]
     public async Task ShouldRejectIfLaunchedBrowserFailsImmediately()
     {
         var error = await Catch(() => BrowserType.LaunchAsync(new(LaunchOptions()) { ExecutablePath = Asset("dummy_bad_browser_executable.js") }));
@@ -58,7 +57,7 @@ public class BrowsertypeLaunchTests : UpstreamBrowserTest
         }
         else
         {
-            Assert.That(error.Message, Does.Match(@"browserType\.launch(.|\n)*(spawn UNKNOWN|spawn EFTYPE|Browser logs:)").IgnoreCase);
+            Assert.That(error.Message, Does.Match(@"(spawn UNKNOWN|spawn EFTYPE|Browser logs:)").IgnoreCase);
         }
     }
 

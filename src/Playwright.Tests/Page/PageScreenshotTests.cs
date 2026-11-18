@@ -510,7 +510,7 @@ public class PageScreenshotTests : UpstreamPageTest
         {
             Info.Skip(BrowserName == "webkit" && Platform == "darwin" && RuntimeInformation.ProcessArchitecture == Architecture.X64, "WebGL is not available on Intel macOS - https://bugs.webkit.org/show_bug.cgi?id=278277");
 
-            await Page.SetViewportSizeAsync(200, 200);
+            await Page.SetViewportSizeAsync(300, 300);
             await Page.SetContentAsync("<body style=\"margin:0\"><div style=\"width:100px;height:100px;background:rgb(0,255,0)\"></div></body>");
             var expected = await Page.ScreenshotAsync();
 
@@ -925,6 +925,8 @@ public class PageScreenshotTests : UpstreamPageTest
         [UpstreamTest("SS-098 should preserve scroll animation progress during screenshots")]
         public async Task ShouldPreserveScrollAnimationProgressDuringScreenshots()
         {
+            Info.Skip(IsAndroid, "Returns screenshot of a different size.");
+
             await Page.SetContentAsync(@"
       <style>
         @keyframes reveal { from { opacity: 0 } to { opacity: 1 } }

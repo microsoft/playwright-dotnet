@@ -45,7 +45,7 @@ export const test = base.extend<{
     const driver: typeof import('@playwright/test') = require(path.join(__dirname, '..', '..', 'Playwright', '.drivers', 'package'));
     const servers: BrowserServer[] = [];
     await use(async ({port}: {port: number}) => {
-      servers.push(await driver.chromium.launchServer({ host: '127.0.0.1', port }));
+      servers.push(await driver.chromium.launchServer({ host: '127.0.0.1', port, wsPath: '/' }));
     });
     for (const server of servers)
       await server.close();

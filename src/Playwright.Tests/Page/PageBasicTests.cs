@@ -248,4 +248,12 @@ public class PageBasicTests : UpstreamPageTest
 
         Assert.That(await Page.EvaluateAsync<bool>("() => navigator.webdriver"), Is.EqualTo(true));
     }
+
+    [UpstreamTest("PA-057 should prefix the error message with the api name")]
+    [LocalFixme("dotnet: the message is 'Timeout 1ms exceeded.', without the 'page.goto: ' prefix of the call")]
+    public async Task ShouldPrefixTheErrorMessageWithTheApiName()
+    {
+        var error = await Catch(() => Page.GotoAsync(Server.Prefix + "/empty.html", new() { Timeout = 1 }));
+        Assert.That(error.Message, Does.Contain("page.goto: Timeout 1ms exceeded."));
+    }
 }

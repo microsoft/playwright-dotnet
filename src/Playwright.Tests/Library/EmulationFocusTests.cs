@@ -296,6 +296,7 @@ public class EmulationFocusTests : UpstreamBrowserTest
     [UpstreamTest("EM-028 should keep mouse drag when interacting with another page/context")]
     public async Task ShouldKeepMouseDragWhenInteractingWithAnotherPageContext()
     {
+        Info.Skip(!Headless, "Stray mouse events mess up the test");
         var page1 = await (await ContextFactory()).NewPageAsync();
         var page2 = await (await ContextFactory()).NewPageAsync();
         foreach (var page in new[] { page1, page2 })

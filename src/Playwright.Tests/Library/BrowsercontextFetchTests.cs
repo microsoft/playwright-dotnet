@@ -142,7 +142,6 @@ public class BrowsercontextFetchTests : UpstreamBrowserTest
     }
 
     [UpstreamTest("FE-092 should throw on network error")]
-    [LocalFixme("dotnet: the message is 'socket hang up (ECONNRESET)', without the 'apiRequestContext.get: ' prefix of the call")]
     public async Task ShouldThrowOnNetworkError()
     {
         var context = await ContextFixture();
@@ -151,11 +150,10 @@ public class BrowsercontextFetchTests : UpstreamBrowserTest
             req.Socket.Destroy();
         });
         var error = await Catch(() => context.APIRequest.GetAsync(Server.Prefix + "/test"));
-        Assert.That(error.Message, Does.Contain("apiRequestContext.get: socket hang up"));
+        Assert.That(error.Message, Does.Contain("socket hang up"));
     }
 
     [UpstreamTest("FE-093 should throw on network error after redirect")]
-    [LocalFixme("dotnet: the message is 'socket hang up (ECONNRESET)', without the 'apiRequestContext.get: ' prefix of the call")]
     public async Task ShouldThrowOnNetworkErrorAfterRedirect()
     {
         var context = await ContextFixture();
@@ -165,11 +163,10 @@ public class BrowsercontextFetchTests : UpstreamBrowserTest
             req.Socket.Destroy();
         });
         var error = await Catch(() => context.APIRequest.GetAsync(Server.Prefix + "/redirect"));
-        Assert.That(error.Message, Does.Contain("apiRequestContext.get: socket hang up"));
+        Assert.That(error.Message, Does.Contain("socket hang up"));
     }
 
     [UpstreamTest("FE-094 should throw on network error when sending body")]
-    [LocalFixme("dotnet: the message is 'aborted', without the 'apiRequestContext.get: ' prefix of the call")]
     public async Task ShouldThrowOnNetworkErrorWhenSendingBody()
     {
         var context = await ContextFixture();
@@ -185,11 +182,10 @@ public class BrowsercontextFetchTests : UpstreamBrowserTest
             req.Socket.Destroy();
         });
         var error = await Catch(() => context.APIRequest.GetAsync(Server.Prefix + "/test"));
-        Assert.That(error.Message, Does.Contain("apiRequestContext.get: aborted"));
+        Assert.That(error.Message, Does.Contain("aborted"));
     }
 
     [UpstreamTest("FE-095 should throw on network error when sending body after redirect")]
-    [LocalFixme("dotnet: the message is 'aborted', without the 'apiRequestContext.get: ' prefix of the call")]
     public async Task ShouldThrowOnNetworkErrorWhenSendingBodyAfterRedirect()
     {
         var context = await ContextFixture();
@@ -206,7 +202,7 @@ public class BrowsercontextFetchTests : UpstreamBrowserTest
             req.Socket.Destroy();
         });
         var error = await Catch(() => context.APIRequest.GetAsync(Server.Prefix + "/redirect"));
-        Assert.That(error.Message, Does.Contain("apiRequestContext.get: aborted"));
+        Assert.That(error.Message, Does.Contain("aborted"));
     }
 
     [UpstreamTest("FE-098 ${method} should support params passed as object")]
@@ -1172,7 +1168,6 @@ public class BrowsercontextFetchTests : UpstreamBrowserTest
     }
 
     [UpstreamTest("FE-148 should support timeout option")]
-    [LocalFixme("dotnet: the message is 'Timeout 10ms exceeded.', without the 'apiRequestContext.get: ' prefix of the call")]
     public async Task ShouldSupportTimeoutOption()
     {
         var context = await ContextFixture();
@@ -1186,7 +1181,7 @@ public class BrowsercontextFetchTests : UpstreamBrowserTest
         });
 
         var error = await Catch(() => context.APIRequest.GetAsync(Server.Prefix + "/slow", new() { Timeout = 10 }));
-        Assert.That(error.Message, Does.Contain("apiRequestContext.get: Timeout 10ms exceeded"));
+        Assert.That(error.Message, Does.Contain("Timeout 10ms exceeded"));
     }
 
     [UpstreamTest("FE-149 should support a timeout of 0")]
@@ -1216,7 +1211,6 @@ public class BrowsercontextFetchTests : UpstreamBrowserTest
     }
 
     [UpstreamTest("FE-150 should respect timeout after redirects")]
-    [LocalFixme("dotnet: the message is 'Timeout 100ms exceeded.', without the 'apiRequestContext.get: ' prefix of the call")]
     public async Task ShouldRespectTimeoutAfterRedirects()
     {
         var context = await ContextFixture();
@@ -1232,7 +1226,7 @@ public class BrowsercontextFetchTests : UpstreamBrowserTest
 
         context.SetDefaultTimeout(100);
         var error = await Catch(() => context.APIRequest.GetAsync(Server.Prefix + "/redirect"));
-        Assert.That(error.Message, Does.Contain("apiRequestContext.get: Timeout 100ms exceeded"));
+        Assert.That(error.Message, Does.Contain("Timeout 100ms exceeded"));
     }
 
     [UpstreamTest("FE-151 should not hang on a brotli encoded Range request")]

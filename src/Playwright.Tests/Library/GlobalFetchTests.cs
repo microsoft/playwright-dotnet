@@ -91,13 +91,12 @@ public class GlobalFetchTests : UpstreamBrowserTest
     }
 
     [UpstreamTest("FE-004 should support global timeout option")]
-    [LocalFixme("dotnet: the message is 'Timeout 100ms exceeded.', without the 'apiRequestContext.get: ' prefix of the call")]
     public async Task ShouldSupportGlobalTimeoutOption()
     {
         var request = await Playwright.APIRequest.NewContextAsync(new() { Timeout = 100 });
         Server.SetRoute("/empty.html", (req, res) => { });
         var error = await Catch(() => request.GetAsync(Server.EmptyPage));
-        Assert.That(error.Message, Does.Contain("apiRequestContext.get: Timeout 100ms exceeded"));
+        Assert.That(error.Message, Does.Contain("Timeout 100ms exceeded"));
         await request.DisposeAsync();
     }
 

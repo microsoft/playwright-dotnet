@@ -448,7 +448,6 @@ public class ConnectOverCdpTests : UpstreamBrowserTest
     }
 
     [UpstreamTest("CD-020 should report an expected error when the endpointURL returns a non-expected status code")]
-    [LocalFixme("dotnet: the message is 'Unexpected status 404 when connecting to <server.PREFIX>/json/version/.', without the 'browserType.connectOverCDP: ' prefix of the call")]
     public async Task ShouldReportAnExpectedErrorWhenTheEndpointURLReturnsANonExpectedStatusCode()
     {
         Server.SetRoute("/json/version/", (req, resp) =>
@@ -460,11 +459,10 @@ public class ConnectOverCdpTests : UpstreamBrowserTest
             }));
         });
         var error = await ThrowsAsync<PlaywrightException>(() => BrowserType.ConnectOverCDPAsync(Server.Prefix));
-        Assert.That(error.Message, Does.Contain($"browserType.connectOverCDP: Unexpected status 404 when connecting to {Server.Prefix}/json/version/"));
+        Assert.That(error.Message, Does.Contain($"Unexpected status 404 when connecting to {Server.Prefix}/json/version/"));
     }
 
     [UpstreamTest("CD-021 should report an expected error when the endpoint URL JSON webSocketDebuggerUrl is undefined")]
-    [LocalFixme("dotnet: the message is 'Invalid URL: undefined', without the 'browserType.connectOverCDP: ' prefix of the call")]
     public async Task ShouldReportAnExpectedErrorWhenTheEndpointURLJSONWebSocketDebuggerUrlIsUndefined()
     {
         Server.SetRoute("/json/version/", (req, resp) =>
@@ -475,7 +473,7 @@ public class ConnectOverCdpTests : UpstreamBrowserTest
             }));
         });
         var error = await ThrowsAsync<PlaywrightException>(() => BrowserType.ConnectOverCDPAsync(Server.Prefix));
-        Assert.That(error.Message, Does.Contain("browserType.connectOverCDP: Invalid URL"));
+        Assert.That(error.Message, Does.Contain("Invalid URL"));
     }
 
     [UpstreamTest("CD-022 should connect to an existing cdp session when passed as a first argument")]

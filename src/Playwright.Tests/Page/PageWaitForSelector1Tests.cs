@@ -112,7 +112,7 @@ public class PageWaitForSelector1Tests : UpstreamPageTest
 
     [UpstreamTest("WA-036 should report logs while waiting for visible")]
 
-    [LocalFixme("dotnet: the message is 'Timeout 5000ms exceeded.', without the 'frame.waitForSelector: ' prefix of the call, and the call log has Locator(\"div\"), upstream expects locator('div')")]
+    [LocalFixme("dotnet: the call log has Locator(\"div\"), upstream expects locator('div')")]
     public async Task ShouldReportLogsWhileWaitingForVisible()
     {
         await Page.GotoAsync(Server.EmptyPage);
@@ -142,7 +142,7 @@ public class PageWaitForSelector1Tests : UpstreamPageTest
         await GiveItTimeToLog(frame);
 
         var error = await Catch(() => watchdog);
-        Assert.That(error.Message, Does.Contain("frame.waitForSelector: Timeout 5000ms exceeded."));
+        Assert.That(error.Message, Does.Contain("Timeout 5000ms exceeded."));
         Assert.That(error.Message, Does.Contain("waiting for locator('div') to be visible"));
         Assert.That(error.Message, Does.Contain("locator resolved to hidden <div id=\"mydiv\" class=\"foo bar\" foo=\"123456789012345678901234567890123456789012345678901234567890\">abcdefghijklmnopqrstuvwyxzabcdefghijklmnopqrstuvw…</div>"));
         Assert.That(error.Message, Does.Contain("locator resolved to hidden <div class=\"another\"></div>"));
@@ -150,7 +150,7 @@ public class PageWaitForSelector1Tests : UpstreamPageTest
 
     [UpstreamTest("WA-037 should report logs while waiting for hidden")]
 
-    [LocalFixme("dotnet: the message is 'Timeout 5000ms exceeded.', without the 'frame.waitForSelector: ' prefix of the call, and the call log has Locator(\"div\"), upstream expects locator('div')")]
+    [LocalFixme("dotnet: the call log has Locator(\"div\"), upstream expects locator('div')")]
     public async Task ShouldReportLogsWhileWaitingForHidden()
     {
         await Page.GotoAsync(Server.EmptyPage);
@@ -176,7 +176,7 @@ public class PageWaitForSelector1Tests : UpstreamPageTest
         await GiveItTimeToLog(frame);
 
         var error = await Catch(() => watchdog);
-        Assert.That(error.Message, Does.Contain("frame.waitForSelector: Timeout 5000ms exceeded."));
+        Assert.That(error.Message, Does.Contain("Timeout 5000ms exceeded."));
         Assert.That(error.Message, Does.Contain("waiting for locator('div') to be hidden"));
         Assert.That(error.Message, Does.Contain("locator resolved to visible <div id=\"mydiv\" class=\"foo bar\">hello</div>"));
         Assert.That(error.Message, Does.Contain("locator resolved to visible <div class=\"another\">hello</div>"));
@@ -256,7 +256,6 @@ public class PageWaitForSelector1Tests : UpstreamPageTest
 
     [UpstreamTest("WA-043 should throw when frame is detached")]
 
-    [LocalFixme("dotnet: the message is 'Frame was detached', without the 'frame.waitForSelector: ' prefix of the call")]
     public async Task ShouldThrowWhenFrameIsDetached()
     {
         await AttachFrame(Page, "frame1", Server.EmptyPage);
@@ -271,6 +270,6 @@ public class PageWaitForSelector1Tests : UpstreamPageTest
         await DetachFrame(Page, "frame1");
         await waitPromise;
         Assert.That(waitError, Is.Not.Null);
-        Assert.That(waitError.Message, Does.Contain("frame.waitForSelector: Frame was detached"));
+        Assert.That(waitError.Message, Does.Contain("Frame was detached"));
     }
 }

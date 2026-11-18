@@ -289,8 +289,7 @@ CD-025      Sets process.env.HTTP_PROXY of the Node.js process that runs the cli
 CD-030      Reads _isBrowserCollocatedWithServer of the server browser through toImpl(), which only the Node.js tests can reach.
 CD-032      Runs evaluateExpression in the utility world through toImpl(), which only the Node.js tests can reach.
 CD-036      Passes a WebSocketTransport of the server internals (coreBundle) to connectOverCDP(); ConnectOverCDPAsync() of the .NET API takes an endpoint URL.
-# library/chromium/connect-to-worker
-library/chromium/connect-to-worker  browserType._connectToWorker() and worker._disconnect() are internal methods of the Node.js client, not in the .NET API.
+CD-054      The maxPageAttachTime option of browserType.connectOverCDP() is not in the .NET API: upstream passes it with "as any".
 # library/chromium/extensions
 CR-036      context.serviceWorkers() and the 'serviceworker' event of the context are not in the .NET API.
 CR-037      context.serviceWorkers() and the 'serviceworker' event of the context are not in the .NET API.

@@ -267,13 +267,12 @@ public class PageFillTests : UpstreamPageTest
     }
 
     [UpstreamTest("FI-018 should throw nice error without injected script stack when element is not an <input>")]
-    [LocalFixme("dotnet: the message is 'Error: Element is not an <input>, <textarea> or [contenteditable] element\\nCall log: ...', without the 'page.fill: ' prefix of the call")]
     public async Task ShouldThrowNiceErrorWithoutInjectedScriptStackWhenElementIsNotAnInput()
     {
         Exception error = null;
         await Page.SetContentAsync("<select><option>value1</option></select>");
         error = await Catch(() => Page.FillAsync("select", ""));
-        Assert.That(error.Message, Does.Contain("page.fill: Error: Element is not an <input>, <textarea> or [contenteditable] element\nCall log:"));
+        Assert.That(error.Message, Does.Contain("Error: Element is not an <input>, <textarea> or [contenteditable] element\nCall log:"));
     }
 
     [UpstreamTest("FI-020 should retry on disabled element")]

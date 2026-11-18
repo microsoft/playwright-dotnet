@@ -141,7 +141,6 @@ public class BrowsercontextStorageStateTests : UpstreamBrowserTest
     }
 
     [UpstreamTest("ST-003 should report good error if the url is not valid")]
-    [LocalFixme("dotnet: the message is 'Error setting storage state:\\n...', without the 'browser.newContext: ' prefix of the call")]
     public async Task ShouldReportGoodErrorIfTheUrlIsNotValid()
     {
         var error = await Catch(() => ContextFactory(new()
@@ -167,7 +166,7 @@ public class BrowsercontextStorageStateTests : UpstreamBrowserTest
                 },
             }),
         }));
-        Assert.That(error.Message, Does.Contain("browser.newContext: Error setting storage state:"));
+        Assert.That(error.Message, Does.Contain("Error setting storage state:"));
         Assert.That(error.Message, Does.Contain("foo"));
     }
 
