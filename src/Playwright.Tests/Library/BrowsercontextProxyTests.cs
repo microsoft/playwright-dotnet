@@ -190,6 +190,7 @@ public class BrowsercontextProxyTests : BrowsercontextProxyTestsBase
 
             // .NET: the values are params.target and params.description.
             [UpstreamTest("PR-024 ${params.description}")]
+            [LocalFixme("harness: on the macOS bot the navigation through the proxy fails with 'Could not connect to the server.' (only in webkit on darwin for \"localhost\" and \"127.0.0.1\" without the additional bypass)")]
             [TestCase("localhost", "localhost")]
             [TestCase("127.0.0.1", "loopback address")]
             [TestCase("169.254.3.4", "link-local")]

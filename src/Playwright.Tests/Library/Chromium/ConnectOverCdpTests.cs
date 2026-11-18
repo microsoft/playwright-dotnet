@@ -26,10 +26,6 @@ namespace Microsoft.Playwright.Tests.Library.Chromium;
 /// <summary>Port of tests/library/chromium/connect-over-cdp.spec.ts.</summary>
 public class ConnectOverCdpTests : UpstreamBrowserTest
 {
-    // .NET: upstream runs the files of tests/library/chromium only in the Chromium project.
-    [SetUp]
-    public void Skip() => Info.Skip(BrowserName != "chromium", "chromium only");
-
     [UpstreamTest("CD-001 should connect to an existing cdp session")]
     public async Task ShouldConnectToAnExistingCdpSession()
     {

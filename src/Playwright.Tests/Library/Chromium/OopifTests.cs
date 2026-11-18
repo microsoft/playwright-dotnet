@@ -24,10 +24,6 @@ namespace Microsoft.Playwright.Tests.Library.Chromium;
 /// <summary>Port of tests/library/chromium/oopif.spec.ts.</summary>
 public class OopifTests : UpstreamBrowserTest
 {
-    // .NET: upstream runs the files of library/chromium/ in the Chromium project only.
-    [SetUp]
-    public void Skip() => Info.Skip(BrowserName != "chromium", "chromium only");
-
     public override BrowserTypeLaunchOptions LaunchOptions() => new(base.LaunchOptions()) { Args = ["--site-per-process"] };
 
     [UpstreamTest("OO-001 should report oopif frames")]

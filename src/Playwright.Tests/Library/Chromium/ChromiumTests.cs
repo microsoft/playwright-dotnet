@@ -20,15 +20,8 @@ using static Microsoft.Playwright.Tests.Fixtures.Utils;
 
 namespace Microsoft.Playwright.Tests.Library.Chromium;
 
-public abstract class ChromiumTestsBase : UpstreamBrowserTest
-{
-    // .NET: upstream runs the files of tests/library/chromium only in the Chromium project.
-    [SetUp]
-    public void Skip() => Info.Skip(BrowserName != "chromium", "chromium only");
-}
-
 /// <summary>Port of tests/library/chromium/chromium.spec.ts.</summary>
-public class ChromiumTests : ChromiumTestsBase
+public class ChromiumTests : UpstreamBrowserTest
 {
     [UpstreamTest("CR-009 should pass args with spaces")]
     public async Task ShouldPassArgsWithSpaces()
@@ -123,7 +116,7 @@ public class ChromiumTests : ChromiumTestsBase
         }
     }
 
-    public class WebUINavigation : ChromiumTestsBase
+    public class WebUINavigation : UpstreamBrowserTest
     {
         private static bool IsEdge(string channel) => channel?.StartsWith("msedge", StringComparison.Ordinal) == true;
 

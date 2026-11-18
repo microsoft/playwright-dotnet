@@ -23,10 +23,6 @@ namespace Microsoft.Playwright.Tests.Library.Chromium;
 /// <summary>Port of tests/library/chromium/session.spec.ts.</summary>
 public class SessionTests : UpstreamBrowserTest
 {
-    // .NET: upstream runs the files of tests/library/chromium only in the Chromium project.
-    [SetUp]
-    public void Skip() => Info.Skip(BrowserName != "chromium", "chromium only");
-
     [UpstreamTest("CD-037 should work")]
     public async Task ShouldWork()
     {

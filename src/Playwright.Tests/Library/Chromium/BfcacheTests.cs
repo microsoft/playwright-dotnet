@@ -21,10 +21,6 @@ namespace Microsoft.Playwright.Tests.Library.Chromium;
 /// <summary>Port of tests/library/chromium/bfcache.spec.ts.</summary>
 public class BfcacheTests : UpstreamPageTest
 {
-    // .NET: upstream runs the files of tests/library/chromium only in the Chromium project.
-    [SetUp]
-    public void Skip() => Info.Skip(BrowserName != "chromium", "chromium only");
-
     // test.use({
     //   launchOptions: async ({ launchOptions }, use) => {
     //     await use({ ...launchOptions, ignoreDefaultArgs: ['--disable-back-forward-cache'] });

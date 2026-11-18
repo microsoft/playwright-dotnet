@@ -24,10 +24,6 @@ namespace Microsoft.Playwright.Tests.Library.Chromium;
 /// <summary>Port of tests/library/chromium/disable-web-security.spec.ts.</summary>
 public class DisableWebSecurityTests : UpstreamPageTest
 {
-    // .NET: upstream runs the files of tests/library/chromium only in the Chromium project.
-    [SetUp]
-    public void Skip() => Info.Skip(BrowserName != "chromium", "chromium only");
-
     // it.use({
     //   launchOptions: async ({ launchOptions }, use) => {
     //     await use({ ...launchOptions, args: ['--disable-web-security'] });

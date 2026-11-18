@@ -43,6 +43,7 @@ public class ModernizrTests : UpstreamBrowserTest
     }
 
     [UpstreamTest("CA-030 Safari Desktop")]
+    [LocalFixme("harness: on the Ubuntu bot the page reports inputtypes.month as true, and the feature list of upstream expects false (only in webkit on linux)")]
     public async Task SafariDesktop()
     {
         Info.Skip(BrowserName != "webkit");

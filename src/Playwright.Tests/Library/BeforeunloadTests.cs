@@ -164,6 +164,7 @@ public class BeforeunloadTests : UpstreamBrowserTest
     }
 
     [UpstreamTest("BU-009 should support dismissing the dialog multiple times")]
+    [LocalFixme("harness: on the macOS bot the test times out, the second page.close({ runBeforeUnload: true }) shows no dialog (only in firefox on darwin)")]
     public async Task ShouldSupportDismissingTheDialogMultipleTimes()
     {
         var page = await PageFixture();

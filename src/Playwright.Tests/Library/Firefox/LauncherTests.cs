@@ -23,10 +23,6 @@ namespace Microsoft.Playwright.Tests.Library.Firefox;
 /// <summary>Port of tests/library/firefox/launcher.spec.ts.</summary>
 public class LauncherTests : UpstreamBrowserTest
 {
-    // .NET: the upstream config runs the files of library/firefox/ in the Firefox project only.
-    [SetUp]
-    public void Skip() => Info.Skip(BrowserName != "firefox", "firefox only");
-
     [UpstreamTest("FF-001 should pass firefox user preferences")]
     public async Task ShouldPassFirefoxUserPreferences()
     {

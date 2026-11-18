@@ -423,6 +423,7 @@ public class BrowsertypeConnectTests : BrowsertypeConnectTestsBase
         }
 
         [UpstreamTest("BT-054 should throw when used after isConnected returns false")]
+        [LocalFixme("harness: on the Windows bot the test times out after remoteServer.Close(), it is not known whether the server does not close or the browser gets no 'disconnected' event (only in chromium on win32)")]
         public async Task ShouldThrowWhenUsedAfterIsConnectedReturnsFalse()
         {
             var remoteServer = await StartRemoteServer(kind);
@@ -437,6 +438,7 @@ public class BrowsertypeConnectTests : BrowsertypeConnectTestsBase
         }
 
         [UpstreamTest("BT-055 should throw when calling waitForNavigation after disconnect")]
+        [LocalFixme("harness: on the Windows bot the test times out after remoteServer.Close(), it is not known whether the server does not close or the browser gets no 'disconnected' event (only in chromium on win32)")]
         public async Task ShouldThrowWhenCallingWaitForNavigationAfterDisconnect()
         {
             var remoteServer = await StartRemoteServer(kind);

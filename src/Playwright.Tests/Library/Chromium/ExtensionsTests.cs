@@ -22,10 +22,6 @@ namespace Microsoft.Playwright.Tests.Library.Chromium;
 
 public abstract class ExtensionsTestsBase : UpstreamBrowserTest
 {
-    // .NET: upstream runs the files of tests/library/chromium only in the Chromium project.
-    [SetUp]
-    public void Skip() => Info.Skip(BrowserName != "chromium", "chromium only");
-
     protected async Task<IBrowserContext> LaunchPersistentContext(string extensionPath, BrowserTypeLaunchPersistentContextOptions options = null)
     {
         var extensionOptions = new BrowserTypeLaunchPersistentContextOptions(options)
@@ -42,7 +38,7 @@ public abstract class ExtensionsTestsBase : UpstreamBrowserTest
     // .NET: upstream closes the contexts of a list that it never fills, so there is no teardown.
 
     [SetUp]
-    public void Skip2() => Info.Skip(IsHeadlessShell, "Headless Shell has no support for extensions");
+    public void Skip() => Info.Skip(IsHeadlessShell, "Headless Shell has no support for extensions");
 }
 
 /// <summary>Port of tests/library/chromium/extensions.spec.ts.</summary>
@@ -51,7 +47,7 @@ public class ExtensionsTests : ExtensionsTestsBase
     public class MV3 : ExtensionsTestsBase
     {
         [SetUp]
-        public void Skip3() => Info.Skip(Channel?.StartsWith("chrome", StringComparison.Ordinal) == true, "--load-extension is not supported in Chrome anymore. https://groups.google.com/a/chromium.org/g/chromium-extensions/c/1-g8EFx2BBY/m/S0ET5wPjCAAJ");
+        public void Skip2() => Info.Skip(Channel?.StartsWith("chrome", StringComparison.Ordinal) == true, "--load-extension is not supported in Chrome anymore. https://groups.google.com/a/chromium.org/g/chromium-extensions/c/1-g8EFx2BBY/m/S0ET5wPjCAAJ");
 
         [UpstreamTest("CR-040 should report console messages from content script")]
         public async Task ShouldReportConsoleMessagesFromContentScript()

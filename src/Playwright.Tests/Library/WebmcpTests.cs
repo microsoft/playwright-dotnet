@@ -40,6 +40,12 @@ public class WebmcpTests : UpstreamPageTest
     // });
     public override BrowserTypeLaunchOptions LaunchOptions()
     {
+        // .NET: the browser starts before the hooks of the class, and WebKit, which this file skips, does not
+        // start with the argument of Chromium.
+        if (BrowserName == "webkit")
+        {
+            return base.LaunchOptions();
+        }
         if (BrowserName == "firefox")
         {
             return new(base.LaunchOptions())

@@ -22,10 +22,6 @@ namespace Microsoft.Playwright.Tests.Library.Chromium;
 /// <summary>Port of tests/library/chromium/launcher.spec.ts.</summary>
 public class LauncherTests : UpstreamBrowserTest
 {
-    // .NET: upstream runs the files of tests/library/chromium only in the Chromium project.
-    [SetUp]
-    public void Skip() => Info.Skip(BrowserName != "chromium", "chromium only");
-
     [UpstreamTest("CR-035 should not create pages automatically")]
     public async Task ShouldNotCreatePagesAutomatically()
     {

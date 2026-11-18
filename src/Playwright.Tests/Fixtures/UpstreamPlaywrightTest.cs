@@ -151,6 +151,15 @@ public class UpstreamPlaywrightTest : WorkerAwareTest
         var retry = _runs.AddOrUpdate(test.ID, 0, (_, runs) => runs + 1);
         Log($"start {test.FullName}");
 
+        // Upstream runs the files of tests/library/chromium in the Chromium project only, and the ones of
+        // tests/library/firefox in the Firefox project only. This is before the browser starts: another
+        // browser can not start with the launch options of such a file.
+        var directory = GetType().Namespace.Split('.')[^1].ToLowerInvariant();
+        if (directory is "chromium" or "firefox" or "webkit" && directory != BrowserName)
+        {
+            Assert.Ignore($"{directory} only");
+        }
+
         Playwright = (await PlaywrightService.Register(this)).Playwright;
         BrowserType = Playwright[BrowserName];
         // testIdAttribute of Playwright Test.

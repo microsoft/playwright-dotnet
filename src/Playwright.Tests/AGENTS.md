@@ -337,9 +337,13 @@ so a port passes them.
   ```
 - Upstream runs the files of `library/chromium/` in the Chromium project only, and the files
   of `library/firefox/` in the Firefox project only: its config ignores a file with the name
-  of another browser in its path. The class of such a file starts with
-  `[SetUp] public void Skip() => Info.Skip(BrowserName != "chromium", "chromium only");`
-  under a `// .NET:` mark, before the modifiers of the file.
+  of another browser in its path. The harness does the same by the namespace of the class,
+  `Library.Chromium` or `Library.Firefox`, before it starts anything: such a file has no skip
+  of its own for this.
+- The browser of a test starts before the hooks of its class, with the options of its
+  `LaunchOptions()`. When a modifier of the file skips a browser that can not start with these
+  options (an argument of Chromium in WebKit), `LaunchOptions()` gives that browser the options
+  of `base`, under a `// .NET:` mark, as in `Library/WebmcpTests.cs`.
 - `test.setTimeout(ms)` is `Info.SetTimeout(ms)`. The timeout of a test is 30 seconds and the
   timeout of `Expect` is 10 seconds, as upstream: the .NET default for `Expect` is 5 seconds,
   and the harness sets 10 for a ported test.
