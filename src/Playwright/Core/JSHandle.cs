@@ -43,7 +43,7 @@ internal class JSHandle : ChannelOwner, IJSHandle
     protected string Preview { get; set; }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public IElementHandle AsElement() => (IElementHandle)this;
+    public IElementHandle? AsElement() => this as IElementHandle;
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task<JsonElement?> EvaluateAsync(string expression, object? arg = null)

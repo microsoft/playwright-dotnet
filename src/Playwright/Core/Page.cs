@@ -397,11 +397,11 @@ internal class Page : ChannelOwner, IPage
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task<IRequest> WaitForRequestAsync(string urlOrPredicate, PageWaitForRequestOptions? options = default)
-        => InnerWaitForEventAsync(PageEvent.Request, null, e => Context.UrlMatches(e.Url, urlOrPredicate), options?.Timeout);
+        => InnerWaitForEventAsync(PageEvent.Request, null, e => Context.UrlMatches(e.Url, urlOrPredicate), options?.Timeout, $"waiting for request {TrimUrl(urlOrPredicate)}");
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task<IRequest> WaitForRequestAsync(Regex urlOrPredicate, PageWaitForRequestOptions? options = default)
-        => InnerWaitForEventAsync(PageEvent.Request, null, e => urlOrPredicate.IsMatch(e.Url), options?.Timeout);
+        => InnerWaitForEventAsync(PageEvent.Request, null, e => urlOrPredicate.IsMatch(e.Url), options?.Timeout, $"waiting for request {TrimUrl(urlOrPredicate)}");
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task<IRequest> WaitForRequestAsync(Func<IRequest, bool> urlOrPredicate, PageWaitForRequestOptions? options = default)
@@ -413,11 +413,11 @@ internal class Page : ChannelOwner, IPage
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task<IResponse> WaitForResponseAsync(string urlOrPredicate, PageWaitForResponseOptions? options = default)
-        => InnerWaitForEventAsync(PageEvent.Response, null, e => Context.UrlMatches(e.Url, urlOrPredicate), options?.Timeout);
+        => InnerWaitForEventAsync(PageEvent.Response, null, e => Context.UrlMatches(e.Url, urlOrPredicate), options?.Timeout, $"waiting for response {TrimUrl(urlOrPredicate)}");
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task<IResponse> WaitForResponseAsync(Regex urlOrPredicate, PageWaitForResponseOptions? options = default)
-        => InnerWaitForEventAsync(PageEvent.Response, null, e => urlOrPredicate.IsMatch(e.Url), options?.Timeout);
+        => InnerWaitForEventAsync(PageEvent.Response, null, e => urlOrPredicate.IsMatch(e.Url), options?.Timeout, $"waiting for response {TrimUrl(urlOrPredicate)}");
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task<IResponse> WaitForResponseAsync(Func<IResponse, bool> urlOrPredicate, PageWaitForResponseOptions? options = default)
@@ -457,11 +457,11 @@ internal class Page : ChannelOwner, IPage
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task<IRequest> RunAndWaitForRequestAsync(Func<Task> action, string urlOrPredicate, PageRunAndWaitForRequestOptions? options = default)
-        => InnerWaitForEventAsync(PageEvent.Request, action, e => Context.UrlMatches(e.Url, urlOrPredicate), options?.Timeout);
+        => InnerWaitForEventAsync(PageEvent.Request, action, e => Context.UrlMatches(e.Url, urlOrPredicate), options?.Timeout, $"waiting for request {TrimUrl(urlOrPredicate)}");
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task<IRequest> RunAndWaitForRequestAsync(Func<Task> action, Regex urlOrPredicate, PageRunAndWaitForRequestOptions? options = default)
-        => InnerWaitForEventAsync(PageEvent.Request, action, e => urlOrPredicate.IsMatch(e.Url), options?.Timeout);
+        => InnerWaitForEventAsync(PageEvent.Request, action, e => urlOrPredicate.IsMatch(e.Url), options?.Timeout, $"waiting for request {TrimUrl(urlOrPredicate)}");
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task<IRequest> RunAndWaitForRequestAsync(Func<Task> action, Func<IRequest, bool> urlOrPredicate, PageRunAndWaitForRequestOptions? options = default)
@@ -469,11 +469,11 @@ internal class Page : ChannelOwner, IPage
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task<IResponse> RunAndWaitForResponseAsync(Func<Task> action, string urlOrPredicate, PageRunAndWaitForResponseOptions? options = default)
-        => InnerWaitForEventAsync(PageEvent.Response, action, e => Context.UrlMatches(e.Url, urlOrPredicate), options?.Timeout);
+        => InnerWaitForEventAsync(PageEvent.Response, action, e => Context.UrlMatches(e.Url, urlOrPredicate), options?.Timeout, $"waiting for response {TrimUrl(urlOrPredicate)}");
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task<IResponse> RunAndWaitForResponseAsync(Func<Task> action, Regex urlOrPredicate, PageRunAndWaitForResponseOptions? options = default)
-        => InnerWaitForEventAsync(PageEvent.Response, action, e => urlOrPredicate.IsMatch(e.Url), options?.Timeout);
+        => InnerWaitForEventAsync(PageEvent.Response, action, e => urlOrPredicate.IsMatch(e.Url), options?.Timeout, $"waiting for response {TrimUrl(urlOrPredicate)}");
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task<IResponse> RunAndWaitForResponseAsync(Func<Task> action, Func<IResponse, bool> urlOrPredicate, PageRunAndWaitForResponseOptions? options = default)
@@ -488,7 +488,7 @@ internal class Page : ChannelOwner, IPage
         return new TargetClosedException(_closeReason ?? Context._effectiveCloseReason());
     }
 
-    internal Task<T> InnerWaitForEventAsync<T>(PlaywrightEvent<T> pageEvent, Func<Task>? action = default, Func<T, bool>? predicate = default, float? timeout = default) => WrapApiCallAsync<T>(async () =>
+    internal Task<T> InnerWaitForEventAsync<T>(PlaywrightEvent<T> pageEvent, Func<Task>? action = default, Func<T, bool>? predicate = default, float? timeout = default, string? logLine = null) => WrapApiCallAsync<T>(async () =>
     {
         if (pageEvent == null)
         {
@@ -496,8 +496,13 @@ internal class Page : ChannelOwner, IPage
         }
 
         timeout = _timeoutSettings.Timeout(timeout);
-        using var waiter = new Waiter(this, $"page.WaitForEventAsync(\"{typeof(T)}\")");
-        waiter.RejectOnTimeout(Convert.ToInt32(timeout, CultureInfo.InvariantCulture), $"Timeout {timeout}ms exceeded while waiting for event \"{pageEvent.Name}\"");
+        var eventName = pageEvent.Name.ToLowerInvariant();
+        using var waiter = new Waiter(this, eventName);
+        if (logLine != null)
+        {
+            waiter.Log(logLine);
+        }
+        waiter.RejectOnTimeout(Convert.ToInt32(timeout, CultureInfo.InvariantCulture), $"Timeout {timeout}ms exceeded while waiting for event \"{eventName}\"");
 
         if (pageEvent.Name != PageEvent.Crash.Name)
         {
@@ -517,6 +522,17 @@ internal class Page : ChannelOwner, IPage
 
         return await waitForEventTask.ConfigureAwait(false);
     });
+
+    private static string TrimUrl(string url) => $"\"{TrimStringWithEllipsis(url, 50)}\"";
+
+    private static string TrimUrl(Regex url)
+    {
+        var (source, flags) = url.GetSourceAndFlags();
+        return $"/{TrimStringWithEllipsis(source, 50)}/{flags}";
+    }
+
+    private static string TrimStringWithEllipsis(string input, int cap)
+        => input.Length <= cap ? input : input.Substring(0, cap - 1) + "\u2026";
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public ValueTask DisposeAsync() => new(CloseAsync());
@@ -1295,6 +1311,10 @@ internal class Page : ChannelOwner, IPage
             Handler = handler,
             Times = options?.Times,
         };
+        if (globMatch != null)
+        {
+            URLMatch.ResolveGlobToRegexPattern(Context.BaseURL, globMatch, false);
+        }
         _connection.Dispatcher.AssertCurrent();
         _routes.Insert(0, setting);
         await UpdateInterceptionAsync().ConfigureAwait(false);
@@ -1739,6 +1759,10 @@ internal class Page : ChannelOwner, IPage
 
     private Task RouteWebSocketAsync(string? globMatch, Regex? urlRegex, Func<string, bool>? urlFunc, Delegate handler) => WrapApiCallAsync(() =>
     {
+        if (globMatch != null)
+        {
+            URLMatch.ResolveGlobToRegexPattern(Context.BaseURL, globMatch, true);
+        }
         _connection.Dispatcher.AssertCurrent();
         _webSocketRoutes.Insert(0, new WebSocketRouteHandler()
         {

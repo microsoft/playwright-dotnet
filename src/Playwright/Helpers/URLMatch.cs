@@ -156,10 +156,18 @@ public class URLMatch
             switch (c)
             {
                 case '{':
+                    if (inGroup)
+                    {
+                        throw new PlaywrightException($"Invalid glob pattern \"{glob}\": nested '{{' is not supported");
+                    }
                     inGroup = true;
                     tokens.Add("(");
                     break;
                 case '}':
+                    if (!inGroup)
+                    {
+                        throw new PlaywrightException($"Invalid glob pattern \"{glob}\": unmatched '}}'");
+                    }
                     inGroup = false;
                     tokens.Add(")");
                     break;
@@ -178,6 +186,10 @@ public class URLMatch
             }
         }
 
+        if (inGroup)
+        {
+            throw new PlaywrightException($"Invalid glob pattern \"{glob}\": unmatched '{{'");
+        }
         tokens.Add("$");
         return string.Concat(tokens.ToArray());
     }

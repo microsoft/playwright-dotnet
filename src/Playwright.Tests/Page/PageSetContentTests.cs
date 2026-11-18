@@ -90,7 +90,6 @@ public class PageSetContentTests : UpstreamPageTest
     }
 
     [UpstreamTest("PA-027 should respect default navigation timeout")]
-    [LocalFixme("dotnet: Frame.SetContentAsync takes the default timeout and not the default navigation timeout as upstream does, so it does not time out after SetDefaultNavigationTimeout(1)")]
     public async Task ShouldRespectDefaultNavigationTimeout()
     {
         Page.SetDefaultNavigationTimeout(1);

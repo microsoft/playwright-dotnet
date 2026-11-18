@@ -67,7 +67,7 @@ public class PageRunAndWaitForRequestTests : PageTestEx
         Page.SetDefaultTimeout(1);
         var exception = await PlaywrightAssert.ThrowsAsync<TimeoutException>(
             () => Page.RunAndWaitForRequestAsync(() => Task.CompletedTask, _ => false));
-        StringAssert.Contains(exception.Message, "Timeout 1ms exceeded while waiting for event \"Request\"");
+        StringAssert.Contains(exception.Message, "Timeout 1ms exceeded while waiting for event \"request\"");
     }
 
     [PlaywrightTest("page-wait-for-request.spec.ts", "should exception preempt timeout")]

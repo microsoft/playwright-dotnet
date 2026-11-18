@@ -31,7 +31,6 @@ public class JshandleAsElementTests : UpstreamPageTest
     }
 
     [UpstreamTest("JH-002 should return null for non-elements")]
-    [LocalFixme("dotnet: JSHandle.AsElement() throws InvalidCastException for a handle that is not an element, it casts itself to IElementHandle; upstream returns null")]
     public async Task ShouldReturnNullForNonElements()
     {
         var aHandle = await Page.EvaluateHandleAsync("() => 2");

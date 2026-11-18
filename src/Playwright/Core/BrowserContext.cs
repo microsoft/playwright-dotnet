@@ -673,8 +673,9 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
         }
 
         timeout = _timeoutSettings.Timeout(timeout);
-        using var waiter = new Waiter(this, $"context.WaitForEventAsync(\"{playwrightEvent.Name}\")");
-        waiter.RejectOnTimeout(Convert.ToInt32(timeout, CultureInfo.InvariantCulture), $"Timeout {timeout}ms exceeded while waiting for event \"{playwrightEvent.Name}\"");
+        var eventName = playwrightEvent.Name.ToLowerInvariant();
+        using var waiter = new Waiter(this, eventName);
+        waiter.RejectOnTimeout(Convert.ToInt32(timeout, CultureInfo.InvariantCulture), $"Timeout {timeout}ms exceeded while waiting for event \"{eventName}\"");
 
         if (playwrightEvent.Name != BrowserContextEvent.Close.Name)
         {
@@ -806,6 +807,10 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
             Handler = handler,
             Times = options?.Times,
         };
+        if (globMatch != null)
+        {
+            URLMatch.ResolveGlobToRegexPattern(BaseURL, globMatch, false);
+        }
         _connection.Dispatcher.AssertCurrent();
         _routes.Insert(0, setting);
         await UpdateInterceptionAsync().ConfigureAwait(false);
@@ -992,6 +997,10 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
 
     private Task RouteWebSocketAsync(string? globMatch, Regex? reMatch, Func<string, bool>? funcMatch, Delegate handler) => WrapApiCallAsync(() =>
     {
+        if (globMatch != null)
+        {
+            URLMatch.ResolveGlobToRegexPattern(BaseURL, globMatch, true);
+        }
         _connection.Dispatcher.AssertCurrent();
         _webSocketRoutes.Insert(0, new WebSocketRouteHandler()
         {

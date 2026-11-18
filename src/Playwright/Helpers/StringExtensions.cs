@@ -528,6 +528,7 @@ internal static class StringExtensions
             { ".wdb", "application/vnd.ms-works" },
             { ".wdp", "image/vnd.ms-photo" },
             { ".webarchive", "application/x-safari-webarchive" },
+            { ".webp", "image/webp" },
             { ".webtest", "application/xml" },
             { ".wiq", "application/xml" },
             { ".wiz", "application/msword" },

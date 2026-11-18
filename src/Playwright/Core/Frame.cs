@@ -304,7 +304,7 @@ internal class Frame : ChannelOwner, IFrame
         waitUntil ??= WaitUntilState.Load;
         string toUrl = !string.IsNullOrEmpty(urlString) ? $" to \"{urlString}\"" : string.Empty;
 
-        waiter.Log($"waiting for navigation{toUrl} until \"{waitUntil}\"");
+        waiter.Log($"waiting for navigation{toUrl} until \"{waitUntil.Value.ToValueString()}\"");
 
         var navigatedEventTask = waiter.WaitForEventAsync<FrameNavigatedEventArgs>(
             this,
@@ -703,7 +703,7 @@ internal class Frame : ChannelOwner, IFrame
                 ["html"] = html,
                 ["waitUntil"] = options?.WaitUntil,
             },
-            timeout: Timeout(options?.Timeout));
+            timeout: NavigationTimeout(options?.Timeout));
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task<string> InputValueAsync(string selector, FrameInputValueOptions? options = null)

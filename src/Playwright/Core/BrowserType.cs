@@ -247,9 +247,9 @@ internal class BrowserType : ChannelOwner, IBrowserType
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task<IBrowser> ConnectOverCDPAsync(string endpointURL, BrowserTypeConnectOverCDPOptions? options = null) => WrapApiCallAsync<IBrowser>(async () =>
     {
-        if (Name != "chromium")
+        if (Name != "chromium" && Name != "webkit")
         {
-            throw new ArgumentException("Connecting over CDP is only supported in Chromium.");
+            throw new ArgumentException("Connecting over CDP is only supported in Chromium and WebKit.");
         }
         options ??= new BrowserTypeConnectOverCDPOptions();
         JsonElement result = await SendMessageToServerAsync<JsonElement>(

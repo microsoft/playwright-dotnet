@@ -101,7 +101,6 @@ public class InterceptionTests : UpstreamPageTest
     }
 
     [UpstreamTest("RO-155 should throw on page.route with invalid glob")]
-    [LocalFixme("dotnet: page.RouteAsync(\"http://*/foo{\", handler) does not throw, the glob is not checked; upstream throws \"unmatched '{'\"")]
     public async Task ShouldThrowOnPageRouteWithInvalidGlob()
     {
         var error = await ThrowsAsync<PlaywrightException>(() => Page.RouteAsync("http://*/foo{", route => route.ContinueAsync()));

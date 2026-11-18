@@ -194,7 +194,7 @@ internal class Request : ChannelOwner, IRequest
     {
         if (await ResponseAsync().ConfigureAwait(false) is not Response res)
         {
-            throw new PlaywrightException("Unable to fetch resources sizes.");
+            throw new PlaywrightException("Unable to fetch sizes for failed request");
         }
 
         return (await res.SendMessageToServerAsync("sizes").ConfigureAwait(false))!.Value.GetProperty("sizes").ToObject<RequestSizesResult>();

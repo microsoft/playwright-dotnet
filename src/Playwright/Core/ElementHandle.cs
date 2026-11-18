@@ -465,6 +465,7 @@ internal class ElementHandle : JSHandle, IElementHandle
         {
             "image/png" => ScreenshotType.Png,
             "image/jpeg" => ScreenshotType.Jpeg,
+            "image/webp" => ScreenshotType.Webp,
             _ => throw new ArgumentException($"path: unsupported mime type \"{mimeType}\""),
         };
     }

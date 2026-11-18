@@ -61,7 +61,6 @@ public class PageWaitForResponseTests : UpstreamPageTest
 
     [UpstreamTest("WA-132 should log the url")]
 
-    [LocalFixme("dotnet: WaitForResponseAsync(url) does not log 'waiting for response \"<url>\"' on its waiter as upstream does, the message is only 'Timeout 1000ms exceeded while waiting for event \"Response\"'")]
     public async Task ShouldLogTheUrl()
     {
         var error1 = await Catch(() => Page.WaitForResponseAsync("foo.css", new() { Timeout = 1000 }));
