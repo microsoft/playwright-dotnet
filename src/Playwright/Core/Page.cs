@@ -283,7 +283,7 @@ internal class Page : ChannelOwner, IPage
                 ViewportSize = new() { Width = size.Width, Height = size.Height };
                 break;
             case "screencastFrame":
-                _screencast.OnScreencastFrame(serverParams.ToObject<ScreencastFrame>(_connection.DefaultJsonSerializerOptions));
+                _screencast.OnScreencastFrame(serverParams.ToObject<ScreencastFrame>(_connection.DefaultJsonSerializerOptions), serverParams.GetProperty("frameId").GetInt32());
                 break;
             case "worker":
                 var worker = serverParams.GetProperty("worker").ToObject<Worker>(_connection.DefaultJsonSerializerOptions);

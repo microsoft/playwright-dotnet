@@ -75,7 +75,6 @@ public class ScreencastTests : UpstreamBrowserTest
     }
 
     [UpstreamTest("SC-002 applies backpressure while async onFrame callback is pending")]
-    [LocalFixme("dotnet: the client never sends screencastFrameAck after the OnFrame callback (Screencast.OnScreencastFrame), so the driver stops sending frames: no frame comes after the test releases the callback")]
     public async Task AppliesBackpressureWhileAsyncOnFrameCallbackIsPending()
     {
         Info.Skip(Trace == "on", "trace recording acknowledges screencast frames independently");
