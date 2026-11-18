@@ -496,13 +496,12 @@ internal class Page : ChannelOwner, IPage
         }
 
         timeout = _timeoutSettings.Timeout(timeout);
-        var eventName = pageEvent.Name.ToLowerInvariant();
-        using var waiter = new Waiter(this, eventName);
+        using var waiter = new Waiter(this, pageEvent.Name);
         if (logLine != null)
         {
             waiter.Log(logLine);
         }
-        waiter.RejectOnTimeout(Convert.ToInt32(timeout, CultureInfo.InvariantCulture), $"Timeout {timeout}ms exceeded while waiting for event \"{eventName}\"");
+        waiter.RejectOnTimeout(Convert.ToInt32(timeout, CultureInfo.InvariantCulture), $"Timeout {timeout}ms exceeded while waiting for event \"{pageEvent.Name}\"");
 
         if (pageEvent.Name != PageEvent.Crash.Name)
         {

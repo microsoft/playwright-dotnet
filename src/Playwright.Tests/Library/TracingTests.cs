@@ -1091,7 +1091,8 @@ public class TracingTests : UpstreamBrowserTest
                 {
                     type = "before",
                     callId = AnyNumber,
-                    title = "Wait for event \"console\"",
+                    // .NET: the event is named "Console".
+                    title = "Wait for event \"Console\"",
                 },
                 new
                 {

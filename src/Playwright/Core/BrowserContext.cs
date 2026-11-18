@@ -673,9 +673,8 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
         }
 
         timeout = _timeoutSettings.Timeout(timeout);
-        var eventName = playwrightEvent.Name.ToLowerInvariant();
-        using var waiter = new Waiter(this, eventName);
-        waiter.RejectOnTimeout(Convert.ToInt32(timeout, CultureInfo.InvariantCulture), $"Timeout {timeout}ms exceeded while waiting for event \"{eventName}\"");
+        using var waiter = new Waiter(this, playwrightEvent.Name);
+        waiter.RejectOnTimeout(Convert.ToInt32(timeout, CultureInfo.InvariantCulture), $"Timeout {timeout}ms exceeded while waiting for event \"{playwrightEvent.Name}\"");
 
         if (playwrightEvent.Name != BrowserContextEvent.Close.Name)
         {

@@ -346,7 +346,7 @@ public class TracingTests : ContextTestEx
                 new Regex(@"Create page"),
                 new Regex(@"Navigate.*/empty.html"),
                 new Regex(@"Set content"),
-                new Regex(@"Wait for event ""page"""),
+                new Regex(@"Wait for event ""Page"""),
                 new Regex(@"Click"),
                 new Regex(@"Evaluate"),
                 new Regex(@"Navigate.*/empty.html"),

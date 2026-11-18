@@ -58,7 +58,8 @@ public class PageWaitForRequestTests : UpstreamPageTest
         Exception error = null;
         error = await Catch(() => Page.WaitForRequestAsync(_ => false, new() { Timeout = 1 }));
         Assert.That(error, Is.InstanceOf<TimeoutException>());
-        Assert.That(error.Message, Does.Contain("Timeout 1ms exceeded while waiting for event \"request\""));
+        // .NET: the event is named "Request".
+        Assert.That(error.Message, Does.Contain("Timeout 1ms exceeded while waiting for event \"Request\""));
         // Error stack should point to the api call.
         // .NET: left out, a .NET stack trace has the frames of the library:
         // const firstFrame = error.stack.split('\n').find(line => line.startsWith('    at '));
