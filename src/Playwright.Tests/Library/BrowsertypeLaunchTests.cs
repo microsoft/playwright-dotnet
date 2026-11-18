@@ -1,0 +1,118 @@
+/**
+ * Copyright 2017 Google Inc. All rights reserved.
+ * Modifications copyright (c) Microsoft Corporation.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+using Microsoft.Playwright.Tests.Fixtures;
+using static Microsoft.Playwright.Tests.Fixtures.Utils;
+
+namespace Microsoft.Playwright.Tests.Library;
+
+/// <summary>Port of tests/library/browsertype-launch.spec.ts.</summary>
+public class BrowsertypeLaunchTests : UpstreamBrowserTest
+{
+    [UpstreamTest("BT-004 should reject all promises when browser is closed")]
+    public async Task ShouldRejectAllPromisesWhenBrowserIsClosed()
+    {
+        var browser = await BrowserType.LaunchAsync(LaunchOptions());
+        var page = await (await browser.NewContextAsync(ContextOptions())).NewPageAsync();
+        Exception error = null;
+        var neverResolves = Catch(() => page.EvaluateAsync("() => new Promise(r => {})"));
+        await page.EvaluateAsync("() => new Promise(f => window.builtins.setTimeout(f, 0))");
+        await browser.CloseAsync();
+        error = await neverResolves;
+        // WebKit under task-set -c 1 is giving browser, rest are giving target.
+        Assert.That(error.Message, Does.Contain(" closed"));
+    }
+
+    [UpstreamTest("BT-009 should throw if page argument is passed")]
+    public async Task ShouldThrowIfPageArgumentIsPassed()
+    {
+        Info.Skip(BrowserName == "firefox" && !IsBidi);
+
+        Exception waitError = null;
+        waitError = await Catch(() => BrowserType.LaunchAsync(new(LaunchOptions()) { Args = ["http://example.com"] }));
+        Assert.That(waitError.Message, Does.Contain("can not specify page"));
+    }
+
+    [UpstreamTest("BT-010 should reject if launched browser fails immediately")]
+    [LocalFixme("dotnet: the message is 'Target page, context or browser has been closed\\nBrowser logs: ...', without the 'browserType.launch: ' prefix of the call (only in chromium and webkit); dotnet: the message is 'Failed to launch the browser process.\\nBrowser logs: ...', without the 'browserType.launch: ' prefix of the call (only in firefox)")]
+    public async Task ShouldRejectIfLaunchedBrowserFailsImmediately()
+    {
+        var error = await Catch(() => BrowserType.LaunchAsync(new(LaunchOptions()) { ExecutablePath = Asset("dummy_bad_browser_executable.js") }));
+        if (Channel == "webkit-wsl")
+        {
+            Assert.That(error.Message, Does.Contain("Failed to launch"));
+        }
+        else
+        {
+            Assert.That(error.Message, Does.Match(@"browserType\.launch(.|\n)*(spawn UNKNOWN|spawn EFTYPE|Browser logs:)").IgnoreCase);
+        }
+    }
+
+    [UpstreamTest("BT-011 should reject if executable path is invalid")]
+    public async Task ShouldRejectIfExecutablePathIsInvalid()
+    {
+        Exception waitError = null;
+        waitError = await Catch(() => BrowserType.LaunchAsync(new(LaunchOptions()) { ExecutablePath = "random-invalid-path" }));
+        Assert.That(waitError.Message, Does.Contain("Failed to launch"));
+    }
+
+    [UpstreamTest("BT-015 should fire close event for all contexts")]
+    public async Task ShouldFireCloseEventForAllContexts()
+    {
+        var browser = await BrowserType.LaunchAsync(LaunchOptions());
+        var context = await browser.NewContextAsync(ContextOptions());
+        var closed = false;
+        context.Close += (_, _) => closed = true;
+        await browser.CloseAsync();
+        Assert.That(closed, Is.EqualTo(true));
+    }
+
+    [UpstreamTest("BT-016 should be callable twice")]
+    public async Task ShouldBeCallableTwice()
+    {
+        var browser = await BrowserType.LaunchAsync(LaunchOptions());
+        await PromiseAll(
+            browser.CloseAsync(),
+            browser.CloseAsync());
+        await browser.CloseAsync();
+    }
+
+    [UpstreamTest("BT-017 should allow await using")]
+    public async Task ShouldAllowAwaitUsing()
+    {
+        Info.Skip(NodeVersion.Major < 18);
+
+        IBrowser b;
+        IBrowserContext c;
+        IPage p;
+        {
+            await using var browser = await BrowserType.LaunchAsync(LaunchOptions());
+            b = browser;
+            {
+                await using var context = await browser.NewContextAsync(ContextOptions());
+                c = context;
+                {
+                    await using var page = await context.NewPageAsync();
+                    p = page;
+                }
+                Assert.That(p.IsClosed, Is.True);
+            }
+            Assert.That((await Catch(() => c.ClearCookiesAsync())).Message, Does.Contain(TargetClosedErrorMessage));
+        }
+        Assert.That(b.IsConnected, Is.False);
+    }
+}

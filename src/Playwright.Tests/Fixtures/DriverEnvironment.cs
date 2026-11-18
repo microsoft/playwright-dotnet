@@ -22,14 +22,21 @@
  * SOFTWARE.
  */
 
-namespace Microsoft.Playwright.Tests;
+using Microsoft.Playwright.Tests.Fixtures;
 
-public class PauseTests : PageTestEx
+/// <summary>
+/// The driver of the tests runs as the one of the upstream tests, with <c>PWTEST_UNDER_TEST</c>: it gives
+/// the pages <c>window.builtins</c>, among other things.
+/// </summary>
+[SetUpFixture]
+#pragma warning disable CA1050 // A [SetUpFixture] outside of a namespace applies to the whole assembly.
+public class DriverEnvironment
+#pragma warning restore CA1050
 {
-    [Test]
-    public async Task ShouldNotFail()
+    [OneTimeSetUp]
+    public void SetDriverEnvironment()
     {
-        await Page.GotoAsync(Server.EmptyPage);
-        await Page.PauseAsync();
+        Environment.SetEnvironmentVariable("PWTEST_UNDER_TEST", "1");
+        Environment.SetEnvironmentVariable("PWTEST_SERVER_REGISTRY", Env.ServerRegistry);
     }
 }

@@ -1,0 +1,395 @@
+# Upstream tests that the .NET port does not run, with the reason.
+#
+# The registry of upstream tests is .upstream/tests/registry.md, tests/registry.md of
+# microsoft/playwright at DriverVersion. UpstreamRegistryTests checks that every test in it
+# is ported under src/Playwright.Tests/{Page,Library} or matches a rule here. One rule per
+# line: a selector, then the reason. A selector is a test identifier (CH-017), a subsystem
+# code (CG), or an upstream file glob without ".spec.ts" (library/unit/*). The check fails
+# on a rule that matches no test, and on a test that is ported and also matches a rule. A
+# reason starting with "TODO harness:" names a test utility the harness does not have yet;
+# such a test is ported once it does. The rules are in src/Playwright.Tests/AGENTS.md.
+
+# Upstream internals, not the client API.
+library/unit/*                      Unit tests of upstream internals.
+library/events/*                    Tests the EventEmitter class of the Node.js client.
+library/channels                    Checks the object tree of the Node.js client through its internals.
+library/heap                        Measures the heap of the Node.js client.
+page/page-leaks                     Counts server objects through toImpl(), which only the Node.js tests can reach.
+library/role-utils                  Calls the injected script directly.
+library/locator-parser              Tests the locator parser of the driver.
+library/component-parser            Tests the component selector parser of the driver.
+library/css-parser                  Tests the CSS selector parser of the driver.
+library/locator-generator           Tests the locator generator of the driver.
+library/selector-generator          Tests the selector generator of the driver.
+library/coverage                    Checks the API coverage of the Node.js tests.
+
+# Tools that run in the driver. The .NET client only starts them.
+library/inspector/*                 Codegen and the Inspector run in the driver.
+library/trace-viewer                The trace viewer runs in the driver.
+library/snapshot-renderer           The trace viewer runs in the driver.
+library/debug-controller            Internal protocol of the VS Code extension.
+
+# Node.js packaging.
+library/browsers-path               Tests importing the Node.js package on an unsupported platform.
+library/playwright-client           Tests the @playwright/client package.
+
+# API that the .NET API does not have.
+library/chromium/js-coverage        page.coverage is not in the .NET API.
+library/chromium/css-coverage       page.coverage is not in the .NET API.
+library/logger                      The logger option is not in the .NET API.
+library/browsertype-launch-server   browserType.launchServer() is not in the .NET API.
+page/page-listeners                 removeAllListeners() is not in the .NET API.
+page/page-aria-snapshot-json        page.ariaSnapshotJSON() and locator.ariaSnapshotJSON() are not in the .NET API.
+
+# Features of the @playwright/test runner.
+page/expect-builtins                Generic matchers of @playwright/test, such as toBe().
+page/matchers.misc                  Generic matchers of @playwright/test.
+page/expect-matcher-result          The matcher result objects of @playwright/test.
+page/expect-with-snapshot           toHaveScreenshot() and toMatchSnapshot() are not in the .NET API.
+
+# Per test, found while porting.
+# page/expect-boolean
+EX-068      Calls toBeOK() on expect(page) through "as any"; Expect(page) is IPageAssertions in the .NET API, which has no ToBeOKAsync(): the call does not compile.
+EX-069      Calls toBeOK() on a promise of a response through "as any"; Expect() takes an IAPIResponse in the .NET API, not a Task of it: the call does not compile.
+# page/expect-misc
+EX-198      Passes undefined as the expected value of toHaveJSProperty(), next to EX-199 that passes null; .NET has one null, which is sent as null.
+EX-205      toHaveClass() takes an array of strings or an array of regular expressions in the .NET API, not an array that mixes them.
+EX-206      toHaveClass() takes an array of strings or an array of regular expressions in the .NET API, not an array that mixes them.
+EX-216      Passes an object to toHaveURL(), which takes a string or a Regex in the .NET API: the call does not compile.
+EX-217      The predicate overload of toHaveURL() is not in the .NET API.
+EX-218      The predicate overload of toHaveURL() is not in the .NET API.
+EX-219      The predicate overload of toHaveURL() is not in the .NET API.
+EX-220      The predicate overload of toHaveURL() is not in the .NET API.
+EX-222      The URLPattern overload of toHaveURL() is not in the .NET API.
+EX-226      toHaveAttribute(name) without a value is not in the .NET API.
+EX-227      toHaveAttribute(name) without a value is not in the .NET API.
+# page/expect-timeout
+EX-253      The signal option of the assertions is not in the .NET API.
+EX-254      The signal option of the assertions is not in the .NET API.
+EX-255      The signal option of the assertions is not in the .NET API.
+EX-256      The signal option of the assertions is not in the .NET API.
+EX-257      The signal option of the assertions is not in the .NET API.
+EX-258      The signal option of the assertions is not in the .NET API.
+# page/expect-to-have-text
+EX-298      Passes an array that mixes strings and a regular expression to toHaveText(), which takes an array of strings or an array of regular expressions in the .NET API: the call does not compile.
+# page/frame-evaluate
+FR-003      Counts the execution contexts of the server page through toImpl().
+FR-004      Counts the execution contexts of the server page through toImpl().
+# page/interception
+RO-153      Calls globToRegexPattern() and urlMatches() of the Node.js client (coreBundle iso) directly.
+RO-154      Calls globToRegexPattern() of the Node.js client (coreBundle iso) directly.
+RO-160      The point is a RegExp made in another Node.js vm context (vm.runInContext); .NET has one kind of Regex.
+RO-161      The point is a RegExp with the global flag (/\/intercept-me/g) and its lastIndex; a .NET Regex has no global flag.
+# page/locator-wait-for-function
+LO-191      The signal option of locator.waitForFunction() is not in the .NET API.
+LO-192      The signal option of locator.waitForFunction() is not in the .NET API.
+# page/page-add-init-script
+IS-004      Passes an object without path and content to addInitScript(); AddInitScriptAsync(script, scriptPath) of the .NET API can not express it.
+# page/page-add-init-script-callback
+page/page-add-init-script-callback  The arg parameter and the exposeFunctions option of addInitScript() are not in the .NET API.
+# page/page-add-locator-handler
+LH-008      expect(page).toHaveScreenshot() is not in the .NET API.
+# page/page-add-script-tag
+AT-001      Passes a string in place of the options object (@ts-ignore), which the typed .NET API can not express.
+# page/page-add-style-tag
+AT-013      Passes a string in place of the options object (@ts-ignore), which the typed .NET API can not express.
+# page/page-autowaiting-basic
+AW-010      Passes a function as the __testHookAfterPointerAction option of click(), a hook that the Node.js client hands to the driver in the same process; the .NET API has no such option.
+# page/page-basic
+PA-019      Enumerates the properties of the JavaScript Page object with for...in and reads their Symbol.iterator; a .NET object has no such enumeration.
+# page/page-click
+CL-067      Passes a function as the __testHookBeforeStable option of click(), a hook of the Node.js client that the .NET API does not have.
+CL-068      Passes a function as the __testHookBeforeStable option of click(), a hook of the Node.js client that the .NET API does not have.
+CL-069      Passes a function as the __testHookBeforeStable option of click(), a hook of the Node.js client that the .NET API does not have.
+CL-090      The signal option of click() is not in the .NET API.
+CL-091      The signal option of click() is not in the .NET API.
+CL-092      The signal option of click() is not in the .NET API.
+CL-093      The signal option of click() is not in the .NET API.
+# page/page-click-during-navigation
+CL-109      Passes a function as the __testHookAfterStable option of click(), a hook of the Node.js client that the .NET API does not have.
+# page/page-click-timeout-1
+CL-110      Passes a function as the __testHookBeforePointerAction option of click(), a hook of the Node.js client that the .NET API does not have.
+# page/page-click-timeout-3
+CL-116      Passes a function as the __testHookBeforeHitTarget option of click(), a hook of the Node.js client that the .NET API does not have.
+# page/page-click-timeout-4
+CL-121      Passes a function as the __testHookBeforePointerAction option of click(), a hook of the Node.js client that the .NET API does not have.
+# page/page-emulate-media
+EM-002      Passes media: 'bad', a value outside of the Media enum of the .NET API.
+EM-005      Passes colorScheme: 'bad', a value outside of the ColorScheme enum of the .NET API.
+# page/page-evaluate
+EV-038      The evaluate methods of the .NET API take one argument: a call with two does not compile.
+EV-039      Passes undefined as a property of the argument and checks Object.is(a, undefined) in the page; .NET has one null, which is sent as null.
+EV-040      Passes undefined as the argument and expects { a: x } to come back without the property; .NET has one null, which is sent as null.
+EV-041      Expects an undefined property of the result to equal a missing one, next to EV-044 that keeps a null property; .NET has one null for both.
+EV-050      Passes a JavaScript function as the argument and checks that the Node.js client refuses it with its source text; .NET has no such value.
+EV-051      Passes a JavaScript function as the argument and checks that the Node.js client refuses it with its source text; .NET has no such value.
+EV-052      Passes a JavaScript function as the argument and checks that the Node.js client refuses it with its source text; .NET has no such value.
+EV-053      Passes a JavaScript function as the argument and checks that the Node.js client refuses it with its source text; .NET has no such value.
+EV-079      Passes an Error with a name set by hand and a stack from its constructor; a .NET Exception has no name to set (the client sends the class name) and no stack until it is thrown.
+# page/page-evaluate-callback
+page/page-evaluate-callback         The exposeFunctions option of evaluate() and evaluateHandle() is not in the .NET API, and a function is not a value that .NET can pass as an argument.
+# page/page-evaluate-no-stall
+page/page-evaluate-no-stall         Calls nonStallingRawEvaluateInExistingMainContext() of the server frame through toImpl(), which only the Node.js tests can reach.
+# page/page-event-console
+CM-003      Checks util.inspect() of Node.js on a ConsoleMessage.
+CM-009      ConsoleMessage.Location is a string in the .NET API ("url:line:column"): it has no url, line and lineNumber properties.
+CM-020      The filter option of page.pageErrors() is not in the .NET API: PageErrorsAsync() takes no options.
+# page/page-expose-function
+EF-006      C# can not throw null: "throw null" throws a NullReferenceException.
+# page/page-filechooser
+FC-003      prependListener() is not in the .NET API: a .NET event has no way to add a handler before the others.
+FC-015      The signal option of waitForEvent() is not in the .NET API.
+# page/page-fill
+FI-019      Passes a number as the value of fill(), which the typed API can not express (@ts-expect-error).
+# page/page-goto
+NA-027      Passes waitUntil: 'networkidle0' (@ts-expect-error), a value outside of the WaitUntilState enum.
+NA-028      Passes waitUntil: 'networkidle2' (@ts-expect-error), a value outside of the WaitUntilState enum.
+NA-033      Calls context.setDefaultNavigationTimeout(undefined) to undo the navigation timeout 0 of the harness; SetDefaultNavigationTimeout(float) of the .NET API can not unset a timeout.
+NA-034      Calls context.setDefaultNavigationTimeout(undefined) to undo the navigation timeout 0 of the harness; SetDefaultNavigationTimeout(float) of the .NET API can not unset a timeout.
+NA-044      Checks process.on('warning') of Node.js for a listener leak of the Node.js EventEmitter.
+NA-045      Checks process.on('warning') of Node.js for a listener leak of the Node.js EventEmitter.
+NA-046      Checks process.on('warning') of Node.js for a listener leak of the Node.js EventEmitter.
+# page/page-request-fallback
+RO-125      Makes route.fulfill() throw with `response: {} as any`; the Response option of the typed .NET API takes only an IAPIResponse.
+# page/page-route
+RO-056      The URLPattern argument of page.route() is not in the .NET API: RouteAsync takes a string, a Regex or a predicate.
+# page/page-screenshot
+SS-055      The __testHookBeforeScreenshot option is a hook of the Node.js client, the .NET API does not have it.
+SS-066      expect(page).toHaveScreenshot() is not in the .NET API.
+SS-067      expect(page).toHaveScreenshot() is not in the .NET API.
+# page/page-select-option
+SO-024      Passes numbers for the values, the value, the label and a string for the index (@ts-expect-error): SelectOptionAsync and SelectOptionValue are typed.
+# page/page-set-content
+PA-036      Runs evaluateExpression in the utility world through toImpl(), which only the Node.js tests can reach.
+PA-037      Runs evaluateExpression in the utility world through toImpl(), which only the Node.js tests can reach.
+# page/page-set-extra-http-headers
+NE-117      The header values of SetExtraHTTPHeadersAsync() are strings in the .NET API: a number or a boolean does not compile.
+# page/page-wait-for-function
+WA-006      Passes polling: 'mutation', which the typed API can not express (@ts-expect-error): the PollingInterval option of WaitForFunctionAsync() is a number.
+WA-007      The polling: 'raf' option of waitForFunction() is not in the .NET API: the PollingInterval option is a number.
+WA-012      Passes polling: 'unknown', which the typed API can not express (@ts-expect-error): the PollingInterval option of WaitForFunctionAsync() is a number.
+# page/page-wait-for-load-state
+WA-080      Passes the load state 'bad', a value outside of the LoadState enum (@ts-expect-error).
+# page/page-wait-for-navigation
+WA-104      dotnet: race: framenavigated of the subframe can come before the test subscribes to it, after it awaited frameattached; the test then waits until its timeout.
+# page/page-wait-for-request
+WA-128      Makes the RegExp in another Node.js context with the vm module; .NET has one Regex class.
+# page/page-wait-for-response
+WA-134      The predicate of WaitForResponseAsync() is a Func<IResponse, bool>: an async predicate is not in the .NET API.
+# page/page-wait-for-selector-1
+WA-027      Passes the waitFor option, which the typed API can not express (@ts-expect-error).
+WA-028      Passes the waitFor option, which the typed API can not express (@ts-expect-error).
+# page/page-wait-for-selector-2
+WA-057      Checks only that error.stack has the name of the test file, 'wait-for-selector': a .NET stack trace does not have the upstream file name.
+WA-058      Passes state: 'foo', a value outside of the WaitForSelectorState enum (@ts-expect-error).
+WA-059      Passes the visibility option, which the typed API can not express (@ts-expect-error).
+WA-060      Passes state: true, which the typed API can not express (@ts-expect-error).
+WA-061      Passes state: false, which the typed API can not express (@ts-expect-error).
+WA-072      Passes the __testHookBeforeAdoptNode function as an option, a hook of the Node.js client that is not in the .NET API.
+WA-073      Passes the __testHookBeforeAdoptNode function as an option, a hook of the Node.js client that is not in the .NET API.
+# page/selectors-get-by
+SE-092      The v (unicodeSets) flag of a JavaScript regular expression is not in .NET Regex: the client can not send it.
+SE-097      The g (global) and y (sticky) flags of a JavaScript regular expression are not in .NET Regex: the client can not send them.
+# library/browser
+BR-007      Uses toImpl() and the __testHookBeforeSetStorageState hook of the Node.js client.
+# library/browsercontext-add-init-script
+IS-031      The arg parameter and the exposeFunctions option of addInitScript() are not in the .NET API.
+IS-032      The arg parameter and the exposeFunctions option of addInitScript() are not in the .NET API.
+IS-033      The arg parameter and the exposeFunctions option of addInitScript() are not in the .NET API.
+IS-034      The arg parameter and the exposeFunctions option of addInitScript() are not in the .NET API.
+# library/browsercontext-basic
+BC-030      Reads the default user agent through browser._channel.defaultUserAgentForTest(), a channel of the Node.js client that the .NET API does not expose.
+BC-084      The locateOnlyVisible option of browser.newContext() is not in the .NET API (langs: js in docs/src/api/params.md).
+# library/browsercontext-credentials
+AU-002      browserContext.setHTTPCredentials() is not in the .NET API.
+AU-003      browserContext.setHTTPCredentials() is not in the .NET API.
+# library/browsercontext-events
+BC-032      dotnet: race: the console event can come before the test subscribes to it. Promise.all([page.evaluate(() => console.log('hello')), context.waitForEvent('console')]): the .NET client sends updateSubscription for console about 3 ms after evaluateExpression, and WebKit has finished the evaluate by then, every time.
+# library/browsercontext-fetch
+FE-096      Passes a function as the __testHookLookup option of get(), a DNS lookup hook that the Node.js client hands to the driver in the same process; the .NET API has no such option, and www.my.playwright.dev does not resolve without it.
+FE-097      Passes a function as the __testHookLookup option of get(), a DNS lookup hook that the Node.js client hands to the driver in the same process; the .NET API has no such option, and my.playwright.dev does not resolve without it.
+FE-104      Passes a function as the __testHookLookup option of get(), a DNS lookup hook that the Node.js client hands to the driver in the same process; the .NET API has no such option, and www.my.playwright.dev does not resolve without it.
+FE-105      Passes a function as the __testHookLookup option of get(), a DNS lookup hook that the Node.js client hands to the driver in the same process; the .NET API has no such option, and www.my.playwright.dev does not resolve without it.
+FE-119      BrowserContext.setHTTPCredentials() is not in the .NET API.
+FE-120      BrowserContext.setHTTPCredentials() is not in the .NET API.
+FE-138      Sets process.env.NODE_TLS_REJECT_UNAUTHORIZED of the Node.js process that runs the client and the driver during the test; the .NET driver is another process, which reads its environment when it starts.
+FE-160      A ReadStream (fs.createReadStream) as a multipart value is not in the .NET API: FormData takes a string, a bool, an int or a FilePayload.
+FE-164      Passes a function as the data option of post(); DataObject of .NET takes any object and has no unsupported type to report.
+# library/browsercontext-fetch-happy-eyeballs
+FE-185      Passes a function as the __testHookLookup option of get(), a DNS lookup hook that the Node.js client hands to the driver in the same process; the .NET API has no such option.
+FE-186      Passes a function as the __testHookLookup option of get(), a DNS lookup hook that the Node.js client hands to the driver in the same process; the .NET API has no such option.
+FE-187      Passes a function as the __testHookLookup option of post(), a DNS lookup hook that the Node.js client hands to the driver in the same process; the .NET API has no such option.
+# library/browsercontext-pages
+BC-059      Listens to the 'warning' event of the Node.js process for a MaxListenersExceededWarning of the client's event emitters; .NET has no such warning.
+# library/browsercontext-proxy
+PR-020      The test passes a number as proxy.server (@ts-expect-error); Proxy.Server is a string in .NET.
+# library/browsercontext-reuse
+library/browsercontext-reuse        The reusedContext fixture calls browser._newContextForReuse(), browser._disconnectFromReusedContext() and browserType._instrumentation, internals of the Node.js client that the .NET client does not have.
+# library/browsercontext-route
+RO-185      The URLPattern argument of context.route() is not in the .NET API: RouteAsync takes a string, a Regex or a predicate.
+# library/browsertype-connect
+BT-034      The test sets process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = '0' for the WebSocket connection, which the Node.js client makes in the process of the test. In .NET the driver makes it, in a process that is already running and does not see the variable.
+BT-041      The test changes playwright._defaultLaunchOptions.headless, an internal of the Node.js client that startRemoteServer and connect read, and passes the __testHookKeepTestTimeout option of page.pause(), which is not in the .NET API.
+BT-047      The object form browserType.connect({ wsEndpoint, ... }) is not in the .NET API.
+BT-052      The __testHookBeforeCreateBrowser option of connect(), a function, is not in the .NET API.
+BT-066      The test reads page._guid, an internal of the Node.js client, and records a video without recordVideo.dir, which .NET does not take ("RecordVideoSize" option requires "RecordVideoDir").
+BT-067      Checks process.on('warning') of Node.js for a listener leak of the Node.js EventEmitter.
+BT-070      The test closes browser._connection, an internal of the Node.js client.
+BT-073      The test sets playwright._defaultTracesDir, an internal of the Node.js client.
+BT-081      The redirectPortForTest option of the connect fixture sets __testHookRedirectPortForwarding of connect(), which is not in the .NET API.
+BT-082      The redirectPortForTest option of the connect fixture sets __testHookRedirectPortForwarding of connect(), which is not in the .NET API.
+BT-083      The redirectPortForTest option of the connect fixture sets __testHookRedirectPortForwarding of connect(), which is not in the .NET API.
+BT-084      The redirectPortForTest option of the connect fixture sets __testHookRedirectPortForwarding of connect(), which is not in the .NET API.
+BT-085      The redirectPortForTest option of the connect fixture sets __testHookRedirectPortForwarding of connect(), which is not in the .NET API.
+BT-087      The redirectPortForTest option of the connect fixture sets __testHookRedirectPortForwarding of connect(), which is not in the .NET API.
+BT-088      The redirectPortForTest option of the connect fixture sets __testHookRedirectPortForwarding of connect(), which is not in the .NET API.
+BT-092      The test calls browser._parent.launch(), an internal of the Node.js client.
+BT-096      The test starts remote.PlaywrightServer of the Node.js package (coreBundle) in its own process and reads its _dontReuseBrowsers.
+# library/browsertype-launch
+BT-005      The userDataDir option of browserType.launch() is not in the .NET API: upstream passes it with "as any".
+BT-006      Checks the message "Pass userDataDir parameter to 'browserType.launchPersistentContext": the driver words it for .NET on purpose, 'BrowserType.LaunchPersistentContextAsync(userDataDir, options)'.
+BT-007      The port option of browserType.launch() is not in the .NET API: upstream passes it with "as any".
+BT-008      The port option of browserType.launchPersistentContext() is not in the .NET API: upstream passes it with "as any".
+BT-012      The __testHookBeforeCreateBrowser option is a function of the Node.js client internals, not in the .NET API.
+BT-013      The __testHookBeforeCreateBrowser option is a function of the Node.js client internals, not in the .NET API.
+BT-014      Passes the Node.js process object as an unknown option (@ts-expect-error): the typed .NET options can not express it.
+# library/browsertype-launch-selenium
+library/browsertype-launch-selenium Every test passes the __testHookSeleniumRemoteURL option of launch(), which is not in the .NET API, or starts a driver with oop.start() of the Node.js package (BT-103).
+# library/chromium/chromium
+CR-001      The serviceworker event of BrowserContext is not in the .NET API.
+CR-002      The serviceworker event of BrowserContext is not in the .NET API.
+CR-003      The serviceworker event of BrowserContext is not in the .NET API.
+CR-004      The serviceworker event of BrowserContext is not in the .NET API.
+CR-005      browserContext.serviceWorkers() and the serviceworker event of BrowserContext are not in the .NET API.
+CR-006      The serviceworker event of BrowserContext is not in the .NET API.
+CR-008      The serviceworker event of BrowserContext is not in the .NET API.
+CR-010      request.serviceWorker() and the serviceworker event of BrowserContext are not in the .NET API.
+CR-011      request.serviceWorker() and the serviceworker event of BrowserContext are not in the .NET API.
+CR-014      The serviceworker event of BrowserContext is not in the .NET API.
+CR-015      The serviceworker event of BrowserContext is not in the .NET API.
+CR-016      request.serviceWorker() and the serviceworker event of BrowserContext are not in the .NET API.
+CR-017      request.serviceWorker() and the serviceworker event of BrowserContext are not in the .NET API.
+CR-018      request.serviceWorker() and the serviceworker event of BrowserContext are not in the .NET API.
+CR-019      The serviceworker event of BrowserContext is not in the .NET API.
+CR-020      request.serviceWorker() and the serviceworker event of BrowserContext are not in the .NET API.
+CR-021      The serviceworker event of BrowserContext is not in the .NET API.
+CR-024      Sets process.env.PLAYWRIGHT_DISABLE_SERVICE_WORKER_NETWORK of the Node.js process that runs the client and the driver during the test; the .NET driver is another process, which reads its environment when it starts. It also uses request.serviceWorker() and the serviceworker event of BrowserContext, which are not in the .NET API.
+CR-025      The serviceworker event of BrowserContext is not in the .NET API.
+CR-026      The serviceworker event of BrowserContext is not in the .NET API.
+CR-032      Counts the CDP sessions of the server browser through toImpl(browser)._connection._sessions, which only the Node.js tests can reach.
+# library/chromium/connect-over-cdp
+CD-005      Reads options.artifactsDir of the server browser through toImpl(), which only the Node.js tests can reach.
+CD-006      browserType.launchServer() is not in the .NET API.
+CD-007      Checks options.artifactsDir and options.tracesDir of the server browser through toImpl(), which only the Node.js tests can reach.
+CD-011      The serviceworker event of BrowserContext and browserContext.serviceWorkers() are not in the .NET API.
+CD-016      Compares the User-Agent header with getUserAgent() of the Node.js package internals (coreBundle), which a .NET test can not call.
+CD-018      Sets process.env.NODE_TLS_REJECT_UNAUTHORIZED of the Node.js process that runs the client and the driver during the test; the .NET driver is another process, which reads its environment when it starts.
+CD-024      Sets process.env.HTTP_PROXY of the Node.js process that runs the client and the driver during the test; the .NET driver is another process, which reads its environment when it starts.
+CD-025      Sets process.env.HTTP_PROXY of the Node.js process that runs the client and the driver during the test; the .NET driver is another process, which reads its environment when it starts.
+CD-030      Reads _isBrowserCollocatedWithServer of the server browser through toImpl(), which only the Node.js tests can reach.
+CD-032      Runs evaluateExpression in the utility world through toImpl(), which only the Node.js tests can reach.
+CD-036      Passes a WebSocketTransport of the server internals (coreBundle) to connectOverCDP(); ConnectOverCDPAsync() of the .NET API takes an endpoint URL.
+# library/chromium/connect-to-worker
+library/chromium/connect-to-worker  browserType._connectToWorker() and worker._disconnect() are internal methods of the Node.js client, not in the .NET API.
+# library/chromium/extensions
+CR-036      context.serviceWorkers() and the 'serviceworker' event of the context are not in the .NET API.
+CR-037      context.serviceWorkers() and the 'serviceworker' event of the context are not in the .NET API.
+CR-038      context.serviceWorkers() and the 'serviceworker' event of the context are not in the .NET API.
+CR-039      context.serviceWorkers() and the 'serviceworker' event of the context are not in the .NET API.
+CR-041      context.serviceWorkers() and the 'serviceworker' event of the context are not in the .NET API.
+# library/chromium/launcher
+CR-033      browserType.launchServer() is not in the .NET API.
+CR-034      browserType.launchServer() is not in the .NET API.
+# library/chromium/session
+CD-040      Passes a context and a plain object to newCDPSession() (@ts-expect-error): NewCDPSessionAsync takes an IPage or an IFrame only.
+CD-041      page.coverage is not in the .NET API.
+CD-049      The 'event' event of CDPSession, for every CDP event, is not in the .NET API: Event(name) gives the events of one CDP method.
+# library/chromium/tracing
+library/chromium/tracing            browser.startTracing() and browser.stopTracing() are not in the .NET API.
+# library/client-certificates
+CC-023      Sets process.env.HTTPS_PROXY of the driver, which runs in the test process upstream. The .NET driver is another process that is already running, so a test can not change its environment (upstream skips the test in such a mode).
+CC-024      Sets process.env.HTTPS_PROXY of the driver, which the proxy option must win over. The .NET driver is another process that is already running, so a test can not change its environment.
+CC-029      TODO harness: needs a TLS server that renegotiates on an open connection to ask for the client certificate (tlsSocket.renegotiate({ requestCert: true })). SslStream.NegotiateClientCertificateAsync, which Kestrel uses too, throws PlatformNotSupportedException on macOS.
+# library/debugger
+DB-004      debugger._enable() and the 'apicallsupdated' event are internals of the Node.js client, not in the .NET API.
+DB-005      debugger._enable() and the 'apicallsupdated' event are internals of the Node.js client, not in the .NET API.
+DB-006      debugger._enable(), the 'apicallsupdated' event and page._wrapApiCall() are internals of the Node.js client, not in the .NET API.
+DB-007      page._wrapApiCall() is an internal of the Node.js client, not in the .NET API.
+DB-008      debugger._enable() and the 'apicallsupdated' event are internals of the Node.js client, not in the .NET API.
+DB-009      debugger._enable() and the 'apicallsupdated' event are internals of the Node.js client, not in the .NET API.
+DB-010      debugger._enable() is an internal of the Node.js client, not in the .NET API.
+# library/defaultbrowsercontext-2
+DC-030      Reads the default arguments of the browser through toImpl(browserType).defaultArgs(), which only the Node.js tests can reach.
+DC-031      Passes a function as the __testHookBeforeCreateBrowser option of launchPersistentContext(), a hook of the Node.js client that the .NET API does not have.
+DC-032      Passes a function as the __testHookBeforeCreateBrowser option of launchPersistentContext(), a hook of the Node.js client that the .NET API does not have.
+DC-034      page.coverage is not in the .NET API.
+DC-036      Passes a function as the __testHookOnConnectToBrowser option of launchPersistentContext(), a hook of the Node.js client that the .NET API does not have.
+DC-038      Reads the default user agent through browser._channel.defaultUserAgentForTest(), a channel of the Node.js client that the .NET API does not expose.
+# library/download
+DO-025      Kills the browser through browser._channel.killForTests(), a channel of the Node.js client that the .NET API does not expose.
+# library/geolocation
+GE-004      Calls setGeolocation() without latitude (@ts-expect-error); Geolocation.Latitude is a float in .NET and can not be missing.
+GE-006      Passes a geolocation without longitude (@ts-expect-error); Geolocation.Longitude is a float in .NET and can not be missing.
+# library/global-fetch
+FE-027      Masks the user agent with getPlaywrightVersion() of the Node.js client (coreBundle) and expects it to end with 'node/X.X'; the .NET client names its own language and runtime there.
+FE-028      Calls playwright._instrumentation.runBeforeCreateRequestContext(), an internal of the Node.js client.
+FE-046      Posts an object with a toJSON() function, which must be called while post() is on the stack and not in the driver of the same process; .NET has no toJSON, and its driver is another process.
+FE-051      TODO harness: needs req.pause() on the test server, a request whose body the server does not read: Server always reads the whole body before the handler can answer and destroy the socket.
+# library/global-fetch-cookie
+FE-054      Passes a function as the __testHookLookup option of get(), a DNS lookup hook that the Node.js client hands to the driver in the same process; the .NET API has no such option, and a.b.one.com does not resolve without it.
+FE-059      Passes a function as the __testHookLookup option of get(), a DNS lookup hook that the Node.js client hands to the driver in the same process; the .NET API has no such option, and one.com does not resolve to the test server without it.
+FE-067      Passes a function as the __testHookLookup option of get(), a DNS lookup hook that the Node.js client hands to the driver in the same process; the .NET API has no such option, and a.b.one.com does not resolve without it.
+FE-068      Passes a function as the __testHookLookup option of get(), a DNS lookup hook that the Node.js client hands to the driver in the same process; the .NET API has no such option, and a.b.one.com does not resolve without it.
+FE-069      Passes a function as the __testHookLookup option of get(), a DNS lookup hook that the Node.js client hands to the driver in the same process; the .NET API has no such option, and a.b.one.com does not resolve without it.
+FE-072      Passes a function as the __testHookLookup option of get(), a DNS lookup hook that the Node.js client hands to the driver in the same process; the .NET API has no such option, and the test relies on it for the first request to a.b.localhost.
+FE-080      Passes a function as the __testHookLookup option of get(), a DNS lookup hook that the Node.js client hands to the driver in the same process; the .NET API has no such option, and a.b.one.com does not resolve without it.
+FE-083      Passes a function as the __testHookLookup option of get(), a DNS lookup hook that the Node.js client hands to the driver in the same process; the .NET API has no such option, and a.b.one.com does not resolve without it.
+FE-085      Passes a function as the __testHookLookup option of get(), a DNS lookup hook that the Node.js client hands to the driver in the same process; the .NET API has no such option, and www.a.b.one.com does not resolve without it.
+# library/har
+HA-006      dotnet: race: the response of /delayed-fetch can come before the test waits for it. Upstream blocks the event loop of Node.js with a busy loop, so that the client and the driver, which run in the test process, see the request late; in .NET the busy loop blocks neither the driver nor the dispatcher thread of the client.
+HA-066      The resourcesDir option of tracing.startHar() is not in the .NET API.
+HA-067      The resourcesDir option of tracing.startHar() is not in the .NET API.
+# library/har-websocket
+HA-105      dotnet: race: frameSent and frameReceived of the WebSocket can come before the test subscribes to them. The driver sends the 'webSocket' event and the four frames in a row, and the test waits for them one after the other.
+HA-112      Sets process.env.PLAYWRIGHT_HAR_NO_WEBSOCKET_FRAMES during the test for the driver, which runs in the test process upstream. The driver of .NET is another process, started before the test.
+# library/launcher
+BT-018      playwright.errors is not in the .NET API: the TimeoutError class is TimeoutException.
+BT-020      The __testHookGracefullyClose launch option is a function, which the .NET API can not pass.
+# library/locator-highlight
+LO-194      The style option of locator.highlight() is a string in the .NET API, not an object.
+# library/multiclient
+MC-005      page.coverage is not in the .NET API.
+MC-006      page.coverage is not in the .NET API.
+MC-015      browserType.launchServer() is not in the .NET API, and the remote server of the harness has no _userDataDir option.
+MC-019      Calls context._startRecording() and context._stopRecording(), internals of the Node.js client.
+# library/network-timeout
+library/network-timeout             Tests utils.httpRequest() of the coreBundle of the driver, not the client API.
+# library/page-clock
+CK-039      Calls clock.pauseAt() with a number of milliseconds outside of the range of a date (Date.now() * 1_000_000): PauseAtAsync takes a DateTime, which ends in the year 9999, or a string.
+CK-048      Calls clock.runFor(0.5): RunForAsync takes a long or a string, not a fraction of a millisecond.
+# library/proxy
+PR-001      Passes a number as proxy.server (@ts-expect-error): Proxy.Server is a string in .NET.
+# library/proxy-pattern
+library/proxy-pattern               Tests parsePattern() of the driver (utils of coreBundle), which only the Node.js tests can import.
+# library/screenshot
+SS-080      Passes a function as the __testHookBeforeScreenshot option of screenshot(), a hook of the Node.js client that the .NET API does not have.
+SS-086      Passes a function as the __testHookBeforeScreenshot option of screenshot(), a hook of the Node.js client that the .NET API does not have.
+SS-087      Passes a function as the __testHookAfterScreenshot option of screenshot(), a hook of the Node.js client that the .NET API does not have.
+SS-089      Passes a function as the __testHookBeforeScreenshot option of screenshot(), a hook of the Node.js client that the .NET API does not have.
+SS-094      expect(page).toHaveScreenshot() is not in the .NET API.
+# library/selectors-register
+SE-161      Registers the engines on require('@playwright/test').selectors, the global instance of the Node.js package. .NET has no global Playwright instance.
+# library/slowmo
+library/slowmo                      Replaces dispatcherConnection._doSlowMo of the server through toImpl(), which only the Node.js tests can reach.
+# library/tracing
+TR-001      Wraps response.internalBody() of the server context through toImplInWorkerScope(), which only the Node.js tests can reach.
+TR-019      Reads the private _stacksId of the Tracing object of the Node.js client, for the directory of the stack session.
+TR-021      Sets the private _defaultTracesDir of the Playwright object of the Node.js client, which the .NET client does not have.
+# library/video
+VI-002      recordVideo without a dir (recordVideo: {}) can not be written in .NET: the options are RecordVideoDir, RecordVideoSize and RecordVideoFps, and the client sends no recordVideo without RecordVideoDir.
+VI-024      Kills the browser through browser._channel.killForTests(), a channel of the Node.js client that the .NET API does not expose.
+# library/web-socket
+WS-008      dotnet: race: framereceived can come before the test subscribes to it
+WS-009      WebSocket.waitForEvent() is not in the .NET API.
+WS-010      WebSocket.waitForEvent() is not in the .NET API.
+WS-012      TODO harness: needs a standalone WebSocket server, WebSocketServer of the ws package (address(), once('connection'), socket.on('message'), close()).

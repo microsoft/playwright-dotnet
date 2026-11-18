@@ -88,7 +88,8 @@ public class PlaywrightTestAttribute : TestAttribute, IWrapSetUpTearDown
     /// <returns>the wrapped test command</returns>
     public TestCommand Wrap(TestCommand command)
     {
-        command = new TimeoutCommand(command, _timeout ?? TestConstants.DefaultTestTimeout);
+        var timeout = _timeout ?? TestConstants.DefaultTestTimeout;
+        command = new TimeoutCommand(command, () => timeout);
         if (Environment.GetEnvironmentVariable("CI") != null)
         {
             command = new RetryCommand(command, 3);
@@ -199,9 +200,9 @@ public class PlaywrightTestAttribute : TestAttribute, IWrapSetUpTearDown
 
     public class TimeoutCommand : BeforeAndAfterTestCommand
     {
-        private readonly int _timeout;
+        private readonly Func<int> _timeout;
 
-        internal TimeoutCommand(TestCommand innerCommand, int timeout) : base(innerCommand)
+        internal TimeoutCommand(TestCommand innerCommand, Func<int> timeout) : base(innerCommand)
         {
             _timeout = timeout;
         }
@@ -212,17 +213,24 @@ public class PlaywrightTestAttribute : TestAttribute, IWrapSetUpTearDown
             {
                 using (new TestExecutionContext.IsolatedContext())
                 {
-                    var testExecution = Task.Run(() => innerCommand.Execute(TestExecutionContext.CurrentContext));
-                    var timedOut = Task.WaitAny([testExecution], _timeout) == -1;
+                    // An instance per test case is made by the inner command, in this context.
+                    var isolatedContext = TestExecutionContext.CurrentContext;
+                    var testExecution = Task.Run(() => innerCommand.Execute(isolatedContext));
+                    var clock = System.Diagnostics.Stopwatch.StartNew();
+                    var timedOut = false;
+                    while (!timedOut && Task.WaitAny([testExecution], 100) == -1)
+                    {
+                        timedOut = clock.ElapsedMilliseconds >= _timeout();
+                    }
 
                     if (timedOut)
                     {
                         context.CurrentResult.SetResult(
                             ResultState.Failure,
-                            $"Test exceeded Timeout value of {_timeout}ms");
+                            $"Test exceeded Timeout value of {_timeout()}ms");
                         // When the timeout is reached the TearDown methods are not called. This is a best-effort
                         // attempt to call them and close the browser / http server.
-                        foreach (var tearDown in GetHackyTearDownMethods(context))
+                        foreach (var tearDown in GetHackyTearDownMethods(isolatedContext))
                         {
                             tearDown();
                         }
