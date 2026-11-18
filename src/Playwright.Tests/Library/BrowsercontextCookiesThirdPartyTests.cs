@@ -325,9 +325,9 @@ public class BrowsercontextCookiesThirdPartyTests : UpstreamBrowserTest
     }
 
     [UpstreamTest("CO-055 save/load third party 'Partitioned;' cookies")]
-    [LocalFixme("dotnet: BrowserContextCookiesResult and Cookie have no _crHasCrossSiteAncestor: a partitioned cookie that goes from CookiesAsync to AddCookiesAsync has a cross-site ancestor for Chromium, and the top-level page does not send it (only in chromium)")]
     public async Task SaveLoadThirdPartyPartitionedCookies()
     {
+        Info.Fixme(BrowserName == "chromium", ".NET: BrowserContextCookiesResult and Cookie have no _crHasCrossSiteAncestor: a partitioned cookie that goes from CookiesAsync to AddCookiesAsync has a cross-site ancestor for Chromium, and the top-level page does not send it");
         var page = await PageFixture();
         Info.Fixme(BrowserName == "firefox" && !IsBidi, "Firefox cookie partitioning is disabled in Firefox(Juggler).");
         Info.Fixme(BrowserName == "webkit" && !IsMac, "Linux and Windows WebKit builds do not partition third-party cookies at all.");
@@ -412,9 +412,9 @@ public class BrowsercontextCookiesThirdPartyTests : UpstreamBrowserTest
     }
 
     [UpstreamTest("CO-056 add 'Partitioned;' cookie via API")]
-    [LocalFixme("dotnet: Cookie has no _crHasCrossSiteAncestor, which upstream sets to false for top-level-partitioned: the cookie has a cross-site ancestor for Chromium, and the top-level page does not send it (only in chromium)")]
     public async Task AddPartitionedCookieViaAPI()
     {
+        Info.Fixme(BrowserName == "chromium", ".NET: Cookie has no _crHasCrossSiteAncestor, which upstream sets to false for top-level-partitioned: the cookie has a cross-site ancestor for Chromium, and the top-level page does not send it");
         var page = await PageFixture();
         var context = await ContextFixture();
         AddCommonCookieHandlers(HttpsServer, Urls);
@@ -593,9 +593,9 @@ public class BrowsercontextCookiesThirdPartyTests : UpstreamBrowserTest
     }
 
     [UpstreamTest("CO-058 top level 'Partitioned;' cookie and same origin iframe")]
-    [LocalFixme("dotnet: BrowserContextCookiesResult and Cookie have no _crHasCrossSiteAncestor: a partitioned cookie that goes from CookiesAsync to AddCookiesAsync has a cross-site ancestor for Chromium, and the top-level page does not send it (only in chromium)")]
     public async Task TopLevelPartitionedCookieAndSameOriginIframe()
     {
+        Info.Fixme(BrowserName == "chromium", ".NET: BrowserContextCookiesResult and Cookie have no _crHasCrossSiteAncestor: a partitioned cookie that goes from CookiesAsync to AddCookiesAsync has a cross-site ancestor for Chromium, and the top-level page does not send it");
         var page = await PageFixture();
         AddCommonCookieHandlers(HttpsServer, Urls);
         HttpsServer.SetRoute("/set-cookie.html", (req, res) =>

@@ -771,9 +771,9 @@ public class HarTests : UpstreamBrowserTest
     }
 
     [UpstreamTest("HA-042 should have security details")]
-    [LocalFixme("harness: the HTTPS server of the harness negotiates TLS 1.2 on macOS, where the SslStream of .NET has no TLS 1.3 for a server: the protocol is 'TLS 1.2', upstream expects 'TLS 1.3' (only on darwin)")]
     public async Task ShouldHaveSecurityDetails()
     {
+        Info.Fixme(IsMac, ".NET: the HTTPS server of the harness negotiates TLS 1.2 on macOS, where the SslStream of .NET has no TLS 1.3 for a server: the protocol is 'TLS 1.2', upstream expects 'TLS 1.3'");
         Info.Fixme(BrowserName == "webkit" && Platform == "win32" && Channel != "webkit-wsl");
         Info.Skip(IsFrozenWebkit);
 
@@ -865,9 +865,9 @@ public class HarTests : UpstreamBrowserTest
     }
 
     [UpstreamTest("HA-046 should return security details directly from response")]
-    [LocalFixme("harness: the HTTPS server of the harness negotiates TLS 1.2 on macOS, where the SslStream of .NET has no TLS 1.3 for a server: the protocol is 'TLS 1.2', upstream expects 'TLS 1.3' (only on darwin)")]
     public async Task ShouldReturnSecurityDetailsDirectlyFromResponse()
     {
+        Info.Fixme(IsMac, ".NET: the HTTPS server of the harness negotiates TLS 1.2 on macOS, where the SslStream of .NET has no TLS 1.3 for a server: the protocol is 'TLS 1.2', upstream expects 'TLS 1.3'");
         Info.Skip(IsFrozenWebkit);
 
         var context = await ContextFactory(new() { IgnoreHTTPSErrors = true });
