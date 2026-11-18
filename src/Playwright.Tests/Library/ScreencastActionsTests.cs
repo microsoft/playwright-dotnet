@@ -35,7 +35,6 @@ public class ScreencastActionsTests : UpstreamBrowserTest
     };
 
     [UpstreamTest("SC-016 should show annotation on click")]
-    [LocalFixme("dotnet: ToHaveTextAsync(Regex) sends ignoreCase: false when the IgnoreCase option is not set, upstream sends no ignoreCase, so the driver removes the 'i' flag of the regex and the title 'Click Locator(\"button\")' does not match")]
     public async Task ShouldShowAnnotationOnClick()
     {
         var context = await Browser.NewContextAsync(ContextOptions());
@@ -160,7 +159,6 @@ public class ScreencastActionsTests : UpstreamBrowserTest
     }
 
     [UpstreamTest("SC-020 should annotate fill action")]
-    [LocalFixme("dotnet: ToHaveTextAsync(Regex) sends ignoreCase: false when the IgnoreCase option is not set, upstream sends no ignoreCase, so the driver removes the 'i' flag of the regex and the title 'Fill \"hello\" Locator(\"textarea\")' does not match")]
     public async Task ShouldAnnotateFillAction()
     {
         var context = await Browser.NewContextAsync(ContextOptions());
