@@ -695,7 +695,6 @@ public class BrowsercontextHarTests : UpstreamBrowserTest
     }
 
     [UpstreamTest("HA-098 page.unrouteAll should stop page.routeFromHAR")]
-    [LocalFixme("dotnet: Page.UnrouteAllAsync with Behavior = Wait does not send setNetworkInterceptionPatterns, as the Node.js client and BrowserContext.UnrouteAllAsync do (Page.UnrouteInternalAsync returns after it stops the handlers); the GotoAsync that follows fails with 'Navigation to \"http://localhost:<port>/empty.html\" is interrupted by another navigation to \"chrome-error://chromewebdata/\"' (only in chromium)")]
     public async Task PageUnrouteAllShouldStopPageRouteFromHAR()
     {
         var harPath = Asset("har-fulfill.har");
