@@ -355,7 +355,6 @@ public class UnrouteBehaviorTests : UpstreamPageTest
     }
 
     [UpstreamTest("RO-200 should not continue requests in flight (page)")]
-    [LocalFixme("dotnet: Page.OnRouteAsync turns the interception off when a handler ends and the routes are empty, also after unrouteAll() replaced them and still waits for the other handlers (upstream checks routeHandlers === this._routes), so the request '/b' in flight is continued: its body is 'File not found: <assets>/b'")]
     public async Task ShouldNotContinueRequestsInFlightPage()
     {
         var routePromise = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
@@ -379,7 +378,6 @@ public class UnrouteBehaviorTests : UpstreamPageTest
     }
 
     [UpstreamTest("RO-201 should not continue requests in flight (context)")]
-    [LocalFixme("dotnet: BrowserContext.OnRouteAsync turns the interception off when a handler ends and the routes are empty, also after unrouteAll() replaced them and still waits for the other handlers (upstream checks routeHandlers === this._routes), so the request '/b' in flight is continued: its body is 'File not found: <assets>/b'")]
     public async Task ShouldNotContinueRequestsInFlightContext()
     {
         var routePromise = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);

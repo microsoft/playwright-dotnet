@@ -525,7 +525,10 @@ internal class Page : ChannelOwner, IPage
     public Task CloseAsync(PageCloseOptions? options = default) => WrapApiCallAsync(async () =>
     {
         _closeReason = options?.Reason;
-        CloseWasCalled = true;
+        if (options?.RunBeforeUnload != true)
+        {
+            CloseWasCalled = true;
+        }
         try
         {
             if (OwnedContext != null)
@@ -1327,7 +1330,6 @@ internal class Page : ChannelOwner, IPage
         {
             var tasks = removed.Select(routeHandler => routeHandler.StopAsync(behavior.Value));
             await Task.WhenAll(tasks).ConfigureAwait(false);
-            return;
         }
         await UpdateInterceptionAsync().ConfigureAwait(false);
     }
@@ -1369,7 +1371,8 @@ internal class Page : ChannelOwner, IPage
     private async Task OnRouteAsync(Route route)
     {
         route._context = Context;
-        foreach (var routeHandler in _routes.ToArray())
+        var routes = _routes;
+        foreach (var routeHandler in routes.ToArray())
         {
             // If the page was closed we stall all requests right away.
             if (CloseWasCalled || Context.ClosingOrClosed)
@@ -1390,7 +1393,7 @@ internal class Page : ChannelOwner, IPage
             }
             var handled = await routeHandler.HandleAsync(route).ConfigureAwait(false);
             _connection.Dispatcher.AssertCurrent();
-            if (_routes.Count == 0)
+            if (ReferenceEquals(routes, _routes) && _routes.Count == 0)
             {
                 UpdateInterceptionAsync().IgnoreException();
             }

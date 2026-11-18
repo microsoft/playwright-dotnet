@@ -729,8 +729,8 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
     {
         route._context = this;
         var page = route._request.SafePage;
-        var routeHandlers = _routes.ToArray();
-        foreach (var routeHandler in routeHandlers)
+        var routes = _routes;
+        foreach (var routeHandler in routes.ToArray())
         {
             // If the page or the context was closed we stall all requests right away.
             if (page?.CloseWasCalled == true || ClosingOrClosed)
@@ -751,7 +751,7 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
             }
             var handled = await routeHandler.HandleAsync(route).ConfigureAwait(false);
             _connection.Dispatcher.AssertCurrent();
-            if (_routes.Count == 0)
+            if (ReferenceEquals(routes, _routes) && _routes.Count == 0)
             {
                 UpdateInterceptionAsync().IgnoreException();
             }

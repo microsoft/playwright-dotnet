@@ -228,7 +228,6 @@ public class BeforeunloadTests : UpstreamBrowserTest
     }
 
     [UpstreamTest("BU-012 does not get stalled by beforeUnload")]
-    [LocalFixme("dotnet: Page.CloseAsync sets CloseWasCalled also with RunBeforeUnload (the Node.js client does not), so the routes of the page that stays open are not handled any more and the second fetch never ends")]
     public async Task DoesNotGetStalledByBeforeUnload()
     {
         var page = await PageFixture();
