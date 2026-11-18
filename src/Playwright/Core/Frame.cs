@@ -179,15 +179,15 @@ internal class Frame : ChannelOwner, IFrame
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task<IReadOnlyList<string>> SelectOptionAsync(string selector, string values, FrameSelectOptionOptions? options = default)
-        => SelectOptionAsync(selector, new[] { values }, options);
+        => SelectOptionAsync(selector, values == null ? null! : new[] { values }, options);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task<IReadOnlyList<string>> SelectOptionAsync(string selector, IEnumerable<string> values, FrameSelectOptionOptions? options = default)
-        => SelectOptionAsync(selector, values.Select(valueOrLabel => new SelectOptionValueProtocol() { ValueOrLabel = valueOrLabel }), options);
+        => SelectOptionAsync(selector, values?.Select(SelectOptionValueProtocol.From), options);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task<IReadOnlyList<string>> SelectOptionAsync(string selector, IElementHandle values, FrameSelectOptionOptions? options = default)
-        => SelectOptionAsync(selector, new[] { values }, options);
+        => SelectOptionAsync(selector, values == null ? null! : new[] { values }, options);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task<IReadOnlyList<string>> SelectOptionAsync(string selector, IEnumerable<IElementHandle> values, FrameSelectOptionOptions? options = default)
@@ -196,7 +196,7 @@ internal class Frame : ChannelOwner, IFrame
             new Dictionary<string, object?>
             {
                 ["selector"] = selector,
-                ["elements"] = values.Select(x => x as ElementHandle),
+                ["elements"] = SelectOptionValueProtocol.Check(values)?.Select(x => x as ElementHandle),
                 ["strict"] = options?.Strict,
                 ["force"] = options?.Force,
             },
@@ -204,19 +204,19 @@ internal class Frame : ChannelOwner, IFrame
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task<IReadOnlyList<string>> SelectOptionAsync(string selector, SelectOptionValue values, FrameSelectOptionOptions? options = default)
-        => SelectOptionAsync(selector, new[] { values }, options);
+        => SelectOptionAsync(selector, values == null ? null! : new[] { values }, options);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task<IReadOnlyList<string>> SelectOptionAsync(string selector, IEnumerable<SelectOptionValue> values, FrameSelectOptionOptions? options = default)
-        => SelectOptionAsync(selector, values.Select(value => SelectOptionValueProtocol.From(value)), options);
+        => SelectOptionAsync(selector, values?.Select(SelectOptionValueProtocol.From), options);
 
-    internal async Task<IReadOnlyList<string>> SelectOptionAsync(string selector, IEnumerable<SelectOptionValueProtocol> values, FrameSelectOptionOptions? options = default)
+    internal async Task<IReadOnlyList<string>> SelectOptionAsync(string selector, IEnumerable<SelectOptionValueProtocol?>? values, FrameSelectOptionOptions? options = default)
         => (await SendMessageToServerAsync(
             "selectOption",
             new Dictionary<string, object?>
             {
                 ["selector"] = selector,
-                ["options"] = values,
+                ["options"] = SelectOptionValueProtocol.Check(values),
 #pragma warning disable CS0612 // Type or member is obsolete
                 ["noWaitAfter"] = options?.NoWaitAfter,
 #pragma warning restore CS0612 // Type or member is obsolete
@@ -1206,14 +1206,39 @@ internal class SelectOptionValueProtocol
     [JsonPropertyName("index")]
     public int? Index { get; set; }
 
-    internal static SelectOptionValueProtocol From(SelectOptionValue value)
+    internal static SelectOptionValueProtocol? From(string? valueOrLabel)
+        => valueOrLabel == null ? null : new() { ValueOrLabel = valueOrLabel };
+
+    internal static SelectOptionValueProtocol? From(SelectOptionValue? value)
     {
+        if (value == null)
+        {
+            return null;
+        }
         return new SelectOptionValueProtocol
         {
             Value = value.Value,
             Label = value.Label,
             Index = value.Index,
         };
+    }
+
+    internal static List<T>? Check<T>(IEnumerable<T?>? values)
+        where T : class
+    {
+        var list = values?.ToList();
+        if (list == null || list.Count == 0)
+        {
+            return null;
+        }
+        for (var i = 0; i < list.Count; i++)
+        {
+            if (list[i] == null)
+            {
+                throw new PlaywrightException($"options[{i}]: expected object, got null");
+            }
+        }
+        return list!;
     }
 }
 

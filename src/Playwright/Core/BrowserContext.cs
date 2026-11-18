@@ -571,7 +571,7 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
             "setExtraHTTPHeaders",
             new Dictionary<string, object?>
             {
-                ["headers"] = headers.Select(kv => new HeaderEntry { Name = kv.Key, Value = kv.Value }),
+                ["headers"] = headers.ToExtraHTTPHeaders(),
             });
 
     [MethodImpl(MethodImplOptions.NoInlining)]

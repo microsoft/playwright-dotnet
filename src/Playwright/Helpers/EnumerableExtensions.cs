@@ -42,6 +42,18 @@ internal static class EnumerableExtensions
         return input.Select(x => new NameValue() { Name = x.Key, Value = x.Value }).ToArray();
     }
 
+    public static IEnumerable<NameValue>? ToExtraHTTPHeaders(this IEnumerable<KeyValuePair<string, string>>? input)
+    {
+        if (input == null)
+        {
+            return null;
+        }
+
+        return input.Select(x => x.Value != null
+            ? new NameValue() { Name = x.Key, Value = x.Value }
+            : throw new PlaywrightException($"Expected value of header \"{x.Key}\" to be String, but \"object\" is found.")).ToArray();
+    }
+
     public static async Task<IEnumerable<TResult>> SelectAsync<TSource, TResult>(this IEnumerable<TSource> source, Func<TSource, Task<TResult>> method)
     {
         return await Task.WhenAll(source.Select(x => method(x))).ConfigureAwait(false);

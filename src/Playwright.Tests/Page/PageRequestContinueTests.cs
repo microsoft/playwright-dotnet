@@ -74,7 +74,6 @@ public class PageRequestContinueTests : UpstreamPageTest
     }
 
     [UpstreamTest("RO-060 should delete header with undefined value")]
-    [LocalFixme("dotnet: route.ContinueAsync() with a null header value fails with \"headers[N].value: expected string, got undefined\"; the Node.js client leaves out a header whose value is undefined")]
     public async Task ShouldDeleteHeaderWithUndefinedValue()
     {
         await Page.GotoAsync(Server.Prefix + "/empty.html");
@@ -700,7 +699,6 @@ public class PageRequestContinueTests : UpstreamPageTest
     }
 
     [UpstreamTest("RO-086 continue should delete headers on redirects")]
-    [LocalFixme("dotnet: route.ContinueAsync() with a null header value fails with \"headers[N].value: expected string, got undefined\"; the Node.js client leaves out a header whose value is undefined")]
     public async Task ContinueShouldDeleteHeadersOnRedirects()
     {
         await Page.GotoAsync(Server.Prefix + "/empty.html");

@@ -657,15 +657,15 @@ internal class Page : ChannelOwner, IPage
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task<IReadOnlyList<string>> SelectOptionAsync(string selector, string values, PageSelectOptionOptions? options = default)
-        => SelectOptionAsync(selector, new[] { values }, options);
+        => SelectOptionAsync(selector, values == null ? null! : new[] { values }, options);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task<IReadOnlyList<string>> SelectOptionAsync(string selector, IEnumerable<string> values, PageSelectOptionOptions? options = default)
-        => SelectOptionAsync(selector, values.Select(x => new SelectOptionValueProtocol() { ValueOrLabel = x }), options);
+        => SelectOptionAsync(selector, values?.Select(SelectOptionValueProtocol.From), options);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task<IReadOnlyList<string>> SelectOptionAsync(string selector, IElementHandle values, PageSelectOptionOptions? options = default)
-        => SelectOptionAsync(selector, new[] { values }, options);
+        => SelectOptionAsync(selector, values == null ? null! : new[] { values }, options);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task<IReadOnlyList<string>> SelectOptionAsync(string selector, IEnumerable<IElementHandle> values, PageSelectOptionOptions? options = default)
@@ -681,13 +681,13 @@ internal class Page : ChannelOwner, IPage
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task<IReadOnlyList<string>> SelectOptionAsync(string selector, SelectOptionValue values, PageSelectOptionOptions? options = default)
-        => SelectOptionAsync(selector, new[] { values }, options);
+        => SelectOptionAsync(selector, values == null ? null! : new[] { values }, options);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task<IReadOnlyList<string>> SelectOptionAsync(string selector, IEnumerable<SelectOptionValue> values, PageSelectOptionOptions? options = default)
-        => SelectOptionAsync(selector, values.Select(x => SelectOptionValueProtocol.From(x)), options);
+        => SelectOptionAsync(selector, values?.Select(SelectOptionValueProtocol.From), options);
 
-    internal Task<IReadOnlyList<string>> SelectOptionAsync(string selector, IEnumerable<SelectOptionValueProtocol> values, PageSelectOptionOptions? options = default)
+    internal Task<IReadOnlyList<string>> SelectOptionAsync(string selector, IEnumerable<SelectOptionValueProtocol?>? values, PageSelectOptionOptions? options = default)
         => MainFrame.SelectOptionAsync(selector, values, new()
         {
 #pragma warning disable CS0612 // Type or member is obsolete
@@ -768,7 +768,7 @@ internal class Page : ChannelOwner, IPage
             "setExtraHTTPHeaders",
             new Dictionary<string, object?>
             {
-                ["headers"] = headers.Select(kv => new HeaderEntry { Name = kv.Key, Value = kv.Value }),
+                ["headers"] = headers.ToExtraHTTPHeaders(),
             });
 
     [MethodImpl(MethodImplOptions.NoInlining)]

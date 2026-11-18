@@ -116,7 +116,7 @@ internal class BrowserType : ChannelOwner, IBrowserType
             ["geolocation"] = options.Geolocation,
             ["locale"] = options.Locale,
             ["permissions"] = options.Permissions,
-            ["extraHTTPHeaders"] = options.ExtraHTTPHeaders?.ToProtocol(),
+            ["extraHTTPHeaders"] = options.ExtraHTTPHeaders.ToExtraHTTPHeaders(),
             ["offline"] = options.Offline,
             ["httpCredentials"] = Browser.ToHttpCredentialsProtocol(options.HttpCredentials, options.HttpCredentialsList),
             ["colorScheme"] = options.ColorScheme == ColorScheme.Null ? "no-override" : options.ColorScheme,

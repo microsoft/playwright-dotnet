@@ -342,22 +342,22 @@ internal class ElementHandle : JSHandle, IElementHandle
 
     public Task<IReadOnlyList<string>> SelectOptionAsync(string value, ElementHandleSelectOptionOptions? options = default)
 #pragma warning disable CS0612 // Type or member is obsolete
-        => _selectOptionAsync(new[] { new SelectOptionValueProtocol() { ValueOrLabel = value } }, options?.NoWaitAfter, options?.Force, options?.Timeout);
+        => _selectOptionAsync(value == null ? null : new[] { SelectOptionValueProtocol.From(value) }, options?.NoWaitAfter, options?.Force, options?.Timeout);
 #pragma warning restore CS0612 // Type or member is obsolete
 
     public Task<IReadOnlyList<string>> SelectOptionAsync(IElementHandle values, ElementHandleSelectOptionOptions? options = default)
 #pragma warning disable CS0612 // Type or member is obsolete
-        => _selectOptionAsync(new[] { values }, options?.NoWaitAfter, options?.Force, options?.Timeout);
+        => _selectOptionAsync(values == null ? null : new[] { values }, options?.NoWaitAfter, options?.Force, options?.Timeout);
 #pragma warning restore CS0612 // Type or member is obsolete
 
     public Task<IReadOnlyList<string>> SelectOptionAsync(IEnumerable<string> values, ElementHandleSelectOptionOptions? options = default)
 #pragma warning disable CS0612 // Type or member is obsolete
-        => _selectOptionAsync(values.Select(x => new SelectOptionValueProtocol() { ValueOrLabel = x }), options?.NoWaitAfter, options?.Force, options?.Timeout);
+        => _selectOptionAsync(values?.Select(SelectOptionValueProtocol.From), options?.NoWaitAfter, options?.Force, options?.Timeout);
 #pragma warning restore CS0612 // Type or member is obsolete
 
     public Task<IReadOnlyList<string>> SelectOptionAsync(SelectOptionValue values, ElementHandleSelectOptionOptions? options = default)
 #pragma warning disable CS0612 // Type or member is obsolete
-        => _selectOptionAsync(new[] { SelectOptionValueProtocol.From(values) }, options?.NoWaitAfter, options?.Force, options?.Timeout);
+        => _selectOptionAsync(values == null ? null : new[] { SelectOptionValueProtocol.From(values) }, options?.NoWaitAfter, options?.Force, options?.Timeout);
 #pragma warning restore CS0612 // Type or member is obsolete
 
     public Task<IReadOnlyList<string>> SelectOptionAsync(IEnumerable<IElementHandle> values, ElementHandleSelectOptionOptions? options = default)
@@ -367,28 +367,28 @@ internal class ElementHandle : JSHandle, IElementHandle
 
     public Task<IReadOnlyList<string>> SelectOptionAsync(IEnumerable<SelectOptionValue> values, ElementHandleSelectOptionOptions? options = default)
 #pragma warning disable CS0612 // Type or member is obsolete
-        => _selectOptionAsync(values.Select(v => SelectOptionValueProtocol.From(v)), options?.NoWaitAfter, options?.Force, options?.Timeout);
+        => _selectOptionAsync(values?.Select(SelectOptionValueProtocol.From), options?.NoWaitAfter, options?.Force, options?.Timeout);
 #pragma warning restore CS0612 // Type or member is obsolete
 
-    private async Task<IReadOnlyList<string>> _selectOptionAsync(IEnumerable<SelectOptionValueProtocol> values, bool? noWaitAfter, bool? force, float? timeout)
+    private async Task<IReadOnlyList<string>> _selectOptionAsync(IEnumerable<SelectOptionValueProtocol?>? values, bool? noWaitAfter, bool? force, float? timeout)
     {
         return (await SendMessageToServerAsync(
             "selectOption",
             new Dictionary<string, object?>
             {
-                ["options"] = values,
+                ["options"] = SelectOptionValueProtocol.Check(values),
                 ["force"] = force,
             },
             timeout: _frame.Timeout(timeout)).ConfigureAwait(false))!.Value.GetProperty("values").ToObject<string[]>();
     }
 
-    private async Task<IReadOnlyList<string>> _selectOptionAsync(IEnumerable<IElementHandle> values, bool? noWaitAfter, bool? force, float? timeout)
+    private async Task<IReadOnlyList<string>> _selectOptionAsync(IEnumerable<IElementHandle?>? values, bool? noWaitAfter, bool? force, float? timeout)
     {
         return (await SendMessageToServerAsync(
             "selectOption",
             new Dictionary<string, object?>
             {
-                ["elements"] = values,
+                ["elements"] = SelectOptionValueProtocol.Check(values),
                 ["force"] = force,
             },
             timeout: _frame.Timeout(timeout)).ConfigureAwait(false))!.Value.GetProperty("values").ToObject<string[]>();
