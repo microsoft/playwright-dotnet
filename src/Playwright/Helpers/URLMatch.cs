@@ -190,11 +190,11 @@ public class URLMatch
         }
         // Allow http(s) baseURL to match ws(s) urls. Only the scheme changes: the rest of the
         // URL may contain another URL, in its path or in its query.
-        if (baseURL.StartsWith("http://"))
+        if (baseURL.StartsWith("http://", StringComparison.OrdinalIgnoreCase))
         {
             return "ws://" + baseURL.Substring("http://".Length);
         }
-        if (baseURL.StartsWith("https://"))
+        if (baseURL.StartsWith("https://", StringComparison.OrdinalIgnoreCase))
         {
             return "wss://" + baseURL.Substring("https://".Length);
         }

@@ -29,8 +29,11 @@ namespace Microsoft.Playwright.Core;
 
 internal class WebSocketFrame : IWebSocketFrame
 {
+    private readonly bool _isBinary;
+
     internal WebSocketFrame(string payload, bool isBase64)
     {
+        _isBinary = isBase64;
         if (isBase64)
         {
             Binary = Convert.FromBase64String(payload);
@@ -43,5 +46,5 @@ internal class WebSocketFrame : IWebSocketFrame
 
     public byte[] Binary { get; set; }
 
-    public string Text => Encoding.UTF8.GetString(Binary);
+    public string? Text => _isBinary ? null : Encoding.UTF8.GetString(Binary);
 }
