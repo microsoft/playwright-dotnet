@@ -20,6 +20,9 @@ using static Microsoft.Playwright.Tests.Fixtures.Utils;
 
 namespace Microsoft.Playwright.Tests.Page;
 
+// .NET: the message of a failed Expect() has the layout of upstream and names the .NET call:
+// "expect(locator).not.toHaveText(expected) failed" is "Expect(locator).Not.ToHaveTextAsync(expected) failed",
+// and 'Expect "not toHaveText"' in the call log is 'Expect "Not.ToHaveTextAsync"'.
 /// <summary>Port of tests/page/to-match-aria-snapshot.spec.ts.</summary>
 public class ToMatchAriaSnapshotTests : UpstreamPageTest
 {
@@ -63,14 +66,13 @@ public class ToMatchAriaSnapshotTests : UpstreamPageTest
     }
 
     [UpstreamTest("AR-110 should fail page with timeout")]
-    [LocalFixme("dotnet: the message of ToMatchAriaSnapshotAsync is \"Page expected to match Aria snapshot '...'\\nBut was: 'System.Dynamic.ExpandoObject' \\nCall log: ...\"")]
     public async Task ShouldFailPageWithTimeout()
     {
         await Page.SetContentAsync("<h1>title</h1>");
         var e = await Catch(() => Expect(Page).ToMatchAriaSnapshotAsync(@"
     - heading ""wrong""
   ", new() { Timeout = 2000 }));
-        Assert.That(StripAnsi(e.Message), Does.Contain("expect(page).toMatchAriaSnapshot(expected) failed"));
+        Assert.That(StripAnsi(e.Message), Does.Contain("Expect(page).ToMatchAriaSnapshotAsync(expected) failed"));
         Assert.That(StripAnsi(e.Message), Does.Contain("Timeout:  2000ms"));
         Assert.That(StripAnsi(e.Message), Does.Not.Contain("Locator"));
     }
@@ -206,7 +208,6 @@ public class ToMatchAriaSnapshotTests : UpstreamPageTest
     }
 
     [UpstreamTest("AR-119 checked attribute")]
-    [LocalFixme("dotnet: the message of ToMatchAriaSnapshotAsync is \"Page expected to match Aria snapshot '...'\\nBut was: 'System.Dynamic.ExpandoObject' \\nCall log: ...\"")]
     public async Task CheckedAttribute()
     {
         await Page.SetContentAsync(@"
@@ -229,7 +230,7 @@ public class ToMatchAriaSnapshotTests : UpstreamPageTest
             var e = await Catch(() => Expect(Page).ToMatchAriaSnapshotAsync(@"
       - checkbox [checked=false]
     ", new() { Timeout = 1000 }));
-            Assert.That(StripAnsi(e.Message), Does.Contain("expect(page).toMatchAriaSnapshot(expected) failed"));
+            Assert.That(StripAnsi(e.Message), Does.Contain("Expect(page).ToMatchAriaSnapshotAsync(expected) failed"));
             Assert.That(StripAnsi(e.Message), Does.Contain("Timeout:  1000ms"));
         }
 
@@ -237,7 +238,7 @@ public class ToMatchAriaSnapshotTests : UpstreamPageTest
             var e = await Catch(() => Expect(Page).ToMatchAriaSnapshotAsync(@"
       - checkbox [checked=mixed]
     ", new() { Timeout = 1000 }));
-            Assert.That(StripAnsi(e.Message), Does.Contain("expect(page).toMatchAriaSnapshot(expected) failed"));
+            Assert.That(StripAnsi(e.Message), Does.Contain("Expect(page).ToMatchAriaSnapshotAsync(expected) failed"));
             Assert.That(StripAnsi(e.Message), Does.Contain("Timeout:  1000ms"));
         }
 
@@ -250,7 +251,6 @@ public class ToMatchAriaSnapshotTests : UpstreamPageTest
     }
 
     [UpstreamTest("AR-120 disabled attribute")]
-    [LocalFixme("dotnet: the message of ToMatchAriaSnapshotAsync is \"Page expected to match Aria snapshot '...'\\nBut was: 'System.Dynamic.ExpandoObject' \\nCall log: ...\"")]
     public async Task DisabledAttribute()
     {
         await Page.SetContentAsync(@"
@@ -273,7 +273,7 @@ public class ToMatchAriaSnapshotTests : UpstreamPageTest
             var e = await Catch(() => Expect(Page).ToMatchAriaSnapshotAsync(@"
       - button [disabled=false]
     ", new() { Timeout = 1000 }));
-            Assert.That(StripAnsi(e.Message), Does.Contain("expect(page).toMatchAriaSnapshot(expected) failed"));
+            Assert.That(StripAnsi(e.Message), Does.Contain("Expect(page).ToMatchAriaSnapshotAsync(expected) failed"));
             Assert.That(StripAnsi(e.Message), Does.Contain("Timeout:  1000ms"));
         }
 
@@ -286,7 +286,6 @@ public class ToMatchAriaSnapshotTests : UpstreamPageTest
     }
 
     [UpstreamTest("AR-121 expanded attribute")]
-    [LocalFixme("dotnet: the message of ToMatchAriaSnapshotAsync is \"Page expected to match Aria snapshot '...'\\nBut was: 'System.Dynamic.ExpandoObject' \\nCall log: ...\"")]
     public async Task ExpandedAttribute()
     {
         await Page.SetContentAsync(@"
@@ -309,7 +308,7 @@ public class ToMatchAriaSnapshotTests : UpstreamPageTest
             var e = await Catch(() => Expect(Page).ToMatchAriaSnapshotAsync(@"
       - button [expanded=false]
     ", new() { Timeout = 1000 }));
-            Assert.That(StripAnsi(e.Message), Does.Contain("expect(page).toMatchAriaSnapshot(expected) failed"));
+            Assert.That(StripAnsi(e.Message), Does.Contain("Expect(page).ToMatchAriaSnapshotAsync(expected) failed"));
             Assert.That(StripAnsi(e.Message), Does.Contain("Timeout:  1000ms"));
         }
 
@@ -322,7 +321,6 @@ public class ToMatchAriaSnapshotTests : UpstreamPageTest
     }
 
     [UpstreamTest("AR-122 level attribute")]
-    [LocalFixme("dotnet: the message of ToMatchAriaSnapshotAsync is \"Page expected to match Aria snapshot '...'\\nBut was: 'System.Dynamic.ExpandoObject' \\nCall log: ...\"")]
     public async Task LevelAttribute()
     {
         await Page.SetContentAsync(@"
@@ -341,7 +339,7 @@ public class ToMatchAriaSnapshotTests : UpstreamPageTest
             var e = await Catch(() => Expect(Page).ToMatchAriaSnapshotAsync(@"
       - heading [level=3]
     ", new() { Timeout = 1000 }));
-            Assert.That(StripAnsi(e.Message), Does.Contain("expect(page).toMatchAriaSnapshot(expected) failed"));
+            Assert.That(StripAnsi(e.Message), Does.Contain("Expect(page).ToMatchAriaSnapshotAsync(expected) failed"));
             Assert.That(StripAnsi(e.Message), Does.Contain("Timeout:  1000ms"));
         }
 
@@ -354,7 +352,6 @@ public class ToMatchAriaSnapshotTests : UpstreamPageTest
     }
 
     [UpstreamTest("AR-123 pressed attribute")]
-    [LocalFixme("dotnet: the message of ToMatchAriaSnapshotAsync is \"Page expected to match Aria snapshot '...'\\nBut was: 'System.Dynamic.ExpandoObject' \\nCall log: ...\"")]
     public async Task PressedAttribute()
     {
         await Page.SetContentAsync(@"
@@ -377,7 +374,7 @@ public class ToMatchAriaSnapshotTests : UpstreamPageTest
             var e = await Catch(() => Expect(Page).ToMatchAriaSnapshotAsync(@"
       - button [pressed=false]
     ", new() { Timeout = 1000 }));
-            Assert.That(StripAnsi(e.Message), Does.Contain("expect(page).toMatchAriaSnapshot(expected) failed"));
+            Assert.That(StripAnsi(e.Message), Does.Contain("Expect(page).ToMatchAriaSnapshotAsync(expected) failed"));
             Assert.That(StripAnsi(e.Message), Does.Contain("Timeout:  1000ms"));
         }
 
@@ -394,7 +391,7 @@ public class ToMatchAriaSnapshotTests : UpstreamPageTest
             var e = await Catch(() => Expect(Page).ToMatchAriaSnapshotAsync(@"
       - button [pressed=true]
     ", new() { Timeout = 1000 }));
-            Assert.That(StripAnsi(e.Message), Does.Contain("expect(page).toMatchAriaSnapshot(expected) failed"));
+            Assert.That(StripAnsi(e.Message), Does.Contain("Expect(page).ToMatchAriaSnapshotAsync(expected) failed"));
             Assert.That(StripAnsi(e.Message), Does.Contain("Timeout:  1000ms"));
         }
 
@@ -407,7 +404,6 @@ public class ToMatchAriaSnapshotTests : UpstreamPageTest
     }
 
     [UpstreamTest("AR-124 selected attribute")]
-    [LocalFixme("dotnet: the message of ToMatchAriaSnapshotAsync is \"Page expected to match Aria snapshot '...'\\nBut was: 'System.Dynamic.ExpandoObject' \\nCall log: ...\", without a diff of the two snapshots")]
     public async Task SelectedAttribute()
     {
         await Page.SetContentAsync(@"
@@ -448,20 +444,18 @@ public class ToMatchAriaSnapshotTests : UpstreamPageTest
       - row [selected=false]
       - row [selected=false]
     ", new() { Timeout = 1000 }));
-            Assert.That(StripAnsi(e.Message), Does.Contain(@"expect(page).toMatchAriaSnapshot(expected) failed
+            // .NET: the message has the two snapshots on the Expected and the Received lines, where upstream prints a diff of them.
+            Assert.That(StripAnsi(e.Message), Does.Contain(@"Expect(page).ToMatchAriaSnapshotAsync(expected) failed
 
-Timeout: 1000ms
-- Expected  - 2
-+ Received  + 6
-
-- - row [selected=false]
-- - row [selected=false]
-+ - table:
-+   - rowgroup:
-+     - row ""Row"" [selected]:
-+       - cell ""Row""
-+     - row ""Row 2"":
-+       - cell ""Row 2""
+Expected: ""- row [selected=false]
+- row [selected=false]""
+Received: ""- table:
+  - rowgroup:
+    - row \""Row\"" [selected]:
+      - cell \""Row\""
+    - row \""Row 2\"":
+      - cell \""Row 2\""""
+Timeout:  1000ms
 
 Call log:
 "));
@@ -539,7 +533,6 @@ Call log:
     }
 
     [UpstreamTest("AR-127 expected formatter")]
-    [LocalFixme("dotnet: the message of ToMatchAriaSnapshotAsync is \"Page expected to match Aria snapshot '...'\\nBut was: 'System.Dynamic.ExpandoObject' \\nCall log: ...\", without a diff of the two snapshots")]
     public async Task ExpectedFormatter()
     {
         await Page.SetContentAsync(@"
@@ -557,18 +550,16 @@ Call log:
 
         // Note that error message should not contain any regular expressions,
         // unlike the baseline generated by --update-snapshots.
-        Assert.That(StripAnsi(error.Message), Does.Contain(@"expect(page).toMatchAriaSnapshot(expected) failed
+        // .NET: the message has the two snapshots on the Expected and the Received lines, where upstream prints a diff of them.
+        Assert.That(StripAnsi(error.Message), Does.Contain(@"Expect(page).ToMatchAriaSnapshotAsync(expected) failed
 
-Timeout: 1ms
-- Expected  - 2
-+ Received  + 4
-
-- - heading ""todos""
-- - textbox ""Wrong text""
-+ - banner:
-+   - heading ""todos"" [level=1]
-+   - textbox ""What needs to be done?""
-+   - button ""Time 15:30""
+Expected: ""- heading \""todos\""
+- textbox \""Wrong text\""""
+Received: ""- banner:
+  - heading \""todos\"" [level=1]
+  - textbox \""What needs to be done?\""
+  - button \""Time 15:30\""""
+Timeout:  1ms
 
 Call log:
 "));
@@ -665,7 +656,6 @@ Call log:
     }
 
     [UpstreamTest("AR-129 should report error in YAML")]
-    [LocalFixme("dotnet: the message of ToMatchAriaSnapshotAsync is \"Page expected to match Aria snapshot\\nError: Aria snapshot must be a YAML sequence, elements starting with \" -\" '...'\\nBut was: 'null' \\nCall log: ...\"")]
     public async Task ShouldReportErrorInYAML()
     {
         await Page.SetContentAsync("<h1>title</h1>");
@@ -674,13 +664,13 @@ Call log:
             var error = await Catch(() => Expect(Page).ToMatchAriaSnapshotAsync(@"
       heading ""title""
     "));
-            Assert.That(StripAnsi(error.Message), Is.EqualTo(@"expect(page).toMatchAriaSnapshot(expected) failed
+            Assert.That(StripAnsi(error.Message), Is.EqualTo(@"Expect(page).ToMatchAriaSnapshotAsync(expected) failed
 
 Expected: ""heading \""title\""""
 Error: Aria snapshot must be a YAML sequence, elements starting with "" -""
 
 Call log:
-  - Expect ""toMatchAriaSnapshot"" with timeout 10000ms
+  - Expect ""ToMatchAriaSnapshotAsync"" with timeout 10000ms
 "));
         }
 
@@ -688,7 +678,7 @@ Call log:
             var error = await Catch(() => Expect(Page).ToMatchAriaSnapshotAsync(@"
       - heading: a:
     "));
-            Assert.That(StripAnsi(error.Message), Is.EqualTo(@"expect(page).toMatchAriaSnapshot(expected) failed
+            Assert.That(StripAnsi(error.Message), Is.EqualTo(@"Expect(page).ToMatchAriaSnapshotAsync(expected) failed
 
 Expected: ""- heading: a:""
 Error: Nested mappings are not allowed in compact mappings at line 1, column 12:
@@ -697,13 +687,12 @@ Error: Nested mappings are not allowed in compact mappings at line 1, column 12:
            ^
 
 Call log:
-  - Expect ""toMatchAriaSnapshot"" with timeout 10000ms
+  - Expect ""ToMatchAriaSnapshotAsync"" with timeout 10000ms
 "));
         }
     }
 
     [UpstreamTest("AR-130 should report error in YAML keys")]
-    [LocalFixme("dotnet: the message of ToMatchAriaSnapshotAsync is \"Page expected to match Aria snapshot\\nError: Unterminated string: ... '...'\\nBut was: 'null' \\nCall log: ...\"")]
     public async Task ShouldReportErrorInYAMLKeys()
     {
         await Page.SetContentAsync("<h1>title</h1>");
@@ -712,7 +701,7 @@ Call log:
             var error = await Catch(() => Expect(Page).ToMatchAriaSnapshotAsync(@"
       - heading ""title
     "));
-            Assert.That(StripAnsi(error.Message), Is.EqualTo(@"expect(page).toMatchAriaSnapshot(expected) failed
+            Assert.That(StripAnsi(error.Message), Is.EqualTo(@"Expect(page).ToMatchAriaSnapshotAsync(expected) failed
 
 Expected: ""- heading \""title""
 Error: Unterminated string:
@@ -721,7 +710,7 @@ heading ""title
               ^
 
 Call log:
-  - Expect ""toMatchAriaSnapshot"" with timeout 10000ms
+  - Expect ""ToMatchAriaSnapshotAsync"" with timeout 10000ms
 "));
         }
 
@@ -729,7 +718,7 @@ Call log:
             var error = await Catch(() => Expect(Page).ToMatchAriaSnapshotAsync(@"
       - heading /title
     "));
-            Assert.That(StripAnsi(error.Message), Is.EqualTo(@"expect(page).toMatchAriaSnapshot(expected) failed
+            Assert.That(StripAnsi(error.Message), Is.EqualTo(@"Expect(page).ToMatchAriaSnapshotAsync(expected) failed
 
 Expected: ""- heading /title""
 Error: Unterminated regex:
@@ -738,7 +727,7 @@ heading /title
               ^
 
 Call log:
-  - Expect ""toMatchAriaSnapshot"" with timeout 10000ms
+  - Expect ""ToMatchAriaSnapshotAsync"" with timeout 10000ms
 "));
         }
 
@@ -746,7 +735,7 @@ Call log:
             var error = await Catch(() => Expect(Page).ToMatchAriaSnapshotAsync(@"
       - heading [level=a]
     "));
-            Assert.That(StripAnsi(error.Message), Is.EqualTo(@"expect(page).toMatchAriaSnapshot(expected) failed
+            Assert.That(StripAnsi(error.Message), Is.EqualTo(@"Expect(page).ToMatchAriaSnapshotAsync(expected) failed
 
 Expected: ""- heading [level=a]""
 Error: Value of ""level"" attribute must be a number:
@@ -755,7 +744,7 @@ heading [level=a]
                ^
 
 Call log:
-  - Expect ""toMatchAriaSnapshot"" with timeout 10000ms
+  - Expect ""ToMatchAriaSnapshotAsync"" with timeout 10000ms
 "));
         }
 
@@ -763,7 +752,7 @@ Call log:
             var error = await Catch(() => Expect(Page).ToMatchAriaSnapshotAsync(@"
       - heading [expanded=FALSE]
     "));
-            Assert.That(StripAnsi(error.Message), Is.EqualTo(@"expect(page).toMatchAriaSnapshot(expected) failed
+            Assert.That(StripAnsi(error.Message), Is.EqualTo(@"Expect(page).ToMatchAriaSnapshotAsync(expected) failed
 
 Expected: ""- heading [expanded=FALSE]""
 Error: Value of ""expanded"" attribute must be a boolean:
@@ -772,7 +761,7 @@ heading [expanded=FALSE]
                   ^
 
 Call log:
-  - Expect ""toMatchAriaSnapshot"" with timeout 10000ms
+  - Expect ""ToMatchAriaSnapshotAsync"" with timeout 10000ms
 "));
         }
 
@@ -780,7 +769,7 @@ Call log:
             var error = await Catch(() => Expect(Page).ToMatchAriaSnapshotAsync(@"
       - heading [checked=foo]
     "));
-            Assert.That(StripAnsi(error.Message), Is.EqualTo(@"expect(page).toMatchAriaSnapshot(expected) failed
+            Assert.That(StripAnsi(error.Message), Is.EqualTo(@"Expect(page).ToMatchAriaSnapshotAsync(expected) failed
 
 Expected: ""- heading [checked=foo]""
 Error: Value of ""checked"" attribute must be a boolean or ""mixed"":
@@ -789,7 +778,7 @@ heading [checked=foo]
                  ^
 
 Call log:
-  - Expect ""toMatchAriaSnapshot"" with timeout 10000ms
+  - Expect ""ToMatchAriaSnapshotAsync"" with timeout 10000ms
 "));
         }
 
@@ -797,7 +786,7 @@ Call log:
             var error = await Catch(() => Expect(Page).ToMatchAriaSnapshotAsync(@"
       - heading [level=]
     "));
-            Assert.That(StripAnsi(error.Message), Is.EqualTo(@"expect(page).toMatchAriaSnapshot(expected) failed
+            Assert.That(StripAnsi(error.Message), Is.EqualTo(@"Expect(page).ToMatchAriaSnapshotAsync(expected) failed
 
 Expected: ""- heading [level=]""
 Error: Value of ""level"" attribute must be a number:
@@ -806,7 +795,7 @@ heading [level=]
                ^
 
 Call log:
-  - Expect ""toMatchAriaSnapshot"" with timeout 10000ms
+  - Expect ""ToMatchAriaSnapshotAsync"" with timeout 10000ms
 "));
         }
 
@@ -814,7 +803,7 @@ Call log:
             var error = await Catch(() => Expect(Page).ToMatchAriaSnapshotAsync(@"
       - heading [bogus]
     "));
-            Assert.That(StripAnsi(error.Message), Is.EqualTo(@"expect(page).toMatchAriaSnapshot(expected) failed
+            Assert.That(StripAnsi(error.Message), Is.EqualTo(@"Expect(page).ToMatchAriaSnapshotAsync(expected) failed
 
 Expected: ""- heading [bogus]""
 Error: Unsupported attribute [bogus]:
@@ -823,7 +812,7 @@ heading [bogus]
          ^
 
 Call log:
-  - Expect ""toMatchAriaSnapshot"" with timeout 10000ms
+  - Expect ""ToMatchAriaSnapshotAsync"" with timeout 10000ms
 "));
         }
 
@@ -831,7 +820,7 @@ Call log:
             var error = await Catch(() => Expect(Page).ToMatchAriaSnapshotAsync(@"
       - heading invalid
     "));
-            Assert.That(StripAnsi(error.Message), Is.EqualTo(@"expect(page).toMatchAriaSnapshot(expected) failed
+            Assert.That(StripAnsi(error.Message), Is.EqualTo(@"Expect(page).ToMatchAriaSnapshotAsync(expected) failed
 
 Expected: ""- heading invalid""
 Error: Unexpected input:
@@ -840,7 +829,7 @@ heading invalid
         ^
 
 Call log:
-  - Expect ""toMatchAriaSnapshot"" with timeout 10000ms
+  - Expect ""ToMatchAriaSnapshotAsync"" with timeout 10000ms
 "));
         }
     }
@@ -879,7 +868,6 @@ Call log:
     }
 
     [UpstreamTest("AR-133 should not unshift actual template text")]
-    [LocalFixme("dotnet: ToMatchAriaSnapshotAsync sends the expected snapshot as written, upstream removes the common indentation of its lines first: the message has \"        - heading \"title\" [level=1]\\n    - heading \"title 2\" [level=1]\"")]
     public async Task ShouldNotUnshiftActualTemplateText()
     {
         await Page.SetContentAsync(@"
@@ -896,7 +884,6 @@ Call log:
     }
 
     [UpstreamTest("AR-134 should not match what is not matched")]
-    [LocalFixme("dotnet: the message of ToMatchAriaSnapshotAsync is \"Page expected to match Aria snapshot '...'\\nBut was: 'System.Dynamic.ExpandoObject' \\nCall log: ...\", without a diff of the two snapshots")]
     public async Task ShouldNotMatchWhatIsNotMatched()
     {
         await Page.SetContentAsync("<p>Text</p>");
@@ -904,10 +891,11 @@ Call log:
     - paragraph:
       - button ""bogus""
   "));
+        // .NET: the message has the two snapshots on the Expected and the Received lines, where upstream prints a diff of them.
         Assert.That(StripAnsi(error.Message), Does.Contain(@"
-- - paragraph:
--   - button ""bogus""
-+ - paragraph: Text"));
+Expected: ""- paragraph:
+  - button \""bogus\""""
+Received: ""- paragraph: Text"""));
     }
 
     [UpstreamTest("AR-135 should match url")]
@@ -924,7 +912,6 @@ Call log:
     }
 
     [UpstreamTest("AR-136 should detect unexpected children: equal")]
-    [LocalFixme("dotnet: the message of ToMatchAriaSnapshotAsync is \"Page expected to match Aria snapshot '...'\\nBut was: 'System.Dynamic.ExpandoObject' \\nCall log: ...\", without a diff of the two snapshots")]
     public async Task ShouldDetectUnexpectedChildrenEqual()
     {
         await Page.SetContentAsync(@"
@@ -948,12 +935,12 @@ Call log:
       - listitem: ""Three""
   ", new() { Timeout = 1000 }));
 
-        Assert.That(StripAnsi(e.Message), Does.Contain("expect(page).toMatchAriaSnapshot(expected) failed"));
-        Assert.That(StripAnsi(e.Message), Does.Contain("+   - listitem: Two"));
+        Assert.That(StripAnsi(e.Message), Does.Contain("Expect(page).ToMatchAriaSnapshotAsync(expected) failed"));
+        // .NET: the message has the two snapshots on the Expected and the Received lines, where upstream prints a diff of them.
+        Assert.That(StripAnsi(e.Message), Does.Contain("Received: \"- list:\n  - listitem: One\n  - listitem: Two"));
     }
 
     [UpstreamTest("AR-137 should detect unexpected children: deep-equal")]
-    [LocalFixme("dotnet: the message of ToMatchAriaSnapshotAsync is \"Page expected to match Aria snapshot '...'\\nBut was: 'System.Dynamic.ExpandoObject' \\nCall log: ...\", without a diff of the two snapshots")]
     public async Task ShouldDetectUnexpectedChildrenDeepEqual()
     {
         await Page.SetContentAsync(@"
@@ -990,12 +977,12 @@ Call log:
           - listitem: 1.1
   ", new() { Timeout = 1000 }));
 
-        Assert.That(StripAnsi(e.Message), Does.Contain("expect(page).toMatchAriaSnapshot(expected) failed"));
-        Assert.That(StripAnsi(e.Message), Does.Contain("+       - listitem: \"1.2\""));
+        Assert.That(StripAnsi(e.Message), Does.Contain("Expect(page).ToMatchAriaSnapshotAsync(expected) failed"));
+        // .NET: the message has the two snapshots on the Expected and the Received lines, where upstream prints a diff of them.
+        Assert.That(StripAnsi(e.Message), Does.Contain("      - listitem: \\\"1.1\\\"\n      - listitem: \\\"1.2\\\"\"\n"));
     }
 
     [UpstreamTest("AR-138 should allow restoring contain mode inside deep-equal")]
-    [LocalFixme("dotnet: the message of ToMatchAriaSnapshotAsync is \"Page expected to match Aria snapshot '...'\\nBut was: 'System.Dynamic.ExpandoObject' \\nCall log: ...\", without a diff of the two snapshots")]
     public async Task ShouldAllowRestoringContainModeInsideDeepEqual()
     {
         await Page.SetContentAsync(@"
@@ -1017,8 +1004,9 @@ Call log:
           - listitem: 1.1
   ", new() { Timeout = 1000 }));
 
-        Assert.That(StripAnsi(e.Message), Does.Contain("expect(page).toMatchAriaSnapshot(expected) failed"));
-        Assert.That(StripAnsi(e.Message), Does.Contain("+       - listitem: \"1.2\""));
+        Assert.That(StripAnsi(e.Message), Does.Contain("Expect(page).ToMatchAriaSnapshotAsync(expected) failed"));
+        // .NET: the message has the two snapshots on the Expected and the Received lines, where upstream prints a diff of them.
+        Assert.That(StripAnsi(e.Message), Does.Contain("      - listitem: \\\"1.1\\\"\n      - listitem: \\\"1.2\\\"\"\n"));
 
         await Expect(Page).ToMatchAriaSnapshotAsync(@"
     - list:
@@ -1031,7 +1019,6 @@ Call log:
     }
 
     [UpstreamTest("AR-139 top-level deep-equal")]
-    [LocalFixme("dotnet: the message of ToMatchAriaSnapshotAsync is \"Page expected to match Aria snapshot '...'\\nBut was: 'System.Dynamic.ExpandoObject' \\nCall log: ...\", without a diff of the two snapshots")]
     public async Task TopLevelDeepEqual()
     {
         await Page.SetContentAsync(@"
@@ -1050,14 +1037,15 @@ Call log:
     - list
   ", new() { Timeout = 1000 }));
 
+        // .NET: the message has the two snapshots on the Expected and the Received lines, where upstream prints a diff of them.
         Assert.That(StripAnsi(error.Message), Does.Contain(@"
-- - /children: deep-equal
-- - list
-+ - list:
-+   - listitem:
-+     - list:
-+       - listitem: ""1.1""
-+       - listitem: ""1.2""
+Expected: ""- /children: deep-equal
+- list""
+Received: ""- list:
+  - listitem:
+    - list:
+      - listitem: \""1.1\""
+      - listitem: \""1.2\""""
   ".Trim()));
     }
 
@@ -1079,7 +1067,6 @@ Call log:
     }
 
     [UpstreamTest("AR-141 treat bad regex as a string")]
-    [LocalFixme("dotnet: the message of ToMatchAriaSnapshotAsync is \"Page expected to match Aria snapshot '...'\\nBut was: 'System.Dynamic.ExpandoObject' \\nCall log: ...\", without a diff of the two snapshots")]
     public async Task TreatBadRegexAsAString()
     {
         await Page.SetContentAsync("<a href=\"/foo\">Log in</a>");
@@ -1087,13 +1074,13 @@ Call log:
     - link ""Log in"":
       - /url: /[a/
   ", new() { Timeout = 1 }));
-        Assert.That(StripAnsi(error.Message), Does.Contain("expect(page).toMatchAriaSnapshot(expected) failed"));
-        Assert.That(StripAnsi(error.Message), Does.Contain("-   - /url: /[a/"));
-        Assert.That(StripAnsi(error.Message), Does.Contain("+   - /url: /foo"));
+        Assert.That(StripAnsi(error.Message), Does.Contain("Expect(page).ToMatchAriaSnapshotAsync(expected) failed"));
+        // .NET: the message has the two snapshots on the Expected and the Received lines, where upstream prints a diff of them.
+        Assert.That(StripAnsi(error.Message), Does.Contain("Expected: \"- link \\\"Log in\\\":\n  - /url: /[a/\""));
+        Assert.That(StripAnsi(error.Message), Does.Contain("Received: \"- link \\\"Log in\\\":\n  - /url: /foo\""));
     }
 
     [UpstreamTest("AR-142 invalid attribute")]
-    [LocalFixme("dotnet: the message of ToMatchAriaSnapshotAsync is \"Page expected to match Aria snapshot '...'\\nBut was: 'System.Dynamic.ExpandoObject' \\nCall log: ...\", without the received snapshot")]
     public async Task InvalidAttribute()
     {
         await Page.SetContentAsync(@"

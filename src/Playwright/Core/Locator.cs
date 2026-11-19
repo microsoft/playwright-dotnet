@@ -427,6 +427,21 @@ internal class Locator : ILocator
               false,
               title);
 
+    internal Task<string> ToStringAsync() => _frame.WrapApiCallAsync(
+        async () =>
+        {
+            try
+            {
+                _stringRepresentation ??= await _frame._connection.LocalUtils!.AsLocatorDescriptionAsync(_selector).ConfigureAwait(false);
+                return _stringRepresentation;
+            }
+            catch (PlaywrightException)
+            {
+                return "Locator@" + _selector;
+            }
+        },
+        true);
+
     public override string ToString()
     {
         if (_stringRepresentation == null)

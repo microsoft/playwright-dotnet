@@ -151,7 +151,6 @@ public class LocatorAnyFrameTests : UpstreamPageTest
     }
 
     [UpstreamTest("LO-010 should fail toHaveCount when elements match in multiple frames")]
-    [LocalFixme("dotnet: the message of ToHaveCountAsync is \"Locator expected to have count\\nError: frameLocator() matched elements in multiple frames. '2'\\nBut was: 'null'\", without a line \"Locator: FrameLocator().Locator(\"span\")\"")]
     public async Task ShouldFailToHaveCountWhenElementsMatchInMultipleFrames()
     {
         await RoutePage(Page, "empty.html", "<iframe src=\"a.html\"></iframe><iframe src=\"b.html\"></iframe>");
@@ -183,7 +182,6 @@ public class LocatorAnyFrameTests : UpstreamPageTest
     }
 
     [UpstreamTest("LO-013 should fail toHaveText when elements match in multiple frames")]
-    [LocalFixme("dotnet: the message of ToHaveTextAsync is \"Locator expected to have text\\nError: frameLocator() matched elements in multiple frames. 'one'\\nBut was: 'null'\", without a line \"Locator: FrameLocator().Locator(\"div\")\"")]
     public async Task ShouldFailToHaveTextWhenElementsMatchInMultipleFrames()
     {
         await RoutePage(Page, "empty.html", "<iframe src=\"a.html\"></iframe><iframe src=\"b.html\"></iframe>");
@@ -209,7 +207,6 @@ public class LocatorAnyFrameTests : UpstreamPageTest
     }
 
     [UpstreamTest("LO-015 should fail toHaveText upon strict mode violation inside a single frame")]
-    [LocalFixme("dotnet: the message of ToHaveTextAsync is \"Locator expected to have text\\nError: strict mode violation: Locator(\\\"div\\\") resolved to 2 elements: ... 'one'\\nBut was: 'null'\", without a line \"Locator: FrameLocator().Locator(\"div\")\"")]
     public async Task ShouldFailToHaveTextUponStrictModeViolationInsideASingleFrame()
     {
         await RoutePage(Page, "empty.html", "<iframe src=\"a.html\"></iframe>");

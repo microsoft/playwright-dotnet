@@ -35,14 +35,14 @@ public class PageCloseTests : UpstreamPageTest
     }
 
     [UpstreamTest("PA-040 expect should not print timed out error message when page closes")]
-    [LocalFixme("dotnet: the message of ToHaveTextAsync is \"Locator expected to have text\\nError: Target page, context or browser has been closed 'hey'\\nBut was: 'null' \\nCall log: ...\", upstream expects \"expect(locator).toHaveText(expected)\"")]
     public async Task ExpectShouldNotPrintTimedOutErrorMessageWhenPageCloses()
     {
         await Page.SetContentAsync("<div id=node>Text content</div>");
         var error = await PromiseAll(
             Catch(() => Expect(Page.Locator("div")).ToHaveTextAsync("hey", new() { Timeout = 100000 })),
             Page.CloseAsync());
-        Assert.That(StripAnsi(error.Message), Does.Contain("expect(locator).toHaveText(expected)"));
+        // .NET: the message names the .NET call, upstream has "expect(locator).toHaveText(expected)".
+        Assert.That(StripAnsi(error.Message), Does.Contain("Expect(locator).ToHaveTextAsync(expected)"));
         Assert.That(StripAnsi(error.Message), Does.Not.Contain("Timed out"));
     }
 

@@ -20,16 +20,18 @@ using static Microsoft.Playwright.Tests.Fixtures.Utils;
 
 namespace Microsoft.Playwright.Tests.Page;
 
+// .NET: the message of a failed Expect() has the layout of upstream and names the .NET call:
+// "expect(locator).not.toHaveText(expected) failed" is "Expect(locator).Not.ToHaveTextAsync(expected) failed",
+// and 'Expect "not toHaveText"' in the call log is 'Expect "Not.ToHaveTextAsync"'.
 /// <summary>Port of tests/page/expect-timeout.spec.ts.</summary>
 public class ExpectTimeoutTests : UpstreamPageTest
 {
     [UpstreamTest("EX-244 should print element not found")]
-    [LocalFixme("dotnet: the message of ToHaveTextAsync is \"Locator expected to have text\\nError: element(s) not found 'hey'\\nBut was: 'null' \\nCall log: ...\"; upstream expects \"expect(locator).toHaveText(expected) failed\" with the Locator, Expected and Timeout lines before the error")]
     public async Task ShouldPrintElementNotFound()
     {
         await Page.SetContentAsync("<div id=node>Text content</div>");
         var error = await Catch(() => Expect(Page.Locator("no-such-thing")).ToHaveTextAsync("hey", new() { Timeout = 1000 }));
-        Assert.That(StripAnsi(error.Message), Does.Contain(@"expect(locator).toHaveText(expected) failed
+        Assert.That(StripAnsi(error.Message), Does.Contain(@"Expect(locator).ToHaveTextAsync(expected) failed
 
 Locator: Locator(""no-such-thing"")
 Expected: ""hey""
@@ -41,12 +43,11 @@ Call log:
     }
 
     [UpstreamTest("EX-245 should print timed out error message when value does not match")]
-    [LocalFixme("dotnet: the message of ToHaveTextAsync is \"Locator expected to have text 'hey'\\nBut was: 'Text content' \\nCall log: ...\"; upstream expects \"expect(locator).toHaveText(expected) failed\" with the Locator, Expected, Received and Timeout lines")]
     public async Task ShouldPrintTimedOutErrorMessageWhenValueDoesNotMatch()
     {
         await Page.SetContentAsync("<div id=node>Text content</div>");
         var error = await Catch(() => Expect(Page.Locator("div")).ToHaveTextAsync("hey", new() { Timeout = 1000 }));
-        Assert.That(StripAnsi(error.Message), Does.Contain(@"expect(locator).toHaveText(expected) failed
+        Assert.That(StripAnsi(error.Message), Does.Contain(@"Expect(locator).ToHaveTextAsync(expected) failed
 
 Locator:  Locator(""div"")
 Expected: ""hey""
@@ -58,12 +59,11 @@ Call log:
     }
 
     [UpstreamTest("EX-246 should print timed out error message with impossible timeout")]
-    [LocalFixme("dotnet: the message of ToHaveTextAsync is \"Locator expected to have text\\nError: element(s) not found 'hey'\\nBut was: 'null' \\nCall log: ...\"; upstream expects \"expect(locator).toHaveText(expected) failed\" with the Locator, Expected and Timeout lines before the error")]
     public async Task ShouldPrintTimedOutErrorMessageWithImpossibleTimeout()
     {
         await Page.SetContentAsync("<div id=node>Text content</div>");
         var error = await Catch(() => Expect(Page.Locator("no-such-thing")).ToHaveTextAsync("hey", new() { Timeout = 1 }));
-        Assert.That(StripAnsi(error.Message), Does.Contain(@"expect(locator).toHaveText(expected) failed
+        Assert.That(StripAnsi(error.Message), Does.Contain(@"Expect(locator).ToHaveTextAsync(expected) failed
 
 Locator: Locator(""no-such-thing"")
 Expected: ""hey""
@@ -74,12 +74,11 @@ Call log:"));
     }
 
     [UpstreamTest("EX-247 should print timed out error message when value does not match with impossible timeout")]
-    [LocalFixme("dotnet: the message of ToHaveTextAsync is \"Locator expected to have text 'hey'\\nBut was: 'Text content' \\nCall log: ...\"; upstream expects \"expect(locator).toHaveText(expected) failed\" with the Locator, Expected, Received and Timeout lines")]
     public async Task ShouldPrintTimedOutErrorMessageWhenValueDoesNotMatchWithImpossibleTimeout()
     {
         await Page.SetContentAsync("<div id=node>Text content</div>");
         var error = await Catch(() => Expect(Page.Locator("div")).ToHaveTextAsync("hey", new() { Timeout = 1 }));
-        Assert.That(StripAnsi(error.Message), Does.Contain(@"expect(locator).toHaveText(expected) failed
+        Assert.That(StripAnsi(error.Message), Does.Contain(@"Expect(locator).ToHaveTextAsync(expected) failed
 
 Locator:  Locator(""div"")
 Expected: ""hey""
@@ -120,13 +119,12 @@ Call log:
     }
 
     [UpstreamTest("EX-251 should timeout during first locator handler check")]
-    [LocalFixme("dotnet: the message of ToHaveTextAsync is \"Locator expected to have text 'bye'\\nBut was: 'null' \\nCall log: ...\"; upstream expects \"expect(locator).toHaveText(expected) failed\" with the Locator, Expected, Received and Timeout lines")]
     public async Task ShouldTimeoutDuringFirstLocatorHandlerCheck()
     {
         await Page.AddLocatorHandlerAsync(Page.Locator("div"), async locator => { });
         await Page.SetContentAsync("<div>hello</div><span>bye</span>");
         var error = await Catch(() => Expect(Page.Locator("span")).ToHaveTextAsync("bye", new() { Timeout = 3000 }));
-        Assert.That(StripAnsi(error.Message), Does.Contain(@"expect(locator).toHaveText(expected) failed
+        Assert.That(StripAnsi(error.Message), Does.Contain(@"Expect(locator).ToHaveTextAsync(expected) failed
 
 Locator:  Locator(""span"")
 Expected: ""bye""

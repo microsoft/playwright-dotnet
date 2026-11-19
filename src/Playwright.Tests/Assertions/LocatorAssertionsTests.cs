@@ -39,12 +39,12 @@ public class LocatorAssertionsTests : PageTestEx
         await Expect(Page.Locator("input")).Not.ToBeCheckedAsync(new() { Checked = false });
 
         var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightAssertionException>(() => Expect(Page.Locator("input")).ToBeCheckedAsync(new() { Checked = false, Timeout = 300 }));
-        StringAssert.Contains("Locator expected not to be checked", exception.Message);
+        StringAssert.Contains("Expect(locator).ToBeCheckedAsync(new() { Checked = false }) failed", exception.Message);
         StringAssert.Contains("Expect \"ToBeCheckedAsync\" Locator(\"input\") with timeout 300ms", exception.Message);
 
         exception = await PlaywrightAssert.ThrowsAsync<PlaywrightAssertionException>(() => Expect(Page.Locator("input")).Not.ToBeCheckedAsync(new() { Timeout = 300 }));
-        StringAssert.Contains("Locator expected not to be checked", exception.Message);
-        StringAssert.Contains("Expect \"ToBeCheckedAsync\" Locator(\"input\") with timeout 300ms", exception.Message);
+        StringAssert.Contains("Expect(locator).Not.ToBeCheckedAsync() failed", exception.Message);
+        StringAssert.Contains("Expect \"Not.ToBeCheckedAsync\" Locator(\"input\") with timeout 300ms", exception.Message);
     }
 
     [PlaywrightTest("tests/page/expect-boolean.spec.ts", "with indeterminate:true")]
@@ -81,7 +81,7 @@ public class LocatorAssertionsTests : PageTestEx
         var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightAssertionException>(
             () => Expect(locator, "should be logged in").ToBeVisibleAsync(new() { Timeout = 1000 }));
         StringAssert.StartsWith("should be logged in", exception.Message);
-        StringAssert.Contains("Locator expected to be visible", exception.Message);
+        StringAssert.Contains("Expect(locator).ToBeVisibleAsync() failed", exception.Message);
 
         // Custom message also propagates through Not.
         await Page.SetContentAsync("<input>");
@@ -98,8 +98,8 @@ public class LocatorAssertionsTests : PageTestEx
         {
             SetDefaultExpectTimeout(1111);
             var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightAssertionException>(() => Expect(Page.Locator("input")).Not.ToBeCheckedAsync());
-            StringAssert.Contains("Locator expected not to be checked", exception.Message);
-            StringAssert.Contains("Expect \"ToBeCheckedAsync\" Locator(\"input\") with timeout 1111ms", exception.Message);
+            StringAssert.Contains("Expect(locator).Not.ToBeCheckedAsync() failed", exception.Message);
+            StringAssert.Contains("Expect \"Not.ToBeCheckedAsync\" Locator(\"input\") with timeout 1111ms", exception.Message);
         }
         finally
         {
@@ -295,7 +295,7 @@ public class LocatorAssertionsTests : PageTestEx
             var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightAssertionException>(() => Expect(locator).ToBeEnabledAsync(new() { Timeout = 1000 }));
             StringAssert.Contains("locator resolved to <button disabled>Text</button>", exception.Message);
             // extra checks
-            StringAssert.Contains("Locator expected to be enabled", exception.Message);
+            StringAssert.Contains("Expect(locator).ToBeEnabledAsync() failed", exception.Message);
             StringAssert.Contains("Expect \"ToBeEnabledAsync\" Locator(\"button\") with timeout 1000ms", exception.Message);
         }
         {
@@ -419,15 +419,15 @@ public class LocatorAssertionsTests : PageTestEx
             await Page.SetContentAsync("<button style=\"display: none\"></button>");
             var locator = Page.Locator("button");
             var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightAssertionException>(() => Expect(locator).ToBeVisibleAsync(new() { Timeout = 500 }));
-            StringAssert.Contains("Locator expected to be visible", exception.Message);
+            StringAssert.Contains("Expect(locator).ToBeVisibleAsync() failed", exception.Message);
             StringAssert.Contains("Expect \"ToBeVisibleAsync\" Locator(\"button\") with timeout 500ms", exception.Message);
         }
         {
             await Page.SetContentAsync("<input></input>");
             var locator = Page.Locator("input");
             var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightAssertionException>(() => Expect(locator).Not.ToBeVisibleAsync(new() { Timeout = 500 }));
-            StringAssert.Contains("Locator expected not to be visible", exception.Message);
-            StringAssert.Contains("Expect \"ToBeVisibleAsync\" Locator(\"input\") with timeout 500ms", exception.Message);
+            StringAssert.Contains("Expect(locator).Not.ToBeVisibleAsync() failed", exception.Message);
+            StringAssert.Contains("Expect \"Not.ToBeVisibleAsync\" Locator(\"input\") with timeout 500ms", exception.Message);
         }
     }
 
@@ -454,8 +454,8 @@ public class LocatorAssertionsTests : PageTestEx
         {
             await Page.SetContentAsync("<div id=node>Text content</div>");
             var exeption = await PlaywrightAssert.ThrowsAsync<PlaywrightAssertionException>(() => Expect(Page.Locator("#node")).ToContainTextAsync(new Regex("ex2"), new() { Timeout = 100 }));
-            StringAssert.Contains("Locator expected text matching regex 'ex2'", exeption.Message);
-            StringAssert.Contains("But was: 'Text content'", exeption.Message);
+            StringAssert.Contains("Expected pattern: /ex2/", exeption.Message);
+            StringAssert.Contains("Received string:  \"Text content\"", exeption.Message);
             StringAssert.Contains("Expect \"ToContainTextAsync\" Locator(\"#node\") with timeout 100ms", exeption.Message);
         }
         {
@@ -488,8 +488,8 @@ public class LocatorAssertionsTests : PageTestEx
             await Page.SetContentAsync("<div id=node>Text content</div>");
             var locator = Page.Locator("#node");
             var exeption = await PlaywrightAssert.ThrowsAsync<PlaywrightAssertionException>(() => Expect(locator).ToHaveTextAsync("Text", new() { Timeout = 100 }));
-            StringAssert.Contains("Locator expected to have text 'Text'", exeption.Message);
-            StringAssert.Contains("But was: 'Text content'", exeption.Message);
+            StringAssert.Contains("Expected: \"Text\"", exeption.Message);
+            StringAssert.Contains("Received: \"Text content\"", exeption.Message);
             StringAssert.Contains("Expect \"ToHaveTextAsync\" Locator(\"#node\") with timeout 100ms", exeption.Message);
         }
     }
@@ -575,8 +575,8 @@ public class LocatorAssertionsTests : PageTestEx
             await Expect(locator).ToHaveClassAsync("foo bar baz");
             await Expect(locator).ToHaveClassAsync(new Regex("foo bar baz"));
             var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightAssertionException>(() => Expect(locator).ToHaveClassAsync("kektus", new() { Timeout = 300 }));
-            StringAssert.Contains("Locator expected to have class 'kektus'", exception.Message);
-            StringAssert.Contains("But was: 'foo bar baz'", exception.Message);
+            StringAssert.Contains("Expected: \"kektus\"", exception.Message);
+            StringAssert.Contains("Received: \"foo bar baz\"", exception.Message);
             StringAssert.Contains("Expect \"ToHaveClassAsync\" Locator(\"div\") with timeout 300ms", exception.Message);
         }
         {
@@ -599,8 +599,8 @@ public class LocatorAssertionsTests : PageTestEx
             await Expect(locator).ToContainClassAsync("   bar   foo ");
             await Expect(locator).Not.ToContainClassAsync("baz not-matching");
             var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightAssertionException>(() => Expect(locator).ToContainClassAsync("does-not-exist", new() { Timeout = 300 }));
-            StringAssert.Contains("Locator expected to contain class names 'does-not-exist'", exception.Message);
-            StringAssert.Contains("But was: 'foo bar baz'", exception.Message);
+            StringAssert.Contains("Expected: \"does-not-exist\"", exception.Message);
+            StringAssert.Contains("Received: \"foo bar baz\"", exception.Message);
             StringAssert.Contains("Expect \"ToContainClassAsync\" Locator(\"div\") with timeout 300ms", exception.Message);
         }
         {
@@ -706,7 +706,7 @@ public class LocatorAssertionsTests : PageTestEx
             var locator = Page.Locator("select");
             await locator.SelectOptionAsync(new string[] { "RR", "GG" });
             var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightAssertionException>(() => Expect(locator).ToHaveValuesAsync(new string[] { "R", "G" }));
-            StringAssert.Contains("Locator expected to have values '['R', 'G']'\nBut was: '['RR', 'GG']'", exception.Message);
+            StringAssert.Contains("Expected: [\"R\", \"G\"]\nReceived: [\"RR\", \"GG\"]", exception.Message);
         }
         {
             // should support toHaveValues with multi-select > works with regex
@@ -731,7 +731,7 @@ public class LocatorAssertionsTests : PageTestEx
             var locator = Page.Locator("select");
             await locator.SelectOptionAsync(new string[] { "B" });
             var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightAssertionException>(() => Expect(locator).ToHaveValuesAsync(new Regex[] { new Regex("R"), new Regex("G") }));
-            StringAssert.Contains("Locator expected to have matching regex '['R', 'G']'\nBut was: '['B']'", exception.Message);
+            StringAssert.Contains("Expected: [/R/, /G/]\nReceived: [\"B\"]", exception.Message);
         }
         {
             // should support toHaveValues with multi-select > fails when multiple not specified
@@ -859,7 +859,7 @@ public class LocatorAssertionsTests : PageTestEx
     {
         await Page.SetContentAsync(@"<div>hello</div><div>hi</div>");
         var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightAssertionException>(() => Expect(Page.Locator("div")).ToBeVisibleAsync());
-        StringAssert.Contains("Locator expected to be visible", exception.Message);
+        StringAssert.Contains("Expect(locator).ToBeVisibleAsync() failed", exception.Message);
         StringAssert.Contains("Error: strict mode violation: Locator(\"div\") resolved to 2 elements:", exception.Message);
     }
 
@@ -869,7 +869,7 @@ public class LocatorAssertionsTests : PageTestEx
     {
         await Page.SetContentAsync(@"<div>a</div><div>b</div>");
         var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightAssertionException>(() => Expect(Page.Locator("##")).ToBeVisibleAsync());
-        StringAssert.Contains("Locator expected to be visible", exception.Message);
+        StringAssert.Contains("Expect(locator).ToBeVisibleAsync() failed", exception.Message);
         StringAssert.Contains("Error: Unexpected token \"#\" while parsing css selector \"##\".", exception.Message);
     }
 
@@ -879,6 +879,6 @@ public class LocatorAssertionsTests : PageTestEx
     {
         await Page.CloseAsync();
         var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightAssertionException>(() => Expect(Page.Locator("div")).ToBeVisibleAsync());
-        StringAssert.Contains("Locator expected to be visible", exception.Message);
+        StringAssert.Contains("Expect(locator).ToBeVisibleAsync() failed", exception.Message);
     }
 }

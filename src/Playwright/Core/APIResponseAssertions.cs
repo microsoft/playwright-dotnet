@@ -25,7 +25,6 @@
 using System;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using Microsoft.Playwright.Transport;
 
 namespace Microsoft.Playwright.Core;
 
@@ -54,28 +53,28 @@ internal class APIResponseAssertions : IAPIResponseAssertions
         {
             return;
         }
-        var message = $"Response status expected to be within [200..299] range, was {_actual.Status}";
-        if (_isNot)
-        {
-            message = message.Replace("expected to", "expected not to");
-        }
-        var logList = await _actual.FetchLogAsync().ConfigureAwait(false);
-        message += Connection.FormatCallLog(logList);
-
         var contentType = _actual.Headers.TryGetValue("content-type", out var contentTypeValue) ? contentTypeValue : string.Empty;
-        bool isTextEncoding = IsTextualMimeType(contentType);
-        var responseText = string.Empty;
+        var isTextEncoding = IsTextualMimeType(contentType);
+        var log = await _actual.FetchLogAsync().ConfigureAwait(false);
+        var text = isTextEncoding ? await _actual.TextAsync().ConfigureAwait(false) : null;
+
+        var message = MatcherHint.FormatMatcherMessage(new()
+        {
+            IsNot = _isNot,
+            MatcherName = "ToBeOKAsync",
+            Receiver = "response",
+            Expectation = string.Empty,
+            Log = log,
+        });
         if (isTextEncoding)
         {
-            var text = await _actual.TextAsync().ConfigureAwait(false);
-            if (!string.IsNullOrEmpty(text))
-            {
-                var trimmedText = text.Length > 1000 ? text.Substring(0, 1000) : text;
-                responseText = $"\nResponse text:\n{trimmedText}";
-            }
+            message += $"\nResponse text:\n{(text?.Length > 1000 ? text.Substring(0, 1000) : text)}";
         }
-        var prefix = _customMessage != null ? _customMessage + "\n\n" : string.Empty;
-        throw new PlaywrightAssertionException(prefix + message + responseText);
+        if (!string.IsNullOrEmpty(_customMessage))
+        {
+            message = _customMessage + "\n\n" + message;
+        }
+        throw new PlaywrightAssertionException(message);
     }
 
     private static bool IsTextualMimeType(string contentType)
