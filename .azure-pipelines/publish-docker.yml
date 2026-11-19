@@ -56,8 +56,8 @@ extends:
             packageType: sdk
             version: 8.x
 
-        # All NuGet restores (Playwright.Tooling and the `dotnet publish` in
-        # utils/docker/build.sh) go through the DevDiv_PublicPackages feed instead of
+        # All NuGet restores (the `dotnet publish` in utils/docker/build.sh) go
+        # through the DevDiv_PublicPackages feed instead of
         # nuget.org (SFI-ES4.2.4): the copied nuget.config is discovered from every
         # project directory and its <clear /> drops the nuget.org source inherited
         # from the user-level config. NuGetAuthenticate@1 installs the credential
@@ -68,7 +68,7 @@ extends:
         - task: NuGetAuthenticate@1
           displayName: "Authenticate NuGet to DevDiv_PublicPackages feed"
 
-        # Playwright.Tooling builds the driver from .upstream/ with `npm ci`, which
+        # utils/build_driver.js builds the driver from .upstream/ with `npm ci`, which
         # picks up the registry and credentials from this .npmrc.
         - task: UseNode@1
           displayName: "Install Node.js"

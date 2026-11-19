@@ -6,7 +6,7 @@
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * to use, copy, modify, merge, publish, distribute, sublicense, and / or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
  *
@@ -22,16 +22,21 @@
  * SOFTWARE.
  */
 
-using System.Threading.Tasks;
-using CommandLine;
+const path = require('path');
 
-namespace Playwright.Tooling;
-
-internal static class Program
-{
-    internal static async Task Main(string[] args)
-    {
-        ParserResult<BuildDriverOptions> result = Parser.Default.ParseArguments<BuildDriverOptions>(args);
-        await result.WithParsedAsync(DriverBuilder.RunAsync).ConfigureAwait(false);
-    }
+// The API docs and the modules that parse them stay in microsoft/playwright. The
+// generator reads both from the same checkout, the first argument of the script.
+if (process.argv.length < 4) {
+  console.error(`Usage: node ${path.relative(process.cwd(), process.argv[1])} <microsoft/playwright checkout> <output directory>`);
+  console.error('For example: node utils/generateDotnetApi.js .upstream src/Playwright');
+  process.exit(1);
 }
+
+const upstreamDir = path.resolve(process.argv[2]);
+
+module.exports = {
+  apiDocsDir: path.join(upstreamDir, 'docs', 'src', 'api'),
+  Documentation: require(path.join(upstreamDir, 'utils', 'doclint', 'documentation')),
+  parseApi: require(path.join(upstreamDir, 'utils', 'doclint', 'api_parser')).parseApi,
+  markdown: require(path.join(upstreamDir, 'utils', 'markdown')),
+};

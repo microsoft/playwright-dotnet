@@ -67,7 +67,7 @@ function update_node_version() {
 
 function build_driver() {
   echo "building driver..."
-  dotnet run --project ./src/tools/Playwright.Tooling/Playwright.Tooling.csproj -- build-driver --basepath .
+  node utils/build_driver.js
   echo "done"
 }
 
@@ -80,10 +80,11 @@ function require_upstream() {
 }
 
 function generate() {
-  # The generators are upstream. PW_SRC_DIR runs them from another microsoft/playwright
-  # checkout (with `npm ci` done), to try a change to a generator or to the docs. The
-  # committed files must come from .upstream/: CI generates them again and fails when
-  # they differ.
+  # The generators are in utils/. They read the API docs and the protocol of
+  # microsoft/playwright with the modules of the same checkout. PW_SRC_DIR names
+  # another microsoft/playwright checkout (with `npm ci` done) to generate from, to try
+  # a change to the docs or to the protocol. The committed files must come from
+  # .upstream/: CI generates them again and fails when they differ.
   local generator_repo_path="${upstream_repo_path}"
   if [[ -n "$PW_SRC_DIR" ]]; then
     generator_repo_path="$PW_SRC_DIR"
@@ -93,10 +94,10 @@ function generate() {
   fi
   echo "Generating API..."
   rm -rf src/Playwright/API/Generated/
-  node "$generator_repo_path/utils/doclint/generateDotnetApi.js" "src/Playwright"
+  node utils/generateDotnetApi.js "$generator_repo_path" "src/Playwright"
   echo "Generating transport channels..."
   rm -rf "src/Playwright/Transport/Protocol/Generated/"
-  node "$generator_repo_path/utils/generate_dotnet_channels.js" "src/Playwright"
+  node utils/generate_dotnet_channels.js "$generator_repo_path" "src/Playwright"
   echo "Formatting source code..."
   dotnet format src/Playwright
   echo "done"
@@ -139,7 +140,7 @@ function roll() {
   echo "${xml_file_contents}" > "${version_props_path}"
   update_node_version
 
-  # The channels generator needs the dependencies that the driver build installs.
+  # The channels generator loads the protocol with the dependencies that the driver build installs.
   build_driver
   generate
 

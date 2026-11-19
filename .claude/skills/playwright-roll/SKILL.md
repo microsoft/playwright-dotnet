@@ -85,7 +85,7 @@ In the docs markdown file (e.g. `docs/src/api/class-browser.md`), add `alias` (a
 
 Use `alias-csharp` (in addition to bare `alias`) when upstream already declared a different `alias` for other languages and you only want to override .NET's name — typically to preserve a name we've already shipped and don't want to break.
 
-The generated files come from `.upstream/` at `DriverVersion`, and CI fails when they differ, so the docs change must land in `microsoft/playwright` first. Make it in another checkout of `microsoft/playwright` (not in `.upstream/`), and try it with `PW_SRC_DIR=<that checkout> ./build.sh --generate`. Once the upstream PR has merged, roll to a commit that has it, then update any hand-written implementation code to use the new type name.
+The generated files come from the docs of `.upstream/` at `DriverVersion`, and CI fails when they differ, so the docs change must land in `microsoft/playwright` first. Make it in another checkout of `microsoft/playwright` (not in `.upstream/`), and try it with `PW_SRC_DIR=<that checkout> ./build.sh --generate`. Once the upstream PR has merged, roll to a commit that has it, then update any hand-written implementation code to use the new type name.
 
 ## Running the full test suite
 

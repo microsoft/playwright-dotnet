@@ -77,7 +77,7 @@ There are lots of thoughts and [approaches](https://github.com/antlr/antlr4-cpp/
 
 ### Prerequisites
 
-You need the .NET SDK, git, and Node.js 20 or newer with npm.
+You need the .NET SDK, git, tar (Windows 10 and newer have it), and Node.js 20 or newer with npm.
 
 #### Initialize
 
@@ -124,7 +124,7 @@ Additionally, you can use the Test Explorer if you're using Visual Studio.
 
 ### Generating the APIs & rolling the driver (upstream)
 
-We use [this](https://github.com/microsoft/playwright/blob/main/utils/doclint/generateDotnetApi.js) generator for the API and [that](https://github.com/microsoft/playwright/blob/main/utils/generate_dotnet_channels.js) for generating the transport channels. Both are located upstream, and run from `.upstream/`. The generated files are committed, and CI fails when they differ from what `.upstream/` generates:
+We use [this](./utils/generateDotnetApi.js) generator for the API and [that](./utils/generate_dotnet_channels.js) for generating the transport channels. They read the API docs and the protocol of `.upstream/`. The generated files are committed, and CI fails when they differ from what `./build.sh --generate` generates:
 
 ```bash
 ./build.sh --generate
