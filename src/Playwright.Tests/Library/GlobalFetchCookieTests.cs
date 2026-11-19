@@ -15,7 +15,6 @@
  */
 
 using System.Globalization;
-using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 using Microsoft.Playwright.Tests.Fixtures;
@@ -566,7 +565,6 @@ public class GlobalFetchCookieTests : UpstreamBrowserTest
     }
 
     [UpstreamTest("FE-086 storage state should round-trip through file")]
-    [LocalFixme("dotnet: StorageStateAsync writes the JSON to Path on one line, upstream writes JSON.stringify(state, undefined, 2)")]
     public async Task StorageStateShouldRoundTripThroughFile()
     {
         var storageState = new
@@ -591,12 +589,12 @@ public class GlobalFetchCookieTests : UpstreamBrowserTest
         // .NET: the storage state is its JSON text, for StorageState and from StorageStateAsync.
         var request1 = await Playwright.APIRequest.NewContextAsync(new() { StorageState = JsonStringify(storageState) });
         var path = Info.OutputPath("storage-state.json");
-        var state1 = JsonSerializer.Deserialize<JsonElement>(await request1.StorageStateAsync(new() { Path = path }));
-        ExpectToEqual(state1, storageState);
+        var state1 = await request1.StorageStateAsync(new() { Path = path });
+        ExpectToEqual(JsonSerializer.Deserialize<JsonElement>(state1), storageState);
 
         var written = await File.ReadAllTextAsync(path);
-        // .NET: JSON.stringify(state1, undefined, 2)
-        Assert.That(JsonSerializer.Serialize(state1, new JsonSerializerOptions { WriteIndented = true, Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping }), Is.EqualTo(written));
+        // .NET: a storage state is a JSON string, JSON.stringify(state1, undefined, 2) is the state.
+        Assert.That(state1, Is.EqualTo(written));
 
         var request2 = await Playwright.APIRequest.NewContextAsync(new() { StorageStatePath = path });
         var state2 = JsonSerializer.Deserialize<JsonElement>(await request2.StorageStateAsync());

@@ -599,7 +599,8 @@ is `ExpectToEqual(await page.EvaluateAsync<object>("() => ({ a: 1, b: [1, 2] })"
   | `frame.payload` of a WebSocket frame | `frame.Text` or `frame.Binary` |
   | `request.failure().errorText` | the string `request.Failure` |
   | `postData: 'text'` of a route call | `PostData = Encoding.UTF8.GetBytes("text")` |
-  | a storage state | a JSON string: `storageState: { ... }` is `StorageState = JsonStringify(new { ... })`, `storageState: path` is `StorageStatePath = path`, and a state that the test reads is `JsonSerializer.Deserialize<JsonElement>(state)` |
+  | a storage state | a JSON string: `storageState: { ... }` is `StorageState = JsonStringify(new { ... })`, `storageState: path` is `StorageStatePath = path`, a state that the test reads is `JsonSerializer.Deserialize<JsonElement>(state)`, and `JSON.stringify(state, undefined, 2)` next to the file of `storageState({ path })` is `state`: the file has that string |
+  | `context.setStorageState(state)` | `SetStorageStateAsync(path)` takes the state in a file only: `path` is the file that the test saved this state to (`storageState({ path })`), or else `var path = Info.OutputPath("storage-state.json");` and `await File.WriteAllTextAsync(path, state);` before the call |
   | `connectOverCDP({ endpointURL, ...options })` | `ConnectOverCDPAsync(endpointURL, options)` |
   | `locator.visible()` | `locator.Visible` |
 

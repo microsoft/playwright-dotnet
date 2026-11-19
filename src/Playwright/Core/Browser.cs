@@ -145,20 +145,13 @@ internal class Browser : ChannelOwner, IBrowser
             args.Add("acceptDownloads", options.AcceptDownloads.Value ? "accept" : "deny");
         }
 
-        var storageState = options.StorageState;
         if (!string.IsNullOrEmpty(options.StorageStatePath))
         {
-            if (!File.Exists(options.StorageStatePath))
-            {
-                throw new PlaywrightException($"The specified storage state file does not exist: {options.StorageStatePath}");
-            }
-
-            storageState = File.ReadAllText(options.StorageStatePath);
+            args.Add("storageState", BrowserContext.ReadStorageState(options.StorageStatePath!));
         }
-
-        if (!storageState.IsNullOrEmpty())
+        else if (!string.IsNullOrEmpty(options.StorageState))
         {
-            args.Add("storageState", JsonSerializer.Deserialize<object>(storageState, Helpers.JsonExtensions.DefaultJsonSerializerOptions));
+            args.Add("storageState", JsonSerializer.Deserialize<object>(options.StorageState!, Helpers.JsonExtensions.DefaultJsonSerializerOptions));
         }
 
         if (options.ViewportSize?.Width == -1)
