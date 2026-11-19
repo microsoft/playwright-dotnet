@@ -364,9 +364,9 @@ public class GlobalFetchTests : UpstreamBrowserTest
     }
 
     [UpstreamTest("FE-021 should return security details from response")]
-    [LocalFixme("harness: the HTTPS server of the tests speaks TLS 1.2 on macOS, where SslStream of .NET has no TLS 1.3 for a server: the protocol is 'TLSv1.2', upstream expects 'TLSv1.3' (only on darwin)")]
     public async Task ShouldReturnSecurityDetailsFromResponse()
     {
+        Info.Fixme(IsMac, ".NET: the HTTPS server of the tests speaks TLS 1.2 on macOS, where SslStream of .NET has no TLS 1.3 for a server: the protocol is 'TLSv1.2', upstream expects 'TLSv1.3'");
         var request = await Playwright.APIRequest.NewContextAsync(new() { IgnoreHTTPSErrors = true });
         // The second request reuses the keep-alive socket and should report the details as well.
         for (var i = 0; i < 2; i++)
@@ -378,9 +378,9 @@ public class GlobalFetchTests : UpstreamBrowserTest
     }
 
     [UpstreamTest("FE-022 should return security details for a resumed TLS session")]
-    [LocalFixme("harness: the HTTPS server of the tests speaks TLS 1.2 on macOS, where SslStream of .NET has no TLS 1.3 for a server: the protocol is 'TLSv1.2', upstream expects 'TLSv1.3' (only on darwin)")]
     public async Task ShouldReturnSecurityDetailsForAResumedTLSSession()
     {
+        Info.Fixme(IsMac, ".NET: the HTTPS server of the tests speaks TLS 1.2 on macOS, where SslStream of .NET has no TLS 1.3 for a server: the protocol is 'TLSv1.2', upstream expects 'TLSv1.3'");
         var expected = new { issuer = "playwright-test", protocol = "TLSv1.3", subjectName = "playwright-test", validFrom = 1691708270, validTo = 2007068270 };
         var request = await Playwright.APIRequest.NewContextAsync(new() { IgnoreHTTPSErrors = true });
         // 'Connection: close' drops the socket, so the next request opens a new one and resumes
