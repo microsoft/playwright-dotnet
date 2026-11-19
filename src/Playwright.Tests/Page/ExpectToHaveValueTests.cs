@@ -94,7 +94,6 @@ public class ExpectToHaveValueTests : UpstreamPageTest
         }
 
         [UpstreamTest("EX-308 exact match with text failure")]
-        [LocalFixme("dotnet: the message of ToHaveValuesAsync is \"Locator expected to have values '['R', 'G']'\\nBut was: '['RR', 'GG']'\"; upstream expects the diff lines '-   \"R\"' and '+   \"RR\"'")]
         public async Task ExactMatchWithTextFailure()
         {
             await Page.SetContentAsync(@"
@@ -106,8 +105,9 @@ public class ExpectToHaveValueTests : UpstreamPageTest
             var locator = Page.Locator("select");
             await locator.SelectOptionAsync(new[] { "RR", "GG" });
             var error = await Catch(() => Expect(locator).ToHaveValuesAsync(new[] { "R", "G" }, new() { Timeout = 1000 }));
-            Assert.That(StripAnsi(error.Message), Does.Contain("-   \"R\""));
-            Assert.That(StripAnsi(error.Message), Does.Contain("+   \"RR\""));
+            // .NET: the message has the two arrays on the Expected and the Received lines, where upstream prints a diff of them.
+            Assert.That(StripAnsi(error.Message), Does.Contain("Expected: [\"R\", \"G\"]"));
+            Assert.That(StripAnsi(error.Message), Does.Contain("Received: [\"RR\", \"GG\"]"));
         }
 
         [UpstreamTest("EX-309 works with regex")]
@@ -126,7 +126,6 @@ public class ExpectToHaveValueTests : UpstreamPageTest
         }
 
         [UpstreamTest("EX-310 fails when items not selected")]
-        [LocalFixme("dotnet: the message of ToHaveValuesAsync is \"Locator expected to have matching regex '['R', 'G']'\\nBut was: '['B']'\"; upstream expects the diff line '+   \"B\"'")]
         public async Task FailsWhenItemsNotSelected()
         {
             await Page.SetContentAsync(@"
@@ -139,7 +138,8 @@ public class ExpectToHaveValueTests : UpstreamPageTest
             var locator = Page.Locator("select");
             await locator.SelectOptionAsync(new[] { "B" });
             var error = await Catch(() => Expect(locator).ToHaveValuesAsync(new[] { new Regex("R"), new Regex("G") }, new() { Timeout = 1000 }));
-            Assert.That(StripAnsi(error.Message), Does.Contain("+   \"B\""));
+            // .NET: the message has the two arrays on the Expected and the Received lines, where upstream prints a diff of them.
+            Assert.That(StripAnsi(error.Message), Does.Contain("Received: [\"B\"]"));
         }
 
         [UpstreamTest("EX-311 fails when multiple not specified")]

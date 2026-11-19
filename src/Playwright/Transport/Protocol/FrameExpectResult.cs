@@ -27,11 +27,13 @@ internal class FrameExpectResult
 {
     public bool Matches { get; set; }
 
-    public object Received { get; set; } = null!;
+    public object? Received { get; set; }
 
     public string? ReceivedAriaSnapshot { get; set; }
 
     public string[] Log { get; set; } = null!;
+
+    public bool TimedOut { get; set; }
 
     public string? ErrorMessage { get; set; }
 }

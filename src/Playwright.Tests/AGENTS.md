@@ -418,8 +418,21 @@ is `ExpectToEqual(await page.EvaluateAsync<object>("() => ({ a: 1, b: [1, 2] })"
   `TargetClosedErrorMessage`. `error.stack` as a text is `error.ToString()`.
 - Compare messages as upstream does. When the .NET message differs from the one upstream
   checks, the test gets `[LocalFixme("dotnet: ...")]`, with the .NET text in the reason. This is so
-  for the missing prefix with the name of the call (`page.click: Timeout ...`) and for the
-  messages of the `Expect` matchers: the port shows the difference, it does not hide it.
+  for the missing prefix with the name of the call (`page.click: Timeout ...`): the port shows
+  the difference, it does not hide it.
+- The message of a failed `Expect` matcher has the layout of upstream, in the .NET form. The
+  expected text is that form:
+  - It names the .NET call. `expect(locator).not.toHaveText(expected) failed` is
+    `Expect(locator).Not.ToHaveTextAsync(expected) failed`, `toBeChecked({ checked: false })` is
+    `ToBeCheckedAsync(new() { Checked = false })`, and in the call log `Expect "not toHaveText"`
+    is `Expect "Not.ToHaveTextAsync"`.
+  - The `Locator:`, `Expected:`, `Received:` and `Timeout:` lines are the lines of upstream, and
+    a scalar is printed as upstream prints it: `"hey"`, `/ex2/`, `1`, `true`. A value that is
+    `undefined` in the page is `null`, with a mark.
+  - .NET prints no diff. Where upstream prints one (two arrays, two objects, two strings of
+    several lines), the message has the values on the `Expected:` and the `Received:` lines,
+    an array as `["R", "G"]` and an object as `{"a": 1}`. The port checks these lines in place
+    of the lines of the diff, with a `// .NET:` mark.
 - Three parts of a message are .NET by design. The expected text has them in the .NET form,
   and the rest of it stays as upstream has it:
   - A locator is printed as C# code, in an error message, in a call log and by

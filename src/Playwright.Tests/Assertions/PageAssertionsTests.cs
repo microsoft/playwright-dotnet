@@ -36,8 +36,8 @@ public class PageAssertionsTests : PageTestEx
 
         await Page.SetContentAsync("<title>Bye</title>");
         var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightAssertionException>(() => Expect(Page).ToHaveTitleAsync("Hello", new() { Timeout = 100 }));
-        StringAssert.Contains("Page title expected to be 'Hello'", exception.Message);
-        StringAssert.Contains("But was: 'Bye'", exception.Message);
+        StringAssert.Contains("Expected: \"Hello\"", exception.Message);
+        StringAssert.Contains("Received: \"Bye\"", exception.Message);
         StringAssert.Contains("Expect \"ToHaveTitleAsync\" with timeout 100ms", exception.Message);
 
         await Page.SetContentAsync("<title>Foo Bar Kek</title>");
@@ -58,8 +58,8 @@ public class PageAssertionsTests : PageTestEx
         // Fail
         await Page.GotoAsync("data:text/html,<div>B</div>");
         var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightAssertionException>(() => Expect(Page).ToHaveURLAsync("wrong", new() { Timeout = 1000 }));
-        StringAssert.Contains("Page URL expected to be 'wrong'", exception.Message);
-        StringAssert.Contains("But was: 'data:text/html,<div>B</div>'", exception.Message);
+        StringAssert.Contains("Expected: \"wrong\"", exception.Message);
+        StringAssert.Contains("Received: \"data:text/html,<div>B</div>\"", exception.Message);
         StringAssert.Contains("Expect \"ToHaveURLAsync\" with timeout 1000ms", exception.Message);
 
         // Fail with Regex
@@ -103,7 +103,7 @@ public class PageAssertionsTests : PageTestEx
         var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightAssertionException>(() => Expect(Page).ToMatchAriaSnapshotAsync(@"
             - heading ""missing""
         ", new() { Timeout = 100 }));
-        StringAssert.Contains("Page expected to match Aria snapshot", exception.Message);
+        StringAssert.Contains("Expect(page).ToMatchAriaSnapshotAsync(expected) failed", exception.Message);
     }
 
     [PlaywrightTest("playwright-test/playwright.expect.misc.spec.ts", "should include aria snapshot in failure message")]

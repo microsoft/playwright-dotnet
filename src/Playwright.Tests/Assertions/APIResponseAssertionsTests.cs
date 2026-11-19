@@ -68,7 +68,7 @@ public class APIResponseAssertionsTests : PageTestEx
     {
         var response = await Page.APIRequest.GetAsync(Server.EmptyPage);
         var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightAssertionException>(() => Expect(response).Not.ToBeOKAsync());
-        StringAssert.Contains("Response status expected not to be within [200..299] range, was 200", exception.Message);
+        StringAssert.Contains("Expect(response).Not.ToBeOKAsync() failed", exception.Message);
     }
 
     [PlaywrightTest("tests/page/expect-boolean.spec.ts", "toBeOK fail with invalid argument")]
@@ -83,7 +83,7 @@ public class APIResponseAssertionsTests : PageTestEx
     {
         var response = await Page.APIRequest.GetAsync($"{Server.Prefix}/text-content-type");
         var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightAssertionException>(() => Expect(response).ToBeOKAsync());
-        StringAssert.Contains("Response status expected to be within [200..299] range, was 404", exception.Message);
+        StringAssert.Contains("Expect(response).ToBeOKAsync() failed", exception.Message);
         StringAssert.Contains($"→ GET {Server.Prefix}/text-content-type", exception.Message);
         StringAssert.Contains("← 404 Not Found", exception.Message);
         StringAssert.Contains("Text error", exception.Message);

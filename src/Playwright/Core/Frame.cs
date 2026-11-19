@@ -1044,6 +1044,10 @@ internal class Frame : ChannelOwner, IFrame
                     {
                         result.ErrorMessage = "Error: " + customErrorMessage.GetString();
                     }
+                    if (details.TryGetProperty("timedOut", out var timedOut) && timedOut.ValueKind == JsonValueKind.True)
+                    {
+                        result.TimedOut = true;
+                    }
                     if (details.TryGetProperty("received", out var received) && received.ValueKind == JsonValueKind.Object)
                     {
                         if (received.TryGetProperty("value", out var receivedValue))

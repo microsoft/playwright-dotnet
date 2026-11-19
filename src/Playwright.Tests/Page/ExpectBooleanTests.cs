@@ -20,6 +20,9 @@ using static Microsoft.Playwright.Tests.Fixtures.Utils;
 
 namespace Microsoft.Playwright.Tests.Page;
 
+// .NET: the message of a failed Expect() has the layout of upstream and names the .NET call:
+// "expect(locator).not.toHaveText(expected) failed" is "Expect(locator).Not.ToHaveTextAsync(expected) failed",
+// and 'Expect "not toHaveText"' in the call log is 'Expect "Not.ToHaveTextAsync"'.
 /// <summary>Port of tests/page/expect-boolean.spec.ts.</summary>
 public class ExpectBooleanTests : UpstreamPageTest
 {
@@ -69,19 +72,18 @@ public class ExpectBooleanTests : UpstreamPageTest
         }
 
         [UpstreamTest("EX-006 fail")]
-        [LocalFixme("dotnet: the message of ToBeCheckedAsync is \"Locator expected to be checked \\nCall log: ...\"; upstream expects \"expect(locator).toBeChecked() failed\" with the Locator, Expected, Received and Timeout lines")]
         public async Task Fail()
         {
             await Page.SetContentAsync("<input type=checkbox></input>");
             var locator = Page.Locator("input");
             var error = await Catch(() => Expect(locator).ToBeCheckedAsync(new() { Timeout = 1000 }));
-            Assert.That(StripAnsi(error.Message), Does.Contain(@"expect(locator).toBeChecked() failed
+            Assert.That(StripAnsi(error.Message), Does.Contain(@"Expect(locator).ToBeCheckedAsync() failed
 
 Locator:  Locator(""input"")
 Expected: checked
 Received: unchecked
 Timeout:  1000ms"));
-            Assert.That(StripAnsi(error.Message), Does.Contain("- Expect \"toBeChecked\" Locator(\"input\") with timeout 1000ms"));
+            Assert.That(StripAnsi(error.Message), Does.Contain("- Expect \"ToBeCheckedAsync\" Locator(\"input\") with timeout 1000ms"));
         }
 
         [UpstreamTest("EX-007 with not")]
@@ -101,63 +103,59 @@ Timeout:  1000ms"));
         }
 
         [UpstreamTest("EX-009 fail with not")]
-        [LocalFixme("dotnet: the message of Not.ToBeCheckedAsync is \"Locator expected not to be checked \\nCall log: ...\"; upstream expects \"expect(locator).not.toBeChecked() failed\" with the Locator, Expected, Received and Timeout lines")]
         public async Task FailWithNot()
         {
             await Page.SetContentAsync("<input type=checkbox checked></input>");
             var locator = Page.Locator("input");
             var error = await Catch(() => Expect(locator).Not.ToBeCheckedAsync(new() { Timeout = 1000 }));
-            Assert.That(StripAnsi(error.Message), Does.Contain(@"expect(locator).not.toBeChecked() failed
+            Assert.That(StripAnsi(error.Message), Does.Contain(@"Expect(locator).Not.ToBeCheckedAsync() failed
 
 Locator:  Locator(""input"")
 Expected: not checked
 Received: checked
 Timeout:  1000ms"));
-            Assert.That(StripAnsi(error.Message), Does.Contain("- Expect \"not toBeChecked\" Locator(\"input\") with timeout 1000ms"));
+            Assert.That(StripAnsi(error.Message), Does.Contain("- Expect \"Not.ToBeCheckedAsync\" Locator(\"input\") with timeout 1000ms"));
             Assert.That(StripAnsi(error.Message), Does.Contain("locator resolved to <input checked type=\"checkbox\"/>"));
         }
 
         [UpstreamTest("EX-010 fail with checked:false")]
-        [LocalFixme("dotnet: the message of ToBeCheckedAsync with Checked = false is \"Locator expected not to be checked \\nCall log: ...\"; upstream expects \"expect(locator).toBeChecked({ checked: false }) failed\" with the Locator, Expected, Received and Timeout lines")]
         public async Task FailWithCheckedFalse()
         {
             await Page.SetContentAsync("<input type=checkbox checked></input>");
             var locator = Page.Locator("input");
             var error = await Catch(() => Expect(locator).ToBeCheckedAsync(new() { Checked = false, Timeout = 1000 }));
-            Assert.That(StripAnsi(error.Message), Does.Contain(@"expect(locator).toBeChecked({ checked: false }) failed
+            Assert.That(StripAnsi(error.Message), Does.Contain(@"Expect(locator).ToBeCheckedAsync(new() { Checked = false }) failed
 
 Locator:  Locator(""input"")
 Expected: unchecked
 Received: checked
 Timeout:  1000ms"));
-            Assert.That(StripAnsi(error.Message), Does.Contain("- Expect \"toBeChecked\" Locator(\"input\") with timeout 1000ms"));
+            Assert.That(StripAnsi(error.Message), Does.Contain("- Expect \"ToBeCheckedAsync\" Locator(\"input\") with timeout 1000ms"));
             Assert.That(StripAnsi(error.Message), Does.Contain("locator resolved to <input checked type=\"checkbox\"/>"));
         }
 
         [UpstreamTest("EX-011 fail with indeterminate: true")]
-        [LocalFixme("dotnet: the message of ToBeCheckedAsync with Indeterminate = true is \"Locator expected to be indeterminate \\nCall log: ...\"; upstream expects \"expect(locator).toBeChecked({ indeterminate: true }) failed\" with the Locator, Expected, Received and Timeout lines")]
         public async Task FailWithIndeterminateTrue()
         {
             await Page.SetContentAsync("<input type=checkbox></input>");
             var locator = Page.Locator("input");
             var error = await Catch(() => Expect(locator).ToBeCheckedAsync(new() { Indeterminate = true, Timeout = 1000 }));
-            Assert.That(StripAnsi(error.Message), Does.Contain(@"expect(locator).toBeChecked({ indeterminate: true }) failed
+            Assert.That(StripAnsi(error.Message), Does.Contain(@"Expect(locator).ToBeCheckedAsync(new() { Indeterminate = true }) failed
 
 Locator:  Locator(""input"")
 Expected: indeterminate
 Received: unchecked
 Timeout:  1000ms"));
-            Assert.That(StripAnsi(error.Message), Does.Contain("- Expect \"toBeChecked\" Locator(\"input\") with timeout 1000ms"));
+            Assert.That(StripAnsi(error.Message), Does.Contain("- Expect \"ToBeCheckedAsync\" Locator(\"input\") with timeout 1000ms"));
         }
 
         [UpstreamTest("EX-012 fail missing")]
-        [LocalFixme("dotnet: the message of Not.ToBeCheckedAsync is \"Locator expected not to be checked\\nError: element(s) not found \\nCall log: ...\"; upstream expects \"expect(locator).not.toBeChecked() failed\" with the Locator, Expected and Timeout lines before the error")]
         public async Task FailMissing()
         {
             await Page.SetContentAsync("<div>no inputs here</div>");
             var locator2 = Page.Locator("input2");
             var error = await Catch(() => Expect(locator2).Not.ToBeCheckedAsync(new() { Timeout = 1000 }));
-            Assert.That(StripAnsi(error.Message), Does.Contain(@"expect(locator).not.toBeChecked() failed
+            Assert.That(StripAnsi(error.Message), Does.Contain(@"Expect(locator).Not.ToBeCheckedAsync() failed
 
 Locator: Locator(""input2"")
 Expected: not checked
@@ -165,7 +163,7 @@ Timeout: 1000ms
 Error: element(s) not found
 
 Call log:
-  - Expect ""not toBeChecked"" Locator(""input2"") with timeout 1000ms
+  - Expect ""Not.ToBeCheckedAsync"" Locator(""input2"") with timeout 1000ms
   - waiting for Locator(""input2"")
 "));
         }
@@ -619,13 +617,12 @@ Call log:
         }
 
         [UpstreamTest("EX-059 fail with not when nothing matching")]
-        [LocalFixme("dotnet: the message of Not.ToBeHiddenAsync is \"Locator expected not to be hidden\\nError: element(s) not found \\nCall log: ...\"; upstream expects \"expect(locator).not.toBeHidden() failed\" with the Locator, Expected and Timeout lines before the error")]
         public async Task FailWithNotWhenNothingMatching()
         {
             await Page.SetContentAsync("<div></div>");
             var locator = Page.Locator("button");
             var error = await Catch(() => Expect(locator).Not.ToBeHiddenAsync(new() { Timeout = 1000 }));
-            Assert.That(StripAnsi(error.Message), Does.Contain(@"expect(locator).not.toBeHidden() failed
+            Assert.That(StripAnsi(error.Message), Does.Contain(@"Expect(locator).Not.ToBeHiddenAsync() failed
 
 Locator: Locator(""button"")
 Expected: not hidden
@@ -633,7 +630,7 @@ Timeout: 1000ms
 Error: element(s) not found
 
 Call log:
-  - Expect ""not toBeHidden"" Locator(""button"") with timeout 1000ms
+  - Expect ""Not.ToBeHiddenAsync"" Locator(""button"") with timeout 1000ms
 "));
         }
 
@@ -746,12 +743,11 @@ Call log:
             }
 
             [UpstreamTest("EX-070 text content type")]
-            [LocalFixme("dotnet: the message of ToBeOKAsync is \"Response status expected to be within [200..299] range, was 404\\nCall log: ...\"; upstream expects \"expect(response).toBeOK() failed\"")]
             public async Task TextContentType()
             {
                 var res = await Page.APIRequest.GetAsync($"{Server.Prefix}/text-content-type");
                 var error = await Catch(() => Expect(res).ToBeOKAsync());
-                Assert.That(StripAnsi(error.Message), Does.Contain("expect(response).toBeOK() failed"));
+                Assert.That(StripAnsi(error.Message), Does.Contain("Expect(response).ToBeOKAsync() failed"));
                 Assert.That(error.Message, Does.Contain($"→ GET {Server.Prefix}/text-content-type"));
                 Assert.That(error.Message, Does.Contain("← 404 Not Found"));
                 Assert.That(StripAnsi(error.Message), Does.Contain("Response text:\nText error"));

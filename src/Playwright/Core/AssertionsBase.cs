@@ -29,7 +29,6 @@ using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.Playwright.Helpers;
-using Microsoft.Playwright.Transport;
 using Microsoft.Playwright.Transport.Protocol;
 
 [assembly: InternalsVisibleTo("Microsoft.Playwright.MSTest, PublicKey=0024000004800000940000000602000000240000525341310004000001000100059a04ca5ca77c9b4eb2addd1afe3f8464b20ee6aefe73b8c23c0e6ca278d1a378b33382e7e18d4aa8300dd22d81f146e528d88368f73a288e5b8157da9710fe6f9fa9911fb786193f983408c5ebae0b1ba5d1d00111af2816f5db55871db03d7536f4a7a6c5152d630c1e1886b1a0fb68ba5e7f64a7f24ac372090889be2ffb")]
@@ -54,51 +53,190 @@ internal abstract class AssertionsBase
 
     protected string? CustomMessage { get; }
 
+    public static void SetDefaultTimeout(float timeout)
+        => _defaultTimeout = timeout;
+
     protected abstract Task<FrameExpectResult> CallExpectAsync(string expression, FrameExpectOptions expectOptions, string title);
 
-    protected async Task ExpectImplAsync(string expression, ExpectedTextValue textValue, object expected, string message, string title, FrameExpectOptions options)
+    // locator.toString(), or null when the receiver is a page.
+    protected virtual Task<string?> LocatorStringAsync() => Task.FromResult<string?>(null);
+
+    // toBeTruthy.ts
+    protected async Task ToBeTruthyAsync(string matcherName, string expected, string arg, string expression, FrameExpectOptions options)
     {
-        await ExpectImplAsync(expression, new ExpectedTextValue[] { textValue }, expected, message, title, options).ConfigureAwait(false);
+        var result = await QueryAsync(matcherName, expression, options).ConfigureAwait(false);
+        var pass = result.Matches;
+        if (pass == !IsNot)
+        {
+            return;
+        }
+
+        var hasErrorMessage = !string.IsNullOrEmpty(result.ErrorMessage);
+        string printedExpected;
+        string printedReceived;
+        if (pass)
+        {
+            printedExpected = $"Expected: not {expected}";
+            printedReceived = hasErrorMessage ? string.Empty : $"Received: {expected}";
+        }
+        else
+        {
+            printedExpected = $"Expected: {expected}";
+            printedReceived = hasErrorMessage ? string.Empty : $"Received: {result.Received as string ?? MatcherHint.PrintValue(result.Received)}";
+        }
+        throw await CreateExceptionAsync(result, options, new()
+        {
+            MatcherName = matcherName,
+            Expectation = arg,
+            PrintedExpected = printedExpected,
+            PrintedReceived = printedReceived,
+        }).ConfigureAwait(false);
     }
 
-    protected async Task ExpectImplAsync(string expression, ExpectedTextValue[]? expectedText, object? expected, string message, string title, FrameExpectOptions options)
+    // toEqual.ts
+    protected async Task ToEqualAsync(string matcherName, string expression, object? expected, FrameExpectOptions options)
     {
-        options ??= new();
-        options.ExpectedText = expectedText;
-        options.IsNot = IsNot;
-        await ExpectImplAsync(expression, options, expected, message, title).ConfigureAwait(false);
+        var result = await QueryAsync(matcherName, expression, options).ConfigureAwait(false);
+        var pass = result.Matches;
+        if (pass == !IsNot)
+        {
+            return;
+        }
+
+        var hasErrorMessage = !string.IsNullOrEmpty(result.ErrorMessage);
+        string? printedExpected;
+        string? printedReceived = null;
+        if (pass)
+        {
+            printedExpected = $"Expected: not {MatcherHint.PrintValue(expected)}";
+            printedReceived = hasErrorMessage ? string.Empty : $"Received: {MatcherHint.PrintValue(result.Received)}";
+        }
+        else if (hasErrorMessage)
+        {
+            printedExpected = $"Expected: {MatcherHint.PrintValue(expected)}";
+        }
+        else
+        {
+            (printedExpected, printedReceived) = MatcherHint.PrintExpectedAndReceived(expected, result.Received, "Expected", "Received");
+        }
+        throw await CreateExceptionAsync(result, options, new()
+        {
+            MatcherName = matcherName,
+            Expectation = "expected",
+            PrintedExpected = printedExpected,
+            PrintedReceived = printedReceived,
+        }).ConfigureAwait(false);
     }
 
-    protected async Task ExpectImplAsync(string expression, FrameExpectOptions expectOptions, object? expected, string message, string title)
+    // toMatchText.ts, where expected is a string or a regular expression.
+    protected async Task ToMatchTextAsync(string matcherName, string expression, object expected, FrameExpectOptions options, bool matchSubstring = false)
     {
-        if (expectOptions.Timeout == null)
+        var result = await QueryAsync(matcherName, expression, options).ConfigureAwait(false);
+        var pass = result.Matches;
+        if (pass == !IsNot)
         {
-            expectOptions.Timeout = _defaultTimeout;
+            return;
         }
-        if (expectOptions.IsNot)
+
+        var hasErrorMessage = !string.IsNullOrEmpty(result.ErrorMessage);
+        var expectedSuffix = expected is Regex ? " pattern" : (matchSubstring ? " substring" : string.Empty);
+        var receivedSuffix = expected is Regex || matchSubstring ? " string" : string.Empty;
+        var receivedString = result.Received as string ?? string.Empty;
+        string? printedExpected;
+        string? printedReceived = null;
+        if (pass)
         {
-            message = message.Replace("expected to", "expected not to");
-        }
-        var result = await CallExpectAsync(expression, expectOptions, title).ConfigureAwait(false);
-        if (result.Matches == IsNot)
-        {
-            var actual = result.Received;
-            var log = Connection.FormatCallLog(result.Log);
-            if (result.ErrorMessage != null)
+            printedExpected = $"Expected{expectedSuffix}: not {MatcherHint.PrintValue(expected)}";
+            if (!hasErrorMessage)
             {
-                message += "\n" + result.ErrorMessage;
+                printedReceived = $"Received{receivedSuffix}: {MatcherHint.PrintValue(receivedString)}";
             }
-            var ariaSnapshotSuffix = string.IsNullOrEmpty(result.ReceivedAriaSnapshot) ? string.Empty : $"\nAria snapshot:\n{result.ReceivedAriaSnapshot}";
-            var prefix = CustomMessage != null ? CustomMessage + "\n\n" : string.Empty;
-            if (expected == null)
-            {
-                throw new PlaywrightAssertionException($"{prefix}{message} {log}{ariaSnapshotSuffix}");
-            }
-            throw new PlaywrightAssertionException($"{prefix}{message} '{FormatValue(expected)}'\nBut was: '{FormatValue(actual)}' {log}{ariaSnapshotSuffix}");
         }
+        else if (hasErrorMessage)
+        {
+            printedExpected = $"Expected{expectedSuffix}: {MatcherHint.PrintValue(expected)}";
+        }
+        else
+        {
+            (printedExpected, printedReceived) = MatcherHint.PrintExpectedAndReceived(expected, receivedString, $"Expected{expectedSuffix}", $"Received{receivedSuffix}");
+        }
+        throw await CreateExceptionAsync(result, options, new()
+        {
+            MatcherName = matcherName,
+            Expectation = "expected",
+            PrintedExpected = printedExpected,
+            PrintedReceived = printedReceived,
+        }).ConfigureAwait(false);
     }
 
-    protected ExpectedTextValue ExpectedRegex(Regex pattern, ExpectedTextValue? options = null)
+    // toMatchAriaSnapshot.ts
+    protected async Task ToMatchAriaSnapshotAsync(string expected, FrameExpectOptions options)
+    {
+        const string MatcherName = "ToMatchAriaSnapshotAsync";
+        expected = Unshift(expected);
+        options.ExpectedValue = ScriptsHelper.SerializedArgument(expected);
+        var result = await QueryAsync(MatcherName, "to.match.aria", options).ConfigureAwait(false);
+        var pass = result.Matches;
+        var hasErrorMessage = !string.IsNullOrEmpty(result.ErrorMessage);
+        if (!hasErrorMessage && pass == !IsNot)
+        {
+            return;
+        }
+
+        var receivedRaw = result.Received is IDictionary<string, object?> typedReceived && typedReceived.TryGetValue("raw", out var raw) ? raw as string : null;
+        string? printedExpected;
+        string? printedReceived = null;
+        if (hasErrorMessage)
+        {
+            printedExpected = $"Expected: {(IsNot ? "not " : string.Empty)}{MatcherHint.PrintValue(expected)}";
+        }
+        else if (pass)
+        {
+            printedExpected = $"Expected: not {MatcherHint.PrintValue(expected)}";
+            printedReceived = $"Received: {MatcherHint.PrintValue(receivedRaw ?? string.Empty)}";
+        }
+        else
+        {
+            (printedExpected, printedReceived) = MatcherHint.PrintExpectedAndReceived(expected, receivedRaw ?? string.Empty, "Expected", "Received");
+        }
+        throw await CreateExceptionAsync(result, options, new()
+        {
+            MatcherName = MatcherName,
+            Expectation = "expected",
+            PrintedExpected = printedExpected,
+            PrintedReceived = printedReceived,
+        }).ConfigureAwait(false);
+    }
+
+    protected ExpectedTextValue[] ExpectedText(object expected, ExpectedTextValue? options = null)
+        => new[] { ExpectedTextItem(expected, options) };
+
+    protected ExpectedTextValue[] ExpectedTextArray<T>(IEnumerable<T> expected, Func<ExpectedTextValue>? options = null)
+        => expected.Select(item => ExpectedTextItem(item!, options?.Invoke())).ToArray();
+
+    protected FrameExpectOptions ConvertToFrameExpectOptions(object? source) => ClassUtils.Clone<FrameExpectOptions>(source);
+
+    // unshift() of toMatchAriaSnapshot.ts.
+    private static string Unshift(string snapshot)
+    {
+        var lines = snapshot.Split('\n');
+        var whitespacePrefixLength = 100;
+        foreach (var line in lines)
+        {
+            if (string.IsNullOrWhiteSpace(line))
+            {
+                continue;
+            }
+            var prefixLength = line.Length - line.TrimStart().Length;
+            if (prefixLength < whitespacePrefixLength)
+            {
+                whitespacePrefixLength = prefixLength;
+            }
+        }
+        return string.Join("\n", lines.Where(line => !string.IsNullOrWhiteSpace(line)).Select(line => line.Substring(Math.Min(whitespacePrefixLength, line.Length))));
+    }
+
+    private static ExpectedTextValue ExpectedRegex(Regex pattern, ExpectedTextValue? options)
     {
         if (pattern == null)
         {
@@ -112,28 +250,42 @@ internal abstract class AssertionsBase
         return textValue;
     }
 
-    protected FrameExpectOptions ConvertToFrameExpectOptions(object? source) => ClassUtils.Clone<FrameExpectOptions>(source);
-
-    private string FormatValue(object value)
+    private static ExpectedTextValue ExpectedTextItem(object expected, ExpectedTextValue? options)
     {
-        if (value == null)
+        if (expected is Regex regex)
         {
-            return "null";
+            return ExpectedRegex(regex, options);
         }
-
-        if (value is string)
-        {
-            return (string)value;
-        }
-
-        if (value is IEnumerable<object>)
-        {
-            return "[" + string.Join(", ", ((IEnumerable<object>)value).Select(value => $"'{value}'")) + "]";
-        }
-
-        return value.ToString();
+        options ??= new();
+        options.String = (string)expected;
+        return options;
     }
 
-    public static void SetDefaultTimeout(float timeout)
-        => _defaultTimeout = timeout;
+    private Task<FrameExpectResult> QueryAsync(string matcherName, string expression, FrameExpectOptions options)
+    {
+        options.Timeout ??= _defaultTimeout;
+        options.IsNot = IsNot;
+        var title = !string.IsNullOrEmpty(CustomMessage) ? CustomMessage! : $"Expect \"{(IsNot ? "Not." : string.Empty)}{matcherName}\"";
+        return CallExpectAsync(expression, options, title);
+    }
+
+    private async Task<PlaywrightAssertionException> CreateExceptionAsync(FrameExpectResult result, FrameExpectOptions options, MatcherHint.Details details)
+    {
+        details.IsNot = IsNot;
+        details.Locator = await LocatorStringAsync().ConfigureAwait(false);
+        details.Timeout = options.Timeout ?? 0;
+        details.TimedOut = result.TimedOut;
+        details.ErrorMessage = result.ErrorMessage;
+        details.Log = result.Log;
+        var message = MatcherHint.FormatMatcherMessage(details);
+        if (!string.IsNullOrEmpty(CustomMessage))
+        {
+            message = CustomMessage + "\n\n" + message;
+        }
+        if (!string.IsNullOrEmpty(result.ReceivedAriaSnapshot))
+        {
+            message += $"\nAria snapshot:\n{result.ReceivedAriaSnapshot}";
+        }
+        return new PlaywrightAssertionException(message);
+    }
 }
