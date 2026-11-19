@@ -41,7 +41,6 @@ public class BrowsertypeBasicTests : UpstreamBrowserTest
     }
 
     [UpstreamTest("BT-003 should throw when trying to connect with not-chromium")]
-    [LocalFixme("dotnet: the message is 'Connecting over CDP is only supported in Chromium.', upstream expects 'Connecting over CDP is only supported in Chromium and WebKit.' (only in firefox)")]
     public async Task ShouldThrowWhenTryingToConnectWithNotChromium()
     {
         Info.Skip(BrowserName == "chromium" || BrowserName == "webkit");

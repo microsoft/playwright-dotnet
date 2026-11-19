@@ -365,7 +365,6 @@ public class PageScreenshotTests : UpstreamPageTest
         }
 
         [UpstreamTest("SS-017 path option should detect webp")]
-        [LocalFixme("dotnet: ScreenshotAsync does not detect webp from the path, it throws ArgumentException 'path: unsupported mime type \"application/octet-stream\"'")]
         public async Task PathOptionShouldDetectWebp()
         {
             await Page.SetViewportSizeAsync(300, 300);

@@ -54,7 +54,7 @@ public class PageWaitForNavigationTests : PageTestEx
         var exception = await PlaywrightAssert.ThrowsAsync<TimeoutException>(() => waitForNavigationResult);
 
         StringAssert.Contains("Timeout 5000ms exceeded", exception.Message);
-        StringAssert.Contains("waiting for navigation to \"**/frame.html\" until \"Load\"", exception.Message);
+        StringAssert.Contains("waiting for navigation to \"**/frame.html\" until \"load\"", exception.Message);
         StringAssert.Contains($"navigated to \"{Server.EmptyPage}\"", exception.Message);
     }
 

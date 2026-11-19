@@ -1044,7 +1044,6 @@ public class TracingTests : UpstreamBrowserTest
     }
 
     [UpstreamTest("TR-041 should not emit after w/o before")]
-    [LocalFixme("dotnet: Page.WaitForConsoleMessageAsync names its wait 'page.WaitForEventAsync(\"Microsoft.Playwright.IConsoleMessage\")' (Page.InnerWaitForEventAsync), so the title in the trace is 'Wait for event \"page.WaitForEventAsync(\"Microsoft.Playwright.IConsoleMessage\")\"', upstream expects 'Wait for event \"console\"'")]
     public async Task ShouldNotEmitAfterWOBefore()
     {
         var tracesDir = Info.OutputPath("traces");
@@ -1092,7 +1091,8 @@ public class TracingTests : UpstreamBrowserTest
                 {
                     type = "before",
                     callId = AnyNumber,
-                    title = "Wait for event \"console\"",
+                    // .NET: the event is named "Console".
+                    title = "Wait for event \"Console\"",
                 },
                 new
                 {

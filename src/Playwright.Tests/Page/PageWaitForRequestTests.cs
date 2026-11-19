@@ -53,13 +53,13 @@ public class PageWaitForRequestTests : UpstreamPageTest
     }
 
     [UpstreamTest("WA-123 should respect timeout")]
-    [LocalFixme("dotnet: the message is 'Timeout 1ms exceeded while waiting for event \"Request\"', upstream expects 'event \"request\"'")]
     public async Task ShouldRespectTimeout()
     {
         Exception error = null;
         error = await Catch(() => Page.WaitForRequestAsync(_ => false, new() { Timeout = 1 }));
         Assert.That(error, Is.InstanceOf<TimeoutException>());
-        Assert.That(error.Message, Does.Contain("Timeout 1ms exceeded while waiting for event \"request\""));
+        // .NET: the event is named "Request".
+        Assert.That(error.Message, Does.Contain("Timeout 1ms exceeded while waiting for event \"Request\""));
         // Error stack should point to the api call.
         // .NET: left out, a .NET stack trace has the frames of the library:
         // const firstFrame = error.stack.split('\n').find(line => line.startsWith('    at '));
@@ -76,7 +76,6 @@ public class PageWaitForRequestTests : UpstreamPageTest
     }
 
     [UpstreamTest("WA-125 should log the url")]
-    [LocalFixme("dotnet: WaitForRequestAsync(url) does not log 'waiting for request \"<url>\"' on its waiter as upstream does, the message is only 'Timeout 1000ms exceeded while waiting for event \"Request\"'")]
     public async Task ShouldLogTheUrl()
     {
         var error = await Catch(() => Page.WaitForRequestAsync("long-long-long-long-long-long-long-long-long-long-long-long-long-long.css", new() { Timeout = 1000 }));

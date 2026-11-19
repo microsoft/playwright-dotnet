@@ -161,7 +161,6 @@ public class PageNetworkSizesTests : UpstreamPageTest
     }
 
     [UpstreamTest("NE-066 should throw for failed requests")]
-    [LocalFixme("dotnet: the message of Request.SizesAsync for a failed request is \"Unable to fetch resources sizes.\", upstream has \"Unable to fetch sizes for failed request\"")]
     public async Task ShouldThrowForFailedRequests()
     {
         Server.SetRoute("/one-style.css", (req, res) =>

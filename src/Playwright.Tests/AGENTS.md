@@ -449,6 +449,10 @@ is `ExpectToEqual(await page.EvaluateAsync<object>("() => ({ a: 1, b: [1, 2] })"
   - A message of Node.js itself is the message of the .NET runtime, with a mark:
     `ENOENT: no such file or directory` is `Could not find file`, the message of a
     `FileNotFoundException`.
+- The name of an event in a message or in a title of a trace is the name of the .NET event,
+  under a `// .NET:` mark: `while waiting for event "request"` is
+  `while waiting for event "Request"`, and `Wait for event "console"` is
+  `Wait for event "Console"`.
 - A check of `error.stack` against `__filename` is a statement left out with a `// .NET:`
   comment: a .NET stack trace has the frames of the library. `__filename` as a value is
   `new System.Diagnostics.StackFrame(true).GetFileName()`, and a `.spec.ts` name that a trace

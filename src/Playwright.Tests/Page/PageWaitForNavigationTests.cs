@@ -38,7 +38,6 @@ public class PageWaitForNavigationTests : UpstreamPageTest
 
     [UpstreamTest("WA-096 should respect timeout")]
 
-    [LocalFixme("dotnet: the log has 'until \"Load\"', upstream expects 'until \"load\"'")]
     public async Task ShouldRespectTimeout()
     {
         var promise = Page.WaitForNavigationAsync(new() { Url = "**/frame.html", Timeout = 5000 });
@@ -286,7 +285,6 @@ public class PageWaitForNavigationTests : UpstreamPageTest
 
     [UpstreamTest("WA-109 should fail when frame detaches")]
 
-    [LocalFixme("dotnet: the log has 'waiting for navigation until \"Load\"', upstream expects 'waiting for navigation until \"load\"'")]
     public async Task ShouldFailWhenFrameDetaches()
     {
         await Page.GotoAsync(Server.Prefix + "/frames/one-frame.html");
