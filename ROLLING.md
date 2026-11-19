@@ -5,7 +5,7 @@
 ## Pre-requisites
 
 - .NET SDK 8: https://dotnet.microsoft.com/download/dotnet/8.0
-- git, and Node.js 20 or newer with npm
+- git, tar, and Node.js 20 or newer with npm
 
 ## Rolling
 

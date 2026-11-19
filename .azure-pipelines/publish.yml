@@ -91,7 +91,7 @@ extends:
           displayName: 'Use DevDiv_PublicPackages as the only NuGet source'
         - task: NuGetAuthenticate@1
           displayName: 'Authenticate NuGet to DevDiv_PublicPackages feed'
-        # Playwright.Tooling builds the driver from .upstream/ with `npm ci`, which
+        # utils/build_driver.js builds the driver from .upstream/ with `npm ci`, which
         # picks up the registry and credentials from this .npmrc.
         - task: UseNode@1
           displayName: 'Install Node.js'
@@ -107,11 +107,8 @@ extends:
             workingFile: .npmrc
         # We need to build the driver first, so we can build. This clones
         # microsoft/playwright into .upstream/ at DriverVersion of src/Common/Version.props.
-        - task: DotNetCoreCLI@2
+        - script: node $(Build.SourcesDirectory)/utils/build_driver.js
           displayName: Build the driver
-          inputs:
-            command: 'run'
-            arguments: '--project $(Build.SourcesDirectory)/src/tools/Playwright.Tooling/Playwright.Tooling.csproj -- build-driver --basepath $(Build.SourcesDirectory)'
         - task: DotNetCoreCLI@2
           displayName: Build Playwright NuGet Packages
           inputs:
