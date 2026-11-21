@@ -281,4 +281,13 @@ public sealed class BrowserContextStorageStateTests : PageTestEx
         localStorage = await page.EvaluateAsync<string>("window.localStorage.getItem('name1')");
         Assert.AreEqual("value1", localStorage);
     }
+
+    [PlaywrightTest]
+    public async Task ShouldCreateTheDirectoryOfThePath()
+    {
+        using var tempDir = new TempDirectory();
+        string path = Path.Combine(tempDir.Path, "nested", "dir", "storage-state.json");
+        string storage = await Context.StorageStateAsync(new() { Path = path });
+        Assert.AreEqual(storage, File.ReadAllText(path));
+    }
 }
