@@ -876,6 +876,15 @@ public class BrowserContextFetchTests : PageTestEx
         Assert.AreEqual(contextState, pageState);
     }
 
+    [PlaywrightTest]
+    public async Task StorageStateShouldCreateTheDirectoryOfThePath()
+    {
+        using var tempDir = new TempDirectory();
+        string path = Path.Combine(tempDir.Path, "nested", "dir", "storage-state.json");
+        string storage = await Context.APIRequest.StorageStateAsync(new() { Path = path });
+        Assert.AreEqual(storage, File.ReadAllText(path));
+    }
+
     [PlaywrightTest("", "should parse response JSON while passing a type")]
     public async Task ShouldParseResponseJSONWhilePassingAType()
     {

@@ -606,7 +606,8 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
 
         if (!string.IsNullOrEmpty(options?.Path))
         {
-            File.WriteAllText(options?.Path, state);
+            Directory.CreateDirectory(Path.GetDirectoryName(Path.GetFullPath(options!.Path)));
+            File.WriteAllText(options.Path, state);
         }
 
         return state;
