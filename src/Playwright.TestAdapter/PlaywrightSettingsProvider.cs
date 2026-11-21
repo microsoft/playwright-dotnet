@@ -57,11 +57,11 @@ public class PlaywrightSettingsProvider : ISettingsProvider
         get
         {
             var browserFromEnv = Environment.GetEnvironmentVariable("BROWSER")?.ToLowerInvariant();
-            // GitHub Codespaces and DevContainers sets the BROWSER environment variable, ignore it if its bogus.
-            if (!string.IsNullOrEmpty(browserFromEnv) && !browserFromEnv!.StartsWith("/vscode/"))
+            // BROWSER is also a common convention for the system's web browser or launcher
+            // (Codespaces, DevContainers, WSL's wslview, xdg-open, ...), so only honor Playwright's browser names.
+            if (browserFromEnv != null && IsSupportedBrowserName(browserFromEnv))
             {
-                ValidateBrowserName(browserFromEnv!, "'BROWSER' environment variable", "\nTry to remove 'BROWSER' environment variable for using default browser");
-                return browserFromEnv!;
+                return browserFromEnv;
             }
             if (_settings != null && !string.IsNullOrEmpty(_settings.BrowserName))
             {
@@ -144,11 +144,14 @@ public class PlaywrightSettingsProvider : ISettingsProvider
         }
     }
 
+    private static bool IsSupportedBrowserName(string browserName) =>
+        browserName == BrowserType.Chromium ||
+        browserName == BrowserType.Firefox ||
+        browserName == BrowserType.Webkit;
+
     private static void ValidateBrowserName(string browserName, string fromText, string suffix)
     {
-        if (browserName != BrowserType.Chromium &&
-            browserName != BrowserType.Firefox &&
-            browserName != BrowserType.Webkit)
+        if (!IsSupportedBrowserName(browserName))
         {
             throw new ArgumentException($"Invalid browser name from {fromText}.\n" +
                 $"Supported browsers: '{BrowserType.Chromium}', '{BrowserType.Firefox}', and '{BrowserType.Webkit}'\n" +
