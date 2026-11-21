@@ -164,6 +164,54 @@ test('should prioritize browser from env over the runsettings file', async ({ ru
   expect(/User-Agent: .*Firefox.*/.test(result.stdout)).toBeTruthy()
 });
 
+// See https://github.com/microsoft/playwright-dotnet/issues/3426
+test('should ignore a BROWSER env var that is not a Playwright browser name', async ({ runTest }) => {
+  const result = await runTest({
+    'ExampleTests.cs': `
+      using System;
+      using System.Threading.Tasks;
+      using Microsoft.Playwright.Xunit.v3;
+      using Xunit;
+
+      namespace Playwright.TestingHarnessTest.Xunit;
+
+      public class <class-name> : PageTest
+      {
+          private readonly ITestOutputHelper output;
+
+          public <class-name>(ITestOutputHelper output)
+          {
+              this.output = output;
+          }
+
+          [Fact]
+          public async Task Test()
+          {
+              await Page.GotoAsync("about:blank");
+              output.WriteLine("BrowserName: " + BrowserName);
+              output.WriteLine("BrowserType: " + BrowserType.Name);
+              output.WriteLine("User-Agent: " + await Page.EvaluateAsync<string>("() => navigator.userAgent"));
+          }
+      }`,
+    '.runsettings': `
+    <?xml version="1.0" encoding="utf-8"?>
+    <RunSettings>
+      <Playwright>
+        <BrowserName>webkit</BrowserName>
+      </Playwright>
+    </RunSettings>
+    `,
+  }, 'dotnet test --settings=.runsettings', {
+    BROWSER: 'wslview'
+  });
+  expect(result.passed).toBe(1);
+  expect(result.failed).toBe(0);
+  expect(result.total).toBe(1);
+  expect(result.stdout).toContain("BrowserName: webkit")
+  expect(result.stdout).toContain("BrowserType: webkit")
+  expect(/User-Agent: .*WebKit.*/.test(result.stdout)).toBeTruthy()
+});
+
 test('should be able to make the browser headed via the env', async ({ runTest }) => {
   const result = await runTest({
     'ExampleTests.cs': `
